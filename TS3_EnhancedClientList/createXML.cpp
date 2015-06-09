@@ -10,7 +10,7 @@ using namespace std;
 
 extern vector <User> UserList;
 
-// Currently only creating a txt for testing.
+// Currently only creating a log for testing.
 void createXML(){
 	fstream XMLfile(XMLFILE, fstream::out);
 
@@ -31,6 +31,14 @@ void createXML(){
 		XMLfile << endl << "Known IPs: ";
 		for (unsigned int j = 0; j < UserList[i].getIPCount(); j++){
 			XMLfile << UserList[i].getUniqueIP(j) << " , ";
+		}
+
+		XMLfile << endl << "Connected: ";
+		switch (UserList[i].isConnected()){
+		case true: XMLfile << "yes";
+			break;
+		case false: XMLfile << "no";
+			break;
 		}
 
 		XMLfile << endl << endl;

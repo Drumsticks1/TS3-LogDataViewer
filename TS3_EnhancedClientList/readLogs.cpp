@@ -22,7 +22,7 @@ void readLogs(){
 	DateTime = Nickname = IP = "";
 
 	unsigned int NicknameLength = 0, IDLength, IPLength;
-	unsigned long logfileLength, currentPos = 0, IDStartPos, NicknameStartPos = 77, IPStartPos;
+	unsigned long logfileLength, currentPos = 0, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
 
 	fstream logfile(LOGFILE, fstream::in | fstream::app);
 
@@ -38,14 +38,14 @@ void readLogs(){
 		ID.clear();
 		IP.clear();
 
-		// Relevant line found.
-		// Currently disabled Disconnect matches (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos) because of the unfinished line-finding.
+		// Relevant Connection line found.
 		if (buffer_logline.find(LOGMATCHCONNECT) != string::npos){
+			NicknameStartPos = 77;
 
-			IPStartPos = 1 + (unsigned long)buffer_logline.find_last_of(" ");
-			IPLength = buffer_logline.length() - IPStartPos;
+			IPStartPos = 1 + (unsigned long)buffer_logline.rfind(" ");
+			IPLength = buffer_logline.length() - IPStartPos - 6; // - 6 for ignoring the port.
 
-			IDStartPos = 2 + (unsigned long)buffer_logline.find_last_of("id");
+			IDStartPos = 5 + (unsigned long)buffer_logline.rfind("'(id:");
 			IDLength = IPStartPos - IDStartPos - 7;
 
 			NicknameLength = IDStartPos - NicknameStartPos - 5;
@@ -72,9 +72,10 @@ void readLogs(){
 
 			// DEV: Outsource.
 
-			if (IDAlreadyExisting(stoul(ID), FoundID) == false){
+			if (!IDAlreadyExisting(stoul(ID), FoundID)){
 				UserList.resize(UserListSize);
 				UserList[i_ID].addNewUser(stoul(ID), Nickname, DateTime, IP);
+				UserList[i_ID].connect();
 				i_ID++;
 				UserListSize++;
 			}
@@ -90,6 +91,47 @@ void readLogs(){
 				if (!IsDuplicateIP(FoundID, IP)){
 					UserList[FoundID].addIP(IP);
 				}
+				UserList[FoundID].connect();
+			}
+		}
+		
+		// WIP: Disconnecting matches
+		// For now: Just Nickname adding if Nickname was changed since connect --> creats kind of nickname history.
+		// Problem: Multiple connects before disconnecting (should be added later).
+		// Could cause problems with unfinished logs (splitted up with connect before).
+		// DEV: Add sorting of the Nickname - for now it's only adding one more at the beginning of the vector if it differs with the newest one !
+		if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
+			NicknameStartPos = 80;
+
+			IDStartPos = (unsigned long)buffer_logline.rfind("'(id:") + 5;
+
+			// Added to cover kick / ban disconnects as well
+			if (buffer_logline.rfind(") reason 'reasonmsg") == string::npos){
+				IDEndPos = (unsigned long)buffer_logline.rfind(") reason 'invokerid=");
+			}
+			else{
+				IDEndPos = (unsigned long)buffer_logline.rfind(") reason 'reasonmsg");
+			}
+			
+			IDLength = IDEndPos - IDStartPos;
+			NicknameLength = IDStartPos - NicknameStartPos - 5;
+
+			// Nickname
+			for (unsigned int i = 0; i < NicknameLength; i++){
+				Nickname += buffer_logline[NicknameStartPos + i];
+			}
+
+			// ID
+			for (unsigned int i = 0; i < IDLength; i++){
+				ID += buffer_logline[IDStartPos + i];
+			}
+
+			// ID must already exist, otherwise the log isn't valid!
+			if (IDAlreadyExisting(stoul(ID), FoundID)){
+				if (UserList[FoundID].getUniqueNickname(0) != Nickname){
+					UserList[FoundID].addNickname(Nickname);
+				}
+				UserList[FoundID].disconnect();
 			}
 		}
 		currentPos += buffer_logline.length() + 1;

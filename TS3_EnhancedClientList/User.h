@@ -10,6 +10,7 @@ class User{
 private:
 	unsigned int ID;
 	vector <string> DateTime, Nickname, IP;
+	bool Connected;
 
 public:
 	unsigned int getID();
@@ -26,6 +27,11 @@ public:
 	void addNickname(string Nickname);
 	void addDateTime(string DateTime);
 	void addIP(string IP);
+
+	void connect();
+	void disconnect();
+
+	bool isConnected();
 
 	bool addNewUser(unsigned int ID, string Nickname, string DateTime, string IP);
 };

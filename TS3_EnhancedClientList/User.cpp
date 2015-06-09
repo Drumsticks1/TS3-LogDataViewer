@@ -43,6 +43,18 @@ void User::addIP(string IP){
 	this->IP.insert(this->IP.begin(), IP);
 }
 
+// Toggles the Connection flag for the current user.
+void User::connect(){ Connected = true; }
+void User::disconnect(){ Connected = false; }
+
+// Checks the connection status of the user.
+bool User::isConnected(){
+	switch (Connected){
+	case true: return true;
+	case false: return false;
+	}
+}
+
 // Adds a new user (If successfully added --> True | If already existing --> False).
 bool User::addNewUser(unsigned int ID, string Nickname, string DateTime, string IP){
 	unsigned int dump;
