@@ -1,4 +1,4 @@
-// createXML.cpp :
+// createXML.cpp : [Description pending]
 
 #include <iostream>
 #include <fstream>
@@ -32,6 +32,8 @@ void createXML(){
 		for (unsigned int j = 0; j < UserList[i].getIPCount(); j++){
 			XMLfile << UserList[i].getUniqueIP(j) << " , ";
 		}
+
+		XMLfile << endl << "Number of Connections: " << UserList[i].getDateTimeCount();
 
 		XMLfile << endl << "Connected: ";
 		switch (UserList[i].isConnected()){

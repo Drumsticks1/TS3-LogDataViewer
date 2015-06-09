@@ -1,4 +1,4 @@
-// User.cpp :
+// User.cpp : [Description pending]
 
 #include <iostream>
 #include <vector>
@@ -10,7 +10,7 @@ using namespace std;
 
 vector <User> UserList;
 
-// 
+// Returns the ID of the current user.
 unsigned int User::getID(){ return ID; }
 
 // Returns the count of the DateTime-/Nickname-/IP-entries of the current user.
@@ -18,7 +18,7 @@ unsigned int User::getDateTimeCount(){ return DateTime.size(); }
 unsigned int User::getNicknameCount(){return Nickname.size(); }
 unsigned int User::getIPCount(){ return IP.size(); }
 
-//
+// Returns the information stored in the given ID slot.
 string User::getUniqueDateTime(unsigned int DateTimeNumber){ return DateTime.at(DateTimeNumber); }
 string User::getUniqueNickname(unsigned int NicknameNumber){ return Nickname.at(NicknameNumber); }
 string User::getUniqueIP(unsigned int IPNumber){ return IP.at(IPNumber); }
@@ -33,7 +33,7 @@ void User::addNickname(string Nickname){
 	this->Nickname.insert(this->Nickname.begin(), Nickname);
 }
 
-//
+// [Description pending]
 void User::addDateTime(string DateTime){
 	this->DateTime.insert(this->DateTime.begin(), DateTime);
 }

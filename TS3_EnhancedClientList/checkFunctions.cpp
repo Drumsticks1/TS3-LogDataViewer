@@ -1,4 +1,4 @@
-// checkFunctions.cpp :
+// checkFunctions.cpp : [Description pending]
 
 #include <iostream>
 #include "User.h"

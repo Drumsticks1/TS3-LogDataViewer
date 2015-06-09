@@ -1,8 +1,7 @@
 // Constants.h
 
-// DEV: Replace the LOGFILE with path to the folder containing all the logs when implemented.
-// Path of the connection log.
-#define LOGFILE "test.log"
+// Path to the server logs.
+#define LOGDIRECTOY "./teamspeak logs"
 
-//
+// Name of the output file.
 #define XMLFILE "XML_output.log"

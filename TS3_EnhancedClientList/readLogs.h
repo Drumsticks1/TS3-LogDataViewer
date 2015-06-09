@@ -1,4 +1,4 @@
 // readLogs.h
 
-// Function for reading the logs and filtering out the relevant lines.
+// [Description pending]
 void readLogs();
