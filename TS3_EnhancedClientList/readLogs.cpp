@@ -5,29 +5,18 @@
 #include <string>
 #include "Constants.h"
 #include "User.h"
+#include "checkFunctions.h"
 
 using namespace std;
 
-User TestUserList[1000];
+extern vector <User> UserList;
 
 #define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
 #define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
 
-
-// DEV: For now not outsourced - Add &Variable with ID-Slot when already existing - outsource later.
-bool IDAlreadyUsed(unsigned int ID, unsigned int &FoundID){
-	for (unsigned i = 0; i < 201; i++){
-		if (TestUserList[i].getID() == ID){
-			FoundID = i;
-			return true;
-		}
-	}
-	return false;
-}
-
-// Function for readingthe logs and filtering out the relevant lines.
+// Function for reading the logs and filtering out the relevant lines.
 void readLogs(){
-	int j = 0;
+	unsigned int FoundID, UserListSize = 1, i_ID = 0;
 	string buffer_logline;
 	string DateTime, Nickname, ID, IP;
 	DateTime = Nickname = IP = "";
@@ -35,7 +24,7 @@ void readLogs(){
 	unsigned int NicknameLength = 0, IDLength, IPLength;
 	unsigned long logfileLength, currentPos = 0, IDStartPos, NicknameStartPos = 77, IPStartPos;
 
-	fstream logfile(LOGPATH, fstream::in | fstream::app);
+	fstream logfile(LOGFILE, fstream::in | fstream::app);
 
 	logfile.seekg(0, logfile.end);
 	logfileLength = (unsigned long)logfile.tellg();
@@ -81,19 +70,27 @@ void readLogs(){
 				IP += buffer_logline[IPStartPos + i];
 			}
 
-			// ID-Slot with already existing ID.
-			unsigned int FoundID;
+			// DEV: Outsource.
 
-			if (IDAlreadyUsed(stoul(ID), FoundID) == false){
-				TestUserList[j].addNewUser(stoul(ID), Nickname, DateTime, IP);
+			if (IDAlreadyExisting(stoul(ID), FoundID) == false){
+				UserList.resize(UserListSize);
+				UserList[i_ID].addNewUser(stoul(ID), Nickname, DateTime, IP);
+				i_ID++;
+				UserListSize++;
 			}
 			else{
-				// DEV: Prevent Duplicates, but get the right order!
-				TestUserList[FoundID].addDateTime(DateTime);
-				TestUserList[FoundID].addNickname(Nickname);
-				TestUserList[FoundID].addIP(IP);
+				// Currently no duplicate check for DateTime as it shouldn't happen. Maybe add for duplicated logfiles ?
+				UserList[FoundID].addDateTime(DateTime);
+
+				// DEV: Get the right order (Last used Nickname should be the first in the vector).
+				if (!IsDuplicateNickname(FoundID, Nickname)){
+					UserList[FoundID].addNickname(Nickname);
+				}
+
+				if (!IsDuplicateIP(FoundID, IP)){
+					UserList[FoundID].addIP(IP);
+				}
 			}
-			j++;
 		}
 		currentPos += buffer_logline.length() + 1;
 		logfile.seekg(currentPos);

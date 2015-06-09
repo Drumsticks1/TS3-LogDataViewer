@@ -24,6 +24,12 @@
     <ClCompile Include="User.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="checkFunctions.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="createXML.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="todo.h">
@@ -36,6 +42,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="checkFunctions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="createXML.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

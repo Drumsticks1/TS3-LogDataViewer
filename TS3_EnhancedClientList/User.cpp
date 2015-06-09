@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "User.h"
+#include "checkFunctions.h"
 
 using namespace std;
 
@@ -11,19 +12,16 @@ vector <User> UserList;
 
 // 
 unsigned int User::getID(){ return ID; }
-string User::getLastDateTime(){ return DateTime.front(); }
-string User::getLastNickname(){ return Nickname.front(); }
-string User::getLastIP(){ return IP.front(); }
 
-// Checks if an ID is already in use.
-bool User::IDAlreadyExisting(unsigned int ID){
-	for (unsigned int i = 0; i < UserList.size(); i++){
-		if (UserList[i].getID() == ID){
-			return true;
-		}
-	}
-	return false;
-}
+// Returns the count of the DateTime-/Nickname-/IP-entries of the current user.
+unsigned int User::getDateTimeCount(){ return DateTime.size(); }
+unsigned int User::getNicknameCount(){return Nickname.size(); }
+unsigned int User::getIPCount(){ return IP.size(); }
+
+//
+string User::getUniqueDateTime(unsigned int DateTimeNumber){ return DateTime.at(DateTimeNumber); }
+string User::getUniqueNickname(unsigned int NicknameNumber){ return Nickname.at(NicknameNumber); }
+string User::getUniqueIP(unsigned int IPNumber){ return IP.at(IPNumber); }
 
 // DEV: Maybe add check if ID already exists in the list.
 void User::addID(unsigned int ID){
@@ -47,7 +45,8 @@ void User::addIP(string IP){
 
 // Adds a new user (If successfully added --> True | If already existing --> False).
 bool User::addNewUser(unsigned int ID, string Nickname, string DateTime, string IP){
-	if (!IDAlreadyExisting(ID)){
+	unsigned int dump;
+	if (!IDAlreadyExisting(ID, dump)){
 		addID(ID);
 		addNickname(Nickname);
 		addDateTime(DateTime);
