@@ -4,4 +4,4 @@
 #define LOGDIRECTOY "./teamspeak logs"
 
 // Name of the output file.
-#define XMLFILE "XML_output.log"
+#define XMLFILE "test.xml"

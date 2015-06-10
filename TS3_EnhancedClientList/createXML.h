@@ -1,4 +1,4 @@
 // createXML.h
 
-// Currently only creating a log for testing.
+// [Description pending]
 void createXML();

@@ -28,18 +28,28 @@ void User::addID(unsigned int ID){
 	this->ID = ID;
 }
 
-// Adds the new Nickname at the front of the IP-List.
+// Adds the new Nickname at the front of the IP list.
 void User::addNickname(string Nickname){
+	for (unsigned int i = 1; i < this->Nickname.size(); i++){
+		if (this->Nickname.at(i) == Nickname){
+			this->Nickname.erase(this->Nickname.begin() + i);
+		}
+	}
 	this->Nickname.insert(this->Nickname.begin(), Nickname);
 }
 
-// [Description pending]
+// Adds the new DateTime at the front of the DateTime list.
 void User::addDateTime(string DateTime){
 	this->DateTime.insert(this->DateTime.begin(), DateTime);
 }
 
-// Adds the new IP at the front of the IP-List.
+// Adds the new IP at the front of the IP list.
 void User::addIP(string IP){
+	for (unsigned int i = 1; i < this->IP.size(); i++){
+		if (this->IP.at(i) == IP){
+			this->IP.erase(this->IP.begin() + i);
+		}
+	}
 	this->IP.insert(this->IP.begin(), IP);
 }
 

@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TS3_EnhancedClientList.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="readLogs.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -31,6 +28,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="fetchLogfiles.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="TS3_EnhancedClientList.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
