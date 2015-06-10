@@ -23,8 +23,8 @@ void readLogs(){
 	unsigned int NicknameLength, IDLength, IPLength;
 	unsigned long logfileLength, currentPos, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
 
-	for (unsigned int i = 1; i < LogFiles.size(); i++){
-		cout << "Reading Logfiles...\t\t" << i << "\t of\t" << LogFiles.size() << endl;
+	for (unsigned int i = 0; i < LogFiles.size(); i++){
+		cout << "Reading Logfiles...\t\t" << i + 1 << "\t of\t" << LogFiles.size() << endl;
 
 		DateTime = Nickname = IP = "";
 		currentPos = 0;
