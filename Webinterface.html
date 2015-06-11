@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>TS3 EnhancedClientList Webinterface</title>
+    <script>
+        var xmlhttp, output, User, i, j;
+        if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
+        else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
+                User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
+                for (i = 0; i < User.length; i++) {
+                    output += "<tr><td>" + User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID")[0].firstChild.nodeValue + "</td><td>";
+
+                    for (j = 0; j < User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames").length; j++) {
+                        output += User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames")[j].firstChild.nodeValue + "<p>";
+                    }
+
+                    // Only the last DateTime for now (Too space consuming).
+                    output += "</td><td>" + User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections")[0].firstChild.nodeValue + "</td>";
+
+                    // Only the last IP for now (Too space consuming).
+                    output += "<td>" + User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs")[0].firstChild.nodeValue + "</td>";
+
+                    output += "<td>" + User[i].getElementsByTagName("Connection_Count")[0].getElementsByTagName("Connection_Count")[0].firstChild.nodeValue + "</td>";
+
+                    output += "<td>" + User[i].getElementsByTagName("Connected")[0].getElementsByTagName("Connected")[0].firstChild.nodeValue + "</td></tr>";
+                }
+                output += "</table>";
+                document.getElementById('ShowTable').innerHTML = output;
+            }
+        }
+        xmlhttp.open("GET", "test.xml", true);
+        xmlhttp.send();
+    </script>
+</head>
+<body>
+    <div id="ReloadXML">
+        <button click="ReloadXML()">ReloadXML (not yet implemented)</button>
+    </div>
+    <br />
+    <div id="ShowTable"></div>
+</body>
+</html>
