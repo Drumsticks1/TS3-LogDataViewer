@@ -195,5 +195,6 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 
-# XML-Files
+# XML- and XMLinfo-files
 *.xml
+*.xmlinfo

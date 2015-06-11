@@ -16,6 +16,16 @@ bool IDAlreadyExisting(unsigned int ID, unsigned int &FoundID){
 	return false;
 }
 
+// Checks if a DateTime is already existing for the current user.
+bool IsDuplicateDateTime(unsigned int ID, string DateTime){
+	for (unsigned int i = 0; i < UserList[ID].getDateTimeCount(); i++){
+		if (UserList[ID].getUniqueDateTime(i) == DateTime){
+			return true;
+		}
+	}
+	return false;
+}
+
 // Checks if a Nickname is already existing for the current User.
 bool IsDuplicateNickname(unsigned int ID, string Nickname){
 	for (unsigned int i = 0; i < UserList[ID].getNicknameCount(); i++){

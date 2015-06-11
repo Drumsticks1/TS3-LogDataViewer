@@ -29,6 +29,7 @@ void createXML(){
 
 	string NicknameVar, DateTimeVar, IPVar;
 
+	cout << "Preparing XML-Creation..." << endl;
 	for (unsigned int i = 0; i < UserList.size(); i++){
 		fieldNickname.clear();
 		fieldDateTime.clear();
@@ -62,6 +63,8 @@ void createXML(){
 	}
 	PropertyTree.add_child("UserList", UserListNode);
 	
+	cout << "Creating XML..." << endl;
+
 	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
 	write_xml(XMLFILE, PropertyTree, std::locale(), settings);
 }

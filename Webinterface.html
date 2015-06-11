@@ -3,7 +3,7 @@
 <head>
     <title>TS3 EnhancedClientList Webinterface</title>
     <script>
-        var xmlhttp, output, User, i, j;
+        var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, i, j;
         if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
         else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
         xmlhttp.onreadystatechange = function () {
@@ -11,23 +11,52 @@
                 output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
                 User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
                 for (i = 0; i < User.length; i++) {
-                    output += "<tr><td>" + User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID")[0].firstChild.nodeValue + "</td><td>";
+                    ID = User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID");
+                    Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
+                    Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
+                    IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
+                    Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].getElementsByTagName("Connection_Count");
+                    Connected = User[i].getElementsByTagName("Connected")[0].getElementsByTagName("Connected");
 
-                    for (j = 0; j < User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames").length; j++) {
-                        output += User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames")[j].firstChild.nodeValue + "<p>";
+                    output += "<tr><td>" + ID[0].firstChild.nodeValue + "</td><td>";
+
+                    for (j = 0; j < Nicknames.length; j++) {
+                        output += Nicknames[j].firstChild.nodeValue + "<p>";
                     }
 
-                    // Only the last DateTime for now (Too space consuming).
-                    output += "</td><td>" + User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections")[0].firstChild.nodeValue + "</td>";
+                    output += "</td><td>";
 
-                    // Only the last IP for now (Too space consuming).
-                    output += "<td>" + User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs")[0].firstChild.nodeValue + "</td>";
+                    // Only or the last 2 and the first 2 DateTime for now (Too space consuming).
+                    if (Connections.length < 6) {
+                        for (j = 0; j < Connections.length; j++) {
+                            output += Connections[j].firstChild.nodeValue + "<p>";
+                        }
+                    }
+                    else {
+                        for (j = 0; j < 2; j++) {
+                            output += Connections[j].firstChild.nodeValue + "<p>";
+                        }
+                        output += "<center>. . . . .</center><p>";
+                        for (j = Connections.length - 2; j < Connections.length; j++) {
+                            output += Connections[j].firstChild.nodeValue + "<p>";
+                        }
+                    }
 
-                    output += "<td>" + User[i].getElementsByTagName("Connection_Count")[0].getElementsByTagName("Connection_Count")[0].firstChild.nodeValue + "</td>";
+                    output += "</td><td>";
 
-                    output += "<td>" + User[i].getElementsByTagName("Connected")[0].getElementsByTagName("Connected")[0].firstChild.nodeValue + "</td></tr>";
+                    // Only the last 10 for now (Too space consuming).
+                    for (j = 0; j < 5; j++) {
+                        if (j < IPs.length) {
+                            output += IPs[j].firstChild.nodeValue + "<p>";
+                        }
+                    }
+
+                    output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
+
+                    output += Connected[0].firstChild.nodeValue + "</td></tr>";
                 }
                 output += "</table>";
+                var table = document
                 document.getElementById('ShowTable').innerHTML = output;
             }
         }

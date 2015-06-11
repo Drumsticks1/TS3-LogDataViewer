@@ -22,14 +22,14 @@ void readLogs(){
 	string DateTime, Nickname, ID, IP;
 	unsigned int NicknameLength, IDLength, IPLength;
 	unsigned long logfileLength, currentPos, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
+	fstream XMLInfo(XMLINFO, fstream::out);
 
+	cout << "Reading Logfiles..." << endl;
 	for (unsigned int i = 0; i < LogFiles.size(); i++){
-		cout << "Reading Logfiles...\t\t" << i + 1 << "\t of\t" << LogFiles.size() << endl;
-
 		DateTime = Nickname = IP = "";
 		currentPos = 0;
-
-		fstream logfile(LogFiles.at(i), fstream::in | fstream::app);
+		 
+		fstream logfile(LogFiles.at(i), fstream::in);
 
 		logfile.seekg(0, logfile.end);
 		logfileLength = (unsigned long)logfile.tellg();
@@ -85,9 +85,10 @@ void readLogs(){
 					UserListSize++;
 				}
 				else{
-					// Currently no duplicate check for DateTime as it shouldn't happen. Maybe add for duplicated logfiles ?
-					UserList[FoundID].addDateTime(DateTime);
-
+					if (!IsDuplicateDateTime(FoundID, DateTime)){
+						UserList[FoundID].addDateTime(DateTime);
+					}
+					
 					// DEV: Get the right order (Last used Nickname should be the first in the vector).
 					if (!IsDuplicateNickname(FoundID, Nickname)){
 						UserList[FoundID].addNickname(Nickname);
@@ -130,6 +131,7 @@ void readLogs(){
 					ID += buffer_logline[IDStartPos + i];
 				}
 
+				// DEV: Maybe ID needn't to exist for splitted logs ? (if log with connection is missing).
 				// ID must already exist, otherwise the log isn't valid!
 				if (IDAlreadyExisting(stoul(ID), FoundID)){
 					if (UserList[FoundID].getUniqueNickname(0) != Nickname){
@@ -141,6 +143,8 @@ void readLogs(){
 			currentPos += buffer_logline.length() + 1;
 			logfile.seekg(currentPos);
 		}
+		XMLInfo << LogFiles.at(i) << endl;
 		logfile.close();
 	}
+	XMLInfo.close();
 }
