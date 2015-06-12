@@ -1,4 +1,7 @@
 // readLogs.h
 
+#include <iostream>
+using namespace std;
+
 // [Description pending]
-void readLogs();
+void readLogs(string LOGDIRECTORY);

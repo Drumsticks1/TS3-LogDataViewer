@@ -1,5 +1,8 @@
 // checkFunctions.h
 
+#include <iostream>
+using namespace std;
+
 // Checks if an ID is already existing.
 bool IDAlreadyExisting(unsigned int ID, unsigned int &FoundID);
 

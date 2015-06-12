@@ -1,4 +1,4 @@
-// fetchLogfiles.cpp : 
+// fetchLogfiles.cpp : [Description pending]
 
 #include <iostream>
 #include <string>
@@ -11,10 +11,8 @@ using namespace std;
 vector <string> LogFiles;
 
 // Fetches the list of log files in the log directory and saves it in a vector.
-void fetchLogfiles(){
+void fetchLogfiles(string LOGDIRECTORY){
 	cout << "Fetching logfiles..." << endl;
-	// DEV: Filter .ts3server_xxxx-xx-xx__xx_xx_xx.xxxxxx_1 logs.
-	// Unimportant for Clist List.
 
 	path log_directory(LOGDIRECTORY);
 	if (exists(log_directory)){
@@ -22,14 +20,17 @@ void fetchLogfiles(){
 			if (!boost::filesystem::is_empty(log_directory)){
 				directory_iterator LogDirectory(LOGDIRECTORY);
 				while (LogDirectory != directory_iterator()){
-					LogFiles.push_back((LogDirectory->path().string()));
+					// Filters out the unneccesary .ts3server_xxxx-xx-xx__xx_xx_xx.xxxxxx_1 logs.)
+					if (LogDirectory->path().filename().string().at(38) == '1'){
+						LogFiles.push_back((LogDirectory->path().filename().string()));
+					}
 					LogDirectory++;
 				}
 			}
-			else cout << "The log directory is empty.";
+			else cout << "The log directory is empty." << endl;
 		}
 		// Change output.
-		else cout << "The log directory isn't a directory.";
+		else cout << "The log directory isn't a directory." << endl;
 	}
-	else cout << "The log directory doesn't exist.";
+	else cout << "The log directory doesn't exist." << endl;
 }

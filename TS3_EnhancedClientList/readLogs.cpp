@@ -16,9 +16,9 @@ extern vector <string> LogFiles;
 #define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
 
 // [Description pending]
-void readLogs(){
+void readLogs(string LOGDIRECTORY){
 	unsigned int FoundID, UserListSize = 1, i_ID = 0;
-	string buffer_logline;
+	string buffer_logline, LogFilePath;
 	string DateTime, Nickname, ID, IP;
 	unsigned int NicknameLength, IDLength, IPLength;
 	unsigned long logfileLength, currentPos, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
@@ -26,10 +26,11 @@ void readLogs(){
 
 	cout << "Reading Logfiles..." << endl;
 	for (unsigned int i = 0; i < LogFiles.size(); i++){
+		LogFilePath = LOGDIRECTORY + LogFiles.at(i);
 		DateTime = Nickname = IP = "";
 		currentPos = 0;
-		 
-		fstream logfile(LogFiles.at(i), fstream::in);
+		
+		fstream logfile(LogFilePath, fstream::in);
 
 		logfile.seekg(0, logfile.end);
 		logfileLength = (unsigned long)logfile.tellg();

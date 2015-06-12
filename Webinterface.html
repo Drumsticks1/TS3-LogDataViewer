@@ -2,71 +2,88 @@
 <html>
 <head>
     <title>TS3 EnhancedClientList Webinterface</title>
+    <script src='https://code.jquery.com/jquery-latest.js'></script>
     <script>
-        var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, i, j;
-        if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
-        else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
-                User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
-                for (i = 0; i < User.length; i++) {
-                    ID = User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID");
-                    Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
-                    Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
-                    IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
-                    Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].getElementsByTagName("Connection_Count");
-                    Connected = User[i].getElementsByTagName("Connected")[0].getElementsByTagName("Connected");
-
-                    output += "<tr><td>" + ID[0].firstChild.nodeValue + "</td><td>";
-
-                    for (j = 0; j < Nicknames.length; j++) {
-                        output += Nicknames[j].firstChild.nodeValue + "<p>";
-                    }
-
-                    output += "</td><td>";
-
-                    // Only or the last 2 and the first 2 DateTime for now (Too space consuming).
-                    if (Connections.length < 6) {
-                        for (j = 0; j < Connections.length; j++) {
-                            output += Connections[j].firstChild.nodeValue + "<p>";
-                        }
-                    }
-                    else {
-                        for (j = 0; j < 2; j++) {
-                            output += Connections[j].firstChild.nodeValue + "<p>";
-                        }
-                        output += "<center>. . . . .</center><p>";
-                        for (j = Connections.length - 2; j < Connections.length; j++) {
-                            output += Connections[j].firstChild.nodeValue + "<p>";
-                        }
-                    }
-
-                    output += "</td><td>";
-
-                    // Only the last 10 for now (Too space consuming).
-                    for (j = 0; j < 5; j++) {
-                        if (j < IPs.length) {
-                            output += IPs[j].firstChild.nodeValue + "<p>";
-                        }
-                    }
-
-                    output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
-
-                    output += Connected[0].firstChild.nodeValue + "</td></tr>";
-                }
-                output += "</table>";
-                var table = document
-                document.getElementById('ShowTable').innerHTML = output;
-            }
+        function rebuildXML() {
+            $.get("rebuildXML.php");
+            return false;
         }
-        xmlhttp.open("GET", "test.xml", true);
-        xmlhttp.send();
+    </script>
+    <script>
+        function buildTable() {
+            var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, i, j;
+            if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
+            else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
+                    User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
+                    for (i = 0; i < User.length; i++) {
+                        ID = User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID");
+                        Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
+                        Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
+                        IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
+                        Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].getElementsByTagName("Connection_Count");
+                        Connected = User[i].getElementsByTagName("Connected")[0].getElementsByTagName("Connected");
+
+                        output += "<tr><td>" + ID[0].firstChild.nodeValue + "</td><td>";
+
+                        for (j = 0; j < Nicknames.length; j++) {
+                            output += Nicknames[j].firstChild.nodeValue + "<p>";
+                        }
+
+                        output += "</td><td>";
+
+                        // Only or the last 2 and the first 2 DateTime for now (Too space consuming).
+                        if (Connections.length < 6) {
+                            for (j = 0; j < Connections.length; j++) {
+                                output += Connections[j].firstChild.nodeValue + "<p>";
+                            }
+                        }
+                        else {
+                            for (j = 0; j < 2; j++) {
+                                output += Connections[j].firstChild.nodeValue + "<p>";
+                            }
+                            output += "<center>. . . . .</center><p>";
+                            for (j = Connections.length - 2; j < Connections.length; j++) {
+                                output += Connections[j].firstChild.nodeValue + "<p>";
+                            }
+                        }
+
+                        output += "</td><td>";
+
+                        // Only the last 5 for now (Too space consuming).
+                        for (j = 0; j < 5; j++) {
+                            if (j < IPs.length) {
+                                output += IPs[j].firstChild.nodeValue + "<p>";
+                            }
+                        }
+
+                        output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
+
+                        output += Connected[0].firstChild.nodeValue + "</td></tr>";
+                    }
+                    output += "</table>";
+                    var table = document
+                    document.getElementById('ShowTable').innerHTML = output;
+                }
+            }
+            xmlhttp.open("GET", "output.xml", true);
+            xmlhttp.send();
+        }
+    </script>
+    <script>
+        rebuildXML();
+        buildTable();
     </script>
 </head>
 <body>
-    <div id="ReloadXML">
-        <button click="ReloadXML()">ReloadXML (not yet implemented)</button>
+    <div id="rebuidlXML">
+        <button onclick="rebuildXML();"> Rebuild XML </button>
+    </div>
+    <br />
+    <div id="reloadTable">
+        <button onclick="buildTable();"> Reload Table </button>
     </div>
     <br />
     <div id="ShowTable"></div>

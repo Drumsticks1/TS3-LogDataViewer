@@ -12,7 +12,7 @@ using namespace std;
 using namespace boost::property_tree;
 
 extern vector <User> UserList;
-// Add later.
+// DEV: Add later.
 #define TITLE "Created by TS3_EnhancedClientList"
 
 // [Description pending]
