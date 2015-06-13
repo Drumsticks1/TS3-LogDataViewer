@@ -28,7 +28,7 @@ void User::addID(unsigned int ID){
 	this->ID = ID;
 }
 
-// Adds the new Nickname at the front of the IP list.
+// Adds the new Nickname at the beginning of the Nickname list.
 void User::addNickname(string Nickname){
 	for (unsigned int i = 1; i < this->Nickname.size(); i++){
 		if (this->Nickname.at(i) == Nickname){
@@ -38,12 +38,17 @@ void User::addNickname(string Nickname){
 	this->Nickname.insert(this->Nickname.begin(), Nickname);
 }
 
-// Adds the new DateTime at the front of the DateTime list.
+// Adds the new DateTime at the beginning of the DateTime list.
 void User::addDateTime(string DateTime){
+	for (unsigned int i = 1; i < this->DateTime.size(); i++){
+		if (this->DateTime.at(i) == DateTime){
+			this->DateTime.erase(this->DateTime.begin() + i);
+		}
+	}
 	this->DateTime.insert(this->DateTime.begin(), DateTime);
 }
 
-// Adds the new IP at the front of the IP list.
+// Adds the new IP at the beginning of the IP list.
 void User::addIP(string IP){
 	for (unsigned int i = 1; i < this->IP.size(); i++){
 		if (this->IP.at(i) == IP){
@@ -53,17 +58,19 @@ void User::addIP(string IP){
 	this->IP.insert(this->IP.begin(), IP);
 }
 
-// DEV: Prevent negative CurrentClientConnects or stop the program when it occurs.
-// Toggles the Connection flag for the current user.
-void User::connect(){ CurrentClientConnects++; }
-void User::disconnect(){ CurrentClientConnects--; }
+// Adds the new Nickname at the end of the IP list.
+void User::addNicknameReverse(string Nickname){
+	this->Nickname.push_back(Nickname);
+}
 
-// Checks the connection status of the user.
-bool User::isConnected(){
-	if (CurrentClientConnects == 0){
-		return false;
-	}
-	else return true;
+// Adds the new DateTime at the end of the DateTime list.
+void User::addDateTimeReverse(string DateTime){
+	this->DateTime.push_back(DateTime);
+}
+
+// Adds the new IP at the end of the IP list.
+void User::addIPReverse(string IP){
+	this->IP.push_back(IP);
 }
 
 // Adds a new user (If successfully added --> True | If already existing --> False).

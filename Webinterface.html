@@ -18,6 +18,7 @@
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
+
                     for (i = 0; i < User.length; i++) {
                         ID = User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID");
                         Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
@@ -29,7 +30,8 @@
                         output += "<tr><td>" + ID[0].firstChild.nodeValue + "</td><td>";
 
                         for (j = 0; j < Nicknames.length; j++) {
-                            output += Nicknames[j].firstChild.nodeValue + "<p>";
+                            output += Nicknames[j].firstChild.nodeValue;
+                            if (j < Nicknames.length - 1) output += "<br />"
                         }
 
                         output += "</td><td>";
@@ -37,16 +39,18 @@
                         // Only or the last 2 and the first 2 DateTime for now (Too space consuming).
                         if (Connections.length < 6) {
                             for (j = 0; j < Connections.length; j++) {
-                                output += Connections[j].firstChild.nodeValue + "<p>";
+                                output += Connections[j].firstChild.nodeValue;
+                                if (j < Connections.length - 1) output += "<br />"
                             }
                         }
                         else {
                             for (j = 0; j < 2; j++) {
-                                output += Connections[j].firstChild.nodeValue + "<p>";
+                                output += Connections[j].firstChild.nodeValue + "<br />";
                             }
-                            output += "<center>. . . . .</center><p>";
+                            output += "<center>. . . . .</center>";
                             for (j = Connections.length - 2; j < Connections.length; j++) {
-                                output += Connections[j].firstChild.nodeValue + "<p>";
+                                output += Connections[j].firstChild.nodeValue;
+                                if (j < Connections.length - 1) output += "<br />"
                             }
                         }
 
@@ -55,10 +59,11 @@
                         // Only the last 5 for now (Too space consuming).
                         for (j = 0; j < 5; j++) {
                             if (j < IPs.length) {
-                                output += IPs[j].firstChild.nodeValue + "<p>";
+                                output += IPs[j].firstChild.nodeValue;
+                                if (j < IPs.length - 1) output += "<br />"
                             }
                         }
-
+                        
                         output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
 
                         output += Connected[0].firstChild.nodeValue + "</td></tr>";

@@ -9,7 +9,6 @@ using namespace std;
 class User{
 private:
 	unsigned int ID;
-	int CurrentClientConnects = 0;
 	vector <string> DateTime, Nickname, IP;
 
 public:
@@ -28,10 +27,9 @@ public:
 	void addDateTime(string DateTime);
 	void addIP(string IP);
 
-	void connect();
-	void disconnect();
-
-	bool isConnected();
+	void addNicknameReverse(string Nickname);
+	void addDateTimeReverse(string DateTime);
+	void addIPReverse(string IP);
 
 	bool addNewUser(unsigned int ID, string Nickname, string DateTime, string IP);
 };

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include "fetchLogs.h"
+#include "parseXML.h"
 #include "parseLogs.h"
 #include "createXML.h"
 
@@ -19,6 +20,11 @@ int main(int argc, char* argv[]){
 		cout << "The programm will now exit.";
 		return 0;
 	}
+
+	if (!parseXML()){
+		cout << "No valid XML found... " << endl;
+	}
+
 	parseLogs(LOGDIRECTORY);
 	createXML();
 	return 0;

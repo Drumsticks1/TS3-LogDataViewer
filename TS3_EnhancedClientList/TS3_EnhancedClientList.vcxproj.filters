@@ -33,6 +33,9 @@
     <ClCompile Include="fetchLogs.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="parseXML.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="todo.h">
@@ -54,6 +57,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="fetchLogs.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="parseXML.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

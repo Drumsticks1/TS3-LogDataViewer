@@ -42,7 +42,7 @@ void createXML(){
 		}
 
 		fieldConnectionCount.put("Connection_Count", UserList[i].getDateTimeCount());
-		fieldConnected.put("Connected", UserList[i].isConnected());
+		fieldConnected.put("Connected", "Currently Disabled");
 
 		UserNode.put_child("ID", fieldID);
 		UserNode.put_child("Nicknames", fieldNickname);
