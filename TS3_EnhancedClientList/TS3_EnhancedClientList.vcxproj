@@ -78,19 +78,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="fetchLogfiles.cpp" />
+    <ClCompile Include="fetchLogs.cpp" />
     <ClCompile Include="checkFunctions.cpp" />
     <ClCompile Include="createXML.cpp" />
-    <ClCompile Include="readLogs.cpp" />
+    <ClCompile Include="parseLogs.cpp" />
     <ClCompile Include="TS3_EnhancedClientList.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fetchLogfiles.h" />
+    <ClInclude Include="fetchLogs.h" />
     <ClInclude Include="checkFunctions.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="createXML.h" />
-    <ClInclude Include="readLogs.h" />
+    <ClInclude Include="parseLogs.h" />
     <ClInclude Include="todo.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>

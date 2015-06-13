@@ -53,16 +53,17 @@ void User::addIP(string IP){
 	this->IP.insert(this->IP.begin(), IP);
 }
 
+// DEV: Prevent negative CurrentClientConnects or stop the program when it occurs.
 // Toggles the Connection flag for the current user.
-void User::connect(){ Connected = true; }
-void User::disconnect(){ Connected = false; }
+void User::connect(){ CurrentClientConnects++; }
+void User::disconnect(){ CurrentClientConnects--; }
 
 // Checks the connection status of the user.
 bool User::isConnected(){
-	switch (Connected){
-	case true: return true;
-	case false: return false;
+	if (CurrentClientConnects == 0){
+		return false;
 	}
+	else return true;
 }
 
 // Adds a new user (If successfully added --> True | If already existing --> False).

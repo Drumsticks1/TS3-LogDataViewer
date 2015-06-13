@@ -1,6 +1,7 @@
 // checkFunctions.cpp : [Description pending]
 
 #include <iostream>
+#include <vector>
 #include "User.h"
 
 extern vector <User> UserList;

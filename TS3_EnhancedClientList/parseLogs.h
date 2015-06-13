@@ -1,7 +1,7 @@
-// readLogs.h
+// parseLogs.h
 
 #include <iostream>
 using namespace std;
 
 // [Description pending]
-void readLogs(string LOGDIRECTORY);
+void parseLogs(string LOGDIRECTORY);

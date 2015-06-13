@@ -9,8 +9,8 @@ using namespace std;
 class User{
 private:
 	unsigned int ID;
+	int CurrentClientConnects = 0;
 	vector <string> DateTime, Nickname, IP;
-	bool Connected;
 
 public:
 	unsigned int getID();

@@ -1,8 +1,9 @@
-// readLogs.cpp : [Description pending]
+// parseLogs.cpp : [Description pending]
 
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "Constants.h"
 #include "User.h"
 #include "checkFunctions.h"
@@ -10,23 +11,22 @@
 using namespace std;
 
 extern vector <User> UserList;
-extern vector <string> LogFiles;
+extern vector <string> Logs;
 
 #define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
 #define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
 
 // [Description pending]
-void readLogs(string LOGDIRECTORY){
+void parseLogs(string LOGDIRECTORY){
 	unsigned int FoundID, UserListSize = 1, i_ID = 0;
-	string buffer_logline, LogFilePath;
-	string DateTime, Nickname, ID, IP;
+	string buffer_logline, LogFilePath, DateTime, Nickname, ID, IP;
 	unsigned int NicknameLength, IDLength, IPLength;
 	unsigned long logfileLength, currentPos, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
 	fstream XMLInfo(XMLINFO, fstream::out);
 
-	cout << "Reading Logfiles..." << endl;
-	for (unsigned int i = 0; i < LogFiles.size(); i++){
-		LogFilePath = LOGDIRECTORY + LogFiles.at(i);
+	cout << "Parsing logs..." << endl;
+	for (unsigned int i = 0; i < Logs.size(); i++){
+		LogFilePath = LOGDIRECTORY + Logs.at(i);
 		DateTime = Nickname = IP = "";
 		currentPos = 0;
 		
@@ -90,7 +90,6 @@ void readLogs(string LOGDIRECTORY){
 						UserList[FoundID].addDateTime(DateTime);
 					}
 					
-					// DEV: Get the right order (Last used Nickname should be the first in the vector).
 					if (!IsDuplicateNickname(FoundID, Nickname)){
 						UserList[FoundID].addNickname(Nickname);
 					}
@@ -104,8 +103,6 @@ void readLogs(string LOGDIRECTORY){
 
 			// WIP: Disconnecting matches
 			// For now: Just Nickname adding if Nickname was changed since connect --> creats kind of nickname history.
-			// May cause problems: Multiple connects before disconnecting (should be added later).
-			// DEV: Add sorting of the Nickname - for now it's only adding one more at the beginning of the vector if it differs with the newest one !
 			if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
 				NicknameStartPos = 80;
 
@@ -132,7 +129,6 @@ void readLogs(string LOGDIRECTORY){
 					ID += buffer_logline[IDStartPos + i];
 				}
 
-				// DEV: Maybe ID needn't to exist for splitted logs ? (if log with connection is missing).
 				// ID must already exist, otherwise the log isn't valid!
 				if (IDAlreadyExisting(stoul(ID), FoundID)){
 					if (UserList[FoundID].getUniqueNickname(0) != Nickname){
@@ -144,7 +140,7 @@ void readLogs(string LOGDIRECTORY){
 			currentPos += buffer_logline.length() + 1;
 			logfile.seekg(currentPos);
 		}
-		XMLInfo << LogFiles.at(i) << endl;
+		XMLInfo << Logs.at(i) << endl;
 		logfile.close();
 	}
 	XMLInfo.close();

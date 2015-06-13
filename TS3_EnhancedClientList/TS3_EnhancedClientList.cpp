@@ -4,8 +4,8 @@
 // Date:	
 
 #include <iostream>
-#include "fetchLogfiles.h"
-#include "readLogs.h"
+#include "fetchLogs.h"
+#include "parseLogs.h"
 #include "createXML.h"
 
 using namespace std;
@@ -15,8 +15,11 @@ int main(int argc, char* argv[]){
 	if (argc > 1){ LOGDIRECTORY = argv[1]; }
 	else{ LOGDIRECTORY = "./logs/"; }
 
-	fetchLogfiles(LOGDIRECTORY);
-	readLogs(LOGDIRECTORY);
+	if (!fetchLogs(LOGDIRECTORY)){
+		cout << "The programm will now exit.";
+		return 0;
+	}
+	parseLogs(LOGDIRECTORY);
 	createXML();
 	return 0;
 }

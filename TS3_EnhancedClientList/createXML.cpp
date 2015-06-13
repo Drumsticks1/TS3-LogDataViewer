@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "Constants.h"
 #include "User.h"
 #include <boost/property_tree/ptree.hpp>
@@ -17,17 +18,8 @@ extern vector <User> UserList;
 
 // [Description pending]
 void createXML(){
-	ptree PropertyTree;
-	ptree UserListNode;
-	ptree UserNode;
-	ptree fieldID;
-	ptree fieldNickname;
-	ptree fieldDateTime;
-	ptree fieldIP;
-	ptree fieldConnectionCount;
-	ptree fieldConnected;
-
-	string NicknameVar, DateTimeVar, IPVar;
+	ptree PropertyTree, UserListNode, UserNode;
+	ptree fieldID, fieldNickname, fieldDateTime, fieldIP, fieldConnectionCount, fieldConnected;
 
 	cout << "Preparing XML-Creation..." << endl;
 	for (unsigned int i = 0; i < UserList.size(); i++){
@@ -36,7 +28,7 @@ void createXML(){
 		fieldIP.clear();
 
 		fieldID.put("ID", UserList[i].getID());
-		
+
 		for (unsigned int j = 0; j < UserList[i].getNicknameCount(); j++){
 			fieldNickname.add("Nicknames", UserList[i].getUniqueNickname(j));
 		}
@@ -62,10 +54,13 @@ void createXML(){
 		UserListNode.add_child("User", UserNode);
 	}
 	PropertyTree.add_child("UserList", UserListNode);
-	
+
 	cout << "Creating XML..." << endl;
-
 	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
-	write_xml(XMLFILE, PropertyTree, std::locale(), settings);
+	try{
+		write_xml(XMLFILE, PropertyTree, std::locale(), settings);
+	}
+	catch (xml_parser_error error){
+		cout << "xml_parser_error";
+	}
 }
-
