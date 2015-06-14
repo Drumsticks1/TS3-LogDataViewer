@@ -8,7 +8,7 @@ using namespace std;
 // Class for the user data.
 class User{
 private:
-	unsigned int ID;
+	unsigned int ID = 0;
 	vector <string> DateTime, Nickname, IP;
 
 public:
@@ -30,6 +30,4 @@ public:
 	void addNicknameReverse(string Nickname);
 	void addDateTimeReverse(string DateTime);
 	void addIPReverse(string IP);
-
-	bool addNewUser(unsigned int ID, string Nickname, string DateTime, string IP);
 };

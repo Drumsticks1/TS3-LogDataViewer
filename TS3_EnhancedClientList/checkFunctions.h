@@ -3,9 +3,6 @@
 #include <iostream>
 using namespace std;
 
-// Checks if an ID is already existing.
-bool IDAlreadyExisting(unsigned int ID, unsigned int &FoundID);
-
 // Checks if a DateTime is already existing for the current user.
 bool IsDuplicateDateTime(unsigned int ID, string DateTime);
 

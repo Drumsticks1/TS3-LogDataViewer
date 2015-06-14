@@ -41,7 +41,7 @@ bool fetchLogs(string LOGDIRECTORY){
 		}
 	}
 	else{
-		cout << "The log directory does not exist." << endl;
+		cout << "The log directory doesn't exist." << endl;
 		return false;
 	}
 	cout << "Sorting logs..." << endl;

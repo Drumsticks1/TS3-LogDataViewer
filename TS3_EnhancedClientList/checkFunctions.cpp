@@ -6,17 +6,6 @@
 
 extern vector <User> UserList;
 
-// Checks if an ID is already existing.
-bool IDAlreadyExisting(unsigned int ID, unsigned int &FoundID){
-	for (unsigned int i = 0; i < UserList.size(); i++){
-		if (UserList[i].getID() == ID){
-			FoundID = i;
-			return true;
-		}
-	}
-	return false;
-}
-
 // Checks if a DateTime is already existing for the current user.
 bool IsDuplicateDateTime(unsigned int ID, string DateTime){
 	for (unsigned int i = 0; i < UserList[ID].getDateTimeCount(); i++){

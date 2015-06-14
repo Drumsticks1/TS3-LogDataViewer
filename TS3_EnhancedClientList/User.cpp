@@ -19,9 +19,21 @@ unsigned int User::getNicknameCount(){return Nickname.size(); }
 unsigned int User::getIPCount(){ return IP.size(); }
 
 // Returns the information stored in the given ID slot.
-string User::getUniqueDateTime(unsigned int DateTimeNumber){ return DateTime.at(DateTimeNumber); }
-string User::getUniqueNickname(unsigned int NicknameNumber){ return Nickname.at(NicknameNumber); }
-string User::getUniqueIP(unsigned int IPNumber){ return IP.at(IPNumber); }
+string User::getUniqueDateTime(unsigned int DateTimeNumber){
+	if (DateTime.size() > DateTimeNumber)
+	return DateTime.at(DateTimeNumber);
+	else return "";
+}
+string User::getUniqueNickname(unsigned int NicknameNumber){
+	if (Nickname.size() > NicknameNumber)
+		return Nickname.at(NicknameNumber);
+	else return "";
+}
+string User::getUniqueIP(unsigned int IPNumber){
+	if (IP.size() > IPNumber)
+	return IP.at(IPNumber);
+	else return "";
+}
 
 // DEV: Maybe add check if ID already exists in the list.
 void User::addID(unsigned int ID){
@@ -71,18 +83,4 @@ void User::addDateTimeReverse(string DateTime){
 // Adds the new IP at the end of the IP list.
 void User::addIPReverse(string IP){
 	this->IP.push_back(IP);
-}
-
-// Adds a new user (If successfully added --> True | If already existing --> False).
-bool User::addNewUser(unsigned int ID, string Nickname, string DateTime, string IP){
-	unsigned int dump;
-	if (!IDAlreadyExisting(ID, dump)){
-		addID(ID);
-		addNickname(Nickname);
-		addDateTime(DateTime);
-		addIP(IP);
-
-		return true;
-	}
-	else return false;
 }

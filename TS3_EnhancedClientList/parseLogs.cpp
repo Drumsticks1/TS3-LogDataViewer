@@ -19,20 +19,18 @@ extern vector <string> Logs;
 
 // [Description pending]
 void parseLogs(string LOGDIRECTORY){
-	unsigned int FoundID, UserListSize = 1, LogsSize = Logs.size(), i_ID = 0;
-	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID, IP;
-	unsigned int NicknameLength, IDLength, IPLength;
+	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP;
+	unsigned int ID, NicknameLength, IDLength, IPLength;
 	unsigned long logfileLength, XMLInfoInputLength, currentPos, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
 	vector <string> unparsedLogs;
 	bool duplicate;
 
+	// Add check if XML is existing, otherwise skip the comparison.
 	if (boost::filesystem::exists(XMLINFO)){
 		if (boost::filesystem::is_regular_file(XMLINFO)){
 			if (!boost::filesystem::is_empty(XMLINFO)){
 				// DEV: Outsource and change output message.
-				cout << "Comparing" << endl;
-				// Dont execute comparison if there is no xml file.
-				// Care about cases where files doesnt exist or is empty !
+				cout << "Check for new logs..." << endl;
 
 				fstream XMLInfoInput(XMLINFO, fstream::in);
 				XMLInfoInput.seekg(0, XMLInfoInput.end);
@@ -79,9 +77,9 @@ void parseLogs(string LOGDIRECTORY){
 			for (unsigned long i = 0; i < logfileLength; i++){
 				getline(logfile, buffer_logline);
 
-				DateTime.clear();
+				ID_string.clear();
 				Nickname.clear();
-				ID.clear();
+				DateTime.clear();
 				IP.clear();
 
 				// Relevant Connection line found.
@@ -108,7 +106,7 @@ void parseLogs(string LOGDIRECTORY){
 
 					// ID
 					for (unsigned int i = 0; i < IDLength; i++){
-						ID += buffer_logline[IDStartPos + i];
+						ID_string += buffer_logline[IDStartPos + i];
 					}
 
 					// IP (if connecting)
@@ -117,25 +115,18 @@ void parseLogs(string LOGDIRECTORY){
 					}
 
 					// DEV: Outsource.
-
-					if (!IDAlreadyExisting(stoul(ID), FoundID)){
-						UserList.resize(UserListSize);
-						UserList[i_ID].addNewUser(stoul(ID), Nickname, DateTime, IP);
-						i_ID++;
-						UserListSize++;
+					ID = stoul(ID_string);
+					if (UserList.size() < ID + 1) UserList.resize(ID + 1);
+					// Duplicate check ? So that ID isn't overwritten every time information is added ?
+					UserList[ID].addID(ID);
+					if (!IsDuplicateNickname(ID, Nickname)){
+						UserList[ID].addNickname(Nickname);
 					}
-					else{
-						if (!IsDuplicateDateTime(FoundID, DateTime)){
-							UserList[FoundID].addDateTime(DateTime);
-						}
-
-						if (!IsDuplicateNickname(FoundID, Nickname)){
-							UserList[FoundID].addNickname(Nickname);
-						}
-
-						if (!IsDuplicateIP(FoundID, IP)){
-							UserList[FoundID].addIP(IP);
-						}
+					if (!IsDuplicateDateTime(ID, DateTime)){
+						UserList[ID].addDateTime(DateTime);
+					}
+					if (!IsDuplicateIP(ID, IP)){
+						UserList[ID].addIP(IP);
 					}
 				}
 
@@ -164,14 +155,17 @@ void parseLogs(string LOGDIRECTORY){
 
 					// ID
 					for (unsigned int i = 0; i < IDLength; i++){
-						ID += buffer_logline[IDStartPos + i];
+						ID_string += buffer_logline[IDStartPos + i];
 					}
 
-					// ID must already exist, otherwise the log isn't valid!
-					if (IDAlreadyExisting(stoul(ID), FoundID)){
-						if (UserList[FoundID].getUniqueNickname(0) != Nickname){
-							UserList[FoundID].addNickname(Nickname);
-						}
+					// ID needn't already exist, see first TS log.
+					ID = stoul(ID_string);
+					if (UserList.size() < ID + 1){
+						UserList.resize(ID + 1);
+						UserList[ID].addID(ID);
+					}
+					if (UserList[ID].getUniqueNickname(0) != Nickname){
+						UserList[ID].addNickname(Nickname);
 					}
 				}
 				currentPos += buffer_logline.length() + 1;
@@ -192,5 +186,6 @@ void parseLogs(string LOGDIRECTORY){
 			}
 		}
 	}
+	Logs.clear();
 	XMLInfoOutput.close();
 }

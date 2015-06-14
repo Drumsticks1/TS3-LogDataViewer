@@ -22,27 +22,29 @@ bool parseXML(){
 	if (exists(XMLFILE)){
 		if (is_regular_file(XMLFILE)){
 			if (!boost::filesystem::is_empty(XMLFILE)){
-				cout << "Parsing the last created XML" << endl;
-				unsigned int i = 0;
+				cout << "Parsing the last created XML..." << endl;
+				unsigned int ID = 0;
 
 				ptree PropertyTree;
 				read_xml(XMLFILE, PropertyTree);
 
 				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
-					UserList.resize(i + 1);
+					// resize earlier.
 					ptree subtree = Node.second;
 					if (Node.first == "User"){
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ID")){
-							UserList[i].addID(stoul(vs.second.data()));
+							ID = stoul(vs.second.data());
+							UserList.resize(ID + 1);
+							UserList[ID].addID(stoul(vs.second.data()));
 						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")){
-							UserList[i].addNicknameReverse(vs.second.data());
+							UserList[ID].addNicknameReverse(vs.second.data());
 						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connections")){
-							UserList[i].addDateTimeReverse(vs.second.data());
+							UserList[ID].addDateTimeReverse(vs.second.data());
 						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
-							UserList[i].addIPReverse(vs.second.data());
+							UserList[ID].addIPReverse(vs.second.data());
 						}
 						// Connected Flag is currently disabled until reimplemented.
 						//BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connected")){
@@ -50,7 +52,6 @@ bool parseXML(){
 						//	if (vs.second.data() == "true") UserList[i].connect();
 						//}
 					}
-					i++;
 				}
 				return true;
 			}
