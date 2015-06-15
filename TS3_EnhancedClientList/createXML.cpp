@@ -1,4 +1,4 @@
-// createXML.cpp : [Description pending]
+// createXML.cpp : Creation of the XML.
 
 #include <iostream>
 #include <fstream>
@@ -16,7 +16,7 @@ extern vector <User> UserList;
 // DEV: Add later.
 #define TITLE "Created by TS3_EnhancedClientList"
 
-// [Description pending]
+// Creates a XML for storing the data extracted from the logs.
 void createXML(){
 	ptree PropertyTree, UserListNode, UserNode;
 	ptree fieldID, fieldNickname, fieldDateTime, fieldIP, fieldConnectionCount, fieldConnected;
@@ -43,7 +43,7 @@ void createXML(){
 			}
 
 			fieldConnectionCount.put("Connection_Count", UserList[i].getDateTimeCount());
-			fieldConnected.put("Connected", "Currently Disabled");
+			fieldConnected.put("Connected", UserList[i].getCurrentConnectionsCount());
 
 			UserNode.put_child("ID", fieldID);
 			UserNode.put_child("Nicknames", fieldNickname);

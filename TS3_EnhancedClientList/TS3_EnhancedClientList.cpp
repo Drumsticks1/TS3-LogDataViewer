@@ -11,6 +11,8 @@
 
 using namespace std;
 
+bool validXML = false;
+
 int main(int argc, char* argv[]){
 	string LOGDIRECTORY;
 	if (argc > 1){ LOGDIRECTORY = argv[1]; }
@@ -20,10 +22,11 @@ int main(int argc, char* argv[]){
 		cout << "The programm will now exit.";
 		return 0;
 	}
-
+	
 	if (!parseXML()){
 		cout << "No valid XML found... " << endl;
 	}
+	else validXML = true;
 
 	parseLogs(LOGDIRECTORY);
 	createXML();

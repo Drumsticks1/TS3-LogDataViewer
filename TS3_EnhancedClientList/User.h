@@ -5,11 +5,12 @@
 
 using namespace std;
 
-// Class for the user data.
+// Class for the User data.
 class User{
 private:
 	unsigned int ID = 0;
 	vector <string> DateTime, Nickname, IP;
+	int CurrentConnectionsCount = 0;
 
 public:
 	unsigned int getID();
@@ -30,4 +31,8 @@ public:
 	void addNicknameReverse(string Nickname);
 	void addDateTimeReverse(string DateTime);
 	void addIPReverse(string IP);
+
+	void connect();
+	void disconnect();
+	int getCurrentConnectionsCount();
 };

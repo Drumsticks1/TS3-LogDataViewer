@@ -63,10 +63,12 @@
                                 if (j < IPs.length - 1) output += "<br />"
                             }
                         }
-                        
+
                         output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
 
-                        output += Connected[0].firstChild.nodeValue + "</td></tr>";
+                        if (Connected[0].firstChild.nodeValue == 1) output += "True"
+                        else output += "False";
+                        output += "</td></tr>";
                     }
                     output += "</table>";
                     var table = document

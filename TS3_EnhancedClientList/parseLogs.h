@@ -3,5 +3,5 @@
 #include <iostream>
 using namespace std;
 
-// [Description pending]
+// Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY);

@@ -1,4 +1,4 @@
-// parseLogs.cpp : [Description pending]
+// parseLogs.cpp : Parsing of the logs.
 
 #include <iostream>
 #include <fstream>
@@ -13,11 +13,12 @@ using namespace std;
 
 extern vector <User> UserList;
 extern vector <string> Logs;
+extern bool validXML;
 
 #define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
 #define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
 
-// [Description pending]
+// Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY){
 	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP;
 	unsigned int ID, NicknameLength, IDLength, IPLength;
@@ -25,36 +26,37 @@ void parseLogs(string LOGDIRECTORY){
 	vector <string> unparsedLogs;
 	bool duplicate;
 
-	// Add check if XML is existing, otherwise skip the comparison.
-	if (boost::filesystem::exists(XMLINFO)){
-		if (boost::filesystem::is_regular_file(XMLINFO)){
-			if (!boost::filesystem::is_empty(XMLINFO)){
-				// DEV: Outsource and change output message.
-				cout << "Check for new logs..." << endl;
+	if (validXML){
+		if (boost::filesystem::exists(XMLINFO)){
+			if (boost::filesystem::is_regular_file(XMLINFO)){
+				if (!boost::filesystem::is_empty(XMLINFO)){
+					// DEV: Outsource and change output message.
+					cout << "Check for new logs..." << endl;
 
-				fstream XMLInfoInput(XMLINFO, fstream::in);
-				XMLInfoInput.seekg(0, XMLInfoInput.end);
-				XMLInfoInputLength = (unsigned long)XMLInfoInput.tellg();
-				XMLInfoInput.seekg(0, XMLInfoInput.beg);
+					fstream XMLInfoInput(XMLINFO, fstream::in);
+					XMLInfoInput.seekg(0, XMLInfoInput.end);
+					XMLInfoInputLength = (unsigned long)XMLInfoInput.tellg();
+					XMLInfoInput.seekg(0, XMLInfoInput.beg);
 
-				for (unsigned long i = 0; i < XMLInfoInputLength; i++){
-					getline(XMLInfoInput, buffer_XMLInfoInput);
-					if (!buffer_XMLInfoInput.empty()){
-						unparsedLogs.resize(unparsedLogs.size() + 1);
-						unparsedLogs[i] = buffer_XMLInfoInput;
-					}
-					// Last parsed logfile is parsed again as it may have changed.
-					for (unsigned int j = 0; j < Logs.size() - 1; j++){
-						if (Logs[j] == buffer_XMLInfoInput){
-							Logs[j].erase();
+					for (unsigned long i = 0; i < XMLInfoInputLength; i++){
+						getline(XMLInfoInput, buffer_XMLInfoInput);
+						if (!buffer_XMLInfoInput.empty()){
+							unparsedLogs.resize(unparsedLogs.size() + 1);
+							unparsedLogs[i] = buffer_XMLInfoInput;
+						}
+						// Last parsed logfile is parsed again as it may have changed.
+						for (unsigned int j = 0; j < Logs.size() - 1; j++){
+							if (Logs[j] == buffer_XMLInfoInput){
+								Logs[j].erase();
+							}
 						}
 					}
+					XMLInfoInput.close();
 				}
-				XMLInfoInput.close();
 			}
 		}
 	}
-
+	
 	fstream XMLInfoOutput(XMLINFO, fstream::out);
 	// DEV: Maybe check if unparsed Logs are existing.
 	for (unsigned int i = 0; i < unparsedLogs.size(); i++){
@@ -74,7 +76,7 @@ void parseLogs(string LOGDIRECTORY){
 			logfileLength = (unsigned long)logfile.tellg();
 			logfile.seekg(0, logfile.beg);
 
-			for (unsigned long i = 0; i < logfileLength; i++){
+			for (unsigned long j = 0; j < logfileLength; j++){
 				getline(logfile, buffer_logline);
 
 				ID_string.clear();
@@ -95,7 +97,7 @@ void parseLogs(string LOGDIRECTORY){
 					NicknameLength = IDStartPos - NicknameStartPos - 5;
 
 					// Date & Time - just as a string until seperation.
-					for (int i = 0; i < 19; i++){
+					for (unsigned int i = 0; i < 19; i++){
 						DateTime += buffer_logline[i];
 					}
 
@@ -128,6 +130,9 @@ void parseLogs(string LOGDIRECTORY){
 					if (!IsDuplicateIP(ID, IP)){
 						UserList[ID].addIP(IP);
 					}
+					if (i + 1 == Logs.size()){
+						UserList[ID].connect();
+					}
 				}
 
 				// WIP: Disconnecting matches
@@ -158,7 +163,6 @@ void parseLogs(string LOGDIRECTORY){
 						ID_string += buffer_logline[IDStartPos + i];
 					}
 
-					// ID needn't already exist, see first TS log.
 					ID = stoul(ID_string);
 					if (UserList.size() < ID + 1){
 						UserList.resize(ID + 1);
@@ -166,6 +170,9 @@ void parseLogs(string LOGDIRECTORY){
 					}
 					if (UserList[ID].getUniqueNickname(0) != Nickname){
 						UserList[ID].addNickname(Nickname);
+					}
+					if (i + 1 == Logs.size()){
+						UserList[ID].disconnect();
 					}
 				}
 				currentPos += buffer_logline.length() + 1;

@@ -1,4 +1,4 @@
 // parseXML.h
 
-// [Description pending]
+// Parses the XML if existing.
 bool parseXML();

@@ -1,4 +1,4 @@
-// User.cpp : [Description pending]
+// User.cpp : Methods of the User class.
 
 #include <iostream>
 #include <vector>
@@ -15,13 +15,13 @@ unsigned int User::getID(){ return ID; }
 
 // Returns the count of the DateTime-/Nickname-/IP-entries of the current user.
 unsigned int User::getDateTimeCount(){ return DateTime.size(); }
-unsigned int User::getNicknameCount(){return Nickname.size(); }
+unsigned int User::getNicknameCount(){ return Nickname.size(); }
 unsigned int User::getIPCount(){ return IP.size(); }
 
 // Returns the information stored in the given ID slot.
 string User::getUniqueDateTime(unsigned int DateTimeNumber){
 	if (DateTime.size() > DateTimeNumber)
-	return DateTime.at(DateTimeNumber);
+		return DateTime.at(DateTimeNumber);
 	else return "";
 }
 string User::getUniqueNickname(unsigned int NicknameNumber){
@@ -31,7 +31,7 @@ string User::getUniqueNickname(unsigned int NicknameNumber){
 }
 string User::getUniqueIP(unsigned int IPNumber){
 	if (IP.size() > IPNumber)
-	return IP.at(IPNumber);
+		return IP.at(IPNumber);
 	else return "";
 }
 
@@ -83,4 +83,16 @@ void User::addDateTimeReverse(string DateTime){
 // Adds the new IP at the end of the IP list.
 void User::addIPReverse(string IP){
 	this->IP.push_back(IP);
+}
+
+// Adjusts the CurrentConnectionsCount.
+void User::connect(){ CurrentConnectionsCount++; }
+void User::disconnect(){
+	if (CurrentConnectionsCount > 0)
+		CurrentConnectionsCount--;
+}
+
+// Returns the CurrentConnectionsCount.
+int User::getCurrentConnectionsCount(){
+	return CurrentConnectionsCount;
 }

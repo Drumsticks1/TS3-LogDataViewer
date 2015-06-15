@@ -1,4 +1,4 @@
-// checkFunctions.cpp : [Description pending]
+// checkFunctions.cpp : Control Functions.
 
 #include <iostream>
 #include <vector>

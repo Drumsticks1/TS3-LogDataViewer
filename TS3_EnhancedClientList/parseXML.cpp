@@ -1,4 +1,4 @@
-// parseXML.cpp : [Description pending]
+// parseXML.cpp : Parsing of the XML.
 
 #include <iostream>
 #include <fstream>
@@ -17,16 +17,22 @@ using namespace boost::filesystem;
 
 extern vector <User> UserList;
 
-// [Description pending]
+// Parses the XML if existing.
 bool parseXML(){
 	if (exists(XMLFILE)){
 		if (is_regular_file(XMLFILE)){
 			if (!boost::filesystem::is_empty(XMLFILE)){
 				cout << "Parsing the last created XML..." << endl;
 				unsigned int ID = 0;
-
 				ptree PropertyTree;
+
+				try{
 				read_xml(XMLFILE, PropertyTree);
+				}
+				catch (xml_parser_error error){
+					cout << "Error reading out the XML - skipping..." << endl;
+					return false;
+				}
 
 				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
 					// resize earlier.
@@ -46,11 +52,7 @@ bool parseXML(){
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
 							UserList[ID].addIPReverse(vs.second.data());
 						}
-						// Connected Flag is currently disabled until reimplemented.
-						//BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connected")){
-						//
-						//	if (vs.second.data() == "true") UserList[i].connect();
-						//}
+						// Not necessary to parse CurrentConnectionCount as the last log is always parsed and contains this information.
 					}
 				}
 				return true;
