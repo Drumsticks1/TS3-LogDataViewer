@@ -21,7 +21,7 @@ extern vector <User> UserList;
 // Creates a XML for storing the data extracted from the logs.
 void createXML(){
 	ptree PropertyTree, UserListNode, UserNode, AttributesNode;
-	ptree fieldID, fieldNickname, fieldDateTime, fieldIP, fieldConnectionCount, fieldConnected;
+	ptree fieldNickname, fieldDateTime, fieldIP;
 
 	cout << "Preparing XML-Creation..." << endl;
 	for (unsigned int i = 0; i < UserList.size(); i++){
@@ -29,8 +29,6 @@ void createXML(){
 			fieldNickname.clear();
 			fieldDateTime.clear();
 			fieldIP.clear();
-
-			fieldID.put("ID", UserList[i].getID());
 
 			for (unsigned int j = 0; j < UserList[i].getNicknameCount(); j++){
 				fieldNickname.add("Nicknames", UserList[i].getUniqueNickname(j));
@@ -44,15 +42,12 @@ void createXML(){
 				fieldIP.add("IPs", UserList[i].getUniqueIP(j));
 			}
 
-			fieldConnectionCount.put("Connection_Count", UserList[i].getDateTimeCount());
-			fieldConnected.put("Connected", UserList[i].getCurrentConnectionsCount());
-
-			UserNode.put_child("ID", fieldID);
+			UserNode.put("ID", UserList[i].getID());
 			UserNode.put_child("Nicknames", fieldNickname);
 			UserNode.put_child("Connections", fieldDateTime);
 			UserNode.put_child("IPs", fieldIP);
-			UserNode.put_child("Connection_Count", fieldConnectionCount);
-			UserNode.put_child("Connected", fieldConnected);
+			UserNode.put("Connection_Count", UserList[i].getDateTimeCount());
+			UserNode.put("Connected", UserList[i].getCurrentConnectionsCount());
 
 			UserListNode.add_child("User", UserNode);
 		}
@@ -60,12 +55,28 @@ void createXML(){
 	UserList.clear();
 
 	ptime now = second_clock::local_time();
-	stringstream currentTimeStringStream;
-	currentTimeStringStream << now.date().day() << "." << static_cast<int>(now.date().month()) << "." << now.date().year() << " "
-		<< now.time_of_day().hours() << ":" << now.time_of_day().minutes() << ":" << now.time_of_day().seconds();
-	string currentTimeString = currentTimeStringStream.str();
 
-	AttributesNode.put("CreationTimestamp", currentTimeString);
+	unsigned short year, month, day, hours, minutes, seconds;
+	year = now.date().year();
+	month = now.date().month();
+	day = now.date().day();
+	hours = now.time_of_day().hours();
+	minutes = now.time_of_day().minutes();
+	seconds = now.time_of_day().seconds();
+
+	string curTime = "";
+	if (day < 10){ curTime += "0"; }
+	curTime += to_string(day) + ".";
+	if (month < 10){ curTime += "0"; }
+	curTime += to_string(month) + "." + to_string(year) + " ";
+	if (hours < 10){ curTime += "0"; }
+	curTime += to_string(hours) + ":";
+	if (minutes < 10){ curTime += "0"; }
+	curTime += to_string(minutes) + ":";
+	if (seconds < 10){ curTime += "0"; }
+	curTime += to_string(seconds);
+
+	AttributesNode.put("CreationTimestamp", curTime);
 	UserListNode.add_child("Attributes", AttributesNode);
 	PropertyTree.add_child("UserList", UserListNode);
 

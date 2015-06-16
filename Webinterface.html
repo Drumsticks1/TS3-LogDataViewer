@@ -4,14 +4,15 @@
     <title>TS3 EnhancedClientList Webinterface</title>
     <script src='https://code.jquery.com/jquery-latest.js'></script>
     <script>
+        // Rebuilds the XML and calls buildTable() when the XML creation has finished.
         function rebuildXML() {
-            $.get("rebuildXML.php");
+            $.get("rebuildXML.php", function () { buildTable() });
             return false;
         }
-    </script>
-    <script>
+
+        // Builds the table using the XML.
         function buildTable() {
-            var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, ConnectedClientsCount = 0, CreationTimeStamp, i, j;
+            var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, ConnectedClientsCount = 0, CreationTimestamp, i, j;
             if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
             else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
             xmlhttp.onreadystatechange = function () {
@@ -19,12 +20,12 @@
                     output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
                     for (i = 0; i < User.length; i++) {
-                        ID = User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID");
+                        ID = User[i].getElementsByTagName("ID");
                         Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
                         Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
                         IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
-                        Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].getElementsByTagName("Connection_Count");
-                        Connected = User[i].getElementsByTagName("Connected")[0].getElementsByTagName("Connected");
+                        Connection_Count = User[i].getElementsByTagName("Connection_Count");
+                        Connected = User[i].getElementsByTagName("Connected");
 
                         output += "<tr><td>" + ID[0].firstChild.nodeValue + "</td><td>";
 
@@ -73,37 +74,30 @@
                     }
                     output += "</table>";
                     var table = document
-                    // Not working, will fix tomorrow.
-                    // CreationTimeStamp = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0].getElementsByTagName("CreationTimestamp")[0].getElementsByTagName("CreationTimestamp")[0].firstChild.nodeValue;
+
+                    CreationTimestamp = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0].getElementsByTagName("CreationTimestamp")[0].firstChild.nodeValue;
 
                     document.getElementById('ShowTable').innerHTML = output;
                     document.getElementById('ConnectedClientsCount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
-                    document.getElementById('CreationTimestamp').innerHTML = "XML file created at: " + CreationTimeStamp + " (server local time)";
+                    document.getElementById('CreationTimestamp').innerHTML = "XML file created at: " + CreationTimestamp + " (local time of the server)";
                 }
             }
             xmlhttp.open("GET", "output.xml", true);
             xmlhttp.send();
         }
-    </script>
-    <script>
+
         rebuildXML();
-        buildTable();
     </script>
 </head>
-<body>
-    <p style="font-size:30px" systle="font-family:'calibri light'">TS3 Enhanced Clied List Webinterface</p>
+<body style="font-family:'Arial'">
+    <h1>TS3 Enhanced Client List Webinterface</h1>
     <div id="rebuildXML">
-        <button onclick="rebuildXML();"> Rebuild XML </button>
-    </div>
-    <br />
-    <div id="reloadTable">
-        <button onclick="buildTable();"> Reload Table </button>
+        <button onclick="rebuildXML();">Rebuild XML and Reload Table</button>
     </div>
     <br />
     <div id="ConnectedClientsCount"></div>
-    <br />
     <div id="CreationTimestamp"></div>
     <br />
-    <div id="ShowTable"></div>
+    <div id="ShowTable">Creating Table...</div>
 </body>
 </html>

@@ -32,7 +32,5 @@ parseLogs
 webinterface
 	- Add sorting options.
 	- Possibility to hide duplicate Names like Drumsticks1 or Drumsticks11 in the webinterface.
-	- Add timer for creation of XML-File (runtime of program) and update table automatically afterwards.
 	- Prevent duplicate processes.
-	- Fix CreationTimestamp parsing in the Webinterface !
 */

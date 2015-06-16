@@ -37,10 +37,12 @@ bool parseXML(){
 				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
 					ptree subtree = Node.second;
 					if (Node.first == "User"){
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ID")){
-							ID = stoul(vs.second.data());
-							UserList.resize(ID + 1);
-							UserList[ID].addID(stoul(vs.second.data()));
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
+							if (vs.first == "ID"){
+								ID = stoul(vs.second.data());
+								UserList.resize(ID + 1);
+								UserList[ID].addID(stoul(vs.second.data()));
+							}
 						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")){
 							UserList[ID].addNicknameReverse(vs.second.data());
