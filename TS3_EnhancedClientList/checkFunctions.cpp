@@ -5,6 +5,8 @@
 #include "User.h"
 
 extern vector <User> UserList;
+extern vector <string> Logs;
+extern vector <string> parsedLogs;
 
 // Checks if a DateTime is already existing for the current user.
 bool IsDuplicateDateTime(unsigned int ID, string DateTime){
@@ -32,6 +34,14 @@ bool IsDuplicateIP(unsigned int ID, string IP){
 		if (UserList[ID].getUniqueIP(i) == IP){
 			return true;
 		}
+	}
+	return false;
+}
+
+// Checks if a log is already existing in the parsedLogs list.
+bool IsDuplicateLog(string log){
+	for (unsigned i = 0; i < parsedLogs.size(); i++){
+		if (log == parsedLogs[i]) return true;
 	}
 	return false;
 }

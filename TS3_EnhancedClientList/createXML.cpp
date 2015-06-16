@@ -15,13 +15,15 @@ using namespace boost::property_tree;
 using namespace boost::posix_time;
 
 extern vector <User> UserList;
+extern vector <string> parsedLogs;
+
 // DEV: Add later.
 #define TITLE "Created by TS3_EnhancedClientList"
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML(){
 	ptree PropertyTree, UserListNode, UserNode, AttributesNode;
-	ptree fieldNickname, fieldDateTime, fieldIP;
+	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
 	cout << "Preparing XML-Creation..." << endl;
 	for (unsigned int i = 0; i < UserList.size(); i++){
@@ -53,6 +55,12 @@ void createXML(){
 		}
 	}
 	UserList.clear();
+
+	for (unsigned i = 0; i < parsedLogs.size(); i++){
+		fieldParsedLogs.add("ParsedLogs", parsedLogs[i]);
+	}
+
+	AttributesNode.put_child("ParsedLogs", fieldParsedLogs);
 
 	ptime now = second_clock::local_time();
 

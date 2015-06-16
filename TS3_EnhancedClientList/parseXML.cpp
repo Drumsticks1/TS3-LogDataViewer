@@ -16,6 +16,7 @@ using namespace boost::property_tree;
 using namespace boost::filesystem;
 
 extern vector <User> UserList;
+vector <string> parsedLogs;
 
 // Parses the XML if existing.
 bool parseXML(){
@@ -52,6 +53,11 @@ bool parseXML(){
 						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
 							UserList[ID].addIPReverse(vs.second.data());
+						}
+					}
+					else if (Node.first == "Attributes"){
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")){
+							parsedLogs.emplace_back(vs.second.data());
 						}
 					}
 				}

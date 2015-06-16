@@ -13,6 +13,7 @@ using namespace std;
 
 extern vector <User> UserList;
 extern vector <string> Logs;
+extern vector <string> parsedLogs;
 extern bool validXML;
 
 #define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
@@ -21,49 +22,22 @@ extern bool validXML;
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY){
 	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP;
-	unsigned int ID, NicknameLength, IDLength, IPLength;
-	unsigned long logfileLength, XMLInfoInputLength, currentPos, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
-	vector <string> unparsedLogs;
-	bool duplicate;
+	unsigned int ID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
+	unsigned long logfileLength, currentPos;
 
 	if (validXML){
-		if (boost::filesystem::exists(XMLINFO)){
-			if (boost::filesystem::is_regular_file(XMLINFO)){
-				if (!boost::filesystem::is_empty(XMLINFO)){
-					// DEV: Outsource and change output message.
-					cout << "Check for new logs..." << endl;
-
-					fstream XMLInfoInput(XMLINFO, fstream::in);
-					XMLInfoInput.seekg(0, XMLInfoInput.end);
-					XMLInfoInputLength = (unsigned long)XMLInfoInput.tellg();
-					XMLInfoInput.seekg(0, XMLInfoInput.beg);
-
-					for (unsigned long i = 0; i < XMLInfoInputLength; i++){
-						getline(XMLInfoInput, buffer_XMLInfoInput);
-						if (!buffer_XMLInfoInput.empty()){
-							unparsedLogs.resize(unparsedLogs.size() + 1);
-							unparsedLogs[i] = buffer_XMLInfoInput;
-						}
-						// Last parsed logfile is parsed again as it may have changed.
-						for (unsigned int j = 0; j < Logs.size() - 1; j++){
-							if (Logs[j] == buffer_XMLInfoInput){
-								Logs[j].erase();
-							}
-						}
-					}
-					XMLInfoInput.close();
+		cout << "Comparing logs..." << endl;
+		for (unsigned int i = 0; i < parsedLogs.size(); i++){
+			// Last parsed logfile is parsed again as it may have changed.
+			for (unsigned int j = 0; j < Logs.size() - 1; j++){
+				if (Logs[j] == parsedLogs[i]){
+					Logs[j].erase();
 				}
 			}
 		}
 	}
-	
-	fstream XMLInfoOutput(XMLINFO, fstream::out);
-	// DEV: Maybe check if unparsed Logs are existing.
-	for (unsigned int i = 0; i < unparsedLogs.size(); i++){
-		XMLInfoOutput << unparsedLogs[i] << endl;
-	}
 
-	cout << "Parsing logs..." << endl;
+	cout << "Parsing new logs..." << endl;
 	for (unsigned int i = 0; i < Logs.size(); i++){
 		if (!Logs[i].empty()){
 			LogFilePath = LOGDIRECTORY + Logs.at(i);
@@ -88,10 +62,10 @@ void parseLogs(string LOGDIRECTORY){
 				if (buffer_logline.find(LOGMATCHCONNECT) != string::npos){
 					NicknameStartPos = 77;
 
-					IPStartPos = 1 + (unsigned long)buffer_logline.rfind(" ");
+					IPStartPos = 1 + (unsigned int)buffer_logline.rfind(" ");
 					IPLength = buffer_logline.length() - IPStartPos - 6; // - 6 for ignoring the port.
 
-					IDStartPos = 5 + (unsigned long)buffer_logline.rfind("'(id:");
+					IDStartPos = 5 + (unsigned int)buffer_logline.rfind("'(id:");
 					IDLength = IPStartPos - IDStartPos - 7;
 
 					NicknameLength = IDStartPos - NicknameStartPos - 5;
@@ -140,14 +114,14 @@ void parseLogs(string LOGDIRECTORY){
 				if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
 					NicknameStartPos = 80;
 
-					IDStartPos = (unsigned long)buffer_logline.rfind("'(id:") + 5;
+					IDStartPos = (unsigned int)buffer_logline.rfind("'(id:") + 5;
 
 					// Added to cover kick / ban disconnects as well
 					if (buffer_logline.rfind(") reason 'reasonmsg") == string::npos){
-						IDEndPos = (unsigned long)buffer_logline.rfind(") reason 'invokerid=");
+						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'invokerid=");
 					}
 					else{
-						IDEndPos = (unsigned long)buffer_logline.rfind(") reason 'reasonmsg");
+						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'reasonmsg");
 					}
 
 					IDLength = IDEndPos - IDStartPos;
@@ -179,20 +153,9 @@ void parseLogs(string LOGDIRECTORY){
 				logfile.seekg(currentPos);
 			}
 			logfile.close();
-		}
-		// DEV: Outsource the duplicate check.
-		if (!Logs.at(i).empty()){
-			duplicate = false;
-			for (unsigned int j = 0; j < unparsedLogs.size(); j++){
-				if (Logs.at(i) == unparsedLogs[j]){
-					duplicate = true;
-				}
-			}
-			if (!duplicate){
-				XMLInfoOutput << Logs.at(i) << endl;
+			if (!IsDuplicateLog(Logs[i])){
+				parsedLogs.emplace_back(Logs[i]);
 			}
 		}
 	}
-	Logs.clear();
-	XMLInfoOutput.close();
 }
