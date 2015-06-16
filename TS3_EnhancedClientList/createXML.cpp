@@ -8,9 +8,11 @@
 #include "User.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include <boost/date_time.hpp>
 
 using namespace std;
 using namespace boost::property_tree;
+using namespace boost::posix_time;
 
 extern vector <User> UserList;
 // DEV: Add later.
@@ -18,7 +20,7 @@ extern vector <User> UserList;
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML(){
-	ptree PropertyTree, UserListNode, UserNode;
+	ptree PropertyTree, UserListNode, UserNode, AttributesNode;
 	ptree fieldID, fieldNickname, fieldDateTime, fieldIP, fieldConnectionCount, fieldConnected;
 
 	cout << "Preparing XML-Creation..." << endl;
@@ -56,8 +58,17 @@ void createXML(){
 		}
 	}
 	UserList.clear();
+
+	ptime now = second_clock::local_time();
+	stringstream currentTimeStringStream;
+	currentTimeStringStream << now.date().day() << "." << static_cast<int>(now.date().month()) << "." << now.date().year() << " "
+		<< now.time_of_day().hours() << ":" << now.time_of_day().minutes() << ":" << now.time_of_day().seconds();
+	string currentTimeString = currentTimeStringStream.str();
+
+	AttributesNode.put("CreationTimestamp", currentTimeString);
+	UserListNode.add_child("Attributes", AttributesNode);
 	PropertyTree.add_child("UserList", UserListNode);
-	
+
 	cout << "Creating XML..." << endl;
 	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
 	try{

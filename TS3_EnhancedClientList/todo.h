@@ -7,30 +7,32 @@ general
 	- Add missing descriptions (found by searching for the [Description pending] tag).
 	- Limit to singleinstance ?
 	- Add option to totally rewrite the xml (ignoring parseXML) (command line command).
+	- Prevent errors when handling files (fstream).
+	- Prevent invalid xml to be written in (only Attributes - is it actually possible ?).
 
 User
 	- Change DateTime to Date and Time and maybe include <time.h> later.
 		- Maybe add total connection time.
 	- Add possibility to ignore IDs (e.g. obsolete ones from old identities).
-	- Maybe add duplicate checks for reverse add functions (If XMLs are created without errors this shouldn't be required).
-	- Add Connection Flag that can be used with parseXML.
+	- Maybe add duplicate checks for reverse add functions (If XML was created without errors this shouldn't be required).
 
 parseXML
 	- check if new logfiles were put in between old ones (would mess up the order of entries --> new XML).
 	- check if old logfiles were deleted (--> new XML).
 	- how to check if xml was already created ? (info.xmlinfo is finished before writing of xml starts).
 
+info.xmlinfo --> createXML
+	- add "parsedLogs" to the XML instead of another file ?
+
 parseLogs
 	- Outsource functions and/or change loop parameter names for better overview.
 	- Extend use of disconnect-messages.
 	- skip comparison if XML isn't existing / empty / a directory.
-
-fetchLogs
-	- Sort out empty files.
 
 webinterface
 	- Add sorting options.
 	- Possibility to hide duplicate Names like Drumsticks1 or Drumsticks11 in the webinterface.
 	- Add timer for creation of XML-File (runtime of program) and update table automatically afterwards.
 	- Prevent duplicate processes.
+	- Fix CreationTimestamp parsing in the Webinterface !
 */

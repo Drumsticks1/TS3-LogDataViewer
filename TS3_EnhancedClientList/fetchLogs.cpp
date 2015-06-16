@@ -22,9 +22,8 @@ bool fetchLogs(string LOGDIRECTORY){
 			if (!boost::filesystem::is_empty(log_directory)){
 				directory_iterator LogDirectory(LOGDIRECTORY);
 				while (LogDirectory != directory_iterator()){
-					// DEV: Sort out empty files.
-					if (is_regular_file(LogDirectory->status()) && LogDirectory->path().extension() == ".log"){
-						// Filters out the unneccesary .ts3server_xxxx-xx-xx__xx_xx_xx.xxxxxx_1 logs
+					if (is_regular_file(LogDirectory->status()) && !boost::filesystem::is_empty(LogDirectory->path()) && LogDirectory->path().extension() == ".log"){
+						// Filters out the unneccesary .ts3server_xxxx-xx-xx__xx_xx_xx.xxxxxx_0 logs.
 						if (LogDirectory->path().filename().string().at(38) == '1'){
 							Logs.push_back((LogDirectory->path().filename().string()));
 						}

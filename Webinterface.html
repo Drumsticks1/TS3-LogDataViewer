@@ -11,14 +11,13 @@
     </script>
     <script>
         function buildTable() {
-            var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, i, j;
+            var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, ConnectedClientsCount = 0, CreationTimeStamp, i, j;
             if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
             else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
-
                     for (i = 0; i < User.length; i++) {
                         ID = User[i].getElementsByTagName("ID")[0].getElementsByTagName("ID");
                         Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
@@ -65,14 +64,21 @@
                         }
 
                         output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
-
-                        if (Connected[0].firstChild.nodeValue == 1) output += "True"
+                        if (Connected[0].firstChild.nodeValue == 1) {
+                            output += "True";
+                            ConnectedClientsCount++;
+                        }
                         else output += "False";
                         output += "</td></tr>";
                     }
                     output += "</table>";
                     var table = document
+                    // Not working, will fix tomorrow.
+                    // CreationTimeStamp = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0].getElementsByTagName("CreationTimestamp")[0].getElementsByTagName("CreationTimestamp")[0].firstChild.nodeValue;
+
                     document.getElementById('ShowTable').innerHTML = output;
+                    document.getElementById('ConnectedClientsCount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
+                    document.getElementById('CreationTimestamp').innerHTML = "XML file created at: " + CreationTimeStamp + " (server local time)";
                 }
             }
             xmlhttp.open("GET", "output.xml", true);
@@ -85,13 +91,18 @@
     </script>
 </head>
 <body>
-    <div id="rebuidlXML">
+    <p style="font-size:30px" systle="font-family:'calibri light'">TS3 Enhanced Clied List Webinterface</p>
+    <div id="rebuildXML">
         <button onclick="rebuildXML();"> Rebuild XML </button>
     </div>
     <br />
     <div id="reloadTable">
         <button onclick="buildTable();"> Reload Table </button>
     </div>
+    <br />
+    <div id="ConnectedClientsCount"></div>
+    <br />
+    <div id="CreationTimestamp"></div>
     <br />
     <div id="ShowTable"></div>
 </body>

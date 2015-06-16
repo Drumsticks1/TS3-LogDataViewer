@@ -35,7 +35,6 @@ bool parseXML(){
 				}
 
 				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
-					// resize earlier.
 					ptree subtree = Node.second;
 					if (Node.first == "User"){
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ID")){
@@ -52,7 +51,6 @@ bool parseXML(){
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
 							UserList[ID].addIPReverse(vs.second.data());
 						}
-						// Not necessary to parse CurrentConnectionCount as the last log is always parsed and contains this information.
 					}
 				}
 				return true;
