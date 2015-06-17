@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>TS3 EnhancedClientList Webinterface</title>
-    <script src='https://code.jquery.com/jquery-latest.js'></script>
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script src="jquery.tablesorter.js"></script>
     <script>
         // Rebuilds the XML and calls buildTable() when the XML creation has finished.
         function rebuildXML() {
@@ -12,12 +13,12 @@
 
         // Builds the table using the XML.
         function buildTable() {
-            var xmlhttp, output, User, ID, Nicknames, Connections, IPs, Connection_Count, Connected, ConnectedClientsCount = 0, CreationTimestamp, i, j;
+            var xmlhttp, output, User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, ConnectedClientsCount = 0, CreationTimestamp, i, j;
             if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
             else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    output = "<table border='1'><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection_Count</th><th>Connected</th></tr>";
+                    output = "<table id='Table' border='1' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>First Connections</th><th>Last Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th></tr></thead><tbody>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
                     for (i = 0; i < User.length; i++) {
                         ID = User[i].getElementsByTagName("ID");
@@ -36,22 +37,27 @@
 
                         output += "</td><td>";
 
-                        // Only or the last 2 and the first 2 DateTime for now (Too space consuming).
-                        if (Connections.length < 6) {
-                            for (j = 0; j < Connections.length; j++) {
+                        if (Connections.length > 5) {
+                            for (j = Connections.length - 1; j > Connections.length - 6 ; j--) {
                                 output += Connections[j].firstChild.nodeValue;
-                                if (j < Connections.length - 1) output += "<br />"
+                                if (j > Connections.length - 6) output += "<br />"
                             }
                         }
                         else {
-                            for (j = 0; j < 2; j++) {
-                                output += Connections[j].firstChild.nodeValue + "<br />";
-                            }
-                            output += "<center>. . . . .</center>";
-                            for (j = Connections.length - 2; j < Connections.length; j++) {
+                            for (j = Connections.length - 1; j >= 0 ; j--) {
                                 output += Connections[j].firstChild.nodeValue;
-                                if (j < Connections.length - 1) output += "<br />"
+                                if (j > 0) output += "<br />"
                             }
+                        }
+
+                        output += "</td><td>";
+
+                        if (Connections.length < 5) ConnectionsLength = Connections.length;
+                        else ConnectionsLength = 5;
+
+                        for (j = 0; j < ConnectionsLength; j++) {
+                            output += Connections[j].firstChild.nodeValue;
+                            if (j < ConnectionsLength - 1) output += "<br />"
                         }
 
                         output += "</td><td>";
@@ -72,7 +78,7 @@
                         else output += "False";
                         output += "</td></tr>";
                     }
-                    output += "</table>";
+                    output += "</tbody></table>";
                     var table = document
 
                     CreationTimestamp = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0].getElementsByTagName("CreationTimestamp")[0].firstChild.nodeValue;
@@ -80,24 +86,24 @@
                     document.getElementById('ShowTable').innerHTML = output;
                     document.getElementById('ConnectedClientsCount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
                     document.getElementById('CreationTimestamp').innerHTML = "XML file created on: " + CreationTimestamp + " (local time of the server)";
+                    $("Table").tablesorter();
                 }
             }
             xmlhttp.open("GET", "output.xml", true);
             xmlhttp.send();
         }
-
         rebuildXML();
     </script>
 </head>
 <body style="font-family:'Arial'">
     <h1>TS3 Enhanced Client List Webinterface</h1>
     <div id="rebuildXML">
-        <button onclick="rebuildXML();">Rebuild XML and Reload Table</button>
+        <button onclick="rebuildXML()">Rebuild XML and Reload Table</button>
     </div>
     <br />
-    <div id="ConnectedClientsCount"></div>
     <div id="CreationTimestamp"></div>
     <br />
+    <div id="ConnectedClientsCount"></div>
     <div id="ShowTable">Creating Table...</div>
 </body>
 </html>
