@@ -96,3 +96,16 @@ void User::disconnect(){
 int User::getCurrentConnectionsCount(){
 	return CurrentConnectionsCount;
 }
+
+// Sets the Deleted Flag to true;
+void User::deleteUser(){
+	deleted = true;
+}
+
+// Returns if the User has been deleted.
+bool User::isDeleted(){
+	if (deleted == true){
+		return true;
+	}
+	else return false;
+}

@@ -18,6 +18,8 @@ extern bool validXML;
 
 #define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
 #define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
+#define LOGMATCHDELETEUSER1 "|VirtualServer |  1| client '"
+#define LOGMATCHDELETEUSER2 ") got deleted by client '"
 
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY){
@@ -50,15 +52,16 @@ void parseLogs(string LOGDIRECTORY){
 			logfileLength = (unsigned long)logfile.tellg();
 			logfile.seekg(0, logfile.beg);
 
-			for (unsigned long j = 0; j < logfileLength; j++){
+			for (unsigned long j = 0; j < logfileLength;){
 				getline(logfile, buffer_logline);
+				j += buffer_logline.size() + 1;
 
 				ID_string.clear();
 				Nickname.clear();
 				DateTime.clear();
 				IP.clear();
 
-				// Relevant Connection line found.
+				// Connection matches.
 				if (buffer_logline.find(LOGMATCHCONNECT) != string::npos){
 					NicknameStartPos = 77;
 
@@ -109,8 +112,7 @@ void parseLogs(string LOGDIRECTORY){
 					}
 				}
 
-				// WIP: Disconnecting matches
-				// For now: Just Nickname adding if Nickname was changed since connect --> creates kind of a nickname history.
+				// Disconnecting matches
 				if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
 					NicknameStartPos = 80;
 
@@ -147,6 +149,23 @@ void parseLogs(string LOGDIRECTORY){
 					}
 					if (i + 1 == Logs.size()){
 						UserList[ID].disconnect();
+					}
+				}
+
+				// User Deletion matches.
+				if (buffer_logline.find(LOGMATCHDELETEUSER1) != string::npos){
+					if (buffer_logline.find(LOGMATCHDELETEUSER2) != string::npos){
+						IDEndPos = (unsigned int)buffer_logline.rfind(") got deleted by client '");
+						IDStartPos = 5 + (unsigned int)buffer_logline.rfind("'(id:", IDEndPos);
+						IDLength = IDEndPos - IDStartPos;
+
+						// ID
+						for (unsigned int i = 0; i < IDLength; i++){
+							ID_string += buffer_logline[IDStartPos + i];
+						}
+
+						ID = stoul(ID_string);
+						UserList[ID].deleteUser();
 					}
 				}
 				currentPos += buffer_logline.length() + 1;

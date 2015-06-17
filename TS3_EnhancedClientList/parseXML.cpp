@@ -44,6 +44,11 @@ bool parseXML(){
 								UserList.resize(ID + 1);
 								UserList[ID].addID(stoul(vs.second.data()));
 							}
+							else if(vs.first == "Deleted"){
+								if (vs.second.data() == "true"){
+									UserList[ID].deleteUser();
+								}
+							}
 						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")){
 							UserList[ID].addNicknameReverse(vs.second.data());

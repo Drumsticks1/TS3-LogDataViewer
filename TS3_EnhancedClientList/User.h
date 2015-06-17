@@ -11,6 +11,7 @@ private:
 	unsigned int ID = 0;
 	vector <string> DateTime, Nickname, IP;
 	int CurrentConnectionsCount = 0;
+	bool deleted = false;
 
 public:
 	unsigned int getID();
@@ -35,4 +36,7 @@ public:
 	void connect();
 	void disconnect();
 	int getCurrentConnectionsCount();
+
+	void deleteUser();
+	bool isDeleted();
 };

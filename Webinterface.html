@@ -13,28 +13,31 @@
 
         // Builds the table using the XML.
         function buildTable() {
-            var xmlhttp, output, User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, ConnectedClientsCount = 0, CreationTimestamp, i, j;
+            var xmlhttp, output, User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, Deleted, ConnectedClientsCount = 0, CreationTimestamp, i, j;
             if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
             else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    output = "<table id='Table' border='1' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>First Connections</th><th>Last Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th></tr></thead><tbody>";
+                    output = "<table id='Table' border='1' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>First Connections</th><th>Last Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
                     for (i = 0; i < User.length; i++) {
-                        ID = User[i].getElementsByTagName("ID");
+                        ID = User[i].getElementsByTagName("ID")[0].firstChild.nodeValue;
                         Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
                         Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
                         IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
-                        Connection_Count = User[i].getElementsByTagName("Connection_Count");
-                        Connected = User[i].getElementsByTagName("Connected");
+                        Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].firstChild.nodeValue;
+                        Connected = User[i].getElementsByTagName("Connected")[0].firstChild.nodeValue;
+                        Deleted = User[i].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
 
-                        output += "<tr><td>" + ID[0].firstChild.nodeValue + "</td><td>";
+                        output += "<tr><td>";
+                        output += ID;
+                        output += "</td><td>";
+
 
                         for (j = 0; j < Nicknames.length; j++) {
                             output += Nicknames[j].firstChild.nodeValue;
                             if (j < Nicknames.length - 1) output += "<br />"
                         }
-
                         output += "</td><td>";
 
                         if (Connections.length > 5) {
@@ -70,12 +73,18 @@
                             }
                         }
 
-                        output += "</td><td>" + Connection_Count[0].firstChild.nodeValue + "</td><td>";
-                        if (Connected[0].firstChild.nodeValue == 1) {
+                        output += "</td><td>";
+                        output += Connection_Count;
+                        output += "</td><td>";
+
+                        if (Connected == 1) {
                             output += "True";
                             ConnectedClientsCount++;
                         }
                         else output += "False";
+
+                        output += "</td><td>";
+                        output += Deleted;
                         output += "</td></tr>";
                     }
                     output += "</tbody></table>";

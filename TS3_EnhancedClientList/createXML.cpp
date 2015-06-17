@@ -50,6 +50,7 @@ void createXML(){
 			UserNode.put_child("IPs", fieldIP);
 			UserNode.put("Connection_Count", UserList[i].getDateTimeCount());
 			UserNode.put("Connected", UserList[i].getCurrentConnectionsCount());
+			UserNode.put("Deleted", UserList[i].isDeleted());
 
 			UserListNode.add_child("User", UserNode);
 		}
