@@ -46,7 +46,7 @@ void parseLogs(string LOGDIRECTORY){
 			DateTime = Nickname = IP = "";
 			currentPos = 0;
 
-			fstream logfile(LogFilePath, fstream::in);
+			ifstream logfile(LogFilePath);
 
 			logfile.seekg(0, logfile.end);
 			logfileLength = (unsigned long)logfile.tellg();

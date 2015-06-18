@@ -1,0 +1,17 @@
+This file contains the install instructions for the TS3_EnhancedClientList.
+
+Linux:
+
+1. Create the directory "EnhancedClientList" in the directory "/var/www".
+2. Set up a .htaccess in order to secure the access to the directory (Skipping this step may result in serious security vulnerability of your webserver!).
+3. Download a compiled file (-> skip to step 4) or compile the code using the makefile (for experienced users -> follow the 3.x steps).
+	3.1. Downloads the makefile and the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't needed for compiling as it doesn't include any code).
+	// DEV: add information about Boost Filesystem compiling !
+	3.3. You will need to install the packages "make", "g++", "boost-system-dev" and "boost-filesystem-dev" in order to compile with the makefile.
+4. Move the "Webinterface.html" and the "jquery.tablesorter.js" into the "var/www/EnhancedClientList" directory.
+5. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
+6. Move the "rebuildXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data ("chown www-data:www-data rebuildXML.php").
+7. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/log/directory").
+8. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
+9. Adjust the LOGPATH in the "rebuildXML.php" if necessary.
+10. Open the Webinterface on your webserver ("your-server/EnhancedClientList/Webinterface.html")

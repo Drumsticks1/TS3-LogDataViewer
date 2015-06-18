@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
 	else{ LOGDIRECTORY = "./logs/"; }
 
 	if (!fetchLogs(LOGDIRECTORY)){
-		cout << "The programm will now exit.";
+		cout << "The program will now exit." << endl;
 		return 0;
 	}
 	

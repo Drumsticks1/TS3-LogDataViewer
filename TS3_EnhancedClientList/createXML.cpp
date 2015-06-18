@@ -1,7 +1,6 @@
 // createXML.cpp : Creation of the XML.
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 #include "Constants.h"

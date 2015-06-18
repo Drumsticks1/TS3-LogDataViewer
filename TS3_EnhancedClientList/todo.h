@@ -27,5 +27,4 @@ parseLogs
 
 webinterface
 	- Possibility to hide duplicate Names like Drumsticks1 or Drumsticks11 in the webinterface.
-	- Prevent duplicate processes.
 */

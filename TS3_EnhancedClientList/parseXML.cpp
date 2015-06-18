@@ -1,7 +1,6 @@
 // parseXML.cpp : Parsing of the XML.
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 #include "Constants.h"
