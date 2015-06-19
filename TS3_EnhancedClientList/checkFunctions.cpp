@@ -7,6 +7,7 @@
 extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
+extern vector <string> ignoreLogs;
 
 // Checks if a DateTime is already existing for the current user.
 bool IsDuplicateDateTime(unsigned int ID, string DateTime){
@@ -42,6 +43,14 @@ bool IsDuplicateIP(unsigned int ID, string IP){
 bool IsDuplicateLog(string log){
 	for (unsigned i = 0; i < parsedLogs.size(); i++){
 		if (log == parsedLogs[i]) return true;
+	}
+	return false;
+}
+
+// Checks if a log is existing in the ignoreLogs list.
+bool IsIgnoredLog(string log){
+	for (unsigned i = 0; i < ignoreLogs.size(); i++){
+		if (log == ignoreLogs[i]) return true;
 	}
 	return false;
 }

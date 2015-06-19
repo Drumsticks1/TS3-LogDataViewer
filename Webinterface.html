@@ -11,6 +11,11 @@
             return false;
         }
 
+        // Deletes the current XML and builds a new one after.
+        function buildNewXML() {
+            $.get("deleteXML.php", function () { rebuildXML() });
+        }
+
         // Builds the table using the XML.
         function buildTable() {
             var xmlhttp, output, User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, Deleted, ConnectedClientsCount = 0, CreationTimestamp, i, j;
@@ -110,9 +115,13 @@
         <button onclick="rebuildXML()">Rebuild XML and Reload Table</button>
     </div>
     <br />
+    <div id="buildNewXML"> Use when switching to another logdirectory: <button onclick="buildNewXML()">Delete old output.xml and generate a new one only from the logs.</button></div>
+    <br />
     <div id="CreationTimestamp"></div>
     <br />
     <div id="ConnectedClientsCount"></div>
+    <br />
+    <br />
     <div id="ShowTable">Creating Table...</div>
 </body>
 </html>

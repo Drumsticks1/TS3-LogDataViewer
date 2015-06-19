@@ -16,6 +16,7 @@ extern vector <string> Logs;
 extern vector <string> parsedLogs;
 extern bool validXML;
 
+// DEV: Make compatible with multiple virtual servers.
 #define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
 #define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
 #define LOGMATCHDELETEUSER1 "|VirtualServer |  1| client '"

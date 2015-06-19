@@ -197,3 +197,6 @@ FakesAssemblies/
 
 # output XML
 output.xml
+
+# logignore
+logignore

@@ -14,3 +14,6 @@ bool IsDuplicateIP(unsigned int ID, string IP);
 
 // Checks if a log is already existing in the parsedLogs list.
 bool IsDuplicateLog(string log);
+
+// Checks if a log is existing in the ignoreLogs list.
+bool IsIgnoredLog(string log);

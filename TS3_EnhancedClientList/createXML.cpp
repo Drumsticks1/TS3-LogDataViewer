@@ -17,7 +17,7 @@ extern vector <User> UserList;
 extern vector <string> parsedLogs;
 
 // DEV: Add later.
-#define TITLE "Created by TS3_EnhancedClientList"
+#define TITLE 
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML(){
@@ -55,6 +55,8 @@ void createXML(){
 		}
 	}
 	UserList.clear();
+
+	AttributesNode.put("Generated", "by TS3_EnhancedClientList");
 
 	for (unsigned i = 0; i < parsedLogs.size(); i++){
 		fieldParsedLogs.add("ParsedLogs", parsedLogs[i]);
