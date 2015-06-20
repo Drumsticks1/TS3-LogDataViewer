@@ -20,5 +20,4 @@ webinterface
 	- Possible additons:
 		- Only show first and last DateTime and make it expenable with a button.
 		- HTML Responsive Web Design.
-		- Change Layout.
 */

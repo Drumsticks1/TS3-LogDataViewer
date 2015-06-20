@@ -18,7 +18,7 @@ vector <string> ignoreLogs;
 // Fetches the list of log files that are in the log directory and saves it in a vector.
 bool fetchLogs(string LOGDIRECTORY){
 	cout << "Fetching logs..." << endl;
-	
+
 	path log_directory(LOGDIRECTORY);
 	try{
 		if (exists(log_directory)){
@@ -37,7 +37,7 @@ bool fetchLogs(string LOGDIRECTORY){
 
 							for (unsigned long i = 0; i < logignoreLength;){
 								getline(logignore, buffer_logignore);
-								i += buffer_logignore.size() + 1;
+								i += buffer_logignore.size() + 2;
 								ignoreLogs.push_back(buffer_logignore);
 							}
 						}

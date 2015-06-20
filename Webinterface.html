@@ -4,6 +4,8 @@
     <title>TS3 EnhancedClientList Webinterface</title>
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="jquery.tablesorter.js"></script>
+    <!-- You can add a stylesheet, tablesorter delivers some too -->
+    <link rel="stylesheet" href="./ts_blue/style_modified.css">
     <script>
         // Rebuilds the XML and calls buildTable() when the XML creation has finished.
         function rebuildXML() {
@@ -14,16 +16,29 @@
         // Deletes the current XML and builds a new one after.
         function buildNewXML() {
             $.get("deleteXML.php", function () { rebuildXML() });
+            return false;
         }
+
+        // DEV: expand and de-expend
+        /*
+        function expandConnections(Row, ID) {
+            var c = document.getElementById("Table").childNodes[1].childNodes[Row].childNodes[2];
+            // var Connections = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
+            // c.childNodes[i].firstChild.nodeValue = Connections[i].firstChild.nodeValue;
+            for (var i = 0; i < c.childNodes.length - 1; i++) {
+                c.childNodes[i].firstChild.nodeValue = "Not yet implemented";
+            }
+        }
+        */
 
         // Builds the table using the XML.
         function buildTable() {
-            var xmlhttp, output, User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, Deleted, ConnectedClientsCount = 0, CreationTimestamp, i, j;
+            var output, User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, Deleted, ConnectedClientsCount = 0, CreationTimestamp, i, j;
             if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
             else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    output = "<table id='Table' border='1' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>First Connections</th><th>Last Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
+                    output = "<table id='Table' border='1' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>First Connect</th><th>Last Connect</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
                     for (i = 0; i < User.length; i++) {
                         ID = User[i].getElementsByTagName("ID")[0].firstChild.nodeValue;
@@ -34,53 +49,36 @@
                         Connected = User[i].getElementsByTagName("Connected")[0].firstChild.nodeValue;
                         Deleted = User[i].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
 
-                        output += "<tr><td>";
-                        output += ID;
-                        output += "</td><td>";
-
+                        output += "<tr><td>" + ID + "</td><td>";
 
                         for (j = 0; j < Nicknames.length; j++) {
-                            output += Nicknames[j].firstChild.nodeValue;
-                            if (j < Nicknames.length - 1) output += "<br />"
+                            output += "<div>" + Nicknames[j].firstChild.nodeValue + "</div>";
                         }
+
+                        // DEV: Make the list expendable.
+                        /*
+                        output += "</td><td>";
+                        output += "<div>" + Connections[0].firstChild.nodeValue + "</div>";
+                        if (Connections.length > 1) output += "<div>" + Connections[Connections.length - 1].firstChild.nodeValue + "</div>";
+
+                        output += '<button onclick="expandConnections(&apos;' + i + '&apos;,&apos;' + ID + '&apos;)">+</button>';
+                        */
                         output += "</td><td>";
 
-                        if (Connections.length > 5) {
-                            for (j = Connections.length - 1; j > Connections.length - 6 ; j--) {
-                                output += Connections[j].firstChild.nodeValue;
-                                if (j > Connections.length - 6) output += "<br />"
-                            }
-                        }
-                        else {
-                            for (j = Connections.length - 1; j >= 0 ; j--) {
-                                output += Connections[j].firstChild.nodeValue;
-                                if (j > 0) output += "<br />"
-                            }
-                        }
-
+                        output += Connections[Connections.length - 1].firstChild.nodeValue;
                         output += "</td><td>";
 
-                        if (Connections.length < 5) ConnectionsLength = Connections.length;
-                        else ConnectionsLength = 5;
-
-                        for (j = 0; j < ConnectionsLength; j++) {
-                            output += Connections[j].firstChild.nodeValue;
-                            if (j < ConnectionsLength - 1) output += "<br />"
-                        }
-
+                        output += Connections[0].firstChild.nodeValue;
                         output += "</td><td>";
 
                         // Only the last 5 for now (Too space consuming).
                         for (j = 0; j < 5; j++) {
                             if (j < IPs.length) {
-                                output += IPs[j].firstChild.nodeValue;
-                                if (j < IPs.length - 1) output += "<br />"
+                                output += "<div>" + IPs[j].firstChild.nodeValue + "</div>";
                             }
                         }
 
-                        output += "</td><td>";
-                        output += Connection_Count;
-                        output += "</td><td>";
+                        output += "</td><td>" + Connection_Count + "</td><td>";
 
                         if (Connected == 1) {
                             output += "True";
@@ -115,12 +113,13 @@
         <button onclick="rebuildXML()">Rebuild XML and Reload Table</button>
     </div>
     <br />
-    <div id="buildNewXML"> Use when switching to another logdirectory: <button onclick="buildNewXML()">Delete old output.xml and generate a new one only from the logs.</button></div>
+    <div id="buildNewXML">
+        Use when switching to another logdirectory: <button onclick="buildNewXML()">Delete old output.xml and generate a new one only from the logs.</button>
+    </div>
     <br />
     <div id="CreationTimestamp"></div>
     <br />
     <div id="ConnectedClientsCount"></div>
-    <br />
     <br />
     <div id="ShowTable">Creating Table...</div>
 </body>

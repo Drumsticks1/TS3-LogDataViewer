@@ -26,7 +26,7 @@ extern bool validXML;
 void parseLogs(string LOGDIRECTORY){
 	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP;
 	unsigned int ID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
-	unsigned long logfileLength, currentPos;
+	unsigned long logfileLength;
 
 	if (validXML){
 		cout << "Comparing logs..." << endl;
@@ -45,7 +45,6 @@ void parseLogs(string LOGDIRECTORY){
 		if (!Logs[i].empty()){
 			LogFilePath = LOGDIRECTORY + Logs.at(i);
 			DateTime = Nickname = IP = "";
-			currentPos = 0;
 
 			ifstream logfile(LogFilePath);
 
@@ -53,9 +52,8 @@ void parseLogs(string LOGDIRECTORY){
 			logfileLength = (unsigned long)logfile.tellg();
 			logfile.seekg(0, logfile.beg);
 
-			for (unsigned long j = 0; j < logfileLength;){
+			for (unsigned long currentPos = 0; currentPos < logfileLength;){
 				getline(logfile, buffer_logline);
-				j += buffer_logline.size() + 1;
 
 				ID_string.clear();
 				Nickname.clear();
