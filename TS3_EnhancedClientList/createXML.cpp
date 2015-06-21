@@ -53,6 +53,11 @@ void createXML(){
 
 			UserListNode.add_child("User", UserNode);
 		}
+		else{
+			UserNode.clear();
+			UserNode.put("ID", "-1");
+			UserListNode.add_child("User", UserNode);
+		}
 	}
 	UserList.clear();
 

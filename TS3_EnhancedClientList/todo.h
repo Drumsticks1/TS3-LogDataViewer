@@ -15,9 +15,7 @@ parseLogs
 	- Change finding of the Virtual Server messages according to servers with multiple virtual servers.
 
 webinterface
-	- Possibility to hide duplicate Names like Drumsticks1 or Drumsticks11 in the webinterface.
-
-	- Possible additons:
-		- Only show first and last DateTime and make it expenable with a button.
-		- HTML Responsive Web Design.
+	- Add button for collapsing all connections.
+	- Only show + or - button (according to current state).
+	- HTML Responsive Web Design.
 */

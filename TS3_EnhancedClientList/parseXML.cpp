@@ -19,6 +19,7 @@ vector <string> parsedLogs;
 
 // Parses the XML if existing.
 bool parseXML(){
+	bool blankUser;
 	if (exists(XMLFILE)){
 		if (is_regular_file(XMLFILE)){
 			if (!boost::filesystem::is_empty(XMLFILE)){
@@ -27,7 +28,7 @@ bool parseXML(){
 				ptree PropertyTree;
 
 				try{
-				read_xml(XMLFILE, PropertyTree);
+					read_xml(XMLFILE, PropertyTree);
 				}
 				catch (xml_parser_error error){
 					cout << "Error reading out the XML - skipping..." << endl;
@@ -37,26 +38,34 @@ bool parseXML(){
 				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
 					ptree subtree = Node.second;
 					if (Node.first == "User"){
+						blankUser = false;
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
 							if (vs.first == "ID"){
-								ID = stoul(vs.second.data());
-								UserList.resize(ID + 1);
-								UserList[ID].addID(stoul(vs.second.data()));
+								if (vs.second.data() != "-1"){
+									ID = stoul(vs.second.data());
+									UserList.resize(ID + 1);
+									UserList[ID].addID(stoul(vs.second.data()));
+								}
+								else{
+									blankUser = true;
+								}
 							}
-							else if(vs.first == "Deleted"){
+							else if (vs.first == "Deleted"){
 								if (vs.second.data() == "true"){
 									UserList[ID].deleteUser();
 								}
 							}
 						}
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")){
-							UserList[ID].addNicknameReverse(vs.second.data());
-						}
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connections")){
-							UserList[ID].addDateTimeReverse(vs.second.data());
-						}
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
-							UserList[ID].addIPReverse(vs.second.data());
+						if (!blankUser){
+							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")){
+								UserList[ID].addNicknameReverse(vs.second.data());
+							}
+							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connections")){
+								UserList[ID].addDateTimeReverse(vs.second.data());
+							}
+							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
+								UserList[ID].addIPReverse(vs.second.data());
+							}
 						}
 					}
 					else if (Node.first == "Attributes"){
