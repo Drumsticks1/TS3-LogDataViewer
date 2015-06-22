@@ -20,13 +20,12 @@
         }
 
         // Expands the current Connections list.
-        function expandConnections(Row, ID) {
+        function expandConnections(ID) {
             var newChild, currentDiv;
-            var c = document.getElementById(Row).childNodes[2];
+            var c = document.getElementById(ID).childNodes[2];
             var Connections = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
             for (var j = 0; j < c.childNodes.length - 1 ; j++) {
                 currentDiv = ID + "_" + j;
-
                 if (document.getElementById(currentDiv).firstChild != null) {
                     document.getElementById(currentDiv).firstChild.nodeValue = Connections[j].firstChild.nodeValue;
                 }
@@ -38,15 +37,24 @@
         }
 
         // Collapses the current Connections list.
-        function collapseConnections(Row, ID) {
+        function collapseConnections(ID) {
             var currentDiv;
-            var c = document.getElementById(Row).childNodes[2];
-            var Connections = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
-            currentDiv = ID + "_1";
-            document.getElementById(currentDiv).firstChild.nodeValue = Connections[Connections.length - 1].firstChild.nodeValue;
-            for (var j = 2; j < c.childNodes.length - 1 ; j++) {
-                currentDiv = ID + "_" + j;
-                document.getElementById(currentDiv).firstChild.nodeValue = "";
+            if (document.getElementById(ID) != null) {
+                var c = document.getElementById(ID).childNodes[2];
+                var Connections = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
+                currentDiv = ID + "_1";
+                document.getElementById(currentDiv).firstChild.nodeValue = Connections[Connections.length - 1].firstChild.nodeValue;
+                for (var j = 2; j < c.childNodes.length - 1 ; j++) {
+                    currentDiv = ID + "_" + j;
+                    document.getElementById(currentDiv).firstChild.nodeValue = "";
+                }
+            }
+        }
+
+        // Scroll to the given Row.
+        function scrollToDiv(Row_ID) {
+            if (document.getElementById(Row_ID) != null) {
+                document.getElementById(Row_ID).scrollIntoView();
             }
         }
 
@@ -71,19 +79,17 @@
                             Connected = User[i].getElementsByTagName("Connected")[0].firstChild.nodeValue;
                             Deleted = User[i].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
 
-
-                            output += "<tr id=" + i + "><td>" + ID + "</td><td>";
+                            output += "<tr id=" + i + "><td>" + ID;
+                            output += "</td><td>";
 
                             for (j = 0; j < Nicknames.length; j++) {
                                 output += "<div>" + Nicknames[j].firstChild.nodeValue + "</div>";
                             }
 
-                            // DEV: Make the list expendable.
-
                             output += "</td><td>";
                             if (Connections.length > 2) {
-                                output += '<center><button onclick="expandConnections(&apos;' + i + '&apos;,&apos;' + ID + '&apos;)">+</button>';
-                                output += '<button onclick="collapseConnections(&apos;' + i + '&apos;,&apos;' + ID + '&apos;)">-</button></center>';
+                                output += '<center><button onclick="expandConnections(&apos;' + ID + '&apos;)">+</button>';
+                                output += '<button onclick="collapseConnections(&apos;' + ID + '&apos;)">-</button></center>';
                             }
                             output += '<div id=' + ID + '_0>' + Connections[0].firstChild.nodeValue + '</div>';
                             if (Connections.length > 1) output += '<div id=' + ID + '_1>' + Connections[Connections.length - 1].firstChild.nodeValue + '</div>';
@@ -146,6 +152,14 @@
     <br />
     <div id="ConnectedClientsCount"></div>
     <br />
+    <div id="ScrollToID">
+        Enter an ID and push the button to scroll to the row containing this ID and its information:
+        <input type="number" id="IDSelection" />
+        <button onclick="scrollToDiv(document.getElementById('IDSelection').value)">Scroll</button>
+    </div>
+    <br />
     <div id="ShowTable">Creating Table...</div>
+    <br />
+    <button onclick=scrollTo(0,0) style="position: fixed; bottom:0;">&#8613; Scroll back to top &#8613;</button>
 </body>
 </html>

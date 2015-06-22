@@ -13,9 +13,11 @@ parseXML
 parseLogs
 	- Outsource functions and/or change loop parameter names for better overview.
 	- Change finding of the Virtual Server messages according to servers with multiple virtual servers.
+		How many virtual servers are possible ?
 
 webinterface
 	- Add button for collapsing all connections.
 	- Only show + or - button (according to current state).
+	- Optionally add the pager plugin.
 	- HTML Responsive Web Design.
 */
