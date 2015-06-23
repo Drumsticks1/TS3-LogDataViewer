@@ -41,7 +41,7 @@ bool IsDuplicateIP(unsigned int ID, string IP){
 
 // Checks if a log is already existing in the parsedLogs list.
 bool IsDuplicateLog(string log){
-	for (unsigned i = 0; i < parsedLogs.size(); i++){
+	for (unsigned int i = 0; i < parsedLogs.size(); i++){
 		if (log == parsedLogs[i]) return true;
 	}
 	return false;
@@ -49,8 +49,21 @@ bool IsDuplicateLog(string log){
 
 // Checks if a log is existing in the ignoreLogs list.
 bool IsIgnoredLog(string log){
-	for (unsigned i = 0; i < ignoreLogs.size(); i++){
+	for (unsigned int i = 0; i < ignoreLogs.size(); i++){
 		if (log == ignoreLogs[i]) return true;
 	}
 	return false;
+}
+
+// Checks if the order of Logs and ParsedLogs is matching.
+bool IsMatchingLogOrder(){
+	for (unsigned int i = 0; i < parsedLogs.size(); i++){
+		if (i < Logs.size()){
+			if (parsedLogs[i] != Logs[i]){
+				return false;
+			}
+		}
+		else return false;
+	}
+	return true;
 }

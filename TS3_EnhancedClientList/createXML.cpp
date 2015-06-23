@@ -19,6 +19,30 @@ extern vector <string> parsedLogs;
 // DEV: Add later.
 #define TITLE 
 
+// Returns the given time structure as string in the format "dd.mm.yyyy hh:mm:ss".
+string timeToString(ptime t){
+	unsigned short year, month, day, hours, minutes, seconds;
+	year = t.date().year();
+	month = t.date().month();
+	day = t.date().day();
+	hours = t.time_of_day().hours();
+	minutes = t.time_of_day().minutes();
+	seconds = t.time_of_day().seconds();
+
+	string curTime = "";
+	if (day < 10){ curTime += "0"; }
+	curTime += to_string(day) + ".";
+	if (month < 10){ curTime += "0"; }
+	curTime += to_string(month) + "." + to_string(year) + " ";
+	if (hours < 10){ curTime += "0"; }
+	curTime += to_string(hours) + ":";
+	if (minutes < 10){ curTime += "0"; }
+	curTime += to_string(minutes) + ":";
+	if (seconds < 10){ curTime += "0"; }
+	curTime += to_string(seconds);
+	return curTime;
+}
+
 // Creates a XML for storing the data extracted from the logs.
 void createXML(){
 	ptree PropertyTree, UserListNode, UserNode, AttributesNode;
@@ -69,29 +93,11 @@ void createXML(){
 
 	AttributesNode.put_child("ParsedLogs", fieldParsedLogs);
 
-	ptime now = second_clock::local_time();
+	ptime currentLocaltime = second_clock::local_time();
+	ptime currentUTC = second_clock::universal_time();
 
-	unsigned short year, month, day, hours, minutes, seconds;
-	year = now.date().year();
-	month = now.date().month();
-	day = now.date().day();
-	hours = now.time_of_day().hours();
-	minutes = now.time_of_day().minutes();
-	seconds = now.time_of_day().seconds();
-
-	string curTime = "";
-	if (day < 10){ curTime += "0"; }
-	curTime += to_string(day) + ".";
-	if (month < 10){ curTime += "0"; }
-	curTime += to_string(month) + "." + to_string(year) + " ";
-	if (hours < 10){ curTime += "0"; }
-	curTime += to_string(hours) + ":";
-	if (minutes < 10){ curTime += "0"; }
-	curTime += to_string(minutes) + ":";
-	if (seconds < 10){ curTime += "0"; }
-	curTime += to_string(seconds);
-
-	AttributesNode.put("CreationTimestamp", curTime);
+	AttributesNode.put("CreationTimestamp_Localtime", timeToString(currentLocaltime));
+	AttributesNode.put("CreationTimestamp_UTC", timeToString(currentUTC));
 	UserListNode.add_child("Attributes", AttributesNode);
 	PropertyTree.add_child("UserList", UserListNode);
 

@@ -29,15 +29,17 @@ void parseLogs(string LOGDIRECTORY){
 	unsigned long logfileLength;
 
 	if (validXML){
-		cout << "Comparing logs..." << endl;
-		for (unsigned int i = 0; i < parsedLogs.size(); i++){
-			// Last parsed logfile is parsed again as it may have changed.
-			for (unsigned int j = 0; j < Logs.size() - 1; j++){
-				if (Logs[j] == parsedLogs[i]){
-					Logs[j].erase();
+		if (IsMatchingLogOrder()){
+			cout << "Comparing logs..." << endl;
+			for (unsigned int i = 0; i < parsedLogs.size(); i++){
+				for (unsigned int j = 0; j < Logs.size() - 1; j++){
+					if (Logs[j] == parsedLogs[i]){
+						Logs[j].erase();
+					}
 				}
 			}
 		}
+		else cout << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML..." << endl;
 	}
 
 	cout << "Parsing new logs..." << endl;

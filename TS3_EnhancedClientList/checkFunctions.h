@@ -17,3 +17,6 @@ bool IsDuplicateLog(string log);
 
 // Checks if a log is existing in the ignoreLogs list.
 bool IsIgnoredLog(string log);
+
+// Checks if the order of Logs and ParsedLogs is matching.
+bool IsMatchingLogOrder();

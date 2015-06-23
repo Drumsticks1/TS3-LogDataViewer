@@ -35,7 +35,7 @@ string User::getUniqueIP(unsigned int IPNumber){
 	else return "";
 }
 
-// DEV: Maybe add check if ID already exists in the list.
+// Sets the given ID as user ID.
 void User::addID(unsigned int ID){
 	this->ID = ID;
 }
@@ -97,12 +97,12 @@ int User::getCurrentConnectionsCount(){
 	return CurrentConnectionsCount;
 }
 
-// Sets the Deleted Flag to true;
+// Sets the Deleted Flag to true.
 void User::deleteUser(){
 	deleted = true;
 }
 
-// Returns if the User has been deleted.
+// Returns true if the user has been deleted.
 bool User::isDeleted(){
 	if (deleted == true){
 		return true;

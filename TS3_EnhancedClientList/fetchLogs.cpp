@@ -51,7 +51,6 @@ bool fetchLogs(string LOGDIRECTORY){
 					directory_iterator LogDirectory(LOGDIRECTORY);
 					while (LogDirectory != directory_iterator()){
 						if (is_regular_file(LogDirectory->status()) && !boost::filesystem::is_empty(LogDirectory->path()) && LogDirectory->path().extension() == ".log"){
-							// Filters out the unneccesary .ts3server_xxxx-xx-xx__xx_xx_xx.xxxxxx_0 logs.
 							if (LogDirectory->path().filename().string().at(38) == '1' && !IsIgnoredLog(LogDirectory->path().filename().string())){
 								Logs.push_back((LogDirectory->path().filename().string()));
 							}
@@ -74,8 +73,7 @@ bool fetchLogs(string LOGDIRECTORY){
 			return false;
 		}
 	}
-	catch (const filesystem_error& error)
-	{
+	catch (const filesystem_error& error){
 		cout << "An error ocurred while fetching the logfiles:" << endl
 			<< error.what() << endl;
 		return false;
