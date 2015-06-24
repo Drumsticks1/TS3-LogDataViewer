@@ -4,8 +4,8 @@
     <title>TS3 EnhancedClientList Webinterface</title>
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="jquery.tablesorter.js"></script>
-    <!-- You can add a stylesheet, tablesorter delivers some too -->
-    <link rel="stylesheet" href="./ts_blue/style_modified.css">
+    <!-- You may adjust the following path according to the chosen theme -->
+    <link rel="stylesheet" href="./blue/style.css">
     <script>
         // Rebuilds the XML and calls buildTable() when the XML creation has finished.
         function rebuildXML() {
@@ -146,7 +146,7 @@
     </div>
     <br />
     <div id="buildNewXML">
-        Use when switching to another logdirectory: <button onclick="buildNewXML()">Delete old output.xml and generate a new one only from the logs.</button>
+        Use when switching to another logdirectory: <button onclick="buildNewXML()">Delete old output.xml and generate a new one only from the logs</button>
     </div>
     <br />
     <div id="CreationTimestamps">

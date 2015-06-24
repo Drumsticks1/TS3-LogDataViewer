@@ -1,7 +1,5 @@
 // TS3_EnhancedClientList.cpp
-//
-// Author:
-// Date:	
+// Author :
 
 #include <iostream>
 #include "fetchLogs.h"
