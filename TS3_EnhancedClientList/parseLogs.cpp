@@ -1,4 +1,6 @@
 // parseLogs.cpp : Parsing of the logs.
+// Author : Drumsticks1
+// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 #include <iostream>
 #include <fstream>
@@ -75,23 +77,23 @@ void parseLogs(string LOGDIRECTORY){
 					NicknameLength = IDStartPos - NicknameStartPos - 5;
 
 					// Date & Time - just as a string until seperation.
-					for (unsigned int i = 0; i < 19; i++){
-						DateTime += buffer_logline[i];
+					for (unsigned int j = 0; j < 19; j++){
+						DateTime += buffer_logline[j];
 					}
 
 					// Nickname
-					for (unsigned int i = 0; i < NicknameLength; i++){
-						Nickname += buffer_logline[NicknameStartPos + i];
+					for (unsigned int j = 0; j < NicknameLength; j++){
+						Nickname += buffer_logline[NicknameStartPos + j];
 					}
 
 					// ID
-					for (unsigned int i = 0; i < IDLength; i++){
-						ID_string += buffer_logline[IDStartPos + i];
+					for (unsigned int j = 0; j < IDLength; j++){
+						ID_string += buffer_logline[IDStartPos + j];
 					}
 
 					// IP (if connecting)
-					for (unsigned int i = 0; i < IPLength; i++){
-						IP += buffer_logline[IPStartPos + i];
+					for (unsigned int j = 0; j < IPLength; j++){
+						IP += buffer_logline[IPStartPos + j];
 					}
 
 					// DEV: Outsource.
@@ -131,13 +133,13 @@ void parseLogs(string LOGDIRECTORY){
 					NicknameLength = IDStartPos - NicknameStartPos - 5;
 
 					// Nickname
-					for (unsigned int i = 0; i < NicknameLength; i++){
-						Nickname += buffer_logline[NicknameStartPos + i];
+					for (unsigned int j = 0; j < NicknameLength; j++){
+						Nickname += buffer_logline[NicknameStartPos + j];
 					}
 
 					// ID
-					for (unsigned int i = 0; i < IDLength; i++){
-						ID_string += buffer_logline[IDStartPos + i];
+					for (unsigned int j = 0; j < IDLength; j++){
+						ID_string += buffer_logline[IDStartPos + j];
 					}
 
 					ID = stoul(ID_string);
@@ -161,8 +163,8 @@ void parseLogs(string LOGDIRECTORY){
 						IDLength = IDEndPos - IDStartPos;
 
 						// ID
-						for (unsigned int i = 0; i < IDLength; i++){
-							ID_string += buffer_logline[IDStartPos + i];
+						for (unsigned int j = 0; j < IDLength; j++){
+							ID_string += buffer_logline[IDStartPos + j];
 						}
 
 						ID = stoul(ID_string);

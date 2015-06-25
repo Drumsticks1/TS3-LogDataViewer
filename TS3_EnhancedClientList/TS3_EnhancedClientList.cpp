@@ -1,5 +1,6 @@
 // TS3_EnhancedClientList.cpp
-// Author :
+// Author : Drumsticks1
+// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 #include <iostream>
 #include "fetchLogs.h"

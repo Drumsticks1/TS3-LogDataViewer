@@ -1,4 +1,6 @@
 // createXML.cpp : Creation of the XML.
+// Author : Drumsticks1
+// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 #include <iostream>
 #include <string>

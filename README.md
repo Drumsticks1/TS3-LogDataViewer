@@ -20,14 +20,15 @@ After all logfiles were parsed a XML file is created which then is fetched by th
 
 #### Short table layout example
 	ID | Nicknames | Connections | IPs | Connected | Deleted
-	---|---|:---:|---|---|---
-	2  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br />24.06.2015 23:11<br />11.03.2013 19:46 | 88.888.888.75<br />99.999.999.99<br /> 99.999.999.31 | True | False
+	---|---|:---:|:---:|---|---
+	2  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br />24.06.2015 23:11<br />11.03.2013 19:46 | + -<br />88.888.888.75<br />99.999.999.31 | True | False
 
 ### Table Features
 - A chronological Nickname history.
 - The last and the first connection time.
 - The connection list can be expanded to a chronologial list of all connection (and collapsed after).
-- A chronological list of the IPs.
+- The last and the first IP.
+- The IP list can be expandedand collapsed like the connection list.
 - A Connected flag which shows if the user is currently connected.
 - A Deleted flag which shows if the user got deleted (only works if this is logged).
 
@@ -43,13 +44,13 @@ After all logfiles were parsed a XML file is created which then is fetched by th
 Coming soon...
 
 ## Installation
-As the file name already implies, the install instructions can be found in the file "Install Instructions".<br />
+As the file name already implies, the install instructions can be found in the file ["Install Instructions"](https://github.com/Drumsticks1/TS3_EnhancedClientList/blob/master/Install%20Instructions)<br />
 For now there are only installation instructions available for Linux.<br />
 Experienced Users should be able to set it up on Windows / Mac by following the Linux steps.
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br />
-You will only need to downloads the jquery plugin "tablesorter" (http://tablesorter.com) if you use a precompiled version of TS3_EnhancedClientList.
+You will only need to downloads the jquery plugin ["tablesorter"](http://tablesorter.com) if you use a precompiled version of TS3_EnhancedClientList.
 
 #### Teamspeak3 server settings
 Logging of Clients must be enabled in the server settings as the program depends on this information.

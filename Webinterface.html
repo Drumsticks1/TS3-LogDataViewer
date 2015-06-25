@@ -1,4 +1,8 @@
 ﻿<!DOCTYPE html>
+<!--
+Author : Drumsticks1
+Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+-->
 <html>
 <head>
     <title>TS3 EnhancedClientList Webinterface</title>
@@ -19,33 +23,41 @@
             return false;
         }
 
-        // Expands the current Connections list.
-        function expandConnections(ID) {
-            var newChild, currentDiv;
-            var c = document.getElementById(ID).childNodes[2];
-            var Connections = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
-            for (var j = 0; j < c.childNodes.length - 1 ; j++) {
-                currentDiv = ID + "_" + j;
+        // Expands the current list.
+        function expandList(List, ID) {
+            var newChild, currentDiv, Row;
+            switch (List) {
+                case "Connections": Row = 2; break;
+                case "IPs": Row = 3; break;
+            }
+            var x = document.getElementById(ID).childNodes[Row];
+            var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(List)[0].getElementsByTagName(List);
+            for (var j = 0; j < x.childNodes.length - 1 ; j++) {
+                currentDiv = List + "_" + ID + "_" + j;
                 if (document.getElementById(currentDiv).firstChild != null) {
-                    document.getElementById(currentDiv).firstChild.nodeValue = Connections[j].firstChild.nodeValue;
+                    document.getElementById(currentDiv).firstChild.nodeValue = ListContent[j].firstChild.nodeValue;
                 }
                 else {
-                    newChild = document.createTextNode(Connections[j].firstChild.nodeValue);
+                    newChild = document.createTextNode(ListContent[j].firstChild.nodeValue);
                     document.getElementById(currentDiv).appendChild(newChild);
                 }
             }
         }
 
-        // Collapses the current Connections list.
-        function collapseConnections(ID) {
-            var currentDiv;
+        // Collapses the current list.
+        function collapseList(List, ID) {
+            var currentDiv, Row;
+            switch (List) {
+                case "Connections": Row = 2; break;
+                case "IPs": Row = 3; break;
+            }
             if (document.getElementById(ID) != null) {
-                var c = document.getElementById(ID).childNodes[2];
-                var Connections = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
-                currentDiv = ID + "_1";
-                document.getElementById(currentDiv).firstChild.nodeValue = Connections[Connections.length - 1].firstChild.nodeValue;
-                for (var j = 2; j < c.childNodes.length - 1 ; j++) {
-                    currentDiv = ID + "_" + j;
+                var x = document.getElementById(ID).childNodes[Row];
+                var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(List)[0].getElementsByTagName(List);
+                currentDiv = List + "_" + ID + "_1";
+                document.getElementById(currentDiv).firstChild.nodeValue = ListContent[ListContent.length - 1].firstChild.nodeValue;
+                for (var j = 2; j < x.childNodes.length - 1 ; j++) {
+                    currentDiv = List + "_" + ID + "_" + j;
                     document.getElementById(currentDiv).firstChild.nodeValue = "";
                 }
             }
@@ -88,23 +100,27 @@
 
                             output += "</td><td>";
                             if (Connections.length > 2) {
-                                output += '<center><button onclick="expandConnections(&apos;' + ID + '&apos;)">+</button>';
-                                output += '<button onclick="collapseConnections(&apos;' + ID + '&apos;)">-</button></center>';
+                                output += '<center><button onclick="expandList(&apos;Connections&apos;,&apos;' + ID + '&apos;)">+</button>';
+                                output += '<button onclick="collapseList(&apos;Connections&apos;,&apos;' + ID + '&apos;)">-</button></center>';
                             }
-                            output += '<div id=' + ID + '_0>' + Connections[0].firstChild.nodeValue + '</div>';
-                            if (Connections.length > 1) output += '<div id=' + ID + '_1>' + Connections[Connections.length - 1].firstChild.nodeValue + '</div>';
+                            output += '<div id=Connections_' + ID + '_0>' + Connections[0].firstChild.nodeValue + '</div>';
+                            if (Connections.length > 1) output += '<div id=Connections_' + ID + '_1>' + Connections[Connections.length - 1].firstChild.nodeValue + '</div>';
                             if (Connections.length > 2) {
                                 for (j = 2; j < Connections.length; j++) {
-                                    output += '<div id=' + ID + '_' + j + '></div>';
+                                    output += '<div id=Connections_' + ID + '_' + j + '></div>';
                                 }
                             }
 
                             output += "</td><td>";
-
-                            // Only the last 5 for now (Too space consuming).
-                            for (j = 0; j < 5; j++) {
-                                if (j < IPs.length) {
-                                    output += "<div>" + IPs[j].firstChild.nodeValue + "</div>";
+                            if (IPs.length > 2) {
+                                output += '<center><button onclick="expandList(&apos;IPs&apos;,&apos;' + ID + '&apos;)">+</button>';
+                                output += '<button onclick="collapseList(&apos;IPs&apos;,&apos;' + ID + '&apos;)">-</button></center>';
+                            }
+                            output += '<div id=IPs_' + ID + '_0>' + IPs[0].firstChild.nodeValue + '</div>';
+                            if (IPs.length > 1) output += '<div id=IPs_' + ID + '_1>' + IPs[IPs.length - 1].firstChild.nodeValue + '</div>';
+                            if (IPs.length > 2) {
+                                for (j = 2; j < IPs.length; j++) {
+                                    output += '<div id=IPs_' + ID + '_' + j + '></div>';
                                 }
                             }
 
