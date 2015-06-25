@@ -13,13 +13,12 @@ Linux:
 	3.3. You will need to install the packages "make", "g++", "boost-system-dev" and "boost-filesystem-dev" in order to compile with the makefile.
 4. Download the jquery plugin "tablesorter" via this link: "http://tablesorter.com/__jquery.tablesorter.zip".
 5. Move the "Webinterface.html" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into the "var/www/EnhancedClientList" directory.
-6. Choose one of the tablesorter themes (can be found in the "__jquery.tablesorter.zip" under "/themes/green" or "/themes/blue" - choose one of the .zips and extract it in the EnhancedClientList directory you created on your server).
-7. If necessary correct the theme path according to the chosen tablesorter theme in the "Webinterface.html". (e.g. '<link rel="stylesheet" href="./blue/style.css">' --> change "blue" to "green" if you chose the green theme).
-6. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
-7. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").
-8. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
-9. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
-10. Adjust the LOGPATH in the "rebuildXML.php" if necessary.
-11. Optionally add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
-12. Open the Webinterface on your webserver ("your-server/EnhancedClientList/Webinterface.html")
-13. (Optional) If you don't like parts of the tablesorter theme you can easily adjust the settings in the "style.css" according to your wishes (e.g. font family, font size, border type, background color ...).
+6. Move the "styles" folder into your "EnhancedClientList" directory (--> /var/www/EnhancedClientList/styles/).
+7. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
+8. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").
+9. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
+10. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
+11. Adjust the LOGPATH in the "rebuildXML.php" if necessary.
+12. Optionally add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+13. Open the Webinterface on your webserver ("your-server/EnhancedClientList/Webinterface.html")
+14. (Optional) If you would like to change the appearance of the Webinterface you can do this by editing the "style.css".

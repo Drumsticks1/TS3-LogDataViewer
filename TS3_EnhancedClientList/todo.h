@@ -10,5 +10,6 @@ webinterface
 	- Add button for collapsing all expanded lists.
 	- Only show + or - button (according to current state).
 	- Optionally add the pager plugin.
+	- Add possibility to search for a nickname.
 	- HTML Responsive Web Design.
 */

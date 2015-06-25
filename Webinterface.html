@@ -8,8 +8,7 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
     <title>TS3 EnhancedClientList Webinterface</title>
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="jquery.tablesorter.js"></script>
-    <!-- You may adjust the following path according to the chosen theme -->
-    <link rel="stylesheet" href="./blue/style.css">
+    <link rel="stylesheet" href="./style/style.css">
     <script>
         // Rebuilds the XML and calls buildTable() when the XML creation has finished.
         function rebuildXML() {
@@ -78,7 +77,7 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
             else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    output = "<table id='Table' border='1' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
+                    output = "<table id='Table' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
                     User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
                     UserListLength = User.length;
                     for (i = 0; i < UserListLength; i++) {
@@ -91,8 +90,7 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
                             Connected = User[i].getElementsByTagName("Connected")[0].firstChild.nodeValue;
                             Deleted = User[i].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
 
-                            output += "<tr id=" + i + "><td>" + ID;
-                            output += "</td><td>";
+                            output += "<tr id=" + i + "><td>" + ID + "</td><td>";
 
                             for (j = 0; j < Nicknames.length; j++) {
                                 output += "<div>" + Nicknames[j].firstChild.nodeValue + "</div>";
@@ -132,9 +130,7 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
                             }
                             else output += "False";
 
-                            output += "</td><td>";
-                            output += Deleted;
-                            output += "</td></tr>";
+                            output += "</td><td>" + Deleted + "</td></tr>";
                         }
                     }
                     output += "</tbody></table>";
@@ -155,7 +151,7 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
         rebuildXML();
     </script>
 </head>
-<body style="font-family:'Arial'">
+<body>
     <h1>TS3 Enhanced Client List Webinterface</h1>
     <div id="rebuildXML">
         <button onclick="rebuildXML()">Rebuild XML and Reload Table</button>
@@ -171,7 +167,7 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
         <div id="CreationTimestamp_UTC">Analyzing data ...  </div>
     </div>
     <br />
-    <div id="ConnectedClientsCount">Current Connected Clients:</div>
+    <div id="ConnectedClientsCount">Current Connected Clients: Analyzing data ...</div>
     <br />
     <div id="ScrollToID">
         Enter an ID and push the button to scroll to the row containing this ID and its information:
@@ -181,6 +177,6 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
     <br />
     <div id="ShowTable">Creating Table...</div>
     <br />
-    <button onclick=scrollTo(0,0) style="position: fixed; bottom:0;">&#8613; Scroll back to top &#8613;</button>
+    <button id="BackToTop" onclick=scrollTo(0,0)>&#8613; Scroll back to top &#8613;</button>
 </body>
 </html>
