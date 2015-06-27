@@ -12,13 +12,16 @@ Linux:
 	3.2. Download the Boost Library package via "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0).
 	3.3. You will need to install the packages "make", "g++", "boost-system-dev" and "boost-filesystem-dev" in order to compile with the makefile.
 4. Download the jquery plugin "tablesorter" via this link: "http://tablesorter.com/__jquery.tablesorter.zip".
-5. Move the "Webinterface.html" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into the "var/www/EnhancedClientList" directory.
-6. Move the "styles" folder into your "EnhancedClientList" directory (--> /var/www/EnhancedClientList/styles/).
-7. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
-8. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").
-9. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
-10. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
-11. Adjust the LOGPATH in the "rebuildXML.php" if necessary.
-12. Optionally add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
-13. Open the Webinterface on your webserver ("your-server/EnhancedClientList/Webinterface.html")
-14. (Optional) If you would like to change the appearance of the Webinterface you can do this by editing the "style.css".
+5. Move the "TS3_EnhancedClientList.js" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into your EnhancedClientList-directory.
+6. If you want to use the predesigned Webinterface.html then follow the step 6 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 6 b).
+	6 a) Move the "Webinterface.html" into the "var/www/EnhancedClientList" directory.
+	6 b) Include the controls and the table by creating two divs with the classes "ts3-control" and "ts3-table" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage..
+7. Move the "styles" folder into your "EnhancedClientList" directory (--> /var/www/EnhancedClientList/styles/) (if you don't use the predesigned html you have to include it into your html ("./style/style.css")).
+8. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
+9. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").
+10. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
+11. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
+12. Adjust the LOGPATH in the "rebuildXML.php" if necessary.
+13. Optionally add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+14. Open the Webinterface ("your-server/EnhancedClientList/Webinterface.html") or your self-created html on your webserver.
+15. (Optional) If you would like to change the appearance of the Webinterface you can do this by editing the "style.css".
