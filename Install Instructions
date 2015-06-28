@@ -15,7 +15,7 @@ Linux:
 5. Move the "TS3_EnhancedClientList.js" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into your EnhancedClientList-directory.
 6. If you want to use the predesigned Webinterface.html then follow the step 6 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 6 b).
 	6 a) Move the "Webinterface.html" into the "var/www/EnhancedClientList" directory.
-	6 b) Include the controls and the table by creating two divs with the classes "ts3-control" and "ts3-table" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage..
+	6 b) Include the controls and the table by creating three divs with the classes "ts3-control" and "ts3-clienttable" "ts3-kicktable" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage..
 7. Move the "styles" folder into your "EnhancedClientList" directory (--> /var/www/EnhancedClientList/styles/) (if you don't use the predesigned html you have to include it into your html ("./style/style.css")).
 8. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
 9. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").

@@ -44,7 +44,7 @@ After all logfiles were parsed a XML file is created which then is fetched by th
 Coming soon...
 
 ## Installation
-As the file name already implies, the install instructions can be found in the file ["Install Instructions"](https://github.com/Drumsticks1/TS3_EnhancedClientList/blob/master/Install%20Instructions)<br />
+As the file name already implies, the install instructions can be found in the file "Install Instructions".
 For now there are only installation instructions available for Linux.<br />
 Experienced Users should be able to set it up on Windows / Mac by following the Linux steps.
 

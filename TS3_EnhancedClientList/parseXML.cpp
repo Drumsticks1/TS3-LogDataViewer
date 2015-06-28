@@ -7,6 +7,7 @@
 #include <vector>
 #include "Constants.h"
 #include "User.h"
+#include "Kick.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/filesystem.hpp>
@@ -17,6 +18,7 @@ using namespace boost::property_tree;
 using namespace boost::filesystem;
 
 extern vector <User> UserList;
+extern vector <Kick> KickList;
 vector <string> parsedLogs;
 
 // Parses the XML if existing.
@@ -26,8 +28,9 @@ bool parseXML(){
 		if (is_regular_file(XMLFILE)){
 			if (!boost::filesystem::is_empty(XMLFILE)){
 				cout << "Parsing the last created XML..." << endl;
-				unsigned int ID = 0;
+				unsigned int ID = 0, KickListID = 0, kickedID;
 				ptree PropertyTree;
+				string kickDateTime, kickedNickname, kickedByNickname, kickReason;
 
 				try{
 					read_xml(XMLFILE, PropertyTree);
@@ -75,6 +78,28 @@ bool parseXML(){
 							parsedLogs.emplace_back(vs.second.data());
 						}
 					}
+					else if (Node.first == "Kick"){
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
+							if (vs.first == "KickDateTime"){
+								kickDateTime = vs.second.data();
+							}
+							else if (vs.first == "KickedID"){
+								kickedID = stoul(vs.second.data());
+							}
+							else if (vs.first == "KickedNickname"){
+								kickedNickname = vs.second.data();
+							}
+							else if (vs.first == "KickedByNickname"){
+								kickedByNickname = vs.second.data();
+							}
+							else if (vs.first == "KickReason"){
+								kickReason = vs.second.data();
+							}
+						}
+							KickList.resize(KickListID + 1);
+							KickList[KickListID].addKick(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickReason);
+							KickListID++;
+						}
 				}
 				return true;
 			}

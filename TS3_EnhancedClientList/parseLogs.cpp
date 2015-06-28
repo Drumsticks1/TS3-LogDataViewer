@@ -9,6 +9,8 @@
 #include <boost/filesystem.hpp>
 #include "Constants.h"
 #include "User.h"
+#include "Kick.h"
+#include "Ban.h"
 #include "checkFunctions.h"
 
 using namespace std;
@@ -16,6 +18,7 @@ using namespace std;
 extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
+extern vector <Kick> KickList;
 extern bool validXML;
 
 // DEV: Make compatible with multiple virtual servers.
@@ -26,9 +29,14 @@ extern bool validXML;
 
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY){
-	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP;
-	unsigned int ID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos;
+	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP, kickedByNickname, kickReason;
+	unsigned int ID, KickListID = 0, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos;
 	unsigned long logfileLength;
+	bool banMatch, kickMatch;
+
+	if (KickList.size() > 0){
+		KickListID = KickList.size();
+	}
 
 	if (validXML){
 		if (IsMatchingLogOrder()){
@@ -63,6 +71,10 @@ void parseLogs(string LOGDIRECTORY){
 				Nickname.clear();
 				DateTime.clear();
 				IP.clear();
+				kickedByNickname.clear();
+				kickReason.clear();
+				banMatch = false;
+				kickMatch = false;
 
 				// Connection matches.
 				if (buffer_logline.find(LOGMATCHCONNECT) != string::npos){
@@ -115,7 +127,7 @@ void parseLogs(string LOGDIRECTORY){
 					}
 				}
 
-				// Disconnecting matches
+				// Disconnecting matches, including kick matches.
 				if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
 					NicknameStartPos = 80;
 
@@ -124,6 +136,10 @@ void parseLogs(string LOGDIRECTORY){
 					// Added to cover kick / ban disconnects as well
 					if (buffer_logline.rfind(") reason 'reasonmsg") == string::npos){
 						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'invokerid=");
+						if (buffer_logline.rfind(" bantime=") != string::npos){
+							banMatch = true;
+						}
+						else kickMatch = true;
 					}
 					else{
 						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'reasonmsg");
@@ -153,6 +169,33 @@ void parseLogs(string LOGDIRECTORY){
 					if (i + 1 == Logs.size()){
 						UserList[ID].disconnect();
 					}
+
+					if (kickMatch){
+						if (buffer_logline.rfind(" reasonmsg=") != string::npos){
+							kickReasonStartPos = 11 + buffer_logline.rfind(" reasonmsg=");
+							for (unsigned int j = kickReasonStartPos; j < buffer_logline.size() - 1; j++){
+								kickReason += buffer_logline[j];
+							}
+						}
+						else kickReason = "";
+
+						kickedByNicknameStartPos = 13 + buffer_logline.rfind(" invokername=");
+						kickedByNicknameEndPos = buffer_logline.rfind(" invokeruid=");
+
+						for (unsigned int j = 0; j < 19; j++){
+							DateTime += buffer_logline[j];
+						}
+
+						for (unsigned j = kickedByNicknameStartPos; j < kickedByNicknameEndPos; j++){
+							kickedByNickname += buffer_logline[j];
+						}
+
+						if (!IsDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickReason)){
+							KickList.resize(KickListID + 1);
+							KickList[KickListID].addKick(DateTime, ID, Nickname, kickedByNickname, kickReason);
+							KickListID++;
+						}
+					}
 				}
 
 				// User Deletion matches.
@@ -171,6 +214,7 @@ void parseLogs(string LOGDIRECTORY){
 						UserList[ID].deleteUser();
 					}
 				}
+
 				currentPos += buffer_logline.length() + 1;
 				logfile.seekg(currentPos);
 			}

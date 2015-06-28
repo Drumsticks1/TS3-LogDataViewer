@@ -1,6 +1,7 @@
 // TS3_EnhancedClientList.js
 // Author: Drumsticks1
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
     $.get("rebuildXML.php", function () { buildTable() });
@@ -62,13 +63,12 @@ function scrollToDiv(Row_ID) {
 
 // Builds the table using the XML.
 function buildTable() {
-    var User, ID, Nicknames, Connections, ConnectionsLength, IPs, Connection_Count, Connected, Deleted, ConnectedClientsCount = 0, Attributes, i, j;
-    var IDcounter, UserListLength;
+    var ConnectedClientsCount = 0;
     if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
     else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            output = "<table id='Table' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
+            output = "<table id='clienttable' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
             User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
             UserListLength = User.length;
             for (i = 0; i < UserListLength; i++) {
@@ -124,16 +124,40 @@ function buildTable() {
                     output += "</td><td>" + Deleted + "</td></tr>";
                 }
             }
+
             output += "</tbody></table>";
-            output += "<button id=backtotop onclick=scrollTo(0,0)>&#8613; Scroll back to top &#8613;</button>";
+            output += "<button id=btt onclick=scrollTo(0,0)>&#8613; Scroll back to top &#8613;</button>";
+
+            output2 = "<table id='kicktable' class='tablesorter'><thead><tr><th>Date and Time</th><th>Kicked User (ID)</th><th>Kicked User (Nickname)</th><th>Kicked by</th><th>Reason</th></tr></thead><tbody>";
+            Kick = xmlhttp.responseXML.documentElement.getElementsByTagName("Kick");
+            KickListLength = Kick.length;
+            for (i = 0; i < KickListLength; i++) {
+
+                KickDateTime = Kick[i].getElementsByTagName("KickDateTime")[0].firstChild.nodeValue;
+                KickedID = Kick[i].getElementsByTagName("KickedID")[0].firstChild.nodeValue;
+                KickedNickname = Kick[i].getElementsByTagName("KickedNickname")[0].firstChild.nodeValue;
+                KickedByNickname = Kick[i].getElementsByTagName("KickedByNickname")[0].firstChild.nodeValue;
+                if (Kick[i].getElementsByTagName("KickReason")[0].firstChild != null) {
+                    KickReason = Kick[i].getElementsByTagName("KickReason")[0].firstChild.nodeValue;
+                }
+                else KickReason = "No Reason given";
+
+                output2 += "<tr><td>" + KickDateTime + "</td><td>" + KickedID + "</td><td>" + KickedNickname + "</td><td>" + KickedByNickname + "</td><td>" + KickReason + "</td></tr>";
+            }
+
+            output2 += "</tbody></table>";
+
             var table = document
 
             Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
 
-            document.getElementById('showtable').innerHTML = output;
+            document.getElementById('showclienttable').innerHTML = output;
+            document.getElementById('showkicktable').innerHTML = output2;
             document.getElementById('connectedclientscount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
             document.getElementById('creationtimestamp_localtime').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue + "   (server local time)";
             document.getElementById('creationtimestamp_utc').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue + "   (UTC)";
+            $("#clienttable").tablesorter();
+            $("#kicktable").tablesorter();
         }
     }
     xmlhttp.open("GET", "output.xml", true);
@@ -148,11 +172,13 @@ control += "<div id='creationtimestamp_utc'>Analyzing data ...  </div><br />";
 control += "<div id='connectedclientscount'>Current Connected Clients: Analyzing data ...</div><br />";
 control += "Enter an ID and push the button to scroll to the row containing this ID and its information:";
 control += "<input type='number' id='idselection' />";
-control += "<button onclick=scrollToDiv(document.getElementById('idselection').value)>Scroll</button>";
+control += "<button onclick=scrollToDiv(document.getElementById('idselection').value)>Scroll</button><br /><br />";
+control += "<button onclick=scrollToDiv('showkicktable')>Scroll to kick table</button>";
 
 rebuildXML();
 
 $(document).ready(function () {
     $(".ts3-control").html(control);
-    $(".ts3-table").html("<div id='showtable'></div>");
+    $(".ts3-clienttable").html("<div id='showclienttable'></div>");
+    $(".ts3-kicktable").html("<div id='showkicktable'></div>");
 });
