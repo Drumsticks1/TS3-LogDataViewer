@@ -7,6 +7,8 @@
 #include "User.h"
 #include "Kick.h"
 
+using namespace std;
+
 extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
@@ -73,10 +75,10 @@ bool IsMatchingLogOrder(){
 }
 
 // Checks if a kick is already existing in the KickList.
-bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickReason){
+bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason){
 	for (unsigned int i = 0; i < KickList.size(); i++){
 		if (KickList[i].getKickDateTime() == kickDateTime && KickList[i].getKickedID() == kickedID && KickList[i].getKickedNickname() == kickedNickname &&
-			KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickReason() == kickReason) return true;
+			KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason) return true;
 	}
 	return false;
 }

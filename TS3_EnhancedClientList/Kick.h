@@ -9,14 +9,15 @@ using namespace std;
 class Kick{
 private:
 	unsigned int kickedID;
-	string kickDateTime, kickedNickname, kickedByNickname, kickReason;
+	string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason;
 
 public:
-	void addKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickReason);
+	void addKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason);
 
 	string getKickDateTime();
 	unsigned int getKickedID();
 	string getKickedNickname();
 	string getKickedByNickname();
+	string getKickedByUID();
 	string getKickReason();
 };

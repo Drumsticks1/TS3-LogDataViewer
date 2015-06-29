@@ -1,9 +1,10 @@
 /* Todo:
 general
 	- add userignore for ignoring IDs ?
-
-Kicks
-	- Add kickedByID.
+	- add IDs to ignoreIDs via Webinterface.
+	- let the user choose (via rebuildXML) which data is wanted (just client list or additional lists).
+	- optimize the code for faster performance.
+	- Add program options (logpath, feature selection) with boost program_options.
 
 Bans
 	- Cover changes of the bans.

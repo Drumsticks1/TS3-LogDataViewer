@@ -24,4 +24,4 @@ bool IsIgnoredLog(string log);
 bool IsMatchingLogOrder();
 
 // Checks if a kick is already existing in the KickList.
-bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickReason);
+bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason);

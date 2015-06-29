@@ -20,9 +20,6 @@ extern vector <User> UserList;
 extern vector <string> parsedLogs;
 extern vector <Kick> KickList;
 
-// DEV: Add later.
-#define TITLE 
-
 // Returns the given time structure as string in the format "dd.mm.yyyy hh:mm:ss".
 string timeToString(ptime t){
 	unsigned short year, month, day, hours, minutes, seconds;
@@ -94,6 +91,7 @@ void createXML(){
 		KickNode.put("KickedID", KickList[i].getKickedID());
 		KickNode.put("KickedNickname", KickList[i].getKickedNickname());
 		KickNode.put("KickedByNickname", KickList[i].getKickedByNickname());
+		KickNode.put("KickedByUID", KickList[i].getKickedByUID());
 		KickNode.put("KickReason", KickList[i].getKickReason());
 
 		UserListNode.add_child("Kick", KickNode);

@@ -29,14 +29,13 @@ extern bool validXML;
 
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY){
-	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP, kickedByNickname, kickReason;
-	unsigned int ID, KickListID = 0, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos;
+	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP, kickedByNickname, kickedByUID, kickReason;
+	unsigned int ID, KickListID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos;
 	unsigned long logfileLength;
 	bool banMatch, kickMatch;
 
-	if (KickList.size() > 0){
-		KickListID = KickList.size();
-	}
+	if (KickList.size() > 0) KickListID = KickList.size();
+	else KickListID = 0;
 
 	if (validXML){
 		if (IsMatchingLogOrder()){
@@ -72,6 +71,7 @@ void parseLogs(string LOGDIRECTORY){
 				DateTime.clear();
 				IP.clear();
 				kickedByNickname.clear();
+				kickedByUID.clear();
 				kickReason.clear();
 				banMatch = false;
 				kickMatch = false;
@@ -128,7 +128,7 @@ void parseLogs(string LOGDIRECTORY){
 				}
 
 				// Disconnecting matches, including kick matches.
-				if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
+				else if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
 					NicknameStartPos = 80;
 
 					IDStartPos = (unsigned int)buffer_logline.rfind("'(id:") + 5;
@@ -141,9 +141,7 @@ void parseLogs(string LOGDIRECTORY){
 						}
 						else kickMatch = true;
 					}
-					else{
-						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'reasonmsg");
-					}
+					else IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'reasonmsg");
 
 					IDLength = IDEndPos - IDStartPos;
 					NicknameLength = IDStartPos - NicknameStartPos - 5;
@@ -181,6 +179,10 @@ void parseLogs(string LOGDIRECTORY){
 
 						kickedByNicknameStartPos = 13 + buffer_logline.rfind(" invokername=");
 						kickedByNicknameEndPos = buffer_logline.rfind(" invokeruid=");
+						if (buffer_logline.find("invokeruid=serveradmin") == string::npos){
+							kickedByUIDEndPos = buffer_logline.find("=", kickedByNicknameEndPos + 12) + 1;
+						}
+						else kickedByUIDEndPos = kickedByNicknameEndPos + 23;
 
 						for (unsigned int j = 0; j < 19; j++){
 							DateTime += buffer_logline[j];
@@ -190,16 +192,20 @@ void parseLogs(string LOGDIRECTORY){
 							kickedByNickname += buffer_logline[j];
 						}
 
-						if (!IsDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickReason)){
+						for (unsigned j = kickedByNicknameEndPos + 12; j < kickedByUIDEndPos; j++){
+							kickedByUID += buffer_logline[j];
+						}
+
+						if (!IsDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)){
 							KickList.resize(KickListID + 1);
-							KickList[KickListID].addKick(DateTime, ID, Nickname, kickedByNickname, kickReason);
+							KickList[KickListID].addKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason);
 							KickListID++;
 						}
 					}
 				}
 
 				// User Deletion matches.
-				if (buffer_logline.find(LOGMATCHDELETEUSER1) != string::npos){
+				else if (buffer_logline.find(LOGMATCHDELETEUSER1) != string::npos){
 					if (buffer_logline.find(LOGMATCHDELETEUSER2) != string::npos){
 						IDEndPos = (unsigned int)buffer_logline.rfind(") got deleted by client '");
 						IDStartPos = 5 + (unsigned int)buffer_logline.rfind("'(id:", IDEndPos);

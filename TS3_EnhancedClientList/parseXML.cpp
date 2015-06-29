@@ -23,14 +23,14 @@ vector <string> parsedLogs;
 
 // Parses the XML if existing.
 bool parseXML(){
-	bool blankUser;
 	if (exists(XMLFILE)){
 		if (is_regular_file(XMLFILE)){
 			if (!boost::filesystem::is_empty(XMLFILE)){
 				cout << "Parsing the last created XML..." << endl;
-				unsigned int ID = 0, KickListID = 0, kickedID;
+				unsigned int ID, KickListID = 0, kickedID;
 				ptree PropertyTree;
-				string kickDateTime, kickedNickname, kickedByNickname, kickReason;
+				string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason;
+				bool blankUser;
 
 				try{
 					read_xml(XMLFILE, PropertyTree);
@@ -43,17 +43,15 @@ bool parseXML(){
 				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
 					ptree subtree = Node.second;
 					if (Node.first == "User"){
-						blankUser = false;
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
 							if (vs.first == "ID"){
 								if (vs.second.data() != "-1"){
 									ID = stoul(vs.second.data());
 									UserList.resize(ID + 1);
 									UserList[ID].addID(stoul(vs.second.data()));
+									blankUser = false;
 								}
-								else{
-									blankUser = true;
-								}
+								else blankUser = true;
 							}
 							else if (vs.first == "Deleted"){
 								if (vs.second.data() == "true"){
@@ -73,11 +71,6 @@ bool parseXML(){
 							}
 						}
 					}
-					else if (Node.first == "Attributes"){
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")){
-							parsedLogs.emplace_back(vs.second.data());
-						}
-					}
 					else if (Node.first == "Kick"){
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
 							if (vs.first == "KickDateTime"){
@@ -92,14 +85,22 @@ bool parseXML(){
 							else if (vs.first == "KickedByNickname"){
 								kickedByNickname = vs.second.data();
 							}
+							else if (vs.first == "KickedByUID"){
+								kickedByUID = vs.second.data();
+							}
 							else if (vs.first == "KickReason"){
 								kickReason = vs.second.data();
 							}
 						}
-							KickList.resize(KickListID + 1);
-							KickList[KickListID].addKick(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickReason);
-							KickListID++;
+						KickList.resize(KickListID + 1);
+						KickList[KickListID].addKick(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason);
+						KickListID++;
+					}
+					else if (Node.first == "Attributes"){
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")){
+							parsedLogs.emplace_back(vs.second.data());
 						}
+					}
 				}
 				return true;
 			}

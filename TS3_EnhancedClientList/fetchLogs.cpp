@@ -43,13 +43,10 @@ bool fetchLogs(string LOGDIRECTORY){
 								ignoreLogs.push_back(buffer_logignore);
 							}
 						}
-						else{
-							cout << "The logignore seems to be empty - skipping ..." << endl;
-						}
+						else cout << "The logignore seems to be empty - skipping ..." << endl;
 					}
-					else{
-						cout << "No valid logignore found - skipping ..." << endl;
-					}
+					else cout << "No valid logignore found - skipping ..." << endl;
+					
 					directory_iterator LogDirectory(LOGDIRECTORY);
 					while (LogDirectory != directory_iterator()){
 						if (is_regular_file(LogDirectory->status()) && !boost::filesystem::is_empty(LogDirectory->path()) && LogDirectory->path().extension() == ".log"){

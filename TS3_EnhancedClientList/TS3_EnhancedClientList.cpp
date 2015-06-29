@@ -14,8 +14,8 @@ bool validXML = false;
 
 int main(int argc, char* argv[]){
 	string LOGDIRECTORY;
-	if (argc > 1){ LOGDIRECTORY = argv[1]; }
-	else{ LOGDIRECTORY = "./logs/"; }
+	if (argc > 1) LOGDIRECTORY = argv[1];
+	else LOGDIRECTORY = "./logs/";
 
 	if (!fetchLogs(LOGDIRECTORY)){
 		cout << "The program will now exit." << endl;
