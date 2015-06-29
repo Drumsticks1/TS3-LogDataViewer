@@ -7,21 +7,22 @@ Linux:
 
 1. Create the directory "EnhancedClientList" in the directory "/var/www".
 2. Set up a .htaccess in order to secure the access to the directory (Skipping this step may result in serious security vulnerability of your webserver!).
-3. Download a compiled file (-> skip to step 4) or compile the code using the makefile (for experienced users -> follow the 3.x steps).
-	3.1. Downloads the makefile and the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't needed for compiling as it doesn't include any code).
-	3.2. Download the Boost Library package via "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0).
-	3.3. You will need to install the packages "make", "g++", "boost-system-dev" and "boost-filesystem-dev" in order to compile with the makefile.
-4. Download the jquery plugin "tablesorter" via this link: "http://tablesorter.com/__jquery.tablesorter.zip".
-5. Move the "TS3_EnhancedClientList.js" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into your EnhancedClientList-directory.
-6. If you want to use the predesigned Webinterface.html then follow the step 6 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 6 b).
-	6 a) Move the "Webinterface.html" into the "var/www/EnhancedClientList" directory.
-	6 b) Include the controls and the table by creating three divs with the classes "ts3-control" and "ts3-clienttable" "ts3-kicktable" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage..
-7. Move the "styles" folder into your "EnhancedClientList" directory (--> /var/www/EnhancedClientList/styles/) (if you don't use the predesigned html you have to include it into your html ("./style/style.css")).
-8. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
-9. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").
-10. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
-11. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
-12. Adjust the LOGPATH in the "rebuildXML.php" if necessary.
-13. Optionally add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+3. Install the packages "libboost-system-dev", "libboost-filesystem-dev" and "libboost-program-options-dev".
+4. Download a compiled file (-> skip to step 4) or compile the code using the makefile (for experienced users -> follow the 3.x steps).
+	4.1. Downloads the makefile and the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't needed for compiling as it doesn't include any code).
+	4.2. Download the Boost Library package via "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0).
+	4.3. You will need to install the packages "make" and "g++" in order to compile using the makefile.
+5. Download the jquery plugin "tablesorter" via this link: "http://tablesorter.com/__jquery.tablesorter.zip".
+6. Move the "TS3_EnhancedClientList.js" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into your EnhancedClientList-directory.
+7. If you want to use the predesigned Webinterface.html then follow the step 7 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 7 b).
+	7 a) Move the "Webinterface.html" into the "var/www/EnhancedClientList" directory.
+	7 b) Include the controls and the table by creating three divs with the classes "ts3-control" and "ts3-clienttable" "ts3-kicktable" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage..
+8. Move the "styles" folder into your "EnhancedClientList" directory (--> /var/www/EnhancedClientList/styles/) (if you don't use the predesigned html you have to include it into your html ("./style/style.css")).
+9. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
+10. Move the "rebuildXML.php" and the "deleteXML.php" into the "var/www/EnhancedClientList" directory and change the file owner to www-data (= owner of the web directories) ("chown www-data:www-data rebuildXML.php").
+11. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
+12. Add the user www-data to the group under which your teampeak3 server is running ("usermod -a -G yourteamspeak3group www-data").
+13. (If necessary) Adjust the LOGPATH in the "rebuildXML.php".
 14. Open the Webinterface ("your-server/EnhancedClientList/Webinterface.html") or your self-created html on your webserver.
-15. (Optional) If you would like to change the appearance of the Webinterface you can do this by editing the "style.css".
+15. (Optional) add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+16. (Optional) If you would like to change the appearance of the Webinterface you can do this by editing the "style.css".

@@ -3,7 +3,7 @@
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 // Global Variables
-var ConnectedClientsCount = 0;
+var ConnectedClientsCount;
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -20,10 +20,15 @@ function buildNewXML() {
 // Expands the current list.
 function expandList(List, ID) {
     var newChild, currentDiv, Row, ListUpper;
-    switch (List) {
-        case "connections": Row = 2; ListUpper = "Connections"; break;
-        case "ips": Row = 3; ListUpper = "IPs"; break;
+    if (List == "ips") {
+        Row = 3;
+        ListUpper = "IPs";
     }
+    else {
+        Row = 2;
+        ListUpper = "Connections";
+    }
+
     var x = document.getElementById(ID).childNodes[Row];
     var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
     for (var j = 0; j < x.childNodes.length - 1 ; j++) {
@@ -41,10 +46,15 @@ function expandList(List, ID) {
 // Collapses the current list.
 function collapseList(List, ID) {
     var currentDiv, Row, ListUpper;
-    switch (List) {
-        case "connections": Row = 2; ListUpper = "Connections"; break;
-        case "ips": Row = 3; ListUpper = "IPs"; break;
+    if (List == "ips") {
+        Row = 3;
+        ListUpper = "IPs";
     }
+    else {
+        Row = 2;
+        ListUpper = "Connections";
+    }
+
     if (document.getElementById(ID) != null) {
         var x = document.getElementById(ID).childNodes[Row];
         var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
@@ -154,16 +164,15 @@ function buildTables() {
     else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            if (document.getElementById("showclienttable") != null)
-                buildClientTable();
-            if (document.getElementById("showkicktable") != null)
-                buildKickTable();
+            ConnectedClientsCount = 0;
 
-            Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
+            if (document.getElementById('showclienttable') != null) buildClientTable();
+            if (document.getElementById('showkicktable') != null) buildKickTable();
 
-            document.getElementById('connectedclientscount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
+			Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
             document.getElementById('creationtimestamp_localtime').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue + "   (server local time)";
             document.getElementById('creationtimestamp_utc').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue + "   (UTC)";
+			document.getElementById('connectedclientscount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
         }
     }
     xmlhttp.open("GET", "output.xml", true);

@@ -111,8 +111,10 @@ void parseLogs(string LOGDIRECTORY){
 					// DEV: Outsource.
 					ID = stoul(ID_string);
 					if (UserList.size() < ID + 1) UserList.resize(ID + 1);
-					// Duplicate check ? So that ID isn't overwritten every time information is added ?
-					UserList[ID].addID(ID);
+
+					if (UserList[ID].getID() != ID){
+						UserList[ID].addID(ID);
+					}
 					if (!IsDuplicateNickname(ID, Nickname)){
 						UserList[ID].addNickname(Nickname);
 					}
@@ -127,13 +129,12 @@ void parseLogs(string LOGDIRECTORY){
 					}
 				}
 
-				// Disconnecting matches, including kick matches.
+				// Disconnecting matches, including kick and ban matches.
 				else if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos){
 					NicknameStartPos = 80;
 
 					IDStartPos = (unsigned int)buffer_logline.rfind("'(id:") + 5;
 
-					// Added to cover kick / ban disconnects as well
 					if (buffer_logline.rfind(") reason 'reasonmsg") == string::npos){
 						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'invokerid=");
 						if (buffer_logline.rfind(" bantime=") != string::npos){
@@ -168,6 +169,7 @@ void parseLogs(string LOGDIRECTORY){
 						UserList[ID].disconnect();
 					}
 
+					// kick matches.
 					if (kickMatch){
 						if (buffer_logline.rfind(" reasonmsg=") != string::npos){
 							kickReasonStartPos = 11 + buffer_logline.rfind(" reasonmsg=");
@@ -202,6 +204,10 @@ void parseLogs(string LOGDIRECTORY){
 							KickListID++;
 						}
 					}
+					// Ban matches.
+				//	else if (banMatch){
+				//
+				//	}
 				}
 
 				// User Deletion matches.
