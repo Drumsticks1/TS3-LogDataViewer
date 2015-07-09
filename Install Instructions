@@ -29,8 +29,8 @@ Linux:
 12. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
 13. (If necessary) Adjust the LOGPATH in the "rebuildXML.php".
 14. Open the Webinterface ("./Webinterface.html") or your self-created html on your webserver and enjoy scrolling through the tables.
-15. (Optional) add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
-16. (Optional) If you would like to change the appearance of the Webinterface you can do this by editing the "style.css".
+15. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+16. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
 
 
 If there are any problems or improvement suggestions feel free to open an Issue on Github so I can improve the install instructions.

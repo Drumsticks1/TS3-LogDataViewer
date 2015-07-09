@@ -12,11 +12,7 @@ parseLogs
 	- Change finding of the Virtual Server messages according to servers with multiple virtual servers.
 		How many virtual servers are possible ?
 
-README:
-	- Add information about the kick table and the upload table (and for the ban table if/when implemented)
-
 webinterface
 	- Add button for collapsing all expanded lists.
 	- Only show + or - button (according to current state).
-	- Add possibility to search for a nickname.
 */

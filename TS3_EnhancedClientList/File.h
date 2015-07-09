@@ -22,7 +22,7 @@ public:
 	unsigned int getUploadedByID();
 };
 
-/* To be added:
+/* Planned for the future:
 Tables which include
 	Downloads
 	Renaming
