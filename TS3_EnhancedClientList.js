@@ -158,6 +158,24 @@ function buildKickTable() {
     $("#kicktable").tablesorter();
 }
 
+// Builds and shows the upload table.
+function buildUploadTable() {
+    uploadTable = "<table id='uploadtable' class='tablesorter'><thead><tr><th>UploadDateTime</th><th>ChannelID</th><th>Filename</th><th>UploadedByNickname</th><th>UploadedByID</tr></thead><tbody>";
+    File = xmlhttp.responseXML.documentElement.getElementsByTagName("File");
+    for (i = 0; i < File.length; i++) {
+            UploadDateTime = File[i].getElementsByTagName("UploadDateTime")[0].firstChild.nodeValue;
+            ChannelID = File[i].getElementsByTagName("ChannelID")[0].firstChild.nodeValue;
+            Filename = File[i].getElementsByTagName("Filename")[0].firstChild.nodeValue;
+            UploadedByNickname = File[i].getElementsByTagName("UploadedByNickname")[0].firstChild.nodeValue;
+            UploadedByID = File[i].getElementsByTagName("UploadedByID")[0].firstChild.nodeValue;
+
+			uploadTable += "<tr><td>" + UploadDateTime + "</td><td>" + ChannelID + "</td><td>" + Filename + "</td><td>" + UploadedByNickname + "</td><td>" + UploadedByID + "</td></tr>";
+    }
+    uploadTable += "</tbody></table>";
+    document.getElementById('showuploadtable').innerHTML = uploadTable;
+    $("#uploadtable").tablesorter();
+}
+
 // Builds the table using the XML.
 function buildTables() {
     if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
@@ -165,10 +183,10 @@ function buildTables() {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             ConnectedClientsCount = 0;
-
-            if (document.getElementById('showclienttable') != null) buildClientTable();
-            if (document.getElementById('showkicktable') != null) buildKickTable();
-
+            if (document.getElementById('showclienttable') != null){buildClientTable();}
+			if (document.getElementById('showkicktable') != null) {buildKickTable();}
+			if (document.getElementById('showuploadtable') != null) {buildUploadTable();}
+			
 			Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
             document.getElementById('creationtimestamp_localtime').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue + "   (server local time)";
             document.getElementById('creationtimestamp_utc').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue + "   (UTC)";
@@ -187,9 +205,10 @@ control += "<div id='creationtimestamp_utc'>Analyzing data ...  </div><br />";
 control += "<div id='connectedclientscount'>Current Connected Clients: Analyzing data ...</div><br />";
 control += "Enter an ID and push the button to scroll to the row containing this ID and its information:";
 control += "<input type='number' id='idselection' />";
-control += "<button onclick=scrollToDiv(document.getElementById('idselection').value)>Scroll</button><br /><br />";
-control += "<button onclick=scrollToDiv('showkicktable')>Scroll to kick table</button><br />";
-control += "<button id=btt onclick=scrollTo(0,0)>&#8613; Scroll back to top &#8613;</button>";
+control += "<button onclick=scrollToDiv(document.getElementById('idselection').value)>Scroll</button><br />";
+control += "<button id=btt onclick=scrollTo(0,0)>&#8613; Scroll back to top &#8613;</button><br />";
+control += "<button onclick=scrollToDiv('showkicktable')>Scroll to kick table</button><br /><br />";
+control += "<button onclick=scrollToDiv('showuploadtable')>Scroll to upload table</button><br /><br />";
 
 rebuildXML();
 
@@ -197,4 +216,5 @@ $(document).ready(function () {
     $(".ts3-control").html(control);
     $(".ts3-clienttable").html("<div id='showclienttable'></div>");
     $(".ts3-kicktable").html("<div id='showkicktable'></div>");
+	$(".ts3-uploadtable").html("<div id='showuploadtable'></div>");
 });

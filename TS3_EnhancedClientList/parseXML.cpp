@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include "User.h"
 #include "Kick.h"
+#include "File.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/filesystem.hpp>
@@ -19,6 +20,7 @@ using namespace boost::filesystem;
 
 extern vector <User> UserList;
 extern vector <Kick> KickList;
+extern vector <File> FileList;
 vector <string> parsedLogs;
 
 // Parses the XML if existing.
@@ -27,9 +29,9 @@ bool parseXML(){
 		if (is_regular_file(XMLFILE)){
 			if (!boost::filesystem::is_empty(XMLFILE)){
 				cout << "Parsing the last created XML..." << endl;
-				unsigned int ID, KickListID = 0, kickedID;
+				unsigned int ID, KickListID = 0, FileListID = 0, kickedID, channelID, uploadedByID;
 				ptree PropertyTree;
-				string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason;
+				string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
 				bool blankUser;
 
 				try{
@@ -95,6 +97,29 @@ bool parseXML(){
 						KickList.resize(KickListID + 1);
 						KickList[KickListID].addKick(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason);
 						KickListID++;
+					}
+					else if (Node.first == "File"){
+						string bla = Node.second.data();
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
+							if (vs.first == "UploadDateTime"){
+								uploadDateTime = vs.second.data();
+							}
+							else if (vs.first == "ChannelID"){
+								channelID = stoul(vs.second.data());
+							}
+							else if (vs.first == "Filename"){
+								filename = vs.second.data();
+							}
+							else if (vs.first == "UploadedByNickname"){
+								uploadedByNickname = vs.second.data();
+							}
+							else if (vs.first == "UploadedByID"){
+								uploadedByID = stoul(vs.second.data());
+							}
+						}
+						FileList.resize(FileListID + 1);
+						FileList[FileListID].uploadFile(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
+						FileListID++;
 					}
 					else if (Node.first == "Attributes"){
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")){

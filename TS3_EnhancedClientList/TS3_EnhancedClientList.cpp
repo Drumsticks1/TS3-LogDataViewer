@@ -17,9 +17,9 @@ bool validXML = false;
 int main(int argc, char* argv[]){
 	string LOGDIRECTORY;
 
-	options_description description("Program options");
+	options_description description("Program options:");
 	description.add_options()
-		("help", "returns this help screen.")
+		("help", "Shows this help screen.")
 		("logdirectory", value<string>(), "Specify directory containing the logs.");
 
 	variables_map vm;

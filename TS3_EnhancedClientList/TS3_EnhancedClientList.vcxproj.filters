@@ -42,6 +42,9 @@
     <ClCompile Include="Ban.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="todo.h">
@@ -72,6 +75,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Ban.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

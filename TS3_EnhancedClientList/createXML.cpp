@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include "User.h"
 #include "Kick.h"
+#include "File.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/date_time.hpp>
@@ -19,6 +20,7 @@ using namespace boost::posix_time;
 extern vector <User> UserList;
 extern vector <string> parsedLogs;
 extern vector <Kick> KickList;
+extern vector <File> FileList;
 
 // Returns the given time structure as string in the format "dd.mm.yyyy hh:mm:ss".
 string timeToString(ptime t){
@@ -46,7 +48,7 @@ string timeToString(ptime t){
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML(){
-	ptree PropertyTree, UserListNode, KickNode, UserNode, AttributesNode;
+	ptree PropertyTree, UserListNode, UserNode, KickNode, FileNode, AttributesNode;
 	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
 	cout << "Preparing XML-Creation..." << endl;
@@ -97,6 +99,17 @@ void createXML(){
 		UserListNode.add_child("Kick", KickNode);
 	}
 	KickList.clear();
+
+	for (unsigned int i = 0; i < FileList.size(); i++){
+		FileNode.put("UploadDateTime", FileList[i].getUploadDateTime());
+		FileNode.put("ChannelID", FileList[i].getChannelID());
+		FileNode.put("Filename", FileList[i].getFilename());
+		FileNode.put("UploadedByNickname", FileList[i].getUploadedByNickname());
+		FileNode.put("UploadedByID", FileList[i].getUploadedByID());
+
+		UserListNode.add_child("File", FileNode);
+	}
+	FileList.clear();
 
 	AttributesNode.put("Generated", "by TS3_EnhancedClientList");
 

@@ -7,7 +7,7 @@ CFLAGS = -Wall -g -std=c++11
 IDIR = -I/usr/boost_1_58_0/
 LDFLAGS = -lboost_system -lboost_filesystem -lboost_program_options
 
-FILES = Ban.cpp Ban.h checkFunctions.cpp checkFunctions.h Constants.h createXML.cpp createXML.h fetchLogs.cpp fetchLogs.h Kick.cpp Kick.h parseLogs.cpp parseLogs.h parseXML.cpp parseXML.h TS3_EnhancedClientList.cpp User.cpp User.h
+FILES = Ban.cpp Ban.h checkFunctions.cpp checkFunctions.h Constants.h createXML.cpp createXML.h fetchLogs.cpp fetchLogs.h File.cpp File.h Kick.cpp Kick.h parseLogs.cpp parseLogs.h parseXML.cpp parseXML.h TS3_EnhancedClientList.cpp User.cpp User.h
 
 TS3_EnhancedClientList: $(FILES)
 		$(CC) $(CFLAGS) $(IDIR) -o TS3_EnhancedClientList $(FILES) $(LDFLAGS)

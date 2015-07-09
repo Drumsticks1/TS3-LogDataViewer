@@ -10,7 +10,7 @@
 #include "Constants.h"
 #include "User.h"
 #include "Kick.h"
-#include "Ban.h"
+#include "File.h"
 #include "checkFunctions.h"
 
 using namespace std;
@@ -19,23 +19,32 @@ extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
 extern vector <Kick> KickList;
+extern vector <File> FileList;
 extern bool validXML;
 
 // DEV: Make compatible with multiple virtual servers.
-#define LOGMATCHCONNECT		"|VirtualServerBase|  1| client connected"
-#define LOGMATCHDISCONNECT	"|VirtualServerBase|  1| client disconnected"
-#define LOGMATCHDELETEUSER1 "|VirtualServer |  1| client '"
-#define LOGMATCHDELETEUSER2 ") got deleted by client '"
+//		How many virtual servers are possible ?
+#define LOGMATCHCONNECT			"|INFO    |VirtualServerBase|  1| client connected '"
+#define LOGMATCHDISCONNECT		"|INFO    |VirtualServerBase|  1| client disconnected '"
+#define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  1| client '"
+#define LOGMATCHDELETEUSER2		") got deleted by client '"
+#define LOGMATCHFILEUPLOAD			"|INFO    |VirtualServer |  1| file upload to ("
+#define LOGMATCHFILEDOWNLOAD		"|INFO    |VirtualServer |  1| file download from ("
+#define LOGMATCHFILERENAMEDMOVED	"|INFO    |VirtualServer |  1| file renamed/moved from ("
+#define LOGMATCHFILEDELETION			"|INFO    |VirtualServer |  1| file deleted from ("
 
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY){
-	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP, kickedByNickname, kickedByUID, kickReason;
-	unsigned int ID, KickListID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos;
+	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP, kickedByNickname, kickedByUID, kickReason, uploadDateTime, channelID_string, filename, uploadedByNickname, uploadedByID_string;
+	unsigned int ID, KickListID, FileListID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos, channelIDEndPos, filenameEndPos, uploadedByIDStartPos;
 	unsigned long logfileLength;
-	bool banMatch, kickMatch;
+	bool kickMatch;
 
 	if (KickList.size() > 0) KickListID = KickList.size();
 	else KickListID = 0;
+
+	if (FileList.size() > 0) FileListID = FileList.size();
+	else FileListID = 0;
 
 	if (validXML){
 		if (IsMatchingLogOrder()){
@@ -73,8 +82,12 @@ void parseLogs(string LOGDIRECTORY){
 				kickedByNickname.clear();
 				kickedByUID.clear();
 				kickReason.clear();
-				banMatch = false;
 				kickMatch = false;
+				uploadDateTime.clear();
+				channelID_string.clear();
+				filename.clear();
+				uploadedByNickname.clear();
+				uploadedByID_string.clear();
 
 				// Connection matches.
 				if (buffer_logline.find(LOGMATCHCONNECT) != string::npos){
@@ -137,10 +150,9 @@ void parseLogs(string LOGDIRECTORY){
 
 					if (buffer_logline.rfind(") reason 'reasonmsg") == string::npos){
 						IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'invokerid=");
-						if (buffer_logline.rfind(" bantime=") != string::npos){
-							banMatch = true;
+						if (buffer_logline.rfind(" bantime=") == string::npos){
+							kickMatch = true;
 						}
-						else kickMatch = true;
 					}
 					else IDEndPos = (unsigned int)buffer_logline.rfind(") reason 'reasonmsg");
 
@@ -204,10 +216,46 @@ void parseLogs(string LOGDIRECTORY){
 							KickListID++;
 						}
 					}
-					// Ban matches.
-				//	else if (banMatch){
-				//
-				//	}
+				}
+
+				/* DEV: File transfer loglines:
+				2013-11-13 16:10:50.316177|INFO    |VirtualServer |  1| file upload to (id:4), '/ts3_recording_13_11_13_17_9_6.wav' by client 'drumstick'(id:3)
+				2013-11-13 16:11:08.080776|INFO    |VirtualServer |  1| file download from (id:4), '/ts3_recording_13_11_13_17_9_6.wav' by client 'Helloagain'(id:5)
+				2013-11-13 16:11:57.708621|INFO    |VirtualServer |  1| file download from (id:4), '/ts3_recording_13_11_13_17_9_6.wav' by client 'Helloagain'(id:5)
+				2013-11-13 16:12:40.740670|INFO    |VirtualServer |  1| file renamed/moved from (id:4), 'files/virtualserver_1/channel_4//ts3_recording_13_11_13_17_9_6.wav' to (id:4)
+				2013-11-22 16:39:58.898810|INFO    |VirtualServer |  1| file deleted from (id:4), 'files/virtualserver_1/channel_4//ts3_recording_13_11_22_17_34_18.wav' by client 'Helloagain'(id:5)
+				*/
+
+				else if (buffer_logline.find(LOGMATCHFILEUPLOAD) != string::npos){
+					channelIDEndPos = (unsigned int)buffer_logline.find(")");
+					filenameEndPos = (unsigned int)buffer_logline.rfind("' by client '");
+					uploadedByIDStartPos = 5 + (unsigned int)buffer_logline.rfind("'(id:");
+
+					for (unsigned int j = 0; j < 19; j++){
+						uploadDateTime += buffer_logline[j];
+					}
+
+					for (unsigned int j = 75; j < channelIDEndPos; j++){
+						channelID_string += buffer_logline[j];
+					}
+
+					for (unsigned int j = channelIDEndPos + 4; j < filenameEndPos; j++){
+						filename += buffer_logline[j];
+					}
+
+					for (unsigned int j = filenameEndPos + 13; j < uploadedByIDStartPos - 5; j++){
+						uploadedByNickname += buffer_logline[j];
+					}
+
+					for (unsigned int j = uploadedByIDStartPos; j < buffer_logline.size() - 1; j++){
+						uploadedByID_string += buffer_logline[j];
+					}
+
+					if (!IsDuplicateFile(uploadDateTime, stoul(channelID_string), filename, uploadedByNickname, stoul(uploadedByID_string))){
+						FileList.resize(FileListID + 1);
+						FileList[FileListID].uploadFile(uploadDateTime, stoul(channelID_string), filename, uploadedByNickname, stoul(uploadedByID_string));
+						FileListID++;
+					}
 				}
 
 				// User Deletion matches.

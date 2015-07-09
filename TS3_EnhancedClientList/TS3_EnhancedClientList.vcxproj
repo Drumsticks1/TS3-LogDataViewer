@@ -83,6 +83,7 @@
     <ClCompile Include="fetchLogs.cpp" />
     <ClCompile Include="checkFunctions.cpp" />
     <ClCompile Include="createXML.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="Kick.cpp" />
     <ClCompile Include="parseLogs.cpp" />
     <ClCompile Include="parseXML.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="checkFunctions.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="createXML.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="Kick.h" />
     <ClInclude Include="parseLogs.h" />
     <ClInclude Include="parseXML.h" />

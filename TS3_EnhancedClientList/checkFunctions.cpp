@@ -6,6 +6,7 @@
 #include <vector>
 #include "User.h"
 #include "Kick.h"
+#include "File.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ extern vector <string> Logs;
 extern vector <string> parsedLogs;
 extern vector <string> ignoreLogs;
 extern vector <Kick> KickList;
+extern vector <File> FileList;
 
 // Checks if a DateTime is already existing for the current user.
 bool IsDuplicateDateTime(unsigned int ID, string DateTime){
@@ -79,6 +81,15 @@ bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNi
 	for (unsigned int i = 0; i < KickList.size(); i++){
 		if (KickList[i].getKickDateTime() == kickDateTime && KickList[i].getKickedID() == kickedID && KickList[i].getKickedNickname() == kickedNickname &&
 			KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason) return true;
+	}
+	return false;
+}
+
+// Checks if a file is already existing in the FileList.
+bool IsDuplicateFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID){
+	for (unsigned int i = 0; i < FileList.size(); i++){
+		if (FileList[i].getUploadDateTime() == uploadDateTime && FileList[i].getChannelID() == channelID && FileList[i].getFilename() == filename &&
+			FileList[i].getUploadedByNickname() == uploadedByNickname && FileList[i].getUploadedByID() == uploadedByID) return true;
 	}
 	return false;
 }
