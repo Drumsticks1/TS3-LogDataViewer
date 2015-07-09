@@ -34,7 +34,7 @@ You can either use the provided Webinterface.html or implement the control secti
 #### Client table layout and features
 ID | Nicknames | Connections | IPs | Connected | Deleted
 ---|---|:---:|:---:|---|---
-3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br />2015-24-06 23:11:02<br />2013-03-11 19:46:07 | + -<br />88.888.888.75<br />99.999.999.31 | True | False
+3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br />2015-24-06 23:11:02<br />2013-03-11 19:46:07 | + -<br />88.888.888.75<br />99.999.999.31 | true | false
 
 - Chronological nickname history.
 - Last and first connection time.
@@ -58,6 +58,7 @@ Upload DateTime | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (
 ### Overall Program Features
 - You can manually create a logignore and list the logfiles (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
 - In order to save time the program uses the information from the last created XML instead of parsing all logs again.
+- Lockfile: Only one instance of the program can run at once.
 
 ### Planned Features
 See the todo.h for planned features.

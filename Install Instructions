@@ -17,8 +17,8 @@ Linux:
 	4.5. Compile with the makefile ("make -f makefile").
 5. Download the jquery plugin "tablesorter" ("http://tablesorter.com/__jquery.tablesorter.zip").
 6. Move the "TS3_EnhancedClientList.js" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into your created EnhancedClientList directory.
-7. If you want to use the predesigned Webinterface.html then follow the step 7 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 7 b).
-	7 a) Move the "Webinterface.html" into your created EnhancedClientList directory.
+7. If you want to use the predesigned index.html then follow the step 7 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 7 b).
+	7 a) Move the "index.html" into your created EnhancedClientList directory.
 	7 b) Include the controls and the table by creating two divs with the classes "ts3-control" and "ts3-clienttable" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage.
 	7 c) (Optional) You can also include two divs with the classes "ts3-kicktable" and "ts3-upload-table" in your webpage. 
 8. Move the "styles" folder into your EnhancedClientList directory (--> e.g. /var/www/html/EnhancedClientList/styles/)
@@ -27,8 +27,8 @@ Linux:
 10. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
 11. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
 12. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
-13. (If necessary) Adjust the LOGPATH in the "rebuildXML.php".
-14. Open the Webinterface ("./Webinterface.html") or your self-created html on your webserver and enjoy scrolling through the tables.
+13. (If necessary) Adjust the ECLPATH in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH in the "rebuildXML.php".
+14. Open the Webinterface by opening the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
 15. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
 16. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
 

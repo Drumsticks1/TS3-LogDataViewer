@@ -5,6 +5,9 @@ general
 	- add fileignore and make it possible to add files via the Webinterface.
 	- optimize the code for faster performance.
 	- cover file transfer.
+	- add scrolling buttons to an bottom bar.
+	- add fixed table header.
+	- add moment.js
 
 Bans - postponed.
 

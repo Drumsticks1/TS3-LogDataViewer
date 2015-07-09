@@ -123,10 +123,10 @@ function buildClientTable() {
             clientTable += "</td><td>" + Connection_Count + "</td><td>";
 
             if (Connected == 1) {
-                clientTable += "True";
+                clientTable += "true";
                 ConnectedClientsCount++;
             }
-            else clientTable += "False";
+            else clientTable += "false";
 
             clientTable += "</td><td>" + Deleted + "</td></tr>";
         }

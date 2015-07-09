@@ -3,8 +3,12 @@
 
 <?php
 	// Directory containing the ts3 logs - please modify the path according to your system.
-	// The permissions have to be adjusted - see howto for more information.
+	// The permissions have to be adjusted - see Install Instructions for more information.
 	$LOGDIRECTORY = "./logs/";
 	
-	exec("/var/www/EnhancedClientList/TS3_EnhancedClientList --logdirectory=$LOGDIRECTORY");
+	// Created EnhancedClientList directory - please modify the path according to your system.
+	$ECLDIRECTORY = "/var/www/EnhancedClientList";
+	
+	// You may need to adjust the path to your EnhancedClientList directory in the following line.
+	exec("$ECLDIRECTORY/TS3_EnhancedClientList --logdirectory=$LOGDIRECTORY");
 ?>
