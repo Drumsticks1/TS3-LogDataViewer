@@ -7,19 +7,19 @@ var ConnectedClientsCount;
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
-    $.get("rebuildXML.php", function () { buildTables() });
+    $.get("rebuildXML.php", function () { buildTables(); });
     return false;
 }
 
 // Deletes the current XML and builds a new one after.
 function buildNewXML() {
-    $.get("deleteXML.php", function () { rebuildXML() });
+    $.get("deleteXML.php", function () { rebuildXML(); });
     return false;
 }
 
 // Expands the current list.
 function expandList(List, ID) {
-    var newChild, currentDiv, Row, ListUpper;
+    var Row, ListUpper;
     if (List == "ips") {
         Row = 3;
         ListUpper = "IPs";
@@ -32,12 +32,12 @@ function expandList(List, ID) {
     var x = document.getElementById(ID).childNodes[Row];
     var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
     for (var j = 0; j < x.childNodes.length - 1 ; j++) {
-        currentDiv = List + "_" + ID + "_" + j;
-        if (document.getElementById(currentDiv).firstChild != null) {
+        var currentDiv = List + "_" + ID + "_" + j;
+        if (document.getElementById(currentDiv).firstChild !== null) {
             document.getElementById(currentDiv).firstChild.nodeValue = ListContent[j].firstChild.nodeValue;
         }
         else {
-            newChild = document.createTextNode(ListContent[j].firstChild.nodeValue);
+            var newChild = document.createTextNode(ListContent[j].firstChild.nodeValue);
             document.getElementById(currentDiv).appendChild(newChild);
         }
     }
@@ -45,7 +45,7 @@ function expandList(List, ID) {
 
 // Collapses the current list.
 function collapseList(List, ID) {
-    var currentDiv, Row, ListUpper;
+	var Row, ListUpper;
     if (List == "ips") {
         Row = 3;
         ListUpper = "IPs";
@@ -55,10 +55,10 @@ function collapseList(List, ID) {
         ListUpper = "Connections";
     }
 
-    if (document.getElementById(ID) != null) {
+    if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row];
         var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
-        currentDiv = List + "_" + ID + "_1";
+        var currentDiv = List + "_" + ID + "_1";
         document.getElementById(currentDiv).firstChild.nodeValue = ListContent[ListContent.length - 1].firstChild.nodeValue;
         for (var j = 2; j < x.childNodes.length - 1 ; j++) {
             currentDiv = List + "_" + ID + "_" + j;
@@ -69,28 +69,28 @@ function collapseList(List, ID) {
 
 // Scroll to the given Row.
 function scrollToDiv(Row_ID) {
-    if (document.getElementById(Row_ID) != null) {
+    if (document.getElementById(Row_ID) !== null) {
         document.getElementById(Row_ID).scrollIntoView();
     }
 }
 
 // Builds and shows the client table.
 function buildClientTable() {
-    clientTable = "<table id='clienttable' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
-    User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
-    for (i = 0; i < User.length; i++) {
-        ID = User[i].getElementsByTagName("ID")[0].firstChild.nodeValue;
+    var clientTable = "<table id='clienttable' class='tablesorter'><thead><tr><th>ID</th><th>Nicknames</th><th>Connections</th><th>IPs</th><th>Connection Count</th><th>Connected</th><th>Deleted (still buggy)</th></tr></thead><tbody>";
+    var User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
+    for (var i = 0; i < User.length; i++) {
+        var ID = User[i].getElementsByTagName("ID")[0].firstChild.nodeValue;
         if (ID != -1) {
-            Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
-            Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
-            IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
-            Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].firstChild.nodeValue;
-            Connected = User[i].getElementsByTagName("Connected")[0].firstChild.nodeValue;
-            Deleted = User[i].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
+            var Nicknames = User[i].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
+            var Connections = User[i].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
+            var IPs = User[i].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
+            var Connection_Count = User[i].getElementsByTagName("Connection_Count")[0].firstChild.nodeValue;
+            var Connected = User[i].getElementsByTagName("Connected")[0].firstChild.nodeValue;
+            var Deleted = User[i].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
 
             clientTable += "<tr id=" + i + "><td>" + ID + "</td><td>";
 
-            for (j = 0; j < Nicknames.length; j++) {
+            for (var j = 0; j < Nicknames.length; j++) {
                 clientTable += "<div>" + Nicknames[j].firstChild.nodeValue + "</div>";
             }
 
@@ -132,22 +132,25 @@ function buildClientTable() {
         }
     }
     clientTable += "</tbody></table>";
-	document.getElementById('scrolltoclienttable').innerHTML = "<br /><button onclick=scrollToDiv('showclienttable')>Scroll to client table</button>";
+	if(document.getElementById("scrolltoclienttable") === null){
+	document.getElementById('navbar').innerHTML += "<button id=scrolltoclienttable onclick=scrollToDiv('showclienttable')>Scroll to client table</button>";
+	}
     document.getElementById('showclienttable').innerHTML = clientTable;
     $("#clienttable").tablesorter();
 }
 
 // Builds and shows the kick table.
 function buildKickTable() {
-    kickTable = "<table id='kicktable' class='tablesorter'><thead><tr><th>Date and Time</th><th>Kicked User (ID)</th><th>Kicked User (Nickname)</th><th>Kicked by (Nickname)</th><th>Kicked by (UID)</th><th>Reason</th></tr></thead><tbody>";
-    Kick = xmlhttp.responseXML.documentElement.getElementsByTagName("Kick");
-    for (i = 0; i < Kick.length; i++) {
-        KickDateTime = Kick[i].getElementsByTagName("KickDateTime")[0].firstChild.nodeValue;
-        KickedID = Kick[i].getElementsByTagName("KickedID")[0].firstChild.nodeValue;
-        KickedNickname = Kick[i].getElementsByTagName("KickedNickname")[0].firstChild.nodeValue;
-        KickedByNickname = Kick[i].getElementsByTagName("KickedByNickname")[0].firstChild.nodeValue;
-        KickedByUID = Kick[i].getElementsByTagName("KickedByUID")[0].firstChild.nodeValue;
-        if (Kick[i].getElementsByTagName("KickReason")[0].firstChild != null) {
+    var kickTable = "<table id='kicktable' class='tablesorter'><thead><tr><th>Date and Time</th><th>Kicked User (ID)</th><th>Kicked User (Nickname)</th><th>Kicked by (Nickname)</th><th>Kicked by (UID)</th><th>Reason</th></tr></thead><tbody>";
+    var Kick = xmlhttp.responseXML.documentElement.getElementsByTagName("Kick");
+    for (var i = 0; i < Kick.length; i++) {
+        var KickDateTime = Kick[i].getElementsByTagName("KickDateTime")[0].firstChild.nodeValue;
+        var KickedID = Kick[i].getElementsByTagName("KickedID")[0].firstChild.nodeValue;
+        var KickedNickname = Kick[i].getElementsByTagName("KickedNickname")[0].firstChild.nodeValue;
+        var KickedByNickname = Kick[i].getElementsByTagName("KickedByNickname")[0].firstChild.nodeValue;
+        var KickedByUID = Kick[i].getElementsByTagName("KickedByUID")[0].firstChild.nodeValue;
+		var KickReason;
+        if (Kick[i].getElementsByTagName("KickReason")[0].firstChild !== null) {
             KickReason = Kick[i].getElementsByTagName("KickReason")[0].firstChild.nodeValue;
         }
         else KickReason = "No Reason given";
@@ -155,52 +158,57 @@ function buildKickTable() {
         kickTable += "<tr><td>" + KickDateTime + "</td><td>" + KickedID + "</td><td>" + KickedNickname + "</td><td>" + KickedByNickname + "</td><td>" + KickedByUID + "</td><td>" + KickReason + "</td></tr>";
     }
     kickTable += "</tbody></table>";
-	document.getElementById('scrolltokicktable').innerHTML = "<br /><button onclick=scrollToDiv('showkicktable')>Scroll to kick table</button>";
+	if(document.getElementById("scrolltokicktable") === null){
+	document.getElementById('navbar').innerHTML += "<button id=scrolltokicktable onclick=scrollToDiv('showkicktable')>Scroll to kick table</button>";
+	}
     document.getElementById("showkicktable").innerHTML = kickTable;
     $("#kicktable").tablesorter();
 }
 
 // Builds and shows the upload table.
 function buildUploadTable() {
-    uploadTable = "<table id='uploadtable' class='tablesorter'><thead><tr><th>Upload DateTime</th><th>Channel ID</th><th>Filename</th><th>Uploaded By (Nickname)</th><th>Uploaded By (ID)</tr></thead><tbody>";
-    File = xmlhttp.responseXML.documentElement.getElementsByTagName("File");
-    for (i = 0; i < File.length; i++) {
-            UploadDateTime = File[i].getElementsByTagName("UploadDateTime")[0].firstChild.nodeValue;
-            ChannelID = File[i].getElementsByTagName("ChannelID")[0].firstChild.nodeValue;
-            Filename = File[i].getElementsByTagName("Filename")[0].firstChild.nodeValue;
-            UploadedByNickname = File[i].getElementsByTagName("UploadedByNickname")[0].firstChild.nodeValue;
-            UploadedByID = File[i].getElementsByTagName("UploadedByID")[0].firstChild.nodeValue;
+    var uploadTable = "<table id='uploadtable' class='tablesorter'><thead><tr><th>Upload DateTime</th><th>Channel ID</th><th>Filename</th><th>Uploaded By (Nickname)</th><th>Uploaded By (ID)</tr></thead><tbody>";
+    var File = xmlhttp.responseXML.documentElement.getElementsByTagName("File");
+    for (var i = 0; i < File.length; i++) {
+            var UploadDateTime = File[i].getElementsByTagName("UploadDateTime")[0].firstChild.nodeValue;
+            var ChannelID = File[i].getElementsByTagName("ChannelID")[0].firstChild.nodeValue;
+            var Filename = File[i].getElementsByTagName("Filename")[0].firstChild.nodeValue;
+            var UploadedByNickname = File[i].getElementsByTagName("UploadedByNickname")[0].firstChild.nodeValue;
+            var UploadedByID = File[i].getElementsByTagName("UploadedByID")[0].firstChild.nodeValue;
 
 			uploadTable += "<tr><td>" + UploadDateTime + "</td><td>" + ChannelID + "</td><td>" + Filename + "</td><td>" + UploadedByNickname + "</td><td>" + UploadedByID + "</td></tr>";
     }
     uploadTable += "</tbody></table>";
-    document.getElementById('scrolltouploadtable').innerHTML = "<br /><button onclick=scrollToDiv('showuploadtable')>Scroll to upload table</button>";
+	if(document.getElementById("scrolltouploadtable") === null){
+    document.getElementById('navbar').innerHTML += "<button id=scrolltouploadtable onclick=scrollToDiv('showuploadtable')>Scroll to upload table</button>";
+	}
 	document.getElementById('showuploadtable').innerHTML = uploadTable;
     $("#uploadtable").tablesorter();
 }
 
 // Builds the table using the XML.
 function buildTables() {
+	var ActiveXObject;
     if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
     else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             ConnectedClientsCount = 0;
-            if (document.getElementById('showclienttable') != null){buildClientTable();}
-			if (document.getElementById('showkicktable') != null) {buildKickTable();}
-			if (document.getElementById('showuploadtable') != null) {buildUploadTable();}
+            if (document.getElementById('showclienttable') !== null){buildClientTable();}
+			if (document.getElementById('showkicktable') !== null) {buildKickTable();}
+			if (document.getElementById('showuploadtable') !== null) {buildUploadTable();}
 			
-			Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
+			var Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
             document.getElementById('creationtimestamp_localtime').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue + "   (server local time)";
             document.getElementById('creationtimestamp_utc').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue + "   (UTC)";
 			document.getElementById('connectedclientscount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
         }
-    }
+    };
     xmlhttp.open("GET", "output.xml", true);
     xmlhttp.send();
 }
 
-control = "<button onclick='rebuildXML()'>Rebuild XML and Reload Tables</button><br />";
+var control = "<button onclick='rebuildXML()'>Rebuild XML and Reload Tables</button><br />";
 control += "<button onclick='buildNewXML()'>Delete old output.xml and generate a new one only from the logs</button> (When switching to another logdirectory)";
 control += "<br /><br />XML file was created on:";
 control += "<div id='creationtimestamp_localtime'>Analyzing data ...  </div>";
@@ -209,8 +217,7 @@ control += "<div id='connectedclientscount'>Current Connected Clients: Analyzing
 control += "Enter an ID and push the button to scroll to the row containing this ID and its information:";
 control += "<input type='number' id='idselection' />";
 control += "<button onclick=scrollToDiv(document.getElementById('idselection').value)>Scroll</button><br />";
-control += "<button id=btt onclick=scrollTo(0,0)>&#8613; Scroll back to top &#8613;</button>";
-control += "<div id=scrollToDivControl><div id=scrolltoclienttable></div><div id=scrolltokicktable></div><div id=scrolltouploadtable></div></div><br />";
+control += "<div id=navbar><button onclick=scrollTo(0,0)>Scroll back to top</button></div>";
 
 rebuildXML();
 

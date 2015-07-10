@@ -9,10 +9,19 @@ body {
     font-family: arial;
 }
 
-#btt {
-    position: fixed;
-    font-size: 12pt;
-    bottom: 0;
+#navbar {
+	position: fixed;
+	background-color: #FFF;
+	border: 1px dotted;
+	border-radius: 5px;
+	font-size: 12pt;
+	bottom: 0;
+	padding: 5px
+}
+
+#navbar > button {
+	margin-left: 6px;
+	margin-right: 6px;
 }
 
 /* Modified tablesorter (http://tablesorter.com) style configuration */

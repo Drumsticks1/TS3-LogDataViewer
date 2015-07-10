@@ -3,7 +3,7 @@ Enhanced Client List for Teamspeak3 Server.
 
 ## Short description
 TS3_EnhancedClientList creates an enhanced client list using the information written to the logfiles of the server.<br />
-It currently provides three detailed tables that can be included in an existing website or be used with the provided Webinterface.html:
+It currently provides three detailed tables that can be included in an existing website or be used with the provided Webinterface (index.html):
 - Client list
 - Kick list 
 - File upload list
@@ -20,7 +20,7 @@ After all logfiles are parsed a XML file is created which then is used for displ
 - File upload List
 
 ### Custom implemention or provided Webinterface
-You can either use the provided Webinterface.html or implement the control section and the different tables into you existing website (see "Install Instructions").
+You can either use the provided Webinterface (index.html) or implement the control section and the different tables into you existing website (see "Install Instructions").
 
 #### Control Section
 - Reload the Table via a button.
@@ -28,8 +28,11 @@ You can either use the provided Webinterface.html or implement the control secti
 - Timestamps of the XML creation (local time of the server and UTC).
 - Count of currently connected clients.
 - Scroll to the client table position of an ID.
-- Scroll to the beginning of a table via a button (e.g. "Scroll to kick list").
-- Scroll back to top.
+- Navbar fixed at the bottom of the page which contains the following buttons (scroll buttons of unused tables won't appear):
+	* Scroll back to top
+	* Scroll to client table
+	* Scroll to kick table
+	* Scroll to upload table
 
 #### Client table layout and features
 ID | Nicknames | Connections | IPs | Connected | Deleted
