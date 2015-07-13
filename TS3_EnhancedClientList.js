@@ -34,10 +34,7 @@ function rebuildXML() {
         document.getElementById("rebuildxmlbutton").disabled = true;
         document.getElementById("buildnewxmlbutton").disabled = true;
     }
-    $.get("rebuildXML.php", function () {
-        clearInterval(momentInterval);
-        buildTables();
-    });
+    $.get("rebuildXML.php", function () { buildTables(); });
     return false;
 }
 
@@ -510,7 +507,7 @@ function buildUploadTable() {
         headers: {
             0 : { sorter: 'ignoreMoment' }
         }
-});
+	});
 }
 
 // Builds the table using the XML.
@@ -528,8 +525,10 @@ function buildTables() {
             var Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
             document.getElementById('creationtimestamp_localtime').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue + " (server local time)";
             document.getElementById('creationtimestamp_utc').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue + " (UTC)";
+			
+			clearInterval(momentInterval);
             momentInterval = setInterval(function(){
-                document.getElementById('creationtimestamp_moment').innerHTML = "Which was about " + moment(Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue,"DD.MM.YYYY h.mm.ss").fromNow() + ".";
+                document.getElementById('creationtimestamp_moment').innerHTML = "Which was about " + moment(Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue,"DD.MM.YYYY HH:mm:ss").fromNow() + ".";
             }, 1000);
 
             document.getElementById('connectedclientscount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;

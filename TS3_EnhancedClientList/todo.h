@@ -15,7 +15,6 @@ parseLogs
 TS3_EnhancedClientList.js
 	- Add button for collapsing all expanded lists.
 	- Add custom parser for Nicknames, Connections and IPs (multi line).
-	
-Keep an eye on:
-	- Sometimes the timestamps aren't updated when rebuilding.
+	- Add support for different timezones with moment.js and/or moment-timezone.js
+	- Add short online list (ID, lastNickname).
 */
