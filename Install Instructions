@@ -9,28 +9,32 @@ Linux:
 	! Skipping the next step may result in serious security vulnerability of your webserver as anybody could be able to access this directory !
 2. Set up a .htaccess in this directory in order to restrict the access to the directory to you and chosen users.
 3. Install the packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers).
-4. Download a compiled file (-> skip to step 4) or compile the code using the provided makefile (for experienced users only -> follow the 4.x steps).
+4. Download a compiled file (-> skip to step 5) or compile the code using the provided makefile (for experienced users only -> follow the 4.x steps).
 	4.1. Downloads the makefile, the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't necessary for compiling as it doesn't include any code).
 	4.2. Download the Boost Library package via "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0)(you may need to adjust the version number).
 	4.3. Install the packages "libboost-system1.55-dev", "libboost-filesystem1.55-dev" and "libboost-program-options1.55-dev" (you may need to adjust the version numbers).
 	4.4. Install the packages "make" and "g++" in order to compile using the makefile.
 	4.5. Compile with the makefile ("make -f makefile").
-5. Download the jquery plugin "tablesorter" ("http://tablesorter.com/__jquery.tablesorter.zip").
-6. Move the "TS3_EnhancedClientList.js" and the "jquery.tablesorter.js" (which is part of the "__jquery.tablesorter.zip") into your created EnhancedClientList directory.
-7. If you want to use the predesigned index.html then follow the step 7 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 7 b).
-	7 a) Move the "index.html" into your created EnhancedClientList directory.
-	7 b) Include the controls and the table by creating two divs with the classes "ts3-control" and "ts3-clienttable" and include the "TS3_EnhancedClientList.js", the "jquery.tablesorter.js" into the head section of you webpage.
-	7 c) (Optional) You can also include two divs with the classes "ts3-kicktable" and "ts3-upload-table" in your webpage. 
-8. Move the "styles" folder into your EnhancedClientList directory (--> e.g. /var/www/html/EnhancedClientList/styles/)
-	8.1. If you don't use the provided html you have to link to the style folder ("<link rel="stylesheet" href="./style/style.css">")).
-9. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
-10. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
-11. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
-12. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
-13. (If necessary) Adjust the ECLPATH in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH in the "rebuildXML.php".
-14. Open the Webinterface by opening the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
-15. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
-16. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
+5. Download jquery via the following link: "http://code.jquery.com/jquery-latest.min.js".
+6. Download the jquery plugin "moment.js" via the following link: "http://momentjs.com/downloads/moment.min.js".
+7. Download the following files from the unofficial fork of the jquery plugin "tablesorter": http://mottie.github.io/tablesorter/docs/ :
+	- http://mottie.github.io/tablesorter/js/jquery.tablesorter.min.js
+	- http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js
+8. Move the "TS3_EnhancedClientList.js" and the other four .js files you just downloaded into your EnhancedClientList directory.
+9. If you want to use the predesigned index.html then follow the step 9 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 9 b).
+	9 a) Move the "index.html" into your created EnhancedClientList directory.
+	9 b) Include the control section and the client table by creating two divs with the classes "ts3-control" and "ts3-clienttable" and include the "TS3_EnhancedClientList.js" and the "jquery-latest.min.js" into the head section of you webpage.
+		 You can also include two divs with the classes "ts3-kicktable" and "ts3-upload-table" in your webpage.
+10. Move the "styles" folder into your EnhancedClientList directory (--> e.g. /var/www/html/EnhancedClientList/styles/)
+11. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
+12. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
+13. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
+14. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
+15. (If necessary) Adjust the ECLPATH in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH in the "rebuildXML.php".
+16. Open the Webinterface by opening the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
+17. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+18. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
 
 
 If there are any problems or improvement suggestions feel free to open an Issue on Github so I can improve the install instructions.
+Also feel free to open Issues on Github for feature requests and so on.

@@ -195,8 +195,7 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 
-# output XML
+# project related files
 output.xml
-
-# logignore
 logignore
+lockfile

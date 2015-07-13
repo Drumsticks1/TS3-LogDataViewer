@@ -4,16 +4,18 @@ general
 	- add kickignore and make it possible to add kicks via the Webinterface.
 	- add fileignore and make it possible to add files via the Webinterface.
 	- optimize the code for faster performance.
-	- add fixed header table (http://www.fixedheadertable.com/).
-	- add moment.js (http://momentjs.com/).
 
-Bans - postponed.
+Bans:
+	- postponed.
 
 parseLogs
 	- Change finding of the Virtual Server messages according to servers with multiple virtual servers.
 		How many virtual servers are possible ?
 
-index.html / webinterface
+TS3_EnhancedClientList.js
 	- Add button for collapsing all expanded lists.
-	- Only show + or - button (according to current state).
+	- Add custom parser for Nicknames, Connections and IPs (multi line).
+	
+Keep an eye on:
+	- Sometimes the timestamps aren't updated when rebuilding.
 */

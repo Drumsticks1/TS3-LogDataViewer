@@ -9,7 +9,7 @@ It currently provides three detailed tables that can be included in an existing 
 - File upload list
 
 ## How does it work ?
-The program needs the logfiles of the ts3 server (logging has to be enabled in the server settings - enabling all logging options is recommended).<br />
+The program needs the logfiles of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended).<br />
 The logfiles are analyzed and the relevant information from the logmessages (e.g. Nicknames and IPs) is collected.<br />
 After all logfiles are parsed a XML file is created which then is used for displaying the tables in the Webinterface or in your custom webpage.
 
@@ -49,14 +49,13 @@ ID | Nicknames | Connections | IPs | Connected | Deleted
 #### Kick table layout
 Date and Time | Kicked User (ID) | Kicked User (Nickname) | Kicked by (Nickname) | Kicked by (UID) | Reason
 ---|---|---|---|---|---
-2015-04-23 15:22:39 | 285 | TrollingTrollUser | Drumsticks | XXXXXXXXXXXXXXXXXX= | Trolling
+2015-04-23 15:22:39 <br/>(about three months ago) | 285 | TrollingTrollUser | Drumsticks | XXXXXXXXXXXXXXXXXX= | Trolling
 
 #### File upload table layout
 Upload DateTime | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (ID)
 ---|---|---|---|---|---
-2015-07-09 19:17:58 | 2 | /file_sample.txt | Drumsticks | 3
-2015-07-09 19:18:18 | 2 | /directory_sample/file_sample.txt | Drumsticks | 3
-
+2015-07-09 19:17:58<br />(about 4 days ago) | 2 | /file_sample.txt | Drumsticks | 3
+2015-07-09 19:18:18<br />(about 4 days ago) | 2 | /directory_sample/file_sample.txt | Drumsticks | 3
 
 ### Overall Program Features
 - You can manually create a logignore and list the logfiles (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
@@ -67,7 +66,7 @@ Upload DateTime | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (
 See the todo.h for planned features.
 
 ### It does not contain and never will
-- Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting)
+- Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting).
 
 ## Installation
 As the file name already implies, the install instructions can be found in the file "Install Instructions".<br />
@@ -76,12 +75,19 @@ Experienced Users should still be able to set it up on Windows / Mac by followin
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br />
-You will need to downloads the jquery plugin ["tablesorter"](http://tablesorter.com) if you use a precompiled version of TS3_EnhancedClientList. <br />
-You will also need to download the packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers).
+You will need to download the following files:
+- One file for jquery:
+	- [jquery-latest.min.js](http://code.jquery.com/jquery-latest.min.js)
+- Two files from [this fork](http://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
+	- [jquery.tablesorter.min.js](http://mottie.github.io/tablesorter/dist/js/jquery.tablesorter.min.js)
+	- [jquery.tablesorter.widgets.js](http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js)
+- One file for moment.js:
+	- [moment.min.js](http://momentjs.com/downloads/moment.min.js)
+- On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).
 
-#### Teamspeak3 server settings
+#### Teamspeak 3 server settings
 Logging of Clients and File transfer must be enabled in the server settings as the program depends on this information. <br />
 It is recommended to enable all logging options in the server options.
 
 ## Support
-If there are any problems or improvement suggestions feel free to open an Issue on Github.
+If there are any problems, improvement suggestions or feature requests feel free to open an Issue on Github.

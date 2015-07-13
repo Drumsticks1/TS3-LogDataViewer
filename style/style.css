@@ -5,69 +5,159 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 Feel free to modify this file according to your wishes.
 */
 
-body {
-    font-family: arial;
+/* index.html header*/
+.TS3-ECL {
+	font-family: 'Open Sans', Arial;
+	font-weight: normal;
+}
+
+.ts3-control, .tablesorter, #navbar{
+    font-family: 'Open Sans', Arial;
+}
+
+.ts3-control button, #navbar button  {
+  font-family: 'Open Sans', Arial;
+  flex-grow: 2;
+  border: 1px solid #8093FF;
+  margin: 8px 15px 0 0;
+  text-align: center;
+  padding: 8px 10px;
+  background: #FFF;
+  color: #8093FF;
+  font-size: 0.8rem;
+  font-weight: 300;
+  border-radius: 5px;
+}
+
+.ts3-control button:active, #navbar button:active,
+.ts3-control button:hover, #navbar button:hover,
+.ts3-control button:focus , #navbar button:focus  {
+    color: #FFF;
+    background-color: #8093FF;
+    outline: none;
+    transition: background-color, color 200ms;
+}
+
+.ts3-control button:disabled {
+color: #999;
 }
 
 #navbar {
-	position: fixed;
-	background-color: #FFF;
-	border: 1px dotted;
-	border-radius: 5px;
-	font-size: 12pt;
-	bottom: 0;
-	padding: 5px
+    display: flex;
+    position: fixed;
+    background-color: #FFF;
+    font-size: 12pt;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px 10px;
+    box-shadow: 0px -8px 10px -11px rgba(0,0,0,0.75);
+    background-color: #FCFCFC;
+    padding-bottom: 10px;
 }
 
 #navbar > button {
-	margin-left: 6px;
-	margin-right: 6px;
+	margin-left: 4px;
+	margin-right: 4px;
 }
 
-/* Modified tablesorter (http://tablesorter.com) style configuration */
-/* The buttons are part of the tablesorter blue theme */
+/* Modified tablesorter style configuration */
 table.tablesorter {
-    font-family: arial;
     background-color: #CDCDCD;
     margin: 10px 0pt 15px;
     font-size: 12pt;
     width: 100%;
     text-align: left;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-    table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-        background-color: #e6EEEE;
-        border: 1px solid #FFF;
-        font-size: 12pt;
-        padding: 4px;
+.tablesorter-sticky-visible {
+    background-color: #FFF;
+}
+
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+    background-color: #E6E6E6;
+    border: 1px solid #E6E6E6;
+    font-size: 14pt;
+	font-weight: 300;
+    padding: 5px;
+}
+
+    table.tablesorter thead tr th:first-child {
+        -webkit-border-top-left-radius: 10px;
+        -moz-border-radius-topleft: 10px;
+        border-top-left-radius: 10px;
     }
 
-    table.tablesorter thead tr .header {
-        background-image: url(bg.gif);
-        background-repeat: no-repeat;
-        background-position: center right;
-        cursor: pointer;
+    table.tablesorter thead tr th:last-child {
+        -webkit-border-top-right-radius: 10px;
+        -moz-border-radius-topright: 10px;
+        border-top-right-radius: 10px;
     }
 
-    table.tablesorter tbody td {
-        color: #3D3D3D;
-        padding: 4px;
-        background-color: #FFF;
-        vertical-align: top;
-    }
+table.tablesorter tbody td {
+    color: #3D3D3D;
+    padding: 4px;
+    background-color: #FFF;
+    vertical-align: top;
+}
 
-    table.tablesorter tbody tr.odd td {
-        background-color: #F0F0F6;
-    }
+table.tablesorter tbody tr.odd td {
+    background-color: #F0F0F6;
+}
 
-    table.tablesorter thead tr .headerSortUp {
-        background-image: url(asc.gif);
-    }
+table.tablesorter thead tr .tablesorter-header.tablesorter-headerUnSorted {
+    background-image: url(bg.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
 
-    table.tablesorter thead tr .headerSortDown {
-        background-image: url(desc.gif);
-    }
+table.tablesorter thead tr .tablesorter-header.tablesorter-headerAsc {
+    background-image: url(asc.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
 
-    table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
-        background-color: #8dbdd8;
-    }
+table.tablesorter thead tr .tablesorter-header.tablesorter-headerDesc {
+    background-image: url(desc.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+    background-color: #8dbdd8;
+}
+
+table.tablesorter td {
+
+}
+
+#clientTable td:nth-child(3){
+text-align: center;
+}
+
+table.tablesorter button{
+  font-family: 'Open Sans', Arial;
+  border: 1px solid #8093FF;
+  text-align: center;
+  padding: 5px 10px;
+  background: #FFF;
+  color: #8093FF;
+  font-size: 0.8rem;
+  font-weight: 300;
+  border-radius: 5px;
+}
+
+table.tablesorter button:active,
+table.tablesorter button:hover,
+table.tablesorter button:focus {
+    color: #FFF;
+    background-color: #8093FF;
+    outline: none;
+    transition: background-color, color 200ms;
+}
