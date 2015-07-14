@@ -2,14 +2,17 @@
 // Author: Drumsticks1
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
+// Disable caching for jquery.
+$.ajaxSetup({ cache: false });
+
 // Global Variables
-var ConnectedClientsCount, momentInterval;
+var ConnectedClientsCount, momentInterval, XML;
 
 // Including the Open Sans font.
 WebFontConfig = {
-    google: { families: [ 'Open+Sans::latin' ] }
+    google: { families: ['Open+Sans::latin'] }
 };
-(function() {
+(function () {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
         '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
@@ -23,44 +26,44 @@ WebFontConfig = {
 $('head').append('<link rel="stylesheet" href="./style/style.css" type="text/css" />');
 
 // Including javascripts via jquery.
-$.getScript("jquery.tablesorter.min.js", function(){});
-$.getScript("jquery.tablesorter.widgets.js", function(){});
-$.getScript("moment.min.js", function(){});
+$.getScript('jquery.tablesorter.min.js', function () { });
+$.getScript('jquery.tablesorter.widgets.js', function () { });
+$.getScript('moment.min.js', function () { });
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
-    if (document.getElementById("rebuildxmlbutton") !== null) {
+    if (document.getElementById('rebuildXMLButton') !== null) {
         $(window.loadingSpinner).show();
-        document.getElementById("rebuildxmlbutton").disabled = true;
-        document.getElementById("buildnewxmlbutton").disabled = true;
+        document.getElementById('rebuildXMLButton').disabled = true;
+        document.getElementById('buildNewXMLButton').disabled = true;
     }
-    $.get("rebuildXML.php", function () { buildTables(); });
+    $.get('rebuildXML.php', function () { buildTables(); });
     return false;
 }
 
 // Deletes the current XML and builds a new one after.
 function buildNewXML() {
-    $.get("deleteXML.php", function () { rebuildXML(); });
+    $.get('deleteXML.php', function () { rebuildXML(); });
     return false;
 }
 
 // Expands or collapses the List, depending on its current state.
-function expandcollapseList(List, ID){
+function expandcollapseList(List, ID) {
     var Row, ListUpper;
-    if (List == "ips") {
+    if (List == 'ips') {
         Row = 3;
-        ListUpper = "IPs";
+        ListUpper = 'IPs';
     }
     else {
         Row = 2;
-        ListUpper = "Connections";
+        ListUpper = 'Connections';
     }
 
-    var currentDiv = List + "_" + ID + "_2";
-    if(document.getElementById(currentDiv).firstChild === null || document.getElementById(currentDiv).firstChild.nodeValue === ""){
+    var currentDiv = List + '_' + ID + '_2';
+    if (document.getElementById(currentDiv).firstChild === null || document.getElementById(currentDiv).firstChild.nodeValue === '') {
         expandList(List, ID);
     }
-    else{
+    else {
         collapseList(List, ID);
     }
 }
@@ -68,19 +71,19 @@ function expandcollapseList(List, ID){
 // Expands the current list.
 function expandList(List, ID) {
     var Row, ListUpper;
-    if (List == "ips") {
+    if (List == 'ips') {
         Row = 3;
-        ListUpper = "IPs";
+        ListUpper = 'IPs';
     }
     else {
         Row = 2;
-        ListUpper = "Connections";
+        ListUpper = 'Connections';
     }
 
     var x = document.getElementById(ID).childNodes[Row];
-    var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+    var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
     for (var j = 0; j < x.childNodes.length - 1; j++) {
-        var currentDiv = List + "_" + ID + "_" + j;
+        var currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) !== null && document.getElementById(currentDiv).firstChild !== null) {
             document.getElementById(currentDiv).firstChild.nodeValue = ListContent[j].firstChild.nodeValue;
         }
@@ -94,35 +97,35 @@ function expandList(List, ID) {
 // Collapses the current list.
 function collapseList(List, ID) {
     var Row, ListUpper;
-    if (List == "ips") {
+    if (List == 'ips') {
         Row = 3;
-        ListUpper = "IPs";
+        ListUpper = 'IPs';
     }
     else {
         Row = 2;
-        ListUpper = "Connections";
+        ListUpper = 'Connections';
     }
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row];
-        var ListContent = xmlhttp.responseXML.documentElement.getElementsByTagName("User")[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
-        var currentDiv = List + "_" + ID + "_1";
+        var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+        var currentDiv = List + '_' + ID + '_1';
         document.getElementById(currentDiv).firstChild.nodeValue = ListContent[ListContent.length - 1].firstChild.nodeValue;
         for (var j = 2; j < x.childNodes.length - 1; j++) {
-            currentDiv = List + "_" + ID + "_" + j;
-            document.getElementById(currentDiv).firstChild.nodeValue = "";
+            currentDiv = List + '_' + ID + '_' + j;
+            document.getElementById(currentDiv).firstChild.nodeValue = '';
         }
     }
 }
 
 //
-function addIgnoreMomentParser(){
+function addIgnoreMomentParser() {
     $.tablesorter.addParser({
         id: 'ignoreMoment',
-        is: function(s, table, cell, $cell) {
+        is: function (s, table, cell, $cell) {
             return false;
         },
-        format: function(s, table, cell, cellIndex) {
+        format: function (s, table, cell, cellIndex) {
             var $cell = $(cell);
 
             if (cellIndex === 0) return s;
@@ -134,7 +137,7 @@ function addIgnoreMomentParser(){
 
 // Scroll to the div with the given ID.
 function scrollToDiv(Div_ID) {
-        document.getElementById(Div_ID).scrollIntoView();
+    document.getElementById(Div_ID).scrollIntoView();
 }
 
 // Scroll to the given Row in the client list.
@@ -142,7 +145,7 @@ function scrollToClientTableRow(Row_ID) {
     if (document.getElementById(Row_ID) !== null) {
         scrollToDiv(Row_ID);
         var $sticky, sHeight;
-        $sticky = $("#clientTable")[0].config.widgetOptions.$sticky;
+        $sticky = $('#clientTable')[0].config.widgetOptions.$sticky;
         sHeight = $sticky.height() || 0;
         window.scrollBy(0, -sHeight);
     }
@@ -150,8 +153,8 @@ function scrollToClientTableRow(Row_ID) {
 
 // Builds and shows the client table.
 function buildClientTable() {
-    $('#showclienttable').empty();
-    var User = xmlhttp.responseXML.documentElement.getElementsByTagName("User");
+    $('.ts3-clienttable').empty();
+    var User = XML.getElementsByTagName('User');
 
     var userTable = document.createElement('table');
     var userHead = document.createElement('thead');
@@ -164,13 +167,13 @@ function buildClientTable() {
     var userHeadCell_Connected = document.createElement('th');
     var userHeadCell_Deleted = document.createElement('th');
 
-    $(userHeadCell_ID).html("ID");
-    $(userHeadCell_Nicknames).html("Nicknames");
-    $(userHeadCell_Connections).html("Connections");
-    $(userHeadCell_IPs).html("IPs");
-    $(userHeadCell_ConnectionCount).html("Connection Count");
-    $(userHeadCell_Connected).html("Connected");
-    $(userHeadCell_Deleted).html("Deleted");
+    $(userHeadCell_ID).html('ID');
+    $(userHeadCell_Nicknames).html('Nicknames');
+    $(userHeadCell_Connections).html('Connections');
+    $(userHeadCell_IPs).html('IPs');
+    $(userHeadCell_ConnectionCount).html('Connection Count');
+    $(userHeadCell_Connected).html('Connected');
+    $(userHeadCell_Deleted).html('Deleted');
 
     userHeadRow.appendChild(userHeadCell_ID);
     userHeadRow.appendChild(userHeadCell_Nicknames);
@@ -188,14 +191,14 @@ function buildClientTable() {
 
     for (var i = 0; i < User.length; i++) {
 
-        var ID = User[i].getElementsByTagName("ID")[0].firstChild.nodeValue;
+        var ID = User[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
         if (ID == i) {
-            var Nicknames = User[ID].getElementsByTagName("Nicknames")[0].getElementsByTagName("Nicknames");
-            var Connections = User[ID].getElementsByTagName("Connections")[0].getElementsByTagName("Connections");
-            var IPs = User[ID].getElementsByTagName("IPs")[0].getElementsByTagName("IPs");
-            var Connection_Count = User[ID].getElementsByTagName("Connection_Count")[0].firstChild.nodeValue;
-            var Connected = User[ID].getElementsByTagName("Connected")[0].firstChild.nodeValue;
-            var Deleted = User[ID].getElementsByTagName("Deleted")[0].firstChild.nodeValue;
+            var Nicknames = User[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('Nicknames');
+            var Connections = User[ID].getElementsByTagName('Connections')[0].getElementsByTagName('Connections');
+            var IPs = User[ID].getElementsByTagName('IPs')[0].getElementsByTagName('IPs');
+            var Connection_Count = User[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue;
+            var Connected = User[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue;
+            var Deleted = User[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;
 
             var userBodyRow = document.createElement('tr');
             var userBodyCell_ID = document.createElement('td');
@@ -229,8 +232,8 @@ function buildClientTable() {
                 })(ID);
 
                 userBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
-            } 
-			
+            }
+
             var divConnections = document.createElement('div');
             $(divConnections).html(Connections[0].firstChild.nodeValue);
             $(divConnections).prop('id', 'connections_' + ID + '_0');
@@ -252,11 +255,11 @@ function buildClientTable() {
 
             if (IPs.length > 2) {
                 var divExpandCollapseIPs = document.createElement('div');
-                $(divExpandCollapseIPs).prop('id','divExpandCollapseIPs');
+                $(divExpandCollapseIPs).prop('id', 'divExpandCollapseIPs');
 
                 var buttonExpandCollapseIPs = document.createElement('button');
                 $(buttonExpandCollapseIPs).html('+ / -');
-                $(buttonExpandCollapseIPs).prop('text-align','center');
+                $(buttonExpandCollapseIPs).prop('text-align', 'center');
 
                 (function (ID) {
                     buttonExpandCollapseIPs.onclick = function () {
@@ -291,10 +294,10 @@ function buildClientTable() {
             userBodyRow.appendChild(userBodyCell_ConnectionCount);
 
             if (Connected == 1) {
-                $(userBodyCell_Connected).html("true");
+                $(userBodyCell_Connected).html('true');
                 ConnectedClientsCount++;
             }
-            else $(userBodyCell_Connected).html("false");
+            else $(userBodyCell_Connected).html('false');
             userBodyRow.appendChild(userBodyCell_Connected);
 
             $(userBodyCell_Deleted).html(Deleted);
@@ -308,26 +311,26 @@ function buildClientTable() {
 
     $(userTable).prop('id', 'clientTable');
     $(userTable).prop('class', 'tablesorter');
-    $('#showclienttable').append(userTable);
+    $('.ts3-clienttable').append(userTable);
 
-    if (document.getElementById("scrolltoclienttable") === null) {
+    if (document.getElementById('scrolltoclienttable') === null) {
         scrolltoclienttable = document.createElement('button');
         $(scrolltoclienttable).prop('id', 'scrolltoclienttable');
         $(scrolltoclienttable).html('Scroll to client table');
-        scrolltoclienttable.onclick = function () { scrollToDiv('showclienttable'); };
+        scrolltoclienttable.onclick = function () { scrollToDiv('clientTable'); };
         document.getElementById('navbar').appendChild(scrolltoclienttable);
     }
-	
-    $("#clientTable").tablesorter({
+
+    $('#clientTable').tablesorter({
         widgets: ['stickyHeaders'],
-        sortList: [[0,2]]
+        sortList: [[0, 2]]
     });
 }
 
 // Builds and shows the kick table.
 function buildKickTable() {
-    $('#showkicktable').empty();
-    var Kick = xmlhttp.responseXML.documentElement.getElementsByTagName("Kick");
+    $('.ts3-kicktable').empty();
+    var Kick = XML.getElementsByTagName('Kick');
 
     var kickTable = document.createElement('table');
     var kickHead = document.createElement('thead');
@@ -339,12 +342,12 @@ function buildKickTable() {
     var kickHeadCell_KickedByUID = document.createElement('th');
     var kickHeadCell_KickReason = document.createElement('th');
 
-    $(kickHeadCell_DateTime).html("Date and Time");
-    $(kickHeadCell_KickedID).html("Kicked User (ID)");
-    $(kickHeadCell_KickedNickname).html("Kicked User (Nickname)");
-    $(kickHeadCell_KickedByNickname).html("Kicked by (Nickname)");
-    $(kickHeadCell_KickedByUID).html("Kicked by (UID)");
-    $(kickHeadCell_KickReason).html("Reason");
+    $(kickHeadCell_DateTime).html('Date and Time');
+    $(kickHeadCell_KickedID).html('Kicked User (ID)');
+    $(kickHeadCell_KickedNickname).html('Kicked User (Nickname)');
+    $(kickHeadCell_KickedByNickname).html('Kicked by (Nickname)');
+    $(kickHeadCell_KickedByUID).html('Kicked by (UID)');
+    $(kickHeadCell_KickReason).html('Reason');
 
     kickHeadRow.appendChild(kickHeadCell_DateTime);
     kickHeadRow.appendChild(kickHeadCell_KickedID);
@@ -359,16 +362,16 @@ function buildKickTable() {
     var kickBody = document.createElement('tbody');
 
     for (var i = 0; i < Kick.length; i++) {
-        var KickDateTime = Kick[i].getElementsByTagName("KickDateTime")[0].firstChild.nodeValue;
-        var KickedID = Kick[i].getElementsByTagName("KickedID")[0].firstChild.nodeValue;
-        var KickedNickname = Kick[i].getElementsByTagName("KickedNickname")[0].firstChild.nodeValue;
-        var KickedByNickname = Kick[i].getElementsByTagName("KickedByNickname")[0].firstChild.nodeValue;
-        var KickedByUID = Kick[i].getElementsByTagName("KickedByUID")[0].firstChild.nodeValue;
+        var KickDateTime = Kick[i].getElementsByTagName('KickDateTime')[0].firstChild.nodeValue;
+        var KickedID = Kick[i].getElementsByTagName('KickedID')[0].firstChild.nodeValue;
+        var KickedNickname = Kick[i].getElementsByTagName('KickedNickname')[0].firstChild.nodeValue;
+        var KickedByNickname = Kick[i].getElementsByTagName('KickedByNickname')[0].firstChild.nodeValue;
+        var KickedByUID = Kick[i].getElementsByTagName('KickedByUID')[0].firstChild.nodeValue;
         var KickReason;
-        if (Kick[i].getElementsByTagName("KickReason")[0].firstChild !== null) {
-            KickReason = Kick[i].getElementsByTagName("KickReason")[0].firstChild.nodeValue;
+        if (Kick[i].getElementsByTagName('KickReason')[0].firstChild !== null) {
+            KickReason = Kick[i].getElementsByTagName('KickReason')[0].firstChild.nodeValue;
         }
-        else KickReason = "No Reason given";
+        else KickReason = 'No Reason given';
 
         var kickBodyRow = document.createElement('tr');
         var kickBodyCell_DateTime = document.createElement('td');
@@ -377,7 +380,7 @@ function buildKickTable() {
         var kickBodyCell_KickedByNickname = document.createElement('td');
         var kickBodyCell_KickedByUID = document.createElement('td');
         var kickBodyCell_KickReason = document.createElement('td');
-		
+
         $(kickBodyCell_DateTime).html(KickDateTime + '<br />(about ' + moment(KickDateTime).fromNow() + ')');
         kickBodyRow.appendChild(kickBodyCell_DateTime);
 
@@ -403,30 +406,30 @@ function buildKickTable() {
 
     $(kickTable).prop('id', 'kickTable');
     $(kickTable).prop('class', 'tablesorter');
-    $('#showkicktable').append(kickTable);
+    $('.ts3-kicktable').append(kickTable);
 
-    if (document.getElementById("scrolltokicktable") === null) {
+    if (document.getElementById('scrolltokicktable') === null) {
         scrolltokicktable = document.createElement('button');
         $(scrolltokicktable).prop('id', 'scrolltokicktable');
         $(scrolltokicktable).html('Scroll to kick table');
-        scrolltokicktable.onclick = function () { scrollToDiv('showkicktable'); };
+        scrolltokicktable.onclick = function () { scrollToDiv('kickTable'); };
         document.getElementById('navbar').appendChild(scrolltokicktable);
     }
-	
+
     addIgnoreMomentParser();
-    $("#kickTable").tablesorter({
+    $('#kickTable').tablesorter({
         widgets: ['stickyHeaders'],
-        sortList: [[0,1]],
+        sortList: [[0, 1]],
         headers: {
-            0 : { sorter: 'ignoreMoment' }
+            0: { sorter: 'ignoreMoment' }
         }
     });
 }
 
 // Builds and shows the upload table.
 function buildUploadTable() {
-    $('#showuploadtable').empty();
-    var File = xmlhttp.responseXML.documentElement.getElementsByTagName("File");
+    $('.ts3-uploadtable').empty();
+    var File = XML.getElementsByTagName('File');
 
     var uploadTable = document.createElement('table');
     var uploadHead = document.createElement('thead');
@@ -437,11 +440,11 @@ function buildUploadTable() {
     var uploadHeadCell_uploadedByNickname = document.createElement('th');
     var uploadHeadCell_uploadedByID = document.createElement('th');
 
-    $(uploadHeadCell_UploadDateTime).html("Upload DateTime");
-    $(uploadHeadCell_ChannelID).html("Channel ID");
-    $(uploadHeadCell_Filename).html("Filename");
-    $(uploadHeadCell_uploadedByNickname).html("Uploaded By (Nickname)");
-    $(uploadHeadCell_uploadedByID).html("Uploaded By (ID)");
+    $(uploadHeadCell_UploadDateTime).html('Upload DateTime');
+    $(uploadHeadCell_ChannelID).html('Channel ID');
+    $(uploadHeadCell_Filename).html('Filename');
+    $(uploadHeadCell_uploadedByNickname).html('Uploaded By (Nickname)');
+    $(uploadHeadCell_uploadedByID).html('Uploaded By (ID)');
 
     uploadHeadRow.appendChild(uploadHeadCell_UploadDateTime);
     uploadHeadRow.appendChild(uploadHeadCell_ChannelID);
@@ -455,11 +458,11 @@ function buildUploadTable() {
     var uploadBody = document.createElement('tbody');
 
     for (var i = 0; i < File.length; i++) {
-        var UploadDateTime = File[i].getElementsByTagName("UploadDateTime")[0].firstChild.nodeValue;
-        var ChannelID = File[i].getElementsByTagName("ChannelID")[0].firstChild.nodeValue;
-        var Filename = File[i].getElementsByTagName("Filename")[0].firstChild.nodeValue;
-        var UploadedByNickname = File[i].getElementsByTagName("UploadedByNickname")[0].firstChild.nodeValue;
-        var UploadedByID = File[i].getElementsByTagName("UploadedByID")[0].firstChild.nodeValue;
+        var UploadDateTime = File[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue;
+        var ChannelID = File[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue;
+        var Filename = File[i].getElementsByTagName('Filename')[0].firstChild.nodeValue;
+        var UploadedByNickname = File[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue;
+        var UploadedByID = File[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue;
 
         var uploadBodyRow = document.createElement('tr');
         var uploadBodyCell_UploadDateTime = document.createElement('td');
@@ -468,7 +471,7 @@ function buildUploadTable() {
         var uploadBodyCell_uploadedByNickname = document.createElement('td');
         var uploadBodyCell_uploadedByID = document.createElement('td');
 
-        $(uploadBodyCell_UploadDateTime).html(UploadDateTime +  '<br />(about ' + moment(UploadDateTime).fromNow() + ')');
+        $(uploadBodyCell_UploadDateTime).html(UploadDateTime + '<br />(about ' + moment(UploadDateTime).fromNow() + ')');
         uploadBodyRow.appendChild(uploadBodyCell_UploadDateTime);
 
         $(uploadBodyCell_ChannelID).html(ChannelID);
@@ -490,81 +493,171 @@ function buildUploadTable() {
 
     $(uploadTable).prop('id', 'uploadTable');
     $(uploadTable).prop('class', 'tablesorter');
-    $('#showuploadtable').append(uploadTable);
+    $('.ts3-uploadtable').append(uploadTable);
 
-    if (document.getElementById("scrolltouploadtable") === null) {
+    if (document.getElementById('scrolltouploadtable') === null) {
         scrolltouploadtable = document.createElement('button');
         $(scrolltouploadtable).prop('id', 'scrolltouploadtable');
         $(scrolltouploadtable).html('Scroll to upload table');
-        scrolltouploadtable.onclick = function () { scrollToDiv('showuploadtable'); };
+        scrolltouploadtable.onclick = function () { scrollToDiv('uploadTable'); };
         document.getElementById('navbar').appendChild(scrolltouploadtable);
     }
-	
+
     addIgnoreMomentParser();
-    $("#uploadTable").tablesorter({
+    $('#uploadTable').tablesorter({
         widgets: ['stickyHeaders'],
-        sortList: [[0,1]],
+        sortList: [[0, 1]],
         headers: {
-            0 : { sorter: 'ignoreMoment' }
+            0: { sorter: 'ignoreMoment' }
         }
-	});
+    });
 }
 
 // Builds the table using the XML.
 function buildTables() {
-    var ActiveXObject;
-    if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
-    else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            ConnectedClientsCount = 0;
-            if (document.getElementById('showclienttable') !== null) { buildClientTable(); }
-            if (document.getElementById('showkicktable') !== null) { buildKickTable(); }
-            if (document.getElementById('showuploadtable') !== null) { buildUploadTable(); }
+    $.get('output.xml', {}, function (tempXML) {
+        XML = tempXML;
+        ConnectedClientsCount = 0;
 
-            var Attributes = xmlhttp.responseXML.documentElement.getElementsByTagName("Attributes")[0];
-            document.getElementById('creationtimestamp_localtime').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue + " (server local time)";
-            document.getElementById('creationtimestamp_utc').innerHTML = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue + " (UTC)";
-			
-			clearInterval(momentInterval);
-            momentInterval = setInterval(function(){
-                document.getElementById('creationtimestamp_moment').innerHTML = "Which was about " + moment(Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue,"DD.MM.YYYY HH:mm:ss").fromNow() + ".";
-            }, 1000);
+        if ($('.ts3-control') !== null && $('#controlSection').length == 0) { buildControlSection(); }
+        if ($('.ts3-clienttable') !== null) { buildClientTable(); }
+        if ($('.ts3-kicktable') !== null) { buildKickTable(); }
+        if ($('.ts3-uploadtable') !== null) { buildUploadTable(); }
 
-            document.getElementById('connectedclientscount').innerHTML = "Current Connected Clients: " + ConnectedClientsCount;
+        var Attributes = XML.getElementsByTagName('Attributes')[0];
+        var CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue;
+        var CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
+        $('#creationtimestamp_localtime').text(CreationTimestampLocaltime);
+        $('#creationtimestamp_utc').text(CreationTimestampUTC);
 
-            document.getElementById("rebuildxmlbutton").disabled = false;
-            document.getElementById("buildnewxmlbutton").disabled = false;
-            $(window.loadingSpinner).hide();
-        }
-    };
-    xmlhttp.open("GET", "output.xml", true);
-    xmlhttp.send();
+        clearInterval(momentInterval);
+        momentInterval = setInterval(function () {
+            $('#creationtimestamp_moment').text(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+        }, 1000);
+
+        $('#connectedClientsCount').text(ConnectedClientsCount);
+
+        document.getElementById('rebuildXMLButton').disabled = false;
+        document.getElementById('buildNewXMLButton').disabled = false;
+        $(window.loadingSpinner).hide();
+    });
 }
 
-var control = "<div class=loading_spinner></div><button id=rebuildxmlbutton onclick=rebuildXML() disabled=true>Rebuild XML and Reload Tables</button>";
-control += "<button id=buildnewxmlbutton onclick=buildNewXML() disabled=true>Delete old output.xml and generate a new one only from the logs</button> (When switching to another logdirectory)";
-control += "<br /><br />The XML file was created on:";
-control += "<div id=creationtimestamp_localtime>Analyzing data ...  </div>";
-control += "<div id=creationtimestamp_utc>Analyzing data ...  </div>";
-control += "<div id=creationtimestamp_moment>Analyzing data ...  </div><br />";
-control += "<div id=connectedclientscount>Current Connected Clients: Analyzing data ...</div>";
-control += "Enter an ID and push the button to scroll to the row containing this ID and its information: ";
-control += "<input type='number' id='idselection' />";
-control += "<button onclick=scrollToClientTableRow(document.getElementById('idselection').value)>Scroll</button><br />";
-control += "<div id=navbar><button onclick=scrollTo(0,0)>Scroll back to top</button></div>";
+// Builds and shows the control section.
+function buildControlSection() {
+    var controlSection = document.createElement('div');
+    var rebuildSection = document.createElement('div');
+    var loadingSpinner = document.createElement('div');
+    var rebuildXMLButton = document.createElement('button');
+    var buildNewXMLButton = document.createElement('button');
 
-buildTables();
+    $(controlSection).prop('id', 'controlSection');
+    $(rebuildSection).prop('id', 'rebuildSection');
+    $(loadingSpinner).prop('class', 'loadingSpinner');
+    $(rebuildXMLButton).prop('id', 'rebuildXMLButton');
+    $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
+    $(rebuildXMLButton).prop('disabled', 'true');
+    $(buildNewXMLButton).prop('disabled', 'true');
+    $(rebuildXMLButton).text('Rebuild XML and reload tables');
+    $(buildNewXMLButton).text('Delete old XML and generate a new one (e.g. when switching to another logdirectory)');
 
-$(document).ready(function () {
-    $(".ts3-control").html(control);
-    $(".ts3-clienttable").html("<div id='showclienttable'></div><br />");
-    $(".ts3-kicktable").html("<div id='showkicktable'></div><br />");
-    $(".ts3-uploadtable").html("<div id='showuploadtable'></div><br />");
+    rebuildXMLButton.onclick = function () { rebuildXML(); };
+    buildNewXMLButton.onclick = function () { buildNewXML(); };
 
-    var loadingSpinner = new Image();
-    loadingSpinner.src = "style/gif-load.gif";
-    $(loadingSpinner).hide();
-    $('.loading_spinner').append(loadingSpinner);
-    window.loadingSpinner = loadingSpinner;
-});
+    var loadingSpinnerIMG = new Image();
+    loadingSpinnerIMG.src = 'style/gif-load.gif';
+    $(loadingSpinner).append(loadingSpinnerIMG);
+    window.loadingSpinner = loadingSpinnerIMG;
+
+    $(rebuildSection).append(loadingSpinner);
+    $(rebuildSection).append(rebuildXMLButton);
+    $(rebuildSection).append(buildNewXMLButton);
+
+    var creationtimestampSection = document.createElement('div');
+    var creationtimestampTable = document.createElement('table');
+    var ctTHead = document.createElement('thead');
+    var ctTHeadRow = document.createElement('tr');
+    var ctTHead_localtime = document.createElement('th');
+    var ctTHead_utc = document.createElement('th');
+    var ctTHead_moment = document.createElement('th');
+    var ctTBody = document.createElement('tbody');
+    var ctTBodyRow = document.createElement('tr');
+    var ctT_localtime = document.createElement('td');
+    var ctT_utc = document.createElement('td');
+    var ctT_moment = document.createElement('td');
+
+    $(creationtimestampSection).prop('id', 'creationtimestampSection');
+    $(creationtimestampTable).prop('id', 'creationtimestampTable');
+    $(ctT_localtime).prop('id', 'creationtimestamp_localtime');
+    $(ctT_utc).prop('id', 'creationtimestamp_utc');
+    $(ctT_moment).prop('id', 'creationtimestamp_moment');
+    $(creationtimestampSection).text('Creation DateTime of the latest XML:');
+    $(ctTHead_localtime).text('Server localtime');
+    $(ctTHead_utc).text('UTC');
+    $(ctTHead_moment).text('moment.js');
+    $(ctT_localtime).text('Analyzing data...');
+    $(ctT_utc).text('Analyzing data...');
+    $(ctT_moment).text('Analyzing data...');
+
+    $(ctTHeadRow).append(ctTHead_localtime);
+    $(ctTHeadRow).append(ctTHead_utc);
+    $(ctTHeadRow).append(ctTHead_moment);
+    $(ctTHead).append(ctTHeadRow);
+    $(creationtimestampTable).append(ctTHead);
+
+    $(ctTBodyRow).append(ctT_localtime);
+    $(ctTBodyRow).append(ctT_utc);
+    $(ctTBodyRow).append(ctT_moment);
+    $(ctTBody).append(ctTBodyRow);
+    $(creationtimestampTable).append(ctTBody);
+    $(creationtimestampSection).append(creationtimestampTable);
+
+    var connectedClientCountSection = document.createElement('div');
+    var connectedClientsCount = document.createElement('div');
+    $(connectedClientCountSection).prop('id', 'connectedClientCountSection');
+    $(connectedClientsCount).prop('id', 'connectedClientsCount');
+    $(connectedClientCountSection).text('Current connected clients: ');
+    $(connectedClientsCount).text('Analyzing data...');
+
+    $(connectedClientCountSection).append(connectedClientsCount);
+
+    var scrollToClientTableRowSection = document.createElement('div');
+    var scrollToCTRInput = document.createElement('input');
+    var scrollToCTRButton = document.createElement('button');
+
+    $(scrollToClientTableRowSection).prop('id', 'scrollToClientTableRowSection');
+    $(scrollToCTRInput).prop('id', 'IDSelection');
+    $(scrollToCTRInput).prop('input', 'number');
+    $(scrollToClientTableRowSection).text('Enter an ID and push the button to scroll to the row containing this ID and its information: ');
+    $(scrollToCTRButton).text('Scroll');
+
+    scrollToCTRButton.onclick = function () {
+        scrollToClientTableRow(document.getElementById('IDSelection').value);
+    };
+
+    $(scrollToClientTableRowSection).append(scrollToCTRInput);
+    $(scrollToClientTableRowSection).append(scrollToCTRButton);
+
+    var navbar = document.createElement('div');
+    var scrollBackToTopButton = document.createElement('button');
+    var scrollToControlSectionButton = document.createElement('button');
+
+    $(navbar).prop('id', 'navbar');
+    $(scrollBackToTopButton).text('Scroll back to top');
+    $(scrollToControlSectionButton).text('Scroll to control section');
+
+    scrollBackToTopButton.onclick = function () { scrollTo(0, 0); };
+    scrollToControlSectionButton.onclick = function () { scrollToDiv('controlSection'); };
+
+    $(navbar).append(scrollBackToTopButton);
+    $(navbar).append(scrollToControlSectionButton);
+
+    $(controlSection).append(rebuildSection);
+    $(controlSection).append(creationtimestampSection);
+    $(controlSection).append(connectedClientCountSection);
+    $(controlSection).append(scrollToClientTableRowSection);
+    $(controlSection).append(navbar);
+    $('.ts3-control').append(controlSection);
+}
+
+$(document).ready(function () { buildTables(); });

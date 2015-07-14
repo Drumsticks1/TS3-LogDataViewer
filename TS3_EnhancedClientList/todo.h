@@ -16,5 +16,8 @@ TS3_EnhancedClientList.js
 	- Add button for collapsing all expanded lists.
 	- Add custom parser for Nicknames, Connections and IPs (multi line).
 	- Add support for different timezones with moment.js and/or moment-timezone.js
+		- Get timezone offset by comparing UTC and server localtime timestamps.
+		- Add possibility to display all DateTimes in the UTC format.
 	- Add short online list (ID, lastNickname).
+	- Add offset at the end of the last table to ensure that the last table lines are not hidden after the navbar.
 */
