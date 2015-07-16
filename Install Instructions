@@ -23,8 +23,8 @@ Linux:
 8. Move the "TS3_EnhancedClientList.js" and the other four .js files you just downloaded into your EnhancedClientList directory.
 9. If you want to use the predesigned index.html then follow the step 9 a), otherwise if you want to include the controls and the table into an existing webpage then follow step 9 b).
 	9 a) Move the "index.html" into your created EnhancedClientList directory.
-	9 b) Include the control section and the client table by creating two divs with the classes "ts3-control" and "ts3-clienttable" and include the "TS3_EnhancedClientList.js" and the "jquery-latest.min.js" into the head section of you webpage.
-		 You can also include two divs with the classes "ts3-kicktable" and "ts3-upload-table" in your webpage.
+	9 b) Include the control section and the client table by creating two divs with the classes "ts3-control" and "ts3-clientTable" and include the "TS3_EnhancedClientList.js" and the "jquery-latest.min.js" into the head section of you webpage.
+		 You can also include two divs with the classes "ts3-kickTable" and "ts3-uploadTable" in your webpage.
 10. Move the "styles" folder into your EnhancedClientList directory (--> e.g. /var/www/html/EnhancedClientList/styles/)
 11. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
 12. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").

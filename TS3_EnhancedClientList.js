@@ -3,14 +3,15 @@
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 // Disable caching for jquery.
-$.ajaxSetup({ cache: false });
+$.ajaxSetup({cache: false});
 
 // Global Variables
-var ConnectedClientsCount, momentInterval, XML;
+var ConnectedClientsCount, currentDiv, momentInterval, XML, ConnectionsSortType = true;
+var ts3_clientTable, ts3_kickTable, ts3_uploadTable;
 
 // Including the Open Sans font.
 WebFontConfig = {
-    google: { families: ['Open+Sans::latin'] }
+    google: {families: ['Open+Sans::latin']}
 };
 (function () {
     var wf = document.createElement('script');
@@ -26,9 +27,12 @@ WebFontConfig = {
 $('head').append('<link rel="stylesheet" href="./style/style.css" type="text/css" />');
 
 // Including javascripts via jquery.
-$.getScript('jquery.tablesorter.min.js', function () { });
-$.getScript('jquery.tablesorter.widgets.js', function () { });
-$.getScript('moment.min.js', function () { });
+$.getScript('jquery.tablesorter.min.js', function () {
+});
+$.getScript('jquery.tablesorter.widgets.js', function () {
+});
+$.getScript('moment.min.js', function () {
+});
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -37,28 +41,22 @@ function rebuildXML() {
         document.getElementById('rebuildXMLButton').disabled = true;
         document.getElementById('buildNewXMLButton').disabled = true;
     }
-    $.get('rebuildXML.php', function () { buildTables(); });
+    $.get('rebuildXML.php', function () {
+        buildTables();
+    });
     return false;
 }
 
 // Deletes the current XML and builds a new one after.
 function buildNewXML() {
-    $.get('deleteXML.php', function () { rebuildXML(); });
+    $.get('deleteXML.php', function () {
+        rebuildXML();
+    });
     return false;
 }
 
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
-    var Row, ListUpper;
-    if (List == 'ips') {
-        Row = 3;
-        ListUpper = 'IPs';
-    }
-    else {
-        Row = 2;
-        ListUpper = 'Connections';
-    }
-
     var currentDiv = List + '_' + ID + '_2';
     if (document.getElementById(currentDiv).firstChild === null || document.getElementById(currentDiv).firstChild.nodeValue === '') {
         expandList(List, ID);
@@ -82,57 +80,25 @@ function expandList(List, ID) {
 
     var x = document.getElementById(ID).childNodes[Row];
     var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
-    for (var j = 0; j < x.childNodes.length - 1; j++) {
-        var currentDiv = List + '_' + ID + '_' + j;
-        if (document.getElementById(currentDiv) !== null && document.getElementById(currentDiv).firstChild !== null) {
-            document.getElementById(currentDiv).firstChild.nodeValue = ListContent[j].firstChild.nodeValue;
-        }
-        else {
-            var newChild = document.createTextNode(ListContent[j].firstChild.nodeValue);
-            document.getElementById(currentDiv).appendChild(newChild);
-        }
+    for (var j = 1; j < x.childNodes.length - 2; j++) {
+        currentDiv = List + '_' + ID + '_' + j;
+        $('#' + currentDiv).html(ListContent[j].firstChild.nodeValue);
     }
 }
 
 // Collapses the current list.
 function collapseList(List, ID) {
-    var Row, ListUpper;
-    if (List == 'ips') {
-        Row = 3;
-        ListUpper = 'IPs';
-    }
-    else {
-        Row = 2;
-        ListUpper = 'Connections';
-    }
+    var Row;
+    if (List == 'ips') Row = 3;
+    else Row = 2;
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row];
-        var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
-        var currentDiv = List + '_' + ID + '_1';
-        document.getElementById(currentDiv).firstChild.nodeValue = ListContent[ListContent.length - 1].firstChild.nodeValue;
-        for (var j = 2; j < x.childNodes.length - 1; j++) {
+        for (var j = 1; j < x.childNodes.length - 2; j++) {
             currentDiv = List + '_' + ID + '_' + j;
-            document.getElementById(currentDiv).firstChild.nodeValue = '';
+            $('#' + currentDiv).html('');
         }
     }
-}
-
-//
-function addIgnoreMomentParser() {
-    $.tablesorter.addParser({
-        id: 'ignoreMoment',
-        is: function (s, table, cell, $cell) {
-            return false;
-        },
-        format: function (s, table, cell, cellIndex) {
-            var $cell = $(cell);
-
-            if (cellIndex === 0) return s;
-        },
-        parsed: false,
-        type: 'text'
-    });
 }
 
 // Scroll to the div with the given ID.
@@ -151,9 +117,48 @@ function scrollToClientTableRow(Row_ID) {
     }
 }
 
+// [Description pending]
+function addIgnoreMomentParser() {
+    $.tablesorter.addParser({
+        id: 'ignoreMoment',
+        is: function () {
+            return false;
+        },
+        format: function (s, table, cell, cellIndex) {
+            if (cellIndex === 0) return s;
+        },
+        parsed: false,
+        type: 'text'
+    });
+}
+
+// [Description pending]
+function addConnectionsParser() {
+    $.tablesorter.addParser({
+        id: 'Connections',
+        is: function () {
+            return false;
+        },
+        format: function (s, table, cell) {
+            var firstConnect;
+            var lastConnect = cell.lastChild.innerHTML;
+            if (cell.firstChild.localName == 'button') {
+                firstConnect = cell.childNodes[1].innerHTML;
+            }
+            else firstConnect = cell.firstChild.innerHTML;
+
+
+            if (ConnectionsSortType) return firstConnect;
+            else return lastConnect;
+        },
+        parsed: false,
+        type: 'text'
+    });
+}
+
 // Builds and shows the client table.
 function buildClientTable() {
-    $('.ts3-clienttable').empty();
+    ts3_clientTable.empty();
     var User = XML.getElementsByTagName('User');
 
     var userTable = document.createElement('table');
@@ -234,23 +239,15 @@ function buildClientTable() {
                 userBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
-            var divConnections = document.createElement('div');
-            $(divConnections).html(Connections[0].firstChild.nodeValue);
-            $(divConnections).prop('id', 'connections_' + ID + '_0');
-            userBodyCell_Connections.appendChild(divConnections);
-            if (Connections.length > 1) {
-                divConnections = document.createElement('div');
-                $(divConnections).html(Connections[Connections.length - 1].firstChild.nodeValue);
-                $(divConnections).prop('id', 'connections_' + ID + '_1');
+            for (j = 0; j < Connections.length; j++) {
+                var divConnections = document.createElement('div');
+                $(divConnections).prop('id', 'connections_' + ID + '_' + j);
+                if (j === 0 || j == Connections.length - 1) {
+                    $(divConnections).html(Connections[j].firstChild.nodeValue);
+                }
                 userBodyCell_Connections.appendChild(divConnections);
             }
-            if (Connections.length > 2) {
-                for (j = 2; j < Connections.length; j++) {
-                    divConnections = document.createElement('div');
-                    $(divConnections).prop('id', 'connections_' + ID + '_' + j);
-                    userBodyCell_Connections.appendChild(divConnections);
-                }
-            }
+
             userBodyRow.appendChild(userBodyCell_Connections);
 
             if (IPs.length > 2) {
@@ -270,22 +267,14 @@ function buildClientTable() {
                 divExpandCollapseIPs.appendChild(buttonExpandCollapseIPs);
                 userBodyCell_IPs.appendChild(divExpandCollapseIPs);
             }
-            var divIPs = document.createElement('div');
-            $(divIPs).html(IPs[0].firstChild.nodeValue);
-            $(divIPs).prop('id', 'ips_' + ID + '_0');
-            userBodyCell_IPs.appendChild(divIPs);
-            if (IPs.length > 1) {
-                divIPs = document.createElement('div');
-                $(divIPs).html(IPs[IPs.length - 1].firstChild.nodeValue);
-                $(divIPs).prop('id', 'ips_' + ID + '_1');
-                userBodyCell_IPs.appendChild(divIPs);
-            }
-            if (IPs.length > 2) {
-                for (j = 2; j < IPs.length; j++) {
-                    divIPs = document.createElement('div');
-                    $(divIPs).prop('id', 'ips_' + ID + '_' + j);
-                    userBodyCell_IPs.appendChild(divIPs);
+
+            for (j = 0; j < IPs.length; j++) {
+                var divIPs = document.createElement('div');
+                $(divIPs).prop('id', 'ips_' + ID + '_' + j);
+                if (j === 0 || j == IPs.length - 1) {
+                    $(divIPs).html(IPs[j].firstChild.nodeValue);
                 }
+                userBodyCell_IPs.appendChild(divIPs);
             }
 
             userBodyRow.appendChild(userBodyCell_IPs);
@@ -311,25 +300,32 @@ function buildClientTable() {
 
     $(userTable).prop('id', 'clientTable');
     $(userTable).prop('class', 'tablesorter');
-    $('.ts3-clienttable').append(userTable);
+    ts3_clientTable.append(userTable);
 
-    if (document.getElementById('scrolltoclienttable') === null) {
-        scrolltoclienttable = document.createElement('button');
-        $(scrolltoclienttable).prop('id', 'scrolltoclienttable');
-        $(scrolltoclienttable).html('Scroll to client table');
-        scrolltoclienttable.onclick = function () { scrollToDiv('clientTable'); };
-        document.getElementById('navbar').appendChild(scrolltoclienttable);
+    if (document.getElementById('scrollToClientTable') === null) {
+        var scrollToClientTable = document.createElement('button');
+        $(scrollToClientTable).prop('id', 'scrollToClientTable');
+        $(scrollToClientTable).html('Scroll to client table');
+        scrollToClientTable.onclick = function () {
+            scrollToDiv('clientTable');
+        };
+        document.getElementById('navbar').appendChild(scrollToClientTable);
     }
 
-    $('#clientTable').tablesorter({
-        widgets: ['stickyHeaders'],
-        sortList: [[0, 2]]
-    });
+    addConnectionsParser();
+    $('#clientTable')
+        .tablesorter({
+            widgets: ['stickyHeaders'],
+            sortList: [[0, 2]],
+            headers: {
+                2: {sorter: 'Connections'}
+            }
+        });
 }
 
 // Builds and shows the kick table.
 function buildKickTable() {
-    $('.ts3-kicktable').empty();
+    ts3_kickTable.empty();
     var Kick = XML.getElementsByTagName('Kick');
 
     var kickTable = document.createElement('table');
@@ -406,14 +402,16 @@ function buildKickTable() {
 
     $(kickTable).prop('id', 'kickTable');
     $(kickTable).prop('class', 'tablesorter');
-    $('.ts3-kicktable').append(kickTable);
+    ts3_kickTable.append(kickTable);
 
-    if (document.getElementById('scrolltokicktable') === null) {
-        scrolltokicktable = document.createElement('button');
-        $(scrolltokicktable).prop('id', 'scrolltokicktable');
-        $(scrolltokicktable).html('Scroll to kick table');
-        scrolltokicktable.onclick = function () { scrollToDiv('kickTable'); };
-        document.getElementById('navbar').appendChild(scrolltokicktable);
+    if (document.getElementById('scrollToKickTable') === null) {
+        var scrollToKickTable = document.createElement('button');
+        $(scrollToKickTable).prop('id', 'scrollToKickTable');
+        $(scrollToKickTable).html('Scroll to kick table');
+        scrollToKickTable.onclick = function () {
+            scrollToDiv('kickTable');
+        };
+        document.getElementById('navbar').appendChild(scrollToKickTable);
     }
 
     addIgnoreMomentParser();
@@ -421,14 +419,14 @@ function buildKickTable() {
         widgets: ['stickyHeaders'],
         sortList: [[0, 1]],
         headers: {
-            0: { sorter: 'ignoreMoment' }
+            0: {sorter: 'ignoreMoment'}
         }
     });
 }
 
 // Builds and shows the upload table.
 function buildUploadTable() {
-    $('.ts3-uploadtable').empty();
+    ts3_uploadTable.empty();
     var File = XML.getElementsByTagName('File');
 
     var uploadTable = document.createElement('table');
@@ -493,14 +491,16 @@ function buildUploadTable() {
 
     $(uploadTable).prop('id', 'uploadTable');
     $(uploadTable).prop('class', 'tablesorter');
-    $('.ts3-uploadtable').append(uploadTable);
+    ts3_uploadTable.append(uploadTable);
 
-    if (document.getElementById('scrolltouploadtable') === null) {
-        scrolltouploadtable = document.createElement('button');
-        $(scrolltouploadtable).prop('id', 'scrolltouploadtable');
-        $(scrolltouploadtable).html('Scroll to upload table');
-        scrolltouploadtable.onclick = function () { scrollToDiv('uploadTable'); };
-        document.getElementById('navbar').appendChild(scrolltouploadtable);
+    if (document.getElementById('scrollToUploadTable') === null) {
+        var scrollToUploadTable = document.createElement('button');
+        $(scrollToUploadTable).prop('id', 'scrollToUploadTable');
+        $(scrollToUploadTable).html('Scroll to upload table');
+        scrollToUploadTable.onclick = function () {
+            scrollToDiv('uploadTable');
+        };
+        document.getElementById('navbar').appendChild(scrollToUploadTable);
     }
 
     addIgnoreMomentParser();
@@ -508,7 +508,7 @@ function buildUploadTable() {
         widgets: ['stickyHeaders'],
         sortList: [[0, 1]],
         headers: {
-            0: { sorter: 'ignoreMoment' }
+            0: {sorter: 'ignoreMoment'}
         }
     });
 }
@@ -518,24 +518,27 @@ function buildTables() {
     $.get('output.xml', {}, function (tempXML) {
         XML = tempXML;
         ConnectedClientsCount = 0;
+        ts3_clientTable = $('.ts3-clientTable');
+        ts3_kickTable = $('.ts3-kickTable');
+        ts3_uploadTable = $('.ts3-uploadTable');
 
-        if ($('.ts3-control') !== null && $('#controlSection').length == 0) { buildControlSection(); }
-        if ($('.ts3-clienttable') !== null) { buildClientTable(); }
-        if ($('.ts3-kicktable') !== null) { buildKickTable(); }
-        if ($('.ts3-uploadtable') !== null) { buildUploadTable(); }
+        if ($('.ts3-control') !== null && $('#controlSection').length === 0) buildControlSection();
+        if (ts3_clientTable !== null) buildClientTable();
+        if (ts3_kickTable !== null) buildKickTable();
+        if (ts3_uploadTable !== null) buildUploadTable();
 
         var Attributes = XML.getElementsByTagName('Attributes')[0];
         var CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue;
         var CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
-        $('#creationtimestamp_localtime').text(CreationTimestampLocaltime);
-        $('#creationtimestamp_utc').text(CreationTimestampUTC);
+        $('#creationTimestamp_localtime').html(CreationTimestampLocaltime);
+        $('#creationTimestamp_utc').html(CreationTimestampUTC);
 
         clearInterval(momentInterval);
         momentInterval = setInterval(function () {
-            $('#creationtimestamp_moment').text(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+            $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
         }, 1000);
 
-        $('#connectedClientsCount').text(ConnectedClientsCount);
+        $('#connectedClientsCount').html(ConnectedClientsCount);
 
         document.getElementById('rebuildXMLButton').disabled = false;
         document.getElementById('buildNewXMLButton').disabled = false;
@@ -558,23 +561,27 @@ function buildControlSection() {
     $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
     $(rebuildXMLButton).prop('disabled', 'true');
     $(buildNewXMLButton).prop('disabled', 'true');
-    $(rebuildXMLButton).text('Rebuild XML and reload tables');
-    $(buildNewXMLButton).text('Delete old XML and generate a new one (e.g. when switching to another logdirectory)');
+    $(rebuildXMLButton).html('Rebuild XML and reload tables');
+    $(buildNewXMLButton).html('Delete old XML and generate a new one (e.g. when switching to another logdirectory)');
 
-    rebuildXMLButton.onclick = function () { rebuildXML(); };
-    buildNewXMLButton.onclick = function () { buildNewXML(); };
+    rebuildXMLButton.onclick = function () {
+        rebuildXML();
+    };
+    buildNewXMLButton.onclick = function () {
+        buildNewXML();
+    };
 
     var loadingSpinnerIMG = new Image();
     loadingSpinnerIMG.src = 'style/gif-load.gif';
-    $(loadingSpinner).append(loadingSpinnerIMG);
+    loadingSpinner.appendChild(loadingSpinnerIMG);
     window.loadingSpinner = loadingSpinnerIMG;
 
-    $(rebuildSection).append(loadingSpinner);
-    $(rebuildSection).append(rebuildXMLButton);
-    $(rebuildSection).append(buildNewXMLButton);
+    rebuildSection.appendChild(loadingSpinner);
+    rebuildSection.appendChild(rebuildXMLButton);
+    rebuildSection.appendChild(buildNewXMLButton);
 
-    var creationtimestampSection = document.createElement('div');
-    var creationtimestampTable = document.createElement('table');
+    var creationTimestampSection = document.createElement('div');
+    var creationTimestampTable = document.createElement('table');
     var ctTHead = document.createElement('thead');
     var ctTHeadRow = document.createElement('tr');
     var ctTHead_localtime = document.createElement('th');
@@ -586,40 +593,40 @@ function buildControlSection() {
     var ctT_utc = document.createElement('td');
     var ctT_moment = document.createElement('td');
 
-    $(creationtimestampSection).prop('id', 'creationtimestampSection');
-    $(creationtimestampTable).prop('id', 'creationtimestampTable');
-    $(ctT_localtime).prop('id', 'creationtimestamp_localtime');
-    $(ctT_utc).prop('id', 'creationtimestamp_utc');
-    $(ctT_moment).prop('id', 'creationtimestamp_moment');
-    $(creationtimestampSection).text('Creation DateTime of the latest XML:');
-    $(ctTHead_localtime).text('Server localtime');
-    $(ctTHead_utc).text('UTC');
-    $(ctTHead_moment).text('moment.js');
-    $(ctT_localtime).text('Analyzing data...');
-    $(ctT_utc).text('Analyzing data...');
-    $(ctT_moment).text('Analyzing data...');
+    $(creationTimestampSection).prop('id', 'creationTimestampSection');
+    $(creationTimestampTable).prop('id', 'creationTimestampTable');
+    $(ctT_localtime).prop('id', 'creationTimestamp_localtime');
+    $(ctT_utc).prop('id', 'creationTimestamp_utc');
+    $(ctT_moment).prop('id', 'creationTimestamp_moment');
+    $(creationTimestampSection).html('Creation DateTime of the latest XML:');
+    $(ctTHead_localtime).html('Server localtime');
+    $(ctTHead_utc).html('UTC');
+    $(ctTHead_moment).html('moment.js');
+    $(ctT_localtime).html('Analyzing data...');
+    $(ctT_utc).html('Analyzing data...');
+    $(ctT_moment).html('Analyzing data...');
 
-    $(ctTHeadRow).append(ctTHead_localtime);
-    $(ctTHeadRow).append(ctTHead_utc);
-    $(ctTHeadRow).append(ctTHead_moment);
-    $(ctTHead).append(ctTHeadRow);
-    $(creationtimestampTable).append(ctTHead);
+    ctTHeadRow.appendChild(ctTHead_localtime);
+    ctTHeadRow.appendChild(ctTHead_utc);
+    ctTHeadRow.appendChild(ctTHead_moment);
+    ctTHead.appendChild(ctTHeadRow);
+    creationTimestampTable.appendChild(ctTHead);
 
-    $(ctTBodyRow).append(ctT_localtime);
-    $(ctTBodyRow).append(ctT_utc);
-    $(ctTBodyRow).append(ctT_moment);
-    $(ctTBody).append(ctTBodyRow);
-    $(creationtimestampTable).append(ctTBody);
-    $(creationtimestampSection).append(creationtimestampTable);
+    ctTBodyRow.appendChild(ctT_localtime);
+    ctTBodyRow.appendChild(ctT_utc);
+    ctTBodyRow.appendChild(ctT_moment);
+    ctTBody.appendChild(ctTBodyRow);
+    creationTimestampTable.appendChild(ctTBody);
+    creationTimestampSection.appendChild(creationTimestampTable);
 
     var connectedClientCountSection = document.createElement('div');
     var connectedClientsCount = document.createElement('div');
     $(connectedClientCountSection).prop('id', 'connectedClientCountSection');
     $(connectedClientsCount).prop('id', 'connectedClientsCount');
-    $(connectedClientCountSection).text('Current connected clients: ');
-    $(connectedClientsCount).text('Analyzing data...');
+    $(connectedClientCountSection).html('Current connected clients: ');
+    $(connectedClientsCount).html('Analyzing data...');
 
-    $(connectedClientCountSection).append(connectedClientsCount);
+    connectedClientCountSection.appendChild(connectedClientsCount);
 
     var scrollToClientTableRowSection = document.createElement('div');
     var scrollToCTRInput = document.createElement('input');
@@ -627,37 +634,70 @@ function buildControlSection() {
 
     $(scrollToClientTableRowSection).prop('id', 'scrollToClientTableRowSection');
     $(scrollToCTRInput).prop('id', 'IDSelection');
-    $(scrollToCTRInput).prop('input', 'number');
-    $(scrollToClientTableRowSection).text('Enter an ID and push the button to scroll to the row containing this ID and its information: ');
-    $(scrollToCTRButton).text('Scroll');
+    $(scrollToCTRInput).prop('type', 'number');
+    $(scrollToCTRInput).prop('min', '0');
+    $(scrollToCTRButton).html('Scroll');
 
     scrollToCTRButton.onclick = function () {
         scrollToClientTableRow(document.getElementById('IDSelection').value);
     };
 
-    $(scrollToClientTableRowSection).append(scrollToCTRInput);
-    $(scrollToClientTableRowSection).append(scrollToCTRButton);
+    scrollToClientTableRowSection.appendChild(scrollToCTRInput);
+    scrollToClientTableRowSection.appendChild(scrollToCTRButton);
+
+    var sortConnectionsSwitch = document.createElement('div');
+    var sortConnectionsSwitchInput = document.createElement('input');
+    var sortConnectionsSwitchLabel = document.createElement('label');
+    var sortConnectionsSwitchSpanInner = document.createElement('span');
+    var sortConnectionsSwitchSpanSwitch = document.createElement('span');
+
+    $(sortConnectionsSwitch).prop('class', 'sortConnectionsSwitch');
+    $(sortConnectionsSwitchInput).prop('type', 'checkbox');
+    $(sortConnectionsSwitchInput).prop('class', 'sortConnectionsSwitch-checkbox');
+    $(sortConnectionsSwitchInput).prop('id', 'sortConnectionsSwitch');
+    $(sortConnectionsSwitchInput).prop('checked', true);
+    $(sortConnectionsSwitchLabel).prop('class', 'sortConnectionsSwitch-label');
+    $(sortConnectionsSwitchLabel).prop('for', 'sortConnectionsSwitch');
+    $(sortConnectionsSwitchSpanInner).prop('class', 'sortConnectionsSwitch-inner');
+    $(sortConnectionsSwitchSpanSwitch).prop('class', 'sortConnectionsSwitch-switch');
+
+    sortConnectionsSwitchInput.onclick = function () {
+        ConnectionsSortType = this.checked;
+        buildClientTable();
+    };
+
+    sortConnectionsSwitch.appendChild(sortConnectionsSwitchInput);
+    sortConnectionsSwitchLabel.appendChild(sortConnectionsSwitchSpanInner);
+    sortConnectionsSwitchLabel.appendChild(sortConnectionsSwitchSpanSwitch);
+    sortConnectionsSwitch.appendChild(sortConnectionsSwitchLabel);
 
     var navbar = document.createElement('div');
     var scrollBackToTopButton = document.createElement('button');
     var scrollToControlSectionButton = document.createElement('button');
 
     $(navbar).prop('id', 'navbar');
-    $(scrollBackToTopButton).text('Scroll back to top');
-    $(scrollToControlSectionButton).text('Scroll to control section');
+    $(scrollBackToTopButton).html('Scroll back to top');
+    $(scrollToControlSectionButton).html('Scroll to control section');
 
-    scrollBackToTopButton.onclick = function () { scrollTo(0, 0); };
-    scrollToControlSectionButton.onclick = function () { scrollToDiv('controlSection'); };
+    scrollBackToTopButton.onclick = function () {
+        scrollTo(0, 0);
+    };
+    scrollToControlSectionButton.onclick = function () {
+        scrollToDiv('controlSection');
+    };
 
-    $(navbar).append(scrollBackToTopButton);
-    $(navbar).append(scrollToControlSectionButton);
+    navbar.appendChild(scrollBackToTopButton);
+    navbar.appendChild(scrollToControlSectionButton);
 
-    $(controlSection).append(rebuildSection);
-    $(controlSection).append(creationtimestampSection);
-    $(controlSection).append(connectedClientCountSection);
-    $(controlSection).append(scrollToClientTableRowSection);
-    $(controlSection).append(navbar);
+    controlSection.appendChild(rebuildSection);
+    controlSection.appendChild(creationTimestampSection);
+    controlSection.appendChild(connectedClientCountSection);
+    controlSection.appendChild(scrollToClientTableRowSection);
+    controlSection.appendChild(sortConnectionsSwitch);
+    controlSection.appendChild(navbar);
     $('.ts3-control').append(controlSection);
 }
 
-$(document).ready(function () { buildTables(); });
+$(document).ready(function () {
+    buildTables();
+});

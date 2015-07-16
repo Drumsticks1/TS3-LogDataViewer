@@ -5,77 +5,43 @@ Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 Feel free to modify this file according to your wishes.
 */
 
+body {
+    margin: 0;
+}
+
 /* index.html header */
-.TS3-ECL {
-    font-family: 'Open Sans', Arial;
+h1.TS3-ECL {
+    font-family: 'Open Sans', Arial sans-serif;
     font-weight: normal;
+    text-align: center;
+    color: #FFF;
+    background-color: #8093FF;
+    margin-top: 0;
+    min-width: 600px;
+    height: 70px;
+    line-height: 70px;
+}
+
+.ts3-control, .ts3-clientTable, .ts3-kickTable, .ts3-uploadTable {
+    margin: 25px 5px;
 }
 
 .ts3-control, .tablesorter, #navbar {
-    font-family: 'Open Sans', Arial;
+    font-family: 'Open Sans', Arial, sans-serif;
 }
 
-    .ts3-control button, #navbar button {
-        font-family: 'Open Sans', Arial;
-        flex-grow: 2;
-        border: 1px solid #8093FF;
-        margin: 8px 15px 0 0;
-        text-align: center;
-        padding: 8px 10px;
-        background: #FFF;
-        color: #8093FF;
-        font-size: 0.8rem;
-        font-weight: 300;
-        border-radius: 5px;
-    }
-
-#controlSection {
-    border: 2px solid #E6E6E6;
-    border-radius: 10px;
-    padding: 5px 10px;
-}
-
-#creationtimestampSection {
-    padding: 10px 0;
-}
-
-#creationtimestampTable {
-    display: block;
-    margin-top: 5px;
-    border-spacing: 5px;
-}
-
-    #creationtimestampTable thead tr th, #creationtimestampTable tbody tr td {
-        font-weight: normal;
-        padding: 5px;
-        border: 1px solid #8093FF;
-    }
-
-    #creationtimestampTable thead tr th {
-        -webkit-border-top-left-radius: 10px;
-        -webkit-border-top-right-radius: 10px;
-        -moz-border-radius-topleft: 10px;
-        -moz-border-radius-topright: 10px;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-    }
-
-    #creationtimestampTable tbody tr td {
-        -webkit-border-bottom-left-radius: 10px;
-        -webkit-border-bottom-right-radius: 10px;
-        -moz-border-radius-bottomleft: 10px;
-        -moz-border-radius-bottomright: 10px;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-    }
-
-#connectedClientsCount {
-    display: inline;
-}
-
-#scrollToClientTableRowSection button {
-    margin: 0 0 0 5px;
-    padding: 4px 8px;
+.ts3-control button, #navbar button {
+    font-family: 'Open Sans', Arial, sans-serif;
+    flex-grow: 2;
+    border: 1px solid #8093FF;
+    margin: 8px 15px 0 0;
+    text-align: center;
+    padding: 8px 10px;
+    background: #FFF;
+    color: #8093FF;
+    font-size: 0.8rem;
+    font-weight: 300;
+    border-radius: 5px;
 }
 
 .ts3-control button:active, #navbar button:active,
@@ -91,6 +57,64 @@ Feel free to modify this file according to your wishes.
     color: #999;
 }
 
+#controlSection {
+    border: 2px solid #E6E6E6;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+#rebuildSection, #creationTimestampSection, #connectedClientsCountSection, #scrollToClientTableRowSection, #creationTimestampTable {
+    margin: 10px 0;
+}
+
+#loadingSpinner {
+    display: inline;
+}
+
+#creationTimestampTable {
+    display: block;
+    border-spacing: 5px;
+}
+
+#creationTimestampTable thead tr th, #creationTimestampTable tbody tr td {
+    font-weight: normal;
+    border: 1px solid #8093FF;
+}
+
+#creationTimestampTable thead tr th {
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#creationTimestampTable tbody tr td {
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    -moz-border-radius-bottomright: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#connectedClientsCount {
+    display: inline;
+}
+
+#IDSelection {
+    font-family: 'Open Sans', Arial, sans-serif;
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+#scrollToClientTableRowSection button {
+    margin: 0 0 0 5px;
+    padding: 4px 8px;
+}
+
 #navbar {
     display: flex;
     position: fixed;
@@ -99,21 +123,19 @@ Feel free to modify this file according to your wishes.
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 5px 10px;
-    box-shadow: 0px -8px 10px -11px rgba(0,0,0,0.75);
-    background-color: #FCFCFC;
-    padding-bottom: 10px;
+    padding: 5px 10px 10px;
+    box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, 0.75);
 }
 
-    #navbar button {
-        margin-left: 4px;
-        margin-right: 4px;
-    }
+#navbar button {
+    margin-left: 4px;
+    margin-right: 4px;
+}
 
 /* Modified tablesorter style configuration */
 table.tablesorter {
     background-color: #CDCDCD;
-    margin: 10px 0pt 15px;
+    margin: 10px 0 15px;
     font-size: 12pt;
     width: 100%;
     text-align: left;
@@ -130,24 +152,23 @@ table.tablesorter {
 }
 
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-    background-color: #E6E6E6;
     border: 1px solid #E6E6E6;
     font-size: 14pt;
     font-weight: 300;
     padding: 5px;
 }
 
-    table.tablesorter thead tr th:first-child {
-        -webkit-border-top-left-radius: 10px;
-        -moz-border-radius-topleft: 10px;
-        border-top-left-radius: 10px;
-    }
+table.tablesorter thead tr th:first-child {
+    -webkit-border-top-left-radius: 10px;
+    -moz-border-radius-topleft: 10px;
+    border-top-left-radius: 10px;
+}
 
-    table.tablesorter thead tr th:last-child {
-        -webkit-border-top-right-radius: 10px;
-        -moz-border-radius-topright: 10px;
-        border-top-right-radius: 10px;
-    }
+table.tablesorter thead tr th:last-child {
+    -webkit-border-top-right-radius: 10px;
+    -moz-border-radius-topright: 10px;
+    border-top-right-radius: 10px;
+}
 
 table.tablesorter tbody td {
     color: #3D3D3D;
@@ -157,21 +178,15 @@ table.tablesorter tbody td {
 }
 
 table.tablesorter thead tr .tablesorter-header.tablesorter-headerUnSorted {
-    background-image: url(bg.png);
-    background-repeat: no-repeat;
-    background-position: center right;
+    background: #E6E6E6 url(bg.png) no-repeat center right;
 }
 
 table.tablesorter thead tr .tablesorter-header.tablesorter-headerAsc {
-    background-image: url(asc.png);
-    background-repeat: no-repeat;
-    background-position: center right;
+    background: #E6E6E6 url(asc.png) no-repeat center right;
 }
 
 table.tablesorter thead tr .tablesorter-header.tablesorter-headerDesc {
-    background-image: url(desc.png);
-    background-repeat: no-repeat;
-    background-position: center right;
+    background: #E6E6E6 url(desc.png) no-repeat center right;
 }
 
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
@@ -183,7 +198,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 table.tablesorter button {
-    font-family: 'Open Sans', Arial;
+    font-family: 'Open Sans', Arial, sans-serif;
     border: 1px solid #8093FF;
     text-align: center;
     padding: 5px 10px;
@@ -194,11 +209,90 @@ table.tablesorter button {
     border-radius: 5px;
 }
 
-    table.tablesorter button:active,
-    table.tablesorter button:hover,
-    table.tablesorter button:focus {
-        color: #FFF;
-        background-color: #8093FF;
-        outline: none;
-        transition: background-color, color 200ms;
-    }
+table.tablesorter button:active,
+table.tablesorter button:hover,
+table.tablesorter button:focus {
+    color: #FFF;
+    background-color: #8093FF;
+    outline: none;
+    transition: background-color, color 200ms;
+}
+
+.sortConnectionsSwitch {
+    position: relative;
+    width: 185px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.sortConnectionsSwitch-checkbox {
+    display: none;
+}
+
+.sortConnectionsSwitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #999999;
+    border-radius: 20px;
+}
+
+.sortConnectionsSwitch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+
+.sortConnectionsSwitch-inner:before, .sortConnectionsSwitch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 30px;
+    padding: 0;
+    line-height: 30px;
+    font-size: 14px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.sortConnectionsSwitch-inner:before {
+    content: "Sort by last connect";
+    padding-left: 10px;
+    background-color: #8093FF;
+    color: #FFFFFF;
+}
+
+.sortConnectionsSwitch-inner:after {
+    content: "Sort by first connect";
+    padding-right: 10px;
+    background-color: #8093FF;
+    color: #FFFFFF;
+    text-align: right;
+}
+
+.sortConnectionsSwitch-switch {
+    display: block;
+    width: 18px;
+    margin: 6px;
+    background: #FFFFFF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 151px;
+    border: 2px solid #999999;
+    border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+
+.sortConnectionsSwitch-checkbox:checked + .sortConnectionsSwitch-label .sortConnectionsSwitch-inner {
+    margin-left: 0;
+}
+
+.sortConnectionsSwitch-checkbox:checked + .sortConnectionsSwitch-label .sortConnectionsSwitch-switch {
+    right: 0;
+}
+
