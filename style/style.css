@@ -79,6 +79,7 @@ h1.TS3-ECL {
 #creationTimestampTable thead tr th, #creationTimestampTable tbody tr td {
     font-weight: normal;
     border: 1px solid #8093FF;
+    padding: 5px;
 }
 
 #creationTimestampTable thead tr th {
@@ -177,6 +178,10 @@ table.tablesorter tbody td {
     vertical-align: top;
 }
 
+table.tablesorter thead tr th{
+background: #E6E6E6 url(bg.png) no-repeat center right;
+}
+
 table.tablesorter thead tr .tablesorter-header.tablesorter-headerUnSorted {
     background: #E6E6E6 url(bg.png) no-repeat center right;
 }
@@ -201,12 +206,12 @@ table.tablesorter button {
     font-family: 'Open Sans', Arial, sans-serif;
     border: 1px solid #8093FF;
     text-align: center;
-    padding: 5px 10px;
+    padding: 3px 10px;
     background: #FFF;
     color: #8093FF;
     font-size: 0.8rem;
     font-weight: 300;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 table.tablesorter button:active,
