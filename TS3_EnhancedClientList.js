@@ -7,6 +7,7 @@ $.ajaxSetup({cache: false});
 
 // Global Variables
 var ConnectedClientsCount, currentDiv, momentInterval, XML, ConnectionsSortType = true;
+var clientTableSortOrder, kickTableSortOrder = [[0, 1]], uploadTableSortOrder = [[0, 1]];
 
 // Including the Open Sans font.
 WebFontConfig = {
@@ -39,6 +40,7 @@ function rebuildXML() {
     document.getElementById('rebuildXMLButton').disabled = true;
     document.getElementById('buildNewXMLButton').disabled = true;
     $.get('rebuildXML.php', function () {
+        saveSortOrder();
         buildTables();
     });
     return false;
@@ -55,7 +57,7 @@ function buildNewXML() {
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
     var i;
-    if(List == 'ips') i = 1;
+    if (List == 'ips') i = 1;
     else i = 2;
     var currentDiv = List + '_' + ID + '_' + i;
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
@@ -187,6 +189,20 @@ function addIPsParser() {
         parsed: false,
         type: 'text'
     });
+}
+
+// [Description pending]
+function saveSortOrder() {
+    if ($('.ts3-clientTable') !== null) clientTableSortOrder = $('#clientTable')[0].config.sortList;
+    if ($('.ts3-kickTable') !== null) kickTableSortOrder = $('#kickTable')[0].config.sortList;
+    if ($('.ts3-uploadTable') !== null) uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
+}
+
+// [Description pending]
+function applySortOrder() {
+    if ($('.ts3-clientTable') !== null) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
+    if ($('.ts3-kickTable') !== null) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
+    if ($('.ts3-uploadTable') !== null) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
 }
 
 // Builds and shows the client table.
@@ -342,13 +358,12 @@ function buildClientTable() {
     addIPsParser();
     $('#clientTable')
         .tablesorter({
-            sortList: [[0, 2]],
             headers: {
                 2: {sorter: 'Connections'},
                 3: {sorter: 'IPs'}
             }
         });
-    $('#ts3-clientTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $('#clientTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
 
 // Builds and shows the kick table.
@@ -444,12 +459,11 @@ function buildKickTable() {
 
     addIgnoreMomentParser();
     $('#kickTable').tablesorter({
-        sortList: [[0, 1]],
         headers: {
             0: {sorter: 'ignoreMoment'}
         }
     });
-    $('#ts3-kickTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $('#kickTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
 
 // Builds and shows the upload table.
@@ -533,12 +547,11 @@ function buildUploadTable() {
 
     addIgnoreMomentParser();
     $('#uploadTable').tablesorter({
-        sortList: [[0, 1]],
         headers: {
             0: {sorter: 'ignoreMoment'}
         }
     });
-    $('#ts3-uploadTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $('#uploadTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
 
 // Builds the tables using the XML.
@@ -552,6 +565,7 @@ function buildTables() {
             if ($('.ts3-clientTable') !== null) buildClientTable();
             if ($('.ts3-kickTable') !== null) buildKickTable();
             if ($('.ts3-uploadTable') !== null) buildUploadTable();
+            applySortOrder();
 
             var Attributes = XML.getElementsByTagName('Attributes')[0];
             var CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue;
@@ -690,7 +704,9 @@ function buildControlSection() {
 
     sortConnectionsSwitchInput.onclick = function () {
         ConnectionsSortType = this.checked;
+        saveSortOrder();
         $('#clientTable').trigger("updateCache");
+        applySortOrder();
     };
 
     sortConnectionsSwitch.appendChild(sortConnectionsSwitchInput);

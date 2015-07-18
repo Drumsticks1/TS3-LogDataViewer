@@ -20,7 +20,6 @@ TS3_EnhancedClientList.js
 		- Add possibility to display all DateTimes in the UTC format.
 	- Add short online list (ID, lastNickname).
 	- Add offset at the end of the last table to ensure that the last table lines are not hidden after the navbar.
-	- Save sorting options when rebuilding the tables.
 
 Example:
 	- Add example on jsfiddle.

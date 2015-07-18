@@ -14,7 +14,7 @@ The logfiles are analyzed and the relevant information from the logmessages (e.g
 After all logfiles are parsed a XML file is created which then is used for displaying the tables in the Webinterface or in your custom webpage.
 
 ## Current Features
-### Multiple tables
+### Multiple sortable tables
 - Client List
 - Kick List
 - File upload List
@@ -28,23 +28,26 @@ You can either use the provided Webinterface (index.html) or implement the contr
 - Timestamps of the XML creation (local time of the server and UTC).
 - Count of currently connected clients.
 - Scroll to the client table position of an ID.
+- Switch between sorting by first or last Connections.
 - Navbar fixed at the bottom of the page which contains the following buttons (scroll buttons of unused tables won't appear):
 	* Scroll back to top
+	* Scroll to control section
 	* Scroll to client table
 	* Scroll to kick table
 	* Scroll to upload table
 
 #### Client table layout and features
 ID | Nicknames | Connections | IPs | Connected | Deleted
----|---|:---:|:---:|---|---
-3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br />2015-24-06 23:11:02<br />2013-03-11 19:46:07 | + -<br />88.888.888.75<br />99.999.999.31 | true | false
+---|---|:---:|---|---|---
+3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07 | + -<br />88.888.888.75 | true | false
+4  | Random User | 2015-18-07 15:11:02<br />2015-18-07 13:56:25 | 99.999.999.31 | false | false
 
-- Chronological nickname history.
+- Chronological nickname history without duplicates.
 - Last and first connection time.
-- Last and first IP.
-- Expanding and Collapsing the Connections and the IPs list (expanding to a chronologial list of all connections / IPs | collapsing back to the last and the first connections / IPs).
+- Last IP.
+- Expanding and Collapsing the Connections and the IPs list (expanding to a chronologial list of all connections / IPs | collapsing back to the last and the first connections / the last IP).
 - Connected flag which shows if a user is currently connected.
-- Deleted flag which shows if the user got deleted (only works if this is logged --> user must be deleted while the server is online).
+- Deleted flag which shows if the user got deleted (only works if this is logged --> user must be deleted while the server is running).
 
 #### Kick table layout
 Date and Time | Kicked User (ID) | Kicked User (Nickname) | Kicked by (Nickname) | Kicked by (UID) | Reason
@@ -71,11 +74,11 @@ See the todo.h for planned features.
 ## Installation
 As the file name already implies, the install instructions can be found in the file "Install Instructions".<br />
 For now there are only installation instructions available for Linux.<br />
-Experienced Users should still be able to set it up on Windows / Mac by following the Linux steps.
+Experienced Users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br />
-You will need to download the following files:
+You will need to download the following extern files:
 - One file for jquery:
 	- [jquery-latest.min.js](http://code.jquery.com/jquery-latest.min.js)
 - Two files from [this fork](http://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
