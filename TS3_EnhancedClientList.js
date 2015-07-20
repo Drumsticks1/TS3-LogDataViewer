@@ -37,7 +37,6 @@ $.getScript('moment.min.js', function () {
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
     nanobar.go(25);
-    $(window.loadingBar).show();
     document.getElementById('rebuildXMLButton').disabled = true;
     document.getElementById('buildNewXMLButton').disabled = true;
     $.get('rebuildXML.php', function () {
@@ -584,7 +583,6 @@ function buildTables() {
 
             document.getElementById('rebuildXMLButton').disabled = false;
             document.getElementById('buildNewXMLButton').disabled = false;
-            $(window.loadingBar).hide();
             nanobar.go(100);
         }
     );
@@ -594,13 +592,11 @@ function buildTables() {
 function buildControlSection() {
     var controlSection = document.createElement('div');
     var rebuildSection = document.createElement('div');
-    var loadingBar = document.createElement('div');
     var rebuildXMLButton = document.createElement('button');
     var buildNewXMLButton = document.createElement('button');
 
     $(controlSection).prop('id', 'controlSection');
     $(rebuildSection).prop('id', 'rebuildSection');
-    $(loadingBar).prop('class', 'loadingBar');
     $(rebuildXMLButton).prop('id', 'rebuildXMLButton');
     $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
     $(rebuildXMLButton).prop('disabled', 'true');
@@ -615,8 +611,6 @@ function buildControlSection() {
         buildNewXML();
     };
 
-    window.loadingBar = loadingBar;
-    rebuildSection.appendChild(loadingBar);
     rebuildSection.appendChild(rebuildXMLButton);
     rebuildSection.appendChild(buildNewXMLButton);
 
