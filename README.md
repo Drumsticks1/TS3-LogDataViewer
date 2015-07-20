@@ -84,6 +84,8 @@ You will need to download the following extern files:
 - Two files from [this fork](http://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
 	- [jquery.tablesorter.min.js](http://mottie.github.io/tablesorter/dist/js/jquery.tablesorter.min.js)
 	- [jquery.tablesorter.widgets.js](http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js)
+- One file for the loading bar:
+	- [nanobar.min.js]("http://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js")
 - One file for moment.js:
 	- [moment.min.js](http://momentjs.com/downloads/moment.min.js)
 - On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).

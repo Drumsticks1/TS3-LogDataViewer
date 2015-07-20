@@ -6,7 +6,7 @@
 $.ajaxSetup({cache: false});
 
 // Global Variables
-var ConnectedClientsCount, currentDiv, momentInterval, XML, ConnectionsSortType = true;
+var ConnectedClientsCount, currentDiv, momentInterval, XML, ConnectionsSortType = true, nanobar;
 var clientTableSortOrder, kickTableSortOrder = [[0, 1]], uploadTableSortOrder = [[0, 1]];
 
 // Including the Open Sans font.
@@ -36,7 +36,8 @@ $.getScript('moment.min.js', function () {
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
-    $(window.loadingSpinner).show();
+    nanobar.go(25);
+    $(window.loadingBar).show();
     document.getElementById('rebuildXMLButton').disabled = true;
     document.getElementById('buildNewXMLButton').disabled = true;
     $.get('rebuildXML.php', function () {
@@ -142,8 +143,8 @@ function addIgnoreMomentParser() {
         is: function () {
             return false;
         },
-        format: function (s, table, cell, cellIndex) {
-            if (cellIndex === 0) return s;
+        format: function (s) {
+            return s;
         },
         parsed: false,
         type: 'text'
@@ -191,14 +192,14 @@ function addIPsParser() {
     });
 }
 
-// [Description pending]
+// Saves the current sort order of the existing tables.
 function saveSortOrder() {
     if ($('.ts3-clientTable') !== null) clientTableSortOrder = $('#clientTable')[0].config.sortList;
     if ($('.ts3-kickTable') !== null) kickTableSortOrder = $('#kickTable')[0].config.sortList;
     if ($('.ts3-uploadTable') !== null) uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
 }
 
-// [Description pending]
+// Applies the saved sort order to the existing tables.
 function applySortOrder() {
     if ($('.ts3-clientTable') !== null) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
     if ($('.ts3-kickTable') !== null) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
@@ -556,6 +557,7 @@ function buildUploadTable() {
 
 // Builds the tables using the XML.
 function buildTables() {
+    nanobar.go(50);
     if ($('.ts3-control') !== null && $('#controlSection').length === 0) buildControlSection();
     $.get('output.xml', {}, function (tempXML) {
             XML = tempXML;
@@ -582,7 +584,8 @@ function buildTables() {
 
             document.getElementById('rebuildXMLButton').disabled = false;
             document.getElementById('buildNewXMLButton').disabled = false;
-            $(window.loadingSpinner).hide();
+            $(window.loadingBar).hide();
+            nanobar.go(100);
         }
     );
 }
@@ -591,19 +594,19 @@ function buildTables() {
 function buildControlSection() {
     var controlSection = document.createElement('div');
     var rebuildSection = document.createElement('div');
-    var loadingSpinner = document.createElement('div');
+    var loadingBar = document.createElement('div');
     var rebuildXMLButton = document.createElement('button');
     var buildNewXMLButton = document.createElement('button');
 
     $(controlSection).prop('id', 'controlSection');
     $(rebuildSection).prop('id', 'rebuildSection');
-    $(loadingSpinner).prop('class', 'loadingSpinner');
+    $(loadingBar).prop('class', 'loadingBar');
     $(rebuildXMLButton).prop('id', 'rebuildXMLButton');
     $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
     $(rebuildXMLButton).prop('disabled', 'true');
     $(buildNewXMLButton).prop('disabled', 'true');
     $(rebuildXMLButton).html('Rebuild XML and reload tables');
-    $(buildNewXMLButton).html('Delete old XML and generate a new one (e.g. when switching to another logdirectory)');
+    $(buildNewXMLButton).html('Delete XML and generate a new one');
 
     rebuildXMLButton.onclick = function () {
         rebuildXML();
@@ -612,12 +615,8 @@ function buildControlSection() {
         buildNewXML();
     };
 
-    var loadingSpinnerIMG = new Image();
-    loadingSpinnerIMG.src = 'style/gif-load.gif';
-    loadingSpinner.appendChild(loadingSpinnerIMG);
-    window.loadingSpinner = loadingSpinnerIMG;
-
-    rebuildSection.appendChild(loadingSpinner);
+    window.loadingBar = loadingBar;
+    rebuildSection.appendChild(loadingBar);
     rebuildSection.appendChild(rebuildXMLButton);
     rebuildSection.appendChild(buildNewXMLButton);
 
@@ -742,5 +741,12 @@ function buildControlSection() {
 }
 
 $(document).ready(function () {
-    buildTables();
+    $.getScript('nanobar.min.js', function () {
+        nanobar = new Nanobar({
+            bg: 'white',
+            id: 'nanobar'
+        });
+        nanobar.go(25);
+        buildTables();
+    });
 });

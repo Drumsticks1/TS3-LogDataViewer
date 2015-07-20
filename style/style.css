@@ -7,6 +7,7 @@ Feel free to modify this file according to your wishes.
 
 body {
     margin: 0;
+    padding-bottom: 51px;
 }
 
 /* index.html header */
@@ -14,7 +15,7 @@ h1.TS3-ECL {
     font-family: 'Open Sans', Arial sans-serif;
     font-weight: normal;
     text-align: center;
-    color: #FFF;
+    color: white;
     background-color: #8093FF;
     margin-top: 0;
     min-width: 600px;
@@ -23,7 +24,7 @@ h1.TS3-ECL {
 }
 
 .ts3-control, .ts3-clientTable, .ts3-kickTable, .ts3-uploadTable {
-    margin: 25px 5px;
+    margin: 25px 5px 0;
 }
 
 .ts3-control, .tablesorter, #navbar {
@@ -34,10 +35,9 @@ h1.TS3-ECL {
     font-family: 'Open Sans', Arial, sans-serif;
     flex-grow: 2;
     border: 1px solid #8093FF;
-    margin: 8px 15px 0 0;
     text-align: center;
     padding: 8px 10px;
-    background: #FFF;
+    background: white;
     color: #8093FF;
     font-size: 0.8rem;
     font-weight: 300;
@@ -47,7 +47,7 @@ h1.TS3-ECL {
 .ts3-control button:active, #navbar button:active,
 .ts3-control button:hover, #navbar button:hover,
 .ts3-control button:focus, #navbar button:focus {
-    color: #FFF;
+    color: white;
     background-color: #8093FF;
     outline: none;
     transition: background-color, color 200ms;
@@ -61,14 +61,16 @@ h1.TS3-ECL {
     border: 2px solid #E6E6E6;
     border-radius: 10px;
     padding: 5px 10px;
+    max-height: 350px;
+    overflow: auto;
 }
 
 #rebuildSection, #creationTimestampSection, #connectedClientsCountSection, #scrollToClientTableRowSection, #creationTimestampTable {
     margin: 10px 0;
 }
 
-#loadingSpinner {
-    display: inline;
+#buildNewXMLButton {
+    margin-left: 5px;
 }
 
 #creationTimestampTable {
@@ -83,21 +85,15 @@ h1.TS3-ECL {
 }
 
 #creationTimestampTable thead tr th {
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    -webkit-border-radius: 10px 10px 0 0;
+    -moz-border-radius: 10px 10px 0 0;
+    border-radius: 10px 10px 0 0;
 }
 
 #creationTimestampTable tbody tr td {
-    -webkit-border-bottom-left-radius: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    -moz-border-radius-bottomright: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    -webkit-border-radius: 0 0 10px 10px;
+    -moz-border-radius: 0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
 }
 
 #connectedClientsCount {
@@ -119,7 +115,7 @@ h1.TS3-ECL {
 #navbar {
     display: flex;
     position: fixed;
-    background-color: #FFF;
+    background-color: white;
     font-size: 12pt;
     bottom: 0;
     left: 0;
@@ -129,27 +125,21 @@ h1.TS3-ECL {
 }
 
 #navbar button {
-    margin-left: 4px;
-    margin-right: 4px;
+    margin: 0 4px;
 }
 
-/* Modified tablesorter style configuration */
 table.tablesorter {
     background-color: #CDCDCD;
-    margin: 10px 0 15px;
     font-size: 12pt;
     width: 100%;
     text-align: left;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    -webkit-border-radius: 10px 10px 0 0;
+    -moz-border-radius: 10px 10px 0 0;
+    border-radius: 10px 10px 0 0;
 }
 
 .tablesorter-sticky-visible {
-    background-color: #FFF;
+    background-color: white;
 }
 
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
@@ -174,12 +164,8 @@ table.tablesorter thead tr th:last-child {
 table.tablesorter tbody td {
     color: #3D3D3D;
     padding: 4px;
-    background-color: #FFF;
+    background-color: white;
     vertical-align: top;
-}
-
-table.tablesorter thead tr th{
-background: #E6E6E6 url(bg.png) no-repeat center right;
 }
 
 table.tablesorter thead tr .tablesorter-header.tablesorter-headerUnSorted {
@@ -192,10 +178,6 @@ table.tablesorter thead tr .tablesorter-header.tablesorter-headerAsc {
 
 table.tablesorter thead tr .tablesorter-header.tablesorter-headerDesc {
     background: #E6E6E6 url(desc.png) no-repeat center right;
-}
-
-table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
-    background-color: #8dbdd8;
 }
 
 #clientTable td:nth-child(3) {
@@ -217,7 +199,7 @@ table.tablesorter button {
 table.tablesorter button:active,
 table.tablesorter button:hover,
 table.tablesorter button:focus {
-    color: #FFF;
+    color: white;
     background-color: #8093FF;
     outline: none;
     transition: background-color, color 200ms;
@@ -259,8 +241,8 @@ table.tablesorter button:focus {
     line-height: 30px;
     font-size: 14px;
     color: white;
-    font-family: Trebuchet, Arial, sans-serif;
-    font-weight: bold;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-weight: 300;
     box-sizing: border-box;
 }
 
@@ -275,7 +257,7 @@ table.tablesorter button:focus {
     content: "Sort by first connect";
     padding-right: 10px;
     background-color: #8093FF;
-    color: #FFFFFF;
+    color: white;
     text-align: right;
 }
 
@@ -283,12 +265,12 @@ table.tablesorter button:focus {
     display: block;
     width: 18px;
     margin: 6px;
-    background: #FFFFFF;
+    background: white;
     position: absolute;
     top: 0;
     bottom: 0;
     right: 151px;
-    border: 2px solid #999999;
+    border: 2px solid white;
     border-radius: 20px;
     transition: all 0.3s ease-in 0s;
 }
@@ -300,4 +282,3 @@ table.tablesorter button:focus {
 .sortConnectionsSwitch-checkbox:checked + .sortConnectionsSwitch-label .sortConnectionsSwitch-switch {
     right: 0;
 }
-
