@@ -289,13 +289,15 @@ function buildClientTable() {
 
             var divLastConnection = document.createElement('div');
             $(divLastConnection).prop('id', 'connections_' + ID + '_0');
-            $(divLastConnection).html(Connections[0].firstChild.nodeValue);
+            var localFirstConnectionDateTime = moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss')
+            $(divLastConnection).html(localFirstConnectionDateTime);
             userBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
                 $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1));
-                $(divFirstConnection).html(Connections[Connections.length - 1].firstChild.nodeValue);
+                var localLastConnectionDateTime = moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss')
+                $(divFirstConnection).html(localLastConnectionDateTime);
                 userBodyCell_Connections.appendChild(divFirstConnection);
             }
 
@@ -420,7 +422,8 @@ function buildKickTable() {
         var kickBodyCell_KickedByUID = document.createElement('td');
         var kickBodyCell_KickReason = document.createElement('td');
 
-        $(kickBodyCell_DateTime).html(KickDateTime + '<br />(about ' + moment(KickDateTime).fromNow() + ')');
+        var localKickDateTime = moment(KickDateTime + '+0000');
+        $(kickBodyCell_DateTime).html(localKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(localKickDateTime).fromNow() + ')');
         kickBodyRow.appendChild(kickBodyCell_DateTime);
 
         $(kickBodyCell_KickedID).html(KickedID);
@@ -511,7 +514,8 @@ function buildUploadTable() {
         var uploadBodyCell_uploadedByNickname = document.createElement('td');
         var uploadBodyCell_uploadedByID = document.createElement('td');
 
-        $(uploadBodyCell_UploadDateTime).html(UploadDateTime + '<br />(about ' + moment(UploadDateTime).fromNow() + ')');
+        var localUploadDateTime = moment(UploadDateTime + '+0000');
+        $(uploadBodyCell_UploadDateTime).html(localUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + localUploadDateTime.fromNow() + ')');
         uploadBodyRow.appendChild(uploadBodyCell_UploadDateTime);
 
         $(uploadBodyCell_ChannelID).html(ChannelID);
@@ -626,6 +630,7 @@ function buildControlSection() {
     var ctT_localtime = document.createElement('td');
     var ctT_utc = document.createElement('td');
     var ctT_moment = document.createElement('td');
+    var ctTdescription = document.createElement('div');
 
     $(creationTimestampSection).prop('id', 'creationTimestampSection');
     $(creationTimestampTable).prop('id', 'creationTimestampTable');
@@ -639,6 +644,7 @@ function buildControlSection() {
     $(ctT_localtime).html('Analyzing data...');
     $(ctT_utc).html('Analyzing data...');
     $(ctT_moment).html('Analyzing data...');
+    $(ctTdescription).html('The DateTimes in the tables are displayed in your current timezone.');
 
     ctTHeadRow.appendChild(ctTHead_localtime);
     ctTHeadRow.appendChild(ctTHead_utc);
@@ -652,6 +658,7 @@ function buildControlSection() {
     ctTBody.appendChild(ctTBodyRow);
     creationTimestampTable.appendChild(ctTBody);
     creationTimestampSection.appendChild(creationTimestampTable);
+    creationTimestampSection.appendChild(ctTdescription);
 
     var connectedClientCountSection = document.createElement('div');
     var connectedClientsCount = document.createElement('div');
