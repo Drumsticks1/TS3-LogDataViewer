@@ -24,30 +24,30 @@ extern vector <File> FileList;
 vector <string> parsedLogs;
 
 // Parses the XML if existing.
-bool parseXML(){
-	if (exists(XMLFILE)){
-		if (is_regular_file(XMLFILE)){
-			if (!boost::filesystem::is_empty(XMLFILE)){
+bool parseXML() {
+	if (exists(XMLFILE)) {
+		if (is_regular_file(XMLFILE)) {
+			if (!boost::filesystem::is_empty(XMLFILE)) {
 				cout << "Parsing the last created XML..." << endl;
 				unsigned int ID, KickListID = 0, FileListID = 0, kickedID, channelID, uploadedByID;
 				ptree PropertyTree;
 				string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
 				bool blankUser;
 
-				try{
+				try {
 					read_xml(XMLFILE, PropertyTree);
 				}
-				catch (xml_parser_error error){
+				catch (xml_parser_error error) {
 					cout << "Error reading out the XML - skipping..." << endl;
 					return false;
 				}
 
-				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")){
+				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")) {
 					ptree subtree = Node.second;
-					if (Node.first == "User"){
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
-							if (vs.first == "ID"){
-								if (vs.second.data() != "-1"){
+					if (Node.first == "User") {
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")) {
+							if (vs.first == "ID") {
+								if (vs.second.data() != "-1") {
 									ID = stoul(vs.second.data());
 									UserList.resize(ID + 1);
 									UserList[ID].addID(stoul(vs.second.data()));
@@ -55,42 +55,42 @@ bool parseXML(){
 								}
 								else blankUser = true;
 							}
-							else if (vs.first == "Deleted"){
-								if (vs.second.data() == "true"){
+							else if (vs.first == "Deleted") {
+								if (vs.second.data() == "true") {
 									UserList[ID].deleteUser();
 								}
 							}
 						}
-						if (!blankUser){
-							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")){
+						if (!blankUser) {
+							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Nicknames")) {
 								UserList[ID].addNicknameReverse(vs.second.data());
 							}
-							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connections")){
+							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("Connections")) {
 								UserList[ID].addDateTimeReverse(vs.second.data());
 							}
-							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")){
+							BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("IPs")) {
 								UserList[ID].addIPReverse(vs.second.data());
 							}
 						}
 					}
-					else if (Node.first == "Kick"){
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
-							if (vs.first == "KickDateTime"){
+					else if (Node.first == "Kick") {
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")) {
+							if (vs.first == "KickDateTime") {
 								kickDateTime = vs.second.data();
 							}
-							else if (vs.first == "KickedID"){
+							else if (vs.first == "KickedID") {
 								kickedID = stoul(vs.second.data());
 							}
-							else if (vs.first == "KickedNickname"){
+							else if (vs.first == "KickedNickname") {
 								kickedNickname = vs.second.data();
 							}
-							else if (vs.first == "KickedByNickname"){
+							else if (vs.first == "KickedByNickname") {
 								kickedByNickname = vs.second.data();
 							}
-							else if (vs.first == "KickedByUID"){
+							else if (vs.first == "KickedByUID") {
 								kickedByUID = vs.second.data();
 							}
-							else if (vs.first == "KickReason"){
+							else if (vs.first == "KickReason") {
 								kickReason = vs.second.data();
 							}
 						}
@@ -98,22 +98,22 @@ bool parseXML(){
 						KickList[KickListID].addKick(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason);
 						KickListID++;
 					}
-					else if (Node.first == "File"){
+					else if (Node.first == "File") {
 						string bla = Node.second.data();
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")){
-							if (vs.first == "UploadDateTime"){
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")) {
+							if (vs.first == "UploadDateTime") {
 								uploadDateTime = vs.second.data();
 							}
-							else if (vs.first == "ChannelID"){
+							else if (vs.first == "ChannelID") {
 								channelID = stoul(vs.second.data());
 							}
-							else if (vs.first == "Filename"){
+							else if (vs.first == "Filename") {
 								filename = vs.second.data();
 							}
-							else if (vs.first == "UploadedByNickname"){
+							else if (vs.first == "UploadedByNickname") {
 								uploadedByNickname = vs.second.data();
 							}
-							else if (vs.first == "UploadedByID"){
+							else if (vs.first == "UploadedByID") {
 								uploadedByID = stoul(vs.second.data());
 							}
 						}
@@ -121,8 +121,8 @@ bool parseXML(){
 						FileList[FileListID].uploadFile(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
 						FileListID++;
 					}
-					else if (Node.first == "Attributes"){
-						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")){
+					else if (Node.first == "Attributes") {
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")) {
 							parsedLogs.emplace_back(vs.second.data());
 						}
 					}

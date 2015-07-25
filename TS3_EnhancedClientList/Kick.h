@@ -6,7 +6,7 @@
 using namespace std;
 
 // Class for the kick data.
-class Kick{
+class Kick {
 private:
 	unsigned int kickedID;
 	string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason;

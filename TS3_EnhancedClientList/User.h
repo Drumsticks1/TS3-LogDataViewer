@@ -8,7 +8,7 @@
 using namespace std;
 
 // Class for the User data.
-class User{
+class User {
 private:
 	unsigned int ID = 0;
 	vector <string> DateTime, Nickname, IP;

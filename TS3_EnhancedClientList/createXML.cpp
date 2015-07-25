@@ -23,7 +23,7 @@ extern vector <Kick> KickList;
 extern vector <File> FileList;
 
 // Returns the given time structure as string in the format "dd.mm.yyyy hh:mm:ss".
-string timeToString(ptime t){
+string timeToString(ptime t) {
 	unsigned short year, month, day, hours, minutes, seconds;
 	year = t.date().year();
 	month = t.date().month();
@@ -33,40 +33,40 @@ string timeToString(ptime t){
 	seconds = t.time_of_day().seconds();
 
 	string curTime = "";
-	if (day < 10){ curTime += "0"; }
+	if (day < 10) { curTime += "0"; }
 	curTime += to_string(day) + ".";
-	if (month < 10){ curTime += "0"; }
+	if (month < 10) { curTime += "0"; }
 	curTime += to_string(month) + "." + to_string(year) + " ";
-	if (hours < 10){ curTime += "0"; }
+	if (hours < 10) { curTime += "0"; }
 	curTime += to_string(hours) + ":";
-	if (minutes < 10){ curTime += "0"; }
+	if (minutes < 10) { curTime += "0"; }
 	curTime += to_string(minutes) + ":";
-	if (seconds < 10){ curTime += "0"; }
+	if (seconds < 10) { curTime += "0"; }
 	curTime += to_string(seconds);
 	return curTime;
 }
 
 // Creates a XML for storing the data extracted from the logs.
-void createXML(){
+void createXML() {
 	ptree PropertyTree, UserListNode, UserNode, KickNode, FileNode, AttributesNode;
 	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
 	cout << "Preparing XML-Creation..." << endl;
-	for (unsigned int i = 0; i < UserList.size(); i++){
-		if (UserList[i].getID() != 0){
+	for (unsigned int i = 0; i < UserList.size(); i++) {
+		if (UserList[i].getID() != 0) {
 			fieldNickname.clear();
 			fieldDateTime.clear();
 			fieldIP.clear();
 
-			for (unsigned int j = 0; j < UserList[i].getNicknameCount(); j++){
+			for (unsigned int j = 0; j < UserList[i].getNicknameCount(); j++) {
 				fieldNickname.add("Nicknames", UserList[i].getUniqueNickname(j));
 			}
 
-			for (unsigned int j = 0; j < UserList[i].getDateTimeCount(); j++){
+			for (unsigned int j = 0; j < UserList[i].getDateTimeCount(); j++) {
 				fieldDateTime.add("Connections", UserList[i].getUniqueDateTime(j));
 			}
 
-			for (unsigned int j = 0; j < UserList[i].getIPCount(); j++){
+			for (unsigned int j = 0; j < UserList[i].getIPCount(); j++) {
 				fieldIP.add("IPs", UserList[i].getUniqueIP(j));
 			}
 
@@ -80,7 +80,7 @@ void createXML(){
 
 			UserListNode.add_child("User", UserNode);
 		}
-		else{
+		else {
 			UserNode.clear();
 			UserNode.put("ID", "-1");
 			UserListNode.add_child("User", UserNode);
@@ -88,7 +88,7 @@ void createXML(){
 	}
 	UserList.clear();
 
-	for (unsigned int i = 0; i < KickList.size(); i++){
+	for (unsigned int i = 0; i < KickList.size(); i++) {
 		KickNode.put("KickDateTime", KickList[i].getKickDateTime());
 		KickNode.put("KickedID", KickList[i].getKickedID());
 		KickNode.put("KickedNickname", KickList[i].getKickedNickname());
@@ -100,7 +100,7 @@ void createXML(){
 	}
 	KickList.clear();
 
-	for (unsigned int i = 0; i < FileList.size(); i++){
+	for (unsigned int i = 0; i < FileList.size(); i++) {
 		FileNode.put("UploadDateTime", FileList[i].getUploadDateTime());
 		FileNode.put("ChannelID", FileList[i].getChannelID());
 		FileNode.put("Filename", FileList[i].getFilename());
@@ -113,7 +113,7 @@ void createXML(){
 
 	AttributesNode.put("Generated", "by TS3_EnhancedClientList");
 
-	for (unsigned i = 0; i < parsedLogs.size(); i++){
+	for (unsigned i = 0; i < parsedLogs.size(); i++) {
 		fieldParsedLogs.add("ParsedLogs", parsedLogs[i]);
 	}
 
@@ -127,13 +127,13 @@ void createXML(){
 
 	UserListNode.add_child("Attributes", AttributesNode);
 	PropertyTree.add_child("UserList", UserListNode);
-	
+
 	cout << "Creating XML..." << endl;
 	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
-	try{
+	try {
 		write_xml(XMLFILE, PropertyTree, std::locale(), settings);
 	}
-	catch (xml_parser_error error){
+	catch (xml_parser_error error) {
 		cout << "xml_parser_error";
 	}
 }

@@ -12,7 +12,7 @@ using namespace std;
 vector <File> FileList;
 
 // Adds a new file with the given data to the list.
-void File::uploadFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID){
+void File::uploadFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
 	this->uploadDateTime = uploadDateTime;
 	this->channelID = channelID;
 	this->filename = filename;
@@ -21,8 +21,8 @@ void File::uploadFile(string uploadDateTime, unsigned int channelID, string file
 }
 
 // Returns the wanted information.
-string File::getUploadDateTime(){ return uploadDateTime; }
-unsigned int File::getChannelID(){ return channelID; }
-string File::getFilename(){ return filename; }
-string File::getUploadedByNickname(){ return uploadedByNickname; }
-unsigned int File::getUploadedByID(){ return uploadedByID; }
+string File::getUploadDateTime() { return uploadDateTime; }
+unsigned int File::getChannelID() { return channelID; }
+string File::getFilename() { return filename; }
+string File::getUploadedByNickname() { return uploadedByNickname; }
+unsigned int File::getUploadedByID() { return uploadedByID; }

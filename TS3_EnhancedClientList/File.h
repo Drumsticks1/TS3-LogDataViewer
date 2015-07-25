@@ -7,7 +7,7 @@
 using namespace std;
 
 // Class for the file data.
-class File{
+class File {
 private:
 	unsigned int channelID, uploadedByID;
 	string uploadDateTime, filename, uploadedByNickname;
@@ -21,13 +21,3 @@ public:
 	string getUploadedByNickname();
 	unsigned int getUploadedByID();
 };
-
-/* Planned for the future:
-Tables which include
-	Downloads
-	Renaming
-	Moving
-	Deletion
-	Overwriting
-of Files as well as directories and channels (e.g. if a directory or a channel is deleted the files in it are deleted too).
-*/

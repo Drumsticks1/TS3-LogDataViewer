@@ -64,6 +64,7 @@ Upload DateTime | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (
 - You can manually create a logignore and list the logfiles (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
 - In order to save time the program uses the information from the last created XML instead of parsing all logs again.
 - Lockfile: Only one instance of the program can run at once.
+	- If a lockfile is older that 5 minutes it is deleted when running the program.<br />This prevents problems caused by lockfiles remaining when the program is terminated manually / an uncaught exception occurs.
 
 ### Planned Features
 See the todo.h for planned features.
@@ -85,7 +86,7 @@ You will need to download the following extern files:
 	- [jquery.tablesorter.min.js](http://mottie.github.io/tablesorter/dist/js/jquery.tablesorter.min.js)
 	- [jquery.tablesorter.widgets.js](http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js)
 - One file for the loading bar:
-	- [nanobar.min.js]("http://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js")
+	- [nanobar.min.js](http://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js)
 - One file for moment.js:
 	- [moment.min.js](http://momentjs.com/downloads/moment.min.js)
 - On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).
