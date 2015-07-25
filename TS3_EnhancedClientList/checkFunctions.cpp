@@ -27,26 +27,6 @@ bool IsDuplicateDateTime(unsigned int ID, string DateTime) {
 	return false;
 }
 
-// Checks if a Nickname is already existing for the current User.
-bool IsDuplicateNickname(unsigned int ID, string Nickname) {
-	for (unsigned int i = 0; i < UserList[ID].getNicknameCount(); i++) {
-		if (UserList[ID].getUniqueNickname(i) == Nickname) {
-			return true;
-		}
-	}
-	return false;
-}
-
-// Checks if an IP is already existing for the current User.
-bool IsDuplicateIP(unsigned int ID, string IP) {
-	for (unsigned int i = 0; i < UserList[ID].getIPCount(); i++) {
-		if (UserList[ID].getUniqueIP(i) == IP) {
-			return true;
-		}
-	}
-	return false;
-}
-
 // Checks if a log is already existing in the parsedLogs list.
 bool IsDuplicateLog(string log) {
 	for (unsigned int i = 0; i < parsedLogs.size(); i++) {

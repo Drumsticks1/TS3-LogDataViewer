@@ -29,9 +29,6 @@ extern bool validXML;
 #define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  1| client '"
 #define LOGMATCHDELETEUSER2		") got deleted by client '"
 #define LOGMATCHFILEUPLOAD			"|INFO    |VirtualServer |  1| file upload to ("
-#define LOGMATCHFILEDOWNLOAD		"|INFO    |VirtualServer |  1| file download from ("
-#define LOGMATCHFILERENAMEDMOVED	"|INFO    |VirtualServer |  1| file renamed/moved from ("
-#define LOGMATCHFILEDELETION			"|INFO    |VirtualServer |  1| file deleted from ("
 
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY) {
@@ -64,7 +61,6 @@ void parseLogs(string LOGDIRECTORY) {
 	for (unsigned int i = 0; i < Logs.size(); i++) {
 		if (!Logs[i].empty()) {
 			LogFilePath = LOGDIRECTORY + Logs.at(i);
-			DateTime = Nickname = IP = "";
 
 			ifstream logfile(LogFilePath);
 
@@ -128,15 +124,18 @@ void parseLogs(string LOGDIRECTORY) {
 					if (UserList[ID].getID() != ID) {
 						UserList[ID].addID(ID);
 					}
-					if (!IsDuplicateNickname(ID, Nickname)) {
-						UserList[ID].addNickname(Nickname);
+
+					UserList[ID].addNickname(Nickname);
+
+					if (validXML) {
+						if (!IsDuplicateDateTime(ID, DateTime)) {
+							UserList[ID].addDateTime(DateTime);
+						}
 					}
-					if (!IsDuplicateDateTime(ID, DateTime)) {
-						UserList[ID].addDateTime(DateTime);
-					}
-					if (!IsDuplicateIP(ID, IP)) {
-						UserList[ID].addIP(IP);
-					}
+					else UserList[ID].addDateTime(DateTime);
+
+					UserList[ID].addIP(IP);
+
 					if (i + 1 == Logs.size()) {
 						UserList[ID].connect();
 					}
@@ -181,7 +180,7 @@ void parseLogs(string LOGDIRECTORY) {
 						UserList[ID].disconnect();
 					}
 
-					// kick matches.
+					// Kick matches.
 					if (kickMatch) {
 						if (buffer_logline.rfind(" reasonmsg=") != string::npos) {
 							kickReasonStartPos = 11 + buffer_logline.rfind(" reasonmsg=");

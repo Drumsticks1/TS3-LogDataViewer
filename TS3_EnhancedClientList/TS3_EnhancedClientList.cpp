@@ -29,7 +29,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	if (!exists("lockfile")) {
-
 		fstream lockfile("lockfile", fstream::out);
 		string LOGDIRECTORY;
 

@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include "User.h"
-#include "checkFunctions.h"
 
 using namespace std;
 
@@ -44,7 +43,7 @@ void User::addID(unsigned int ID) {
 
 // Adds the new Nickname at the beginning of the Nickname list.
 void User::addNickname(string Nickname) {
-	for (unsigned int i = 1; i < this->Nickname.size(); i++) {
+	for (unsigned int i = 0; i < this->Nickname.size(); i++) {
 		if (this->Nickname.at(i) == Nickname) {
 			this->Nickname.erase(this->Nickname.begin() + i);
 		}
@@ -54,17 +53,12 @@ void User::addNickname(string Nickname) {
 
 // Adds the new DateTime at the beginning of the DateTime list.
 void User::addDateTime(string DateTime) {
-	for (unsigned int i = 1; i < this->DateTime.size(); i++) {
-		if (this->DateTime.at(i) == DateTime) {
-			this->DateTime.erase(this->DateTime.begin() + i);
-		}
-	}
 	this->DateTime.insert(this->DateTime.begin(), DateTime);
 }
 
 // Adds the new IP at the beginning of the IP list.
 void User::addIP(string IP) {
-	for (unsigned int i = 1; i < this->IP.size(); i++) {
+	for (unsigned int i = 0; i < this->IP.size(); i++) {
 		if (this->IP.at(i) == IP) {
 			this->IP.erase(this->IP.begin() + i);
 		}
