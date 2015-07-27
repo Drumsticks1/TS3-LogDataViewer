@@ -8,7 +8,6 @@
 #include <vector>
 #include <algorithm>
 #include <boost/filesystem.hpp>
-#include "Constants.h"
 #include "checkFunctions.h"
 
 using namespace boost::filesystem;

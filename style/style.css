@@ -168,15 +168,15 @@ table.tablesorter tbody td {
     vertical-align: top;
 }
 
-table.tablesorter thead tr .tablesorter-header.tablesorter-headerUnSorted {
+.tablesorter-header {
     background: #E6E6E6 url(bg.png) no-repeat center right;
 }
 
-table.tablesorter thead tr .tablesorter-header.tablesorter-headerAsc {
+.tablesorter-header.tablesorter-headerAsc {
     background: #E6E6E6 url(asc.png) no-repeat center right;
 }
 
-table.tablesorter thead tr .tablesorter-header.tablesorter-headerDesc {
+.tablesorter-header.tablesorter-headerDesc {
     background: #E6E6E6 url(desc.png) no-repeat center right;
 }
 

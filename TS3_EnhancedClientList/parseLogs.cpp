@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <boost/filesystem.hpp>
-#include "Constants.h"
 #include "User.h"
 #include "Kick.h"
 #include "File.h"

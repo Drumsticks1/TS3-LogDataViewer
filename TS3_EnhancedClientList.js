@@ -89,10 +89,10 @@ function expandList(List, ID) {
             $(newDiv).prop('id', currentDiv);
             $(newDiv).html(ListContent[j].firstChild.nodeValue);
             if (Row == 3) {
-                document.getElementById(ID).childNodes[Row].appendChild(newDiv);
+                x.appendChild(newDiv);
             }
             else {
-                document.getElementById(ID).childNodes[Row].insertBefore(newDiv, document.getElementById(ID).childNodes[Row].lastChild);
+                x.insertBefore(newDiv, x.lastChild);
             }
         }
         else {
@@ -289,14 +289,14 @@ function buildClientTable() {
 
             var divLastConnection = document.createElement('div');
             $(divLastConnection).prop('id', 'connections_' + ID + '_0');
-            var localFirstConnectionDateTime = moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss')
+            var localFirstConnectionDateTime = moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss');
             $(divLastConnection).html(localFirstConnectionDateTime);
             userBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
                 $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1));
-                var localLastConnectionDateTime = moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss')
+                var localLastConnectionDateTime = moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss');
                 $(divFirstConnection).html(localLastConnectionDateTime);
                 userBodyCell_Connections.appendChild(divFirstConnection);
             }
