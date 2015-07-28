@@ -2,33 +2,24 @@
 // Author : Drumsticks1
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
-/*
 #include <iostream>
 using namespace std;
 
 // Class for the ban data.
 class Ban {
 private:
-	string banDateTime, bannedID, bannedNickname, bannedIP, bannedByID, bannedByNickname, banReason, banDeletionReason;
-	unsigned int bantime;
-	bool banned = false;
+	unsigned int bannedID, bannedByInvokerID, bantime;
+	string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason;
 
 public:
-	void addBan(string banDateTime, string bannedID, string bannedNickname, string bannedIP, string bannedByID, string bannedByNickname, string banReason);
-
-	void setBanDeletionReason(string banDeletionReason);
-
-	// DEV: If Date addition and deletion have the same DateTime.
-	void modifyBan();
+	void addBan(string banDateTime, string bannedNickname, unsigned int bannedID, unsigned int bannedByInvokerID, string bannedByNickname, string bannedByUID, string banReason, unsigned int bantime);
 
 	string getBanDateTime();
-	string getBannedID();
 	string getBannedNickname();
-	string getBannedIP();
-	string getBannedByID();
+	unsigned int getBannedID();
+	unsigned int getbannedByInvokerID();
 	string getBannedByNickname();
+	string getBannedByUID();
 	string getBanReason();
-	string getBanDeletionReason();
 	unsigned int getBantime();
 };
-*/

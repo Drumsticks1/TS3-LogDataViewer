@@ -7,6 +7,7 @@
 #include <vector>
 #include "Constants.h"
 #include "User.h"
+#include "Ban.h"
 #include "Kick.h"
 #include "File.h"
 #include <boost/property_tree/ptree.hpp>
@@ -19,6 +20,7 @@ using namespace boost::property_tree;
 using namespace boost::filesystem;
 
 extern vector <User> UserList;
+extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
 vector <string> parsedLogs;
@@ -29,9 +31,9 @@ bool parseXML() {
 		if (is_regular_file(XMLFILE)) {
 			if (!boost::filesystem::is_empty(XMLFILE)) {
 				cout << "Parsing the last created XML..." << endl;
-				unsigned int ID, KickListID = 0, FileListID = 0, kickedID, channelID, uploadedByID;
+				unsigned int ID, BanListID = 0, KickListID = 0, FileListID = 0, bannedID, bannedByInvokerID, bantime, kickedID, channelID, uploadedByID;
 				ptree PropertyTree;
-				string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
+				string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason, kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
 				bool blankUser;
 
 				try {
@@ -73,6 +75,37 @@ bool parseXML() {
 							}
 						}
 					}
+					else if (Node.first == "Ban") {
+						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")) {
+							if (vs.first == "BanDateTime") {
+								banDateTime = vs.second.data();
+							}
+							else if (vs.first == "BannedNickname") {
+								bannedNickname = vs.second.data();
+							}
+							else if (vs.first == "BannedID") {
+								bannedID = stoul(vs.second.data());
+							}
+							else if (vs.first == "BannedByInvokerID") {
+								bannedByInvokerID = stoul(vs.second.data());
+							}
+							else if (vs.first == "BannedByNickname") {
+								bannedByNickname = vs.second.data();
+							}
+							else if (vs.first == "BannedByUID") {
+								bannedByUID = vs.second.data();
+							}
+							else if (vs.first == "BanReason") {
+								banReason = vs.second.data();
+							}
+							else if (vs.first == "Bantime") {
+								bantime = stoul(vs.second.data());
+							}
+						}
+						BanList.resize(BanListID + 1);
+						BanList[BanListID].addBan(banDateTime, bannedNickname, bannedID, bannedByInvokerID, bannedByNickname, bannedByUID, banReason, bantime);
+						BanListID++;
+					}
 					else if (Node.first == "Kick") {
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")) {
 							if (vs.first == "KickDateTime") {
@@ -99,7 +132,6 @@ bool parseXML() {
 						KickListID++;
 					}
 					else if (Node.first == "File") {
-						string bla = Node.second.data();
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("")) {
 							if (vs.first == "UploadDateTime") {
 								uploadDateTime = vs.second.data();

@@ -1,13 +1,10 @@
 /* Todo:
 general
-	- add userignore and make it possible to add IDs via the Webinterface.
-	- add kickignore and make it possible to add kicks via the Webinterface.
-	- add fileignore and make it possible to add files via the Webinterface.
+	- add additional ignore files for the tables.
 	- optimize the code for faster performance.
 	- add complaint list.
 
-Bans:
-	- postponed.
+Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
 
 parseLogs
 	- Change finding of the Virtual Server messages according to servers with multiple virtual servers.

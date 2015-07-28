@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "User.h"
+#include "Ban.h"
 #include "Kick.h"
 #include "File.h"
 
@@ -14,6 +15,7 @@ extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
 extern vector <string> ignoreLogs;
+extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
 
@@ -54,6 +56,16 @@ bool IsMatchingLogOrder() {
 		else return false;
 	}
 	return true;
+}
+
+// Checks if a ban is already existing in the BanList.
+bool IsDuplicateBan(string banDateTime, string bannedNickname, unsigned int bannedID, unsigned int bannedByInvokerID, string bannedByNickname, string bannedByUID, string banReason, unsigned int bantime) {
+	for (unsigned int i = 0; i < BanList.size(); i++) {
+		if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedNickname() == bannedNickname && BanList[i].getBannedID() == bannedID &&
+			BanList[i].getbannedByInvokerID() == bannedByInvokerID && BanList[i].getBannedByNickname() == bannedByNickname &&
+			BanList[i].getBannedByUID() == bannedByUID && BanList[i].getBanReason() == banReason && BanList[i].getBantime() == bantime) return true;
+	}
+	return false;
 }
 
 // Checks if a kick is already existing in the KickList.

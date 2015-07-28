@@ -17,6 +17,9 @@ bool IsIgnoredLog(string log);
 // Checks if the order of Logs and ParsedLogs is matching.
 bool IsMatchingLogOrder();
 
+// Checks if a ban is already existing in the BanList.
+bool IsDuplicateBan(string DateTime, string Nickname, unsigned int ID, unsigned int bannedByInvokerID, string bannedByNickname, string bannedByUID, string banReason, unsigned int bantime);
+
 // Checks if a kick is already existing in the KickList.
 bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason);
 

@@ -21,7 +21,7 @@ void Kick::addKick(string kickDateTime, unsigned int kickedID, string kickedNick
 	this->kickReason = kickReason;
 }
 
-// Returns the wanted information.
+// Returns the requested information.
 string Kick::getKickDateTime() { return kickDateTime; }
 unsigned int Kick::getKickedID() { return kickedID; }
 string Kick::getKickedNickname() { return kickedNickname; }

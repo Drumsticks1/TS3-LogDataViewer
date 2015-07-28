@@ -7,6 +7,7 @@
 #include <vector>
 #include "Constants.h"
 #include "User.h"
+#include "Ban.h"
 #include "Kick.h"
 #include "File.h"
 #include <boost/property_tree/ptree.hpp>
@@ -19,6 +20,7 @@ using namespace boost::posix_time;
 
 extern vector <User> UserList;
 extern vector <string> parsedLogs;
+extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
 
@@ -48,7 +50,7 @@ string timeToString(ptime t) {
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML() {
-	ptree PropertyTree, UserListNode, UserNode, KickNode, FileNode, AttributesNode;
+	ptree PropertyTree, UserListNode, UserNode, BanNode, KickNode, FileNode, AttributesNode;
 	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
 	cout << "Preparing XML-Creation..." << endl;
@@ -87,6 +89,19 @@ void createXML() {
 		}
 	}
 	UserList.clear();
+
+	for (unsigned int i = 0; i < BanList.size(); i++) {
+		BanNode.put("BanDateTime", BanList[i].getBanDateTime());
+		BanNode.put("BannedNickname", BanList[i].getBannedNickname());
+		BanNode.put("BannedID", BanList[i].getBannedID());
+		BanNode.put("BannedByInvokerID", BanList[i].getbannedByInvokerID());
+		BanNode.put("BannedByNickname", BanList[i].getBannedByNickname());
+		BanNode.put("BannedByUID", BanList[i].getBannedByUID());
+		BanNode.put("BanReason", BanList[i].getBanReason());
+		BanNode.put("Bantime", BanList[i].getBantime());
+		UserListNode.add_child("Ban", BanNode);
+	}
+	BanList.clear();
 
 	for (unsigned int i = 0; i < KickList.size(); i++) {
 		KickNode.put("KickDateTime", KickList[i].getKickDateTime());

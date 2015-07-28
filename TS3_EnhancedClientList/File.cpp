@@ -20,7 +20,7 @@ void File::uploadFile(string uploadDateTime, unsigned int channelID, string file
 	this->uploadedByID = uploadedByID;
 }
 
-// Returns the wanted information.
+// Returns the requested information.
 string File::getUploadDateTime() { return uploadDateTime; }
 unsigned int File::getChannelID() { return channelID; }
 string File::getFilename() { return filename; }

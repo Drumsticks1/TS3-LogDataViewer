@@ -23,7 +23,7 @@ h1.TS3-ECL {
     line-height: 70px;
 }
 
-.ts3-control, .ts3-clientTable, .ts3-kickTable, .ts3-uploadTable {
+.ts3-control, .ts3-clientTable, .ts3-banTable, .ts3-kickTable, .ts3-uploadTable {
     margin: 25px 5px 0;
 }
 

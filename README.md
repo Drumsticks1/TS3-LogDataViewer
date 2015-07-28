@@ -5,6 +5,7 @@ Enhanced Client List for Teamspeak3 Server.
 TS3_EnhancedClientList creates an enhanced client list using the information written to the logfiles of the server.<br />
 It currently provides three detailed tables that can be included in an existing website or be used with the provided Webinterface (index.html):
 - Client list
+- Ban list
 - Kick list 
 - File upload list
 
@@ -16,6 +17,7 @@ After all logfiles are parsed a XML file is created which then is used for displ
 ## Current Features
 ### Multiple sortable tables
 - Client List
+- Ban List
 - Kick List
 - File upload List
 
@@ -33,6 +35,7 @@ You can either use the provided Webinterface (index.html) or implement the contr
 	* Scroll back to top
 	* Scroll to control section
 	* Scroll to client table
+	* Scroll to ban table
 	* Scroll to kick table
 	* Scroll to upload table
 
@@ -49,13 +52,18 @@ ID | Nicknames | Connections | IPs | Connected | Deleted
 - Connected flag which shows if a user is currently connected.
 - Deleted flag which shows if the user got deleted (only works if this is logged --> user must be deleted while the server is running).
 
+#### Ban table layout
+Date and Time | Banned User (ID) | Banned User (Nickname) | Banned by (Nickname) | Banned by (InvokerID) | Banned by (UID) | Reason | Bantime
+---|---|---|---|---|---|---|---
+2015-07-28 13:32:32<br />(about 3 hours ago) | Drumsticks-Test | 12 | 3 | Drumsticks | XXXXXXXXXXXXXXXXXX= | Testban | 1800
+
 #### Kick table layout
 Date and Time | Kicked User (ID) | Kicked User (Nickname) | Kicked by (Nickname) | Kicked by (UID) | Reason
 ---|---|---|---|---|---
-2015-04-23 15:22:39 <br/>(about three months ago) | 285 | TrollingTrollUser | Drumsticks | XXXXXXXXXXXXXXXXXX= | Trolling
+2015-04-23 15:22:39<br/>(about three months ago) | 285 | TrollingTrollUser | Drumsticks | XXXXXXXXXXXXXXXXXX= | Trolling
 
 #### File upload table layout
-Upload DateTime | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (ID)
+Date and Time | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (ID)
 ---|---|---|---|---|---
 2015-07-09 19:17:58<br />(about 4 days ago) | 2 | /file_sample.txt | Drumsticks | 3
 2015-07-09 19:18:18<br />(about 4 days ago) | 2 | /directory_sample/file_sample.txt | Drumsticks | 3
