@@ -693,7 +693,6 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
-            if ($('.ts3-control') !== null && $('#controlSection').length === 0) buildControlSection();
             if ($('.ts3-clientTable') !== null) buildClientTable();
             if ($('.ts3-banTable') !== null) buildBanTable();
             if ($('.ts3-kickTable') !== null) buildKickTable();
@@ -878,7 +877,6 @@ $(document).ready(function () {
         });
         nanobar.go(25);
         if ($('.ts3-control') !== null && $('#controlSection').length === 0) buildControlSection();
-        nanobar.go(50);
         buildTables();
     });
 });
