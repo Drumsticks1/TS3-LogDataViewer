@@ -36,7 +36,7 @@ $.getScript('moment.min.js', function () {
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
-    nanobar.go(50);
+    nanobar.go(35);
     document.getElementById('rebuildXMLButton').disabled = true;
     document.getElementById('buildNewXMLButton').disabled = true;
     $.get('rebuildXML.php', function () {
@@ -62,9 +62,11 @@ function expandcollapseList(List, ID) {
     var currentDiv = List + '_' + ID + '_' + i;
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
         expandList(List, ID);
+        return 0;
     }
     else {
         collapseList(List, ID);
+        return 1;
     }
 }
 
@@ -201,7 +203,7 @@ function saveSortOrder() {
 
 // Applies the saved sort order to the existing tables.
 function applySortOrder() {
-    if ($('#clientTable') !== null) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
+    if ($('#clientTable')[0] !== null) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
     if ($('#banTable')[0] !== undefined) $('#banTable').trigger('sorton', [banTableSortOrder]);
     if ($('#kickTable')[0] !== undefined) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
     if ($('#uploadTable')[0] !== undefined) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
@@ -278,13 +280,16 @@ function buildClientTable() {
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement('button');
-                $(buttonExpandCollapseConnections).html('+ / -');
+                var ConnectionsLength = Connections.length - 2;
+                $(buttonExpandCollapseConnections).html('+ ' + ConnectionsLength);
 
-                (function (ID) {
+                (function (ID, ConnectionsLength) {
                     buttonExpandCollapseConnections.onclick = function () {
-                        expandcollapseList('connections', ID);
+                        if (expandcollapseList('connections', ID) == 1) {
+                            jQuery(this).html('+ ' + ConnectionsLength);
+                        } else jQuery(this).html('- ' + ConnectionsLength);
                     };
-                })(ID);
+                })(ID, ConnectionsLength);
 
                 userBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
@@ -307,13 +312,16 @@ function buildClientTable() {
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
-                $(buttonExpandCollapseIPs).html('+ / -');
+                var IPsLength = IPs.length - 1;
+                $(buttonExpandCollapseIPs).html('+ ' + IPsLength);
 
-                (function (ID) {
+                (function (ID, IPsLength) {
                     buttonExpandCollapseIPs.onclick = function () {
-                        expandcollapseList('ips', ID);
+                        if (expandcollapseList('ips', ID) == 1) {
+                            jQuery(this).html('+ ' + IPsLength);
+                        } else jQuery(this).html('- ' + IPsLength);
                     };
-                })(ID);
+                })(ID, IPsLength);
 
                 userBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
             }
@@ -684,6 +692,7 @@ function buildUploadTable() {
 
 // Builds the tables using the XML.
 function buildTables() {
+    nanobar.go(60);
     $.ajax({
         url: 'output.xml',
         error: function () {
@@ -717,7 +726,6 @@ function buildTables() {
             document.getElementById('buildNewXMLButton').disabled = false;
         }
     });
-
 }
 
 // Builds and shows the control section.
@@ -875,8 +883,8 @@ $(document).ready(function () {
             bg: 'white',
             id: 'nanobar'
         });
-        nanobar.go(25);
         if ($('.ts3-control') !== null && $('#controlSection').length === 0) buildControlSection();
+        nanobar.go(25);
         buildTables();
     });
 });

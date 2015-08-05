@@ -40,15 +40,17 @@ You can either use the provided Webinterface (index.html) or implement the contr
 	* Scroll to upload table
 
 #### Client table layout and features
-ID | Nicknames | Connections | IPs | Connected | Deleted
----|---|:---:|---|---|---
-3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07 | + -<br />88.888.888.75 | true | false
-4  | Random User | 2015-18-07 15:11:02<br />2015-18-07 13:56:25 | 99.999.999.31 | false | false
+ID | Nicknames | Connections | IPs | Connections Count | Connected | Deleted
+---|---|:---:|---|---|---|---
+3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | ( + 34 ) <br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07 | ( + 6 )<br />88.888.888.75 | 36 |true | false
+4  | Random User | 2015-18-07 15:11:02<br />2015-18-07 13:56:25 | 99.999.999.31 | 2 | false | false
+5  | Teamspeakuser | ( - 1 )<br />2015-05-08 16:06:31<br />2015-05-08 10:13:54<br />2015-05-08 09:34:12 | ( - 1 )<br />12.345.678.90<br />217.000.000.000 | 3 | false | false
 
 - Chronological nickname history without duplicates.
 - Last and first connection time.
 - Last IP.
 - Expanding and Collapsing the Connections and the IPs list (expanding to a chronologial list of all connections / IPs | collapsing back to the last and the first connections / the last IP).
+	- The button shows how many entries will be shown / hidden.
 - Connected flag which shows if a user is currently connected.
 - Deleted flag which shows if the user got deleted (only works if this is logged --> user must be deleted while the server is running).
 
