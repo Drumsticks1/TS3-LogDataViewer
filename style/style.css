@@ -61,11 +61,9 @@ h1.TS3-ECL {
     border: 2px solid #E6E6E6;
     border-radius: 10px;
     padding: 5px 10px;
-    max-height: 350px;
-    overflow: auto;
 }
 
-#rebuildSection, #creationTimestampSection, #connectedClientsCountSection, #scrollToClientTableRowSection, #creationTimestampTable {
+#rebuildSection, #creationTimestampSection, #connectedClientsCountSection, #scrollToClientTableRowSection, #creationTimestampTable, #collapseAllSection {
     margin: 10px 0;
 }
 

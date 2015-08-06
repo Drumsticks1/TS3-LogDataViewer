@@ -62,28 +62,30 @@ function expandcollapseList(List, ID) {
     var currentDiv = List + '_' + ID + '_' + i;
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
         expandList(List, ID);
-        return 0;
     }
     else {
         collapseList(List, ID);
-        return 1;
     }
 }
 
 // Expands the current list.
 function expandList(List, ID) {
-    var Row, ListUpper;
+    var Row, ListUpper, i;
     if (List == 'ips') {
         Row = 3;
         ListUpper = 'IPs';
+        i = 1;
     }
     else {
         Row = 2;
         ListUpper = 'Connections';
+        i = 2;
     }
 
     var x = document.getElementById(ID).childNodes[Row];
     var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+    $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i));
+    $('#' + List + 'Button_' + ID).parent().attr('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
         currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) === null) {
@@ -105,18 +107,42 @@ function expandList(List, ID) {
 
 // Collapses the current list.
 function collapseList(List, ID) {
-    var Row, j;
-    if (List == 'ips') Row = 3;
-    else Row = 2;
+    var Row, ListUpper, i;
+    if (List == 'ips') {
+        Row = 3;
+        ListUpper = 'IPs';
+        i = 1;
+    }
+    else {
+        Row = 2;
+        ListUpper = 'Connections';
+        i = 2;
+    }
+
+    var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+    $('#' + List + 'Button_' + ID).html('+ ' + (ListContent.length - i));
+    $('#' + List + 'Button_' + ID).parent().attr('expanded', false);
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row];
-        for (j = 1; j < x.childNodes.length - 2; j++) {
-            currentDiv = List + '_' + ID + '_' + j;
-            $('#' + currentDiv).hide();
+        for (var j = 1; j < x.childNodes.length - 2; j++) {
+            $('#' + List + '_' + ID + '_' + j).hide();
         }
         if (Row == 3) {
             $('#' + List + '_' + ID + '_' + j).hide();
+        }
+    }
+}
+
+// Collapses all expanded lists.
+function collapseAll() {
+    var j, x = document.getElementById('clientTable').lastChild;
+    for (j = 0; j < x.childNodes.length; j++) {
+        if (x.childNodes.item(j).childNodes.item(2).getAttribute('expanded') === 'true') {
+            collapseList('connections', x.childNodes.item(j).getAttribute('id'));
+        }
+        if (x.childNodes.item(j).childNodes.item(3).getAttribute('expanded') === 'true') {
+            collapseList('ips', x.childNodes.item(j).getAttribute('id'));
         }
     }
 }
@@ -137,7 +163,7 @@ function scrollToClientTableRow(Row_ID) {
     }
 }
 
-// [Description pending]
+// Adds a custom parser which ignores the moment.js timestamps.
 function addIgnoreMomentParser() {
     $.tablesorter.addParser({
         id: 'ignoreMoment',
@@ -152,7 +178,7 @@ function addIgnoreMomentParser() {
     });
 }
 
-// [Description pending]
+// Adds a custom parser which ignores the expand/collapse button in the Connections list.
 function addConnectionsParser() {
     $.tablesorter.addParser({
         id: 'Connections',
@@ -175,7 +201,7 @@ function addConnectionsParser() {
     });
 }
 
-// [Description pending]
+// Adds a custom parser which ignores the expand/collapse button in the IPs list.
 function addIPsParser() {
     $.tablesorter.addParser({
         id: 'IPs',
@@ -203,7 +229,7 @@ function saveSortOrder() {
 
 // Applies the saved sort order to the existing tables.
 function applySortOrder() {
-    if ($('#clientTable')[0] !== null) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
+    if ($('#clientTable')[0] !== undefined) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
     if ($('#banTable')[0] !== undefined) $('#banTable').trigger('sorton', [banTableSortOrder]);
     if ($('#kickTable')[0] !== undefined) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
     if ($('#uploadTable')[0] !== undefined) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
@@ -247,7 +273,6 @@ function buildClientTable() {
     var userBody = document.createElement('tbody');
 
     for (var i = 0; i < User.length; i++) {
-
         var ID = User[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
         if (ID == i) {
             var Nicknames = User[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('Nicknames');
@@ -280,16 +305,14 @@ function buildClientTable() {
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement('button');
-                var ConnectionsLength = Connections.length - 2;
-                $(buttonExpandCollapseConnections).html('+ ' + ConnectionsLength);
+                $(buttonExpandCollapseConnections).attr('id', 'connectionsButton_' + ID);
+                $(buttonExpandCollapseConnections).html('+ ' + (Connections.length - 2));
 
-                (function (ID, ConnectionsLength) {
+                (function (ID) {
                     buttonExpandCollapseConnections.onclick = function () {
-                        if (expandcollapseList('connections', ID) == 1) {
-                            jQuery(this).html('+ ' + ConnectionsLength);
-                        } else jQuery(this).html('- ' + ConnectionsLength);
+                        expandcollapseList('connections', ID);
                     };
-                })(ID, ConnectionsLength);
+                })(ID);
 
                 userBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
@@ -312,16 +335,14 @@ function buildClientTable() {
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
-                var IPsLength = IPs.length - 1;
-                $(buttonExpandCollapseIPs).html('+ ' + IPsLength);
+                $(buttonExpandCollapseIPs).attr('id', 'ipsButton_' + ID);
+                $(buttonExpandCollapseIPs).html('+ ' + (IPs.length - 1));
 
-                (function (ID, IPsLength) {
+                (function (ID) {
                     buttonExpandCollapseIPs.onclick = function () {
-                        if (expandcollapseList('ips', ID) == 1) {
-                            jQuery(this).html('+ ' + IPsLength);
-                        } else jQuery(this).html('- ' + IPsLength);
+                        expandcollapseList('ips', ID);
                     };
-                })(ID, IPsLength);
+                })(ID);
 
                 userBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
             }
@@ -822,6 +843,17 @@ function buildControlSection() {
     scrollToClientTableRowSection.appendChild(scrollToCTRInput);
     scrollToClientTableRowSection.appendChild(scrollToCTRButton);
 
+    var collapseAllSection = document.createElement('div');
+    var collapseAllButton = document.createElement('button');
+    $(collapseAllSection).prop('id', 'collapseAllSection');
+    $(collapseAllButton).html('Collapse all lists');
+
+    collapseAllButton.onclick = function () {
+        collapseAll();
+    };
+
+    collapseAllSection.appendChild(collapseAllButton);
+
     var sortConnectionsSwitch = document.createElement('div');
     var sortConnectionsSwitchInput = document.createElement('input');
     var sortConnectionsSwitchLabel = document.createElement('label');
@@ -872,6 +904,7 @@ function buildControlSection() {
     controlSection.appendChild(creationTimestampSection);
     controlSection.appendChild(connectedClientCountSection);
     controlSection.appendChild(scrollToClientTableRowSection);
+    controlSection.appendChild(collapseAllSection);
     controlSection.appendChild(sortConnectionsSwitch);
     controlSection.appendChild(navbar);
     $('.ts3-control').append(controlSection);

@@ -10,11 +10,6 @@ parseLogs
 	- Change finding of the Virtual Server messages according to servers with multiple virtual servers.
 		How many virtual servers are possible ?
 
-TS3_EnhancedClientList.js
-	- Add button for collapsing all expanded lists.
-	- Add custom parser for Nicknames.
-	- Add short online list (ID, lastNickname).
-
 Example:
-	- Add example on jsfiddle.
+	- Add gh-pages branch with an example.
 */

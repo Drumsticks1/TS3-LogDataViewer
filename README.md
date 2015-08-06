@@ -30,6 +30,7 @@ You can either use the provided Webinterface (index.html) or implement the contr
 - Timestamps of the XML creation (local time of the server and UTC).
 - Count of currently connected clients.
 - Scroll to the client table position of an ID.
+- Collapse all extended lists.
 - Switch between sorting by first or last Connections.
 - Navbar fixed at the bottom of the page which contains the following buttons (scroll buttons of unused tables won't appear):
 	* Scroll back to top
