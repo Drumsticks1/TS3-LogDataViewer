@@ -59,7 +59,7 @@ function expandcollapseList(List, ID) {
     var i;
     if (List == 'ips') i = 1;
     else i = 2;
-    var currentDiv = List + '_' + ID + '_' + i;
+    currentDiv = List + '_' + ID + '_' + i;
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
         expandList(List, ID);
     }
@@ -221,18 +221,18 @@ function addIPsParser() {
 
 // Saves the current sort order of the existing tables.
 function saveSortOrder() {
-    if ($('#clientTable')[0] !== undefined) clientTableSortOrder = $('#clientTable')[0].config.sortList;
-    if ($('#banTable')[0] !== undefined) banTableSortOrder = $('#banTable')[0].config.sortList;
-    if ($('#kickTable')[0] !== undefined) kickTableSortOrder = $('#kickTable')[0].config.sortList;
-    if ($('#uploadTable')[0] !== undefined) uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
+    if ($('#clientTable').length) clientTableSortOrder = $('#clientTable')[0].config.sortList;
+    if ($('#banTable').length) banTableSortOrder = $('#banTable')[0].config.sortList;
+    if ($('#kickTable').length) kickTableSortOrder = $('#kickTable')[0].config.sortList;
+    if ($('#uploadTable').length) uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
 }
 
 // Applies the saved sort order to the existing tables.
 function applySortOrder() {
-    if ($('#clientTable')[0] !== undefined) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
-    if ($('#banTable')[0] !== undefined) $('#banTable').trigger('sorton', [banTableSortOrder]);
-    if ($('#kickTable')[0] !== undefined) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
-    if ($('#uploadTable')[0] !== undefined) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
+    if ($('#clientTable').length) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
+    if ($('#banTable').length) $('#banTable').trigger('sorton', [banTableSortOrder]);
+    if ($('#kickTable').length) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
+    if ($('#uploadTable').length) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
 }
 
 // Builds and shows the client table.
@@ -723,10 +723,10 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
-            if ($('.ts3-clientTable') !== null) buildClientTable();
-            if ($('.ts3-banTable') !== null) buildBanTable();
-            if ($('.ts3-kickTable') !== null) buildKickTable();
-            if ($('.ts3-uploadTable') !== null) buildUploadTable();
+            if ($('.ts3-clientTable').length) buildClientTable();
+            if ($('.ts3-banTable').length) buildBanTable();
+            if ($('.ts3-kickTable').length) buildKickTable();
+            if ($('.ts3-uploadTable').length) buildUploadTable();
             applySortOrder();
 
             var Attributes = XML.getElementsByTagName('Attributes')[0];
@@ -740,6 +740,14 @@ function buildTables() {
                 $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
             }, 1000);
 
+            if (!$('.ts3-clientTable').length) {
+                for (var i = 0; i < XML.getElementsByTagName('User').length; i++) {
+                    if (XML.getElementsByTagName('User')[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
+                        if (XML.getElementsByTagName('User')[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1)
+                            ConnectedClientsCount++;
+                    }
+                }
+            }
             $('#connectedClientsCount').html(ConnectedClientsCount);
 
             nanobar.go(100);
@@ -834,7 +842,7 @@ function buildControlSection() {
     $(scrollToCTRInput).prop('id', 'IDSelection');
     $(scrollToCTRInput).prop('type', 'number');
     $(scrollToCTRInput).prop('min', '0');
-    $(scrollToCTRButton).html('Scroll');
+    $(scrollToCTRButton).html('Scroll to ID in the client list');
 
     scrollToCTRButton.onclick = function () {
         scrollToClientTableRow(document.getElementById('IDSelection').value);
@@ -911,13 +919,19 @@ function buildControlSection() {
 }
 
 $(document).ready(function () {
-    $.getScript('nanobar.min.js', function () {
-        nanobar = new Nanobar({
-            bg: 'white',
-            id: 'nanobar'
+    if ($('.ts3-control').length) {
+        $.getScript('nanobar.min.js', function () {
+            nanobar = new Nanobar({
+                bg: 'white',
+                id: 'nanobar'
+            });
+
+            buildControlSection();
+            nanobar.go(25);
+            buildTables();
         });
-        if ($('.ts3-control') !== null && $('#controlSection').length === 0) buildControlSection();
-        nanobar.go(25);
-        buildTables();
-    });
+    }
+    else {
+        alert("Please include the control section by adding a div with the class 'ts3-control' to your html.");
+    }
 });
