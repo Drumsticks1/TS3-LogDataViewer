@@ -78,7 +78,7 @@ Date and Time | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (ID
 	- If a lockfile is older that 5 minutes it is deleted when running the program.<br />This prevents problems caused by lockfiles remaining when the program is terminated manually / an uncaught exception occurs.
 
 ### Planned Features
-See the todo.h for planned features.
+See the latest todo.h for planned features.
 
 ### It does not contain and never will
 - Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting).
@@ -86,7 +86,8 @@ See the todo.h for planned features.
 ## Installation
 As the file name already implies, the install instructions can be found in the file "Install Instructions".<br />
 For now there are only installation instructions available for Linux.<br />
-Experienced Users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).
+Experienced Users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/>
+NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on Github since v1.3.0 (TS3_EnhancedClientList.gz for Linux and TS3_EnhancedClientList.exe.gz for Windows).
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br />

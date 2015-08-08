@@ -34,8 +34,8 @@ int main(int argc, char* argv[]) {
 
 		options_description description("Program options:");
 		description.add_options()
-			("help", "Shows this help screen.")
-			("logdirectory", value<string>(), "Specify directory containing the logs.");
+			("--help", "Shows this help screen.")
+			("--logdirectory", value<string>(), "Specify directory containing the logs.");
 
 		variables_map vm;
 		positional_options_description logdirectory;
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 	}
 	else {
 		cout << "The program is already running..." << endl
-			<< "The program will now exit..." << endl;
+			<< "This program instance will now exit..." << endl;
 		return 0;
 	}
 }
