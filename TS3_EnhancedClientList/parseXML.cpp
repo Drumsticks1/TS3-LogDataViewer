@@ -19,18 +19,18 @@ using namespace std;
 using namespace boost::property_tree;
 using namespace boost::filesystem;
 
+vector <string> parsedLogs;
 extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
-vector <string> parsedLogs;
 
 // Parses the XML if existing.
 bool parseXML() {
 	if (exists(XMLFILE)) {
 		if (is_regular_file(XMLFILE)) {
 			if (!boost::filesystem::is_empty(XMLFILE)) {
-				cout << "Parsing the last created XML..." << endl;
+				cout << endl << "Parsing the old XML...";
 				unsigned int ID, BanListID = 0, KickListID = 0, FileListID = 0, bannedID, bannedByInvokerID, bantime, kickedID, channelID, uploadedByID;
 				ptree PropertyTree;
 				string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason, kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
@@ -39,7 +39,7 @@ bool parseXML() {
 					read_xml(XMLFILE, PropertyTree);
 				}
 				catch (xml_parser_error error) {
-					cout << "Error reading out the XML - skipping..." << endl;
+					cout << "An error occured while parsing the XML:" << endl << error.what() << endl << "Skipping the XML-Parsing...";
 					return false;
 				}
 

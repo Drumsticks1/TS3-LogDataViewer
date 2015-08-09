@@ -11,10 +11,10 @@
 
 using namespace std;
 
-extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
 extern vector <string> ignoreLogs;
+extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;

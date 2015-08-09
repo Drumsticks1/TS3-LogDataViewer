@@ -16,14 +16,18 @@ using namespace std;
 using namespace boost::filesystem;
 using namespace boost::program_options;
 
+#define DEFAULTLOGDIRECTORY "./logs/"
+#define DEFAULTVIRTUALSERVER 1
+
 bool validXML = false;
+unsigned int VIRTUALSERVER = 0;
 
 int main(int argc, char* argv[]) {
 	if (exists("lockfile")) {
 		time_t currentTime, lockfileCreation = last_write_time("lockfile");
 		time(&currentTime);
 		if (difftime(currentTime, lockfileCreation) > 300) {
-			cout << "lockfile is older than 5 minutes - removing..." << endl;
+			cout << endl << "The lockfile is older than 5 minutes - removing...";
 			remove("lockfile");
 		}
 	}
@@ -31,50 +35,62 @@ int main(int argc, char* argv[]) {
 	if (!exists("lockfile")) {
 		fstream lockfile("lockfile", fstream::out);
 		string LOGDIRECTORY;
+		variables_map vm;
 
-		options_description description("Program options:");
+		options_description description("TS3 Enhanced Client List - Program options");
 		description.add_options()
 			("help", "Shows this help screen.")
-			("logdirectory", value<string>(), "Specify directory containing the logs.");
-
-		variables_map vm;
-		positional_options_description logdirectory;
-		logdirectory.add("logdirectory", -1);
+			("logdirectory", value<string>()->default_value(DEFAULTLOGDIRECTORY), "Specify directory containing the logs.")
+			("virtualserver", value<unsigned int>()->default_value(DEFAULTVIRTUALSERVER), "Specify the virtual server (currently only supports numbers between 1 and 9).");
 
 		try {
-			store(command_line_parser(argc, argv).options(description).positional(logdirectory).run(), vm);
+			store(command_line_parser(argc, argv).options(description).run(), vm);
 			notify(vm);
 
 			if (vm.count("help")) {
-				cout << description;
+				cout << endl << description;
 				lockfile.close();
 				remove("lockfile");
 				return 0;
 			}
 
 			if (vm.count("logdirectory")) {
+				string x = vm["logdirectory"].as<string>();
 				LOGDIRECTORY = vm["logdirectory"].as<string>();
+				// Prevents errors when '.../logs' is used instead of '.../logs/'.
+				if (LOGDIRECTORY[LOGDIRECTORY.size() - 1] != '/') {
+					cout << endl << "'" + LOGDIRECTORY + "' is an invalid path - trying '" + LOGDIRECTORY + "/'.";
+					LOGDIRECTORY.push_back('/');
+				}
+			}
+
+			if (vm.count("virtualserver")) {
+				VIRTUALSERVER = vm["virtualserver"].as<unsigned int>();
 			}
 		}
-		catch (error& e) {
-			cout << e.what() << endl;
-			cout << "Skipping use of command line..." << endl;
+		catch (error& error) {
+			cout << endl << error.what() << endl << "Skipping command line parameters and using their default values...";
+			LOGDIRECTORY = DEFAULTLOGDIRECTORY;
+			VIRTUALSERVER = DEFAULTVIRTUALSERVER;
 		}
 
-		if (LOGDIRECTORY.size() == 0) {
-			cout << "Using default logdirectory..." << endl;
-			LOGDIRECTORY = "./logs/";
+		if (vm["logdirectory"].defaulted()) {
+			cout << endl << "No logdirectory specified - using default path...";
+		}
+
+		if (vm["virtualserver"].defaulted()) {
+			cout << endl << "No virtualserver specified - using default value...";
 		}
 
 		if (!fetchLogs(LOGDIRECTORY)) {
-			cout << "The program will now exit..." << endl;
+			cout << endl << "The program will now exit...";
 			lockfile.close();
 			remove("lockfile");
 			return 0;
 		}
 
 		if (!parseXML()) {
-			cout << "XML isn't valid - skipping... " << endl;
+			cout << endl << "XML isn't valid - skipping XML parsing...";
 		}
 		else validXML = true;
 
@@ -86,8 +102,8 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 	else {
-		cout << "The program is already running..." << endl
-			<< "This program instance will now exit..." << endl;
+		cout << endl << "The program is already running..." << endl
+			<< "This program instance will now exit...";
 		return 0;
 	}
 }

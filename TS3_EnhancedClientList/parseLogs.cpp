@@ -15,21 +15,21 @@
 
 using namespace std;
 
-extern vector <User> UserList;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
+extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
 extern bool validXML;
+extern unsigned int VIRTUALSERVER;
 
-// DEV: Make compatible with multiple virtual servers.
-//		How many virtual servers are possible ?
-#define LOGMATCHCONNECT			"|INFO    |VirtualServerBase|  1| client connected '"
-#define LOGMATCHDISCONNECT		"|INFO    |VirtualServerBase|  1| client disconnected '"
-#define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  1| client '"
+// Currently only supports Virtual Servers with numbers between 1 and 9 - Support for Virtual Servers > 9 will follow soon.
+#define LOGMATCHCONNECT			"|INFO    |VirtualServerBase|  " + to_string(VIRTUALSERVER) + "| client connected '"
+#define LOGMATCHDISCONNECT		"|INFO    |VirtualServerBase|  " + to_string(VIRTUALSERVER) + "| client disconnected '"
+#define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| client '"
 #define LOGMATCHDELETEUSER2		") got deleted by client '"
-#define LOGMATCHFILEUPLOAD		"|INFO    |VirtualServer |  1| file upload to ("
+#define LOGMATCHFILEUPLOAD		"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| file upload to ("
 
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY) {
@@ -49,7 +49,7 @@ void parseLogs(string LOGDIRECTORY) {
 
 	if (validXML) {
 		if (IsMatchingLogOrder()) {
-			cout << "Comparing logs..." << endl;
+			cout << endl << "Comparing new and old logs...";
 			for (unsigned int i = 0; i < parsedLogs.size(); i++) {
 				for (unsigned int j = 0; j < Logs.size() - 1; j++) {
 					if (Logs[j] == parsedLogs[i]) {
@@ -58,10 +58,10 @@ void parseLogs(string LOGDIRECTORY) {
 				}
 			}
 		}
-		else cout << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML..." << endl;
+		else cout << endl << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML...";
 	}
 
-	cout << "Parsing new logs..." << endl;
+	cout << endl << "Parsing new logs...";
 	for (unsigned int i = 0; i < Logs.size(); i++) {
 		if (!Logs[i].empty()) {
 			LogFilePath = LOGDIRECTORY + Logs.at(i);

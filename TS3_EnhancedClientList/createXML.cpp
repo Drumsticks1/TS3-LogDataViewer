@@ -18,8 +18,8 @@ using namespace std;
 using namespace boost::property_tree;
 using namespace boost::posix_time;
 
-extern vector <User> UserList;
 extern vector <string> parsedLogs;
+extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
@@ -53,7 +53,7 @@ void createXML() {
 	ptree PropertyTree, UserListNode, UserNode, BanNode, KickNode, FileNode, AttributesNode;
 	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
-	cout << "Preparing XML-Creation..." << endl;
+	cout << endl << "Preparing XML-Creation...";
 	for (unsigned int i = 0; i < UserList.size(); i++) {
 		if (UserList[i].getID() != 0) {
 			fieldNickname.clear();
@@ -143,12 +143,12 @@ void createXML() {
 	UserListNode.add_child("Attributes", AttributesNode);
 	PropertyTree.add_child("UserList", UserListNode);
 
-	cout << "Creating XML..." << endl;
+	cout << endl << "Creating XML...";
 	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
 	try {
 		write_xml(XMLFILE, PropertyTree, std::locale(), settings);
 	}
 	catch (xml_parser_error error) {
-		cout << "xml_parser_error";
+		cout << endl << "An error occured while creating the xml:" << endl << error.what();
 	}
 }
