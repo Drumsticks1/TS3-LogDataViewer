@@ -18,14 +18,14 @@ vector <string> ignoreLogs;
 
 // Fetches the list of log files that are in the log directory and saves it in a vector.
 bool fetchLogs(string LOGDIRECTORY) {
-	cout << endl << "Checking logdirectory...";
+	cout << "Checking logdirectory..." << endl;
 
 	path log_directory(LOGDIRECTORY);
 	try {
 		if (exists(log_directory)) {
 			if (is_directory(log_directory)) {
 				if (!boost::filesystem::is_empty(log_directory)) {
-					cout << endl << "Fetching logs...";
+					cout << "Fetching logs..." << endl;
 					string LogignorePath = LOGDIRECTORY + "logignore";
 					if (is_regular_file(LogignorePath)) {
 						if (!boost::filesystem::is_empty(LogignorePath)) {
@@ -43,9 +43,9 @@ bool fetchLogs(string LOGDIRECTORY) {
 								ignoreLogs.push_back(buffer_logignore);
 							}
 						}
-						else cout << endl << "The logignore seems to be empty - skipping...";
+						else cout << "The logignore seems to be empty - skipping..." << endl;
 					}
-					else cout << endl << "No valid logignore found - skipping...";
+					else cout << "No valid logignore found - skipping..." << endl;
 
 					directory_iterator LogDirectory(LOGDIRECTORY);
 					while (LogDirectory != directory_iterator()) {
@@ -58,31 +58,31 @@ bool fetchLogs(string LOGDIRECTORY) {
 					}
 				}
 				else {
-					cout << endl << "The log directory seems to be empty.";
+					cout << "The log directory seems to be empty." << endl;
 					return false;
 				}
 			}
 			else {
-				cout << endl << "The log directory seems not to be a directory.";
+				cout << "The log directory seems not to be a directory." << endl;
 				return false;
 			}
 		}
 		else {
-			cout << endl << "The log directory seems not to exist.";
+			cout << "The log directory seems not to exist." << endl;
 			return false;
 		}
 	}
 	catch (const filesystem_error& error) {
-		cout << endl << "An error ocurred while fetching the logfiles:" << endl << error.what();
+		cout << "An error ocurred while fetching the logfiles:" << endl << error.what() << endl;
 		return false;
 	}
 
 	if (Logs.size() == 0) {
-		cout << endl << "The log directory contains no valid logs.";
+		cout << "The log directory contains no valid logs." << endl;
 		return false;
 	}
 
-	cout << endl << "Sorting logs...";
+	cout << "Sorting logs..." << endl;
 	sort(Logs.begin(), Logs.end());
 	return true;
 }

@@ -30,7 +30,7 @@ bool parseXML() {
 	if (exists(XMLFILE)) {
 		if (is_regular_file(XMLFILE)) {
 			if (!boost::filesystem::is_empty(XMLFILE)) {
-				cout << endl << "Parsing the old XML...";
+				cout << "Parsing the old XML..." << endl;
 				unsigned int ID, BanListID = 0, KickListID = 0, FileListID = 0, bannedID, bannedByInvokerID, bantime, kickedID, channelID, uploadedByID;
 				ptree PropertyTree;
 				string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason, kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
@@ -39,7 +39,7 @@ bool parseXML() {
 					read_xml(XMLFILE, PropertyTree);
 				}
 				catch (xml_parser_error error) {
-					cout << "An error occured while parsing the XML:" << endl << error.what() << endl << "Skipping the XML-Parsing...";
+					cout << "An error occured while parsing the XML:" << endl << error.what() << endl << "Skipping the XML-Parsing..." << endl;
 					return false;
 				}
 

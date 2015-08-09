@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 		time_t currentTime, lockfileCreation = last_write_time("lockfile");
 		time(&currentTime);
 		if (difftime(currentTime, lockfileCreation) > 300) {
-			cout << endl << "The lockfile is older than 5 minutes - removing...";
+			cout << "The lockfile is older than 5 minutes - removing..." << endl;
 			remove("lockfile");
 		}
 	}
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 			notify(vm);
 
 			if (vm.count("help")) {
-				cout << endl << description;
+				cout << endl << description << endl;
 				lockfile.close();
 				remove("lockfile");
 				return 0;
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 				LOGDIRECTORY = vm["logdirectory"].as<string>();
 				// Prevents errors when '.../logs' is used instead of '.../logs/'.
 				if (LOGDIRECTORY[LOGDIRECTORY.size() - 1] != '/') {
-					cout << endl << "'" + LOGDIRECTORY + "' is an invalid path - trying '" + LOGDIRECTORY + "/'.";
+					cout << "'" + LOGDIRECTORY + "' is an invalid path - trying '" + LOGDIRECTORY + "/'." << endl;
 					LOGDIRECTORY.push_back('/');
 				}
 			}
@@ -69,28 +69,28 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		catch (error& error) {
-			cout << endl << error.what() << endl << "Skipping command line parameters and using their default values...";
+			cout << error.what() << endl << "Skipping command line parameters and using their default values..." << endl;
 			LOGDIRECTORY = DEFAULTLOGDIRECTORY;
 			VIRTUALSERVER = DEFAULTVIRTUALSERVER;
 		}
 
 		if (vm["logdirectory"].defaulted()) {
-			cout << endl << "No logdirectory specified - using default path...";
+			cout << "No logdirectory specified - using default path..." << endl;
 		}
 
 		if (vm["virtualserver"].defaulted()) {
-			cout << endl << "No virtualserver specified - using default value...";
+			cout << "No virtualserver specified - using default value..." << endl;
 		}
 
 		if (!fetchLogs(LOGDIRECTORY)) {
-			cout << endl << "The program will now exit...";
+			cout << "The program will now exit..." << endl;
 			lockfile.close();
 			remove("lockfile");
 			return 0;
 		}
 
 		if (!parseXML()) {
-			cout << endl << "XML isn't valid - skipping XML parsing...";
+			cout << "XML isn't valid - skipping XML parsing..." << endl;
 		}
 		else validXML = true;
 
@@ -102,8 +102,8 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 	else {
-		cout << endl << "The program is already running..." << endl
-			<< "This program instance will now exit...";
+		cout << "The program is already running..." << endl
+			<< "This program instance will now exit..." << endl;
 		return 0;
 	}
 }

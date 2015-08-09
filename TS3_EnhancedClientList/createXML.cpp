@@ -53,7 +53,7 @@ void createXML() {
 	ptree PropertyTree, UserListNode, UserNode, BanNode, KickNode, FileNode, AttributesNode;
 	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
-	cout << endl << "Preparing XML-Creation...";
+	cout << "Preparing XML-Creation..." << endl;
 	for (unsigned int i = 0; i < UserList.size(); i++) {
 		if (UserList[i].getID() != 0) {
 			fieldNickname.clear();
@@ -143,12 +143,12 @@ void createXML() {
 	UserListNode.add_child("Attributes", AttributesNode);
 	PropertyTree.add_child("UserList", UserListNode);
 
-	cout << endl << "Creating XML...";
+	cout << "Creating XML..." << endl;
 	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
 	try {
 		write_xml(XMLFILE, PropertyTree, std::locale(), settings);
 	}
 	catch (xml_parser_error error) {
-		cout << endl << "An error occured while creating the xml:" << endl << error.what();
+		cout << "An error occured while creating the xml:" << endl << error.what() << endl;
 	}
 }

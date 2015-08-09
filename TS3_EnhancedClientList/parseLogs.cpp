@@ -49,7 +49,7 @@ void parseLogs(string LOGDIRECTORY) {
 
 	if (validXML) {
 		if (IsMatchingLogOrder()) {
-			cout << endl << "Comparing new and old logs...";
+			cout << "Comparing new and old logs..." << endl;
 			for (unsigned int i = 0; i < parsedLogs.size(); i++) {
 				for (unsigned int j = 0; j < Logs.size() - 1; j++) {
 					if (Logs[j] == parsedLogs[i]) {
@@ -58,10 +58,10 @@ void parseLogs(string LOGDIRECTORY) {
 				}
 			}
 		}
-		else cout << endl << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML...";
+		else cout << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML..." << endl;
 	}
 
-	cout << endl << "Parsing new logs...";
+	cout << "Parsing new logs..." << endl;
 	for (unsigned int i = 0; i < Logs.size(); i++) {
 		if (!Logs[i].empty()) {
 			LogFilePath = LOGDIRECTORY + Logs.at(i);
