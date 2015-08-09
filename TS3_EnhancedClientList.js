@@ -229,7 +229,7 @@ function saveSortOrder() {
 
 // Applies the saved sort order to the existing tables.
 function applySortOrder() {
-    if ($('#clientTable').length) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
+    if ($('#clientTable').length && clientTableSortOrder !== undefined) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
     if ($('#banTable').length) $('#banTable').trigger('sorton', [banTableSortOrder]);
     if ($('#kickTable').length) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
     if ($('#uploadTable').length) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
@@ -723,7 +723,12 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
-            if ($('.ts3-clientTable').length) buildClientTable();
+            if ($('.ts3-clientTable').length) {
+                $('#scrollToClientTableRowSection').show();
+                $('#collapseAllSection').show();
+                $('.sortConnectionsSwitch').show();
+                buildClientTable();
+            }
             if ($('.ts3-banTable').length) buildBanTable();
             if ($('.ts3-kickTable').length) buildKickTable();
             if ($('.ts3-uploadTable').length) buildUploadTable();
@@ -838,6 +843,7 @@ function buildControlSection() {
     var scrollToCTRInput = document.createElement('input');
     var scrollToCTRButton = document.createElement('button');
 
+    $(scrollToClientTableRowSection).prop('hidden', 'true');
     $(scrollToClientTableRowSection).prop('id', 'scrollToClientTableRowSection');
     $(scrollToCTRInput).prop('id', 'IDSelection');
     $(scrollToCTRInput).prop('type', 'number');
@@ -853,8 +859,10 @@ function buildControlSection() {
 
     var collapseAllSection = document.createElement('div');
     var collapseAllButton = document.createElement('button');
+
+    $(collapseAllSection).prop('hidden', 'true');
     $(collapseAllSection).prop('id', 'collapseAllSection');
-    $(collapseAllButton).html('Collapse all lists');
+    $(collapseAllButton).html('Collapse all expanded lists');
 
     collapseAllButton.onclick = function () {
         collapseAll();
@@ -868,6 +876,7 @@ function buildControlSection() {
     var sortConnectionsSwitchSpanInner = document.createElement('span');
     var sortConnectionsSwitchSpanSwitch = document.createElement('span');
 
+    $(sortConnectionsSwitch).prop('hidden', 'true');
     $(sortConnectionsSwitch).prop('class', 'sortConnectionsSwitch');
     $(sortConnectionsSwitchInput).prop('type', 'checkbox');
     $(sortConnectionsSwitchInput).prop('class', 'sortConnectionsSwitch-checkbox');
