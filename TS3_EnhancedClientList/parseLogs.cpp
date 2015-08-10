@@ -184,9 +184,11 @@ void parseLogs(string LOGDIRECTORY) {
 						UserList.resize(ID + 1);
 						UserList[ID].addID(ID);
 					}
-					if (UserList[ID].getUniqueNickname(0) != Nickname) {
+
+					if (UserList[ID].getNicknameCount() == 0 || UserList[ID].getUniqueNickname(0) != Nickname) {
 						UserList[ID].addNickname(Nickname);
 					}
+
 					if (i + 1 == Logs.size()) {
 						UserList[ID].disconnect();
 					}

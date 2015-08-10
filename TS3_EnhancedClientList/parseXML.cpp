@@ -24,6 +24,7 @@ extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
+extern unsigned int VIRTUALSERVER;
 
 // Parses the XML if existing.
 bool parseXML() {
@@ -43,7 +44,7 @@ bool parseXML() {
 					return false;
 				}
 
-				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("UserList")) {
+				BOOST_FOREACH(ptree::value_type const& Node, PropertyTree.get_child("Data")) {
 					ptree subtree = Node.second;
 					if (Node.first == "User") {
 						if (subtree.get_child("ID").data() != "-1") {
@@ -104,6 +105,10 @@ bool parseXML() {
 						FileListID++;
 					}
 					else if (Node.first == "Attributes") {
+						if (VIRTUALSERVER != stoul(subtree.get_child("VirtualServer").data())) {
+							cout << "The last XML was created for another virtual server - skipping use of XML..." << endl;
+							return false;
+						}
 						BOOST_FOREACH(ptree::value_type const& vs, subtree.get_child("ParsedLogs")) {
 							parsedLogs.emplace_back(vs.second.data());
 						}

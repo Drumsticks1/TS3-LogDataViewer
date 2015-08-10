@@ -23,6 +23,7 @@ extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <File> FileList;
+extern unsigned int VIRTUALSERVER;
 
 // Returns the given time structure as string in the format "dd.mm.yyyy hh:mm:ss".
 string timeToString(ptime t) {
@@ -50,10 +51,27 @@ string timeToString(ptime t) {
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML() {
-	ptree PropertyTree, UserListNode, UserNode, BanNode, KickNode, FileNode, AttributesNode;
+	ptree PropertyTree, DataNode, AttributesNode, UserNode, BanNode, KickNode, FileNode;
 	ptree fieldNickname, fieldDateTime, fieldIP, fieldParsedLogs;
 
 	cout << "Preparing XML-Creation..." << endl;
+
+	AttributesNode.put("Generated", "by TS3 Enhanced Client List");
+	AttributesNode.put("VirtualServer", VIRTUALSERVER);
+
+	ptime currentLocaltime = second_clock::local_time();
+	ptime currentUTC = second_clock::universal_time();
+
+	AttributesNode.put("CreationTimestamp_Localtime", timeToString(currentLocaltime));
+	AttributesNode.put("CreationTimestamp_UTC", timeToString(currentUTC));
+
+	for (unsigned i = 0; i < parsedLogs.size(); i++) {
+		fieldParsedLogs.add("ParsedLogs", parsedLogs[i]);
+	}
+
+	AttributesNode.put_child("ParsedLogs", fieldParsedLogs);
+	DataNode.add_child("Attributes", AttributesNode);
+
 	for (unsigned int i = 0; i < UserList.size(); i++) {
 		if (UserList[i].getID() != 0) {
 			fieldNickname.clear();
@@ -79,13 +97,12 @@ void createXML() {
 			UserNode.put("Connection_Count", UserList[i].getDateTimeCount());
 			UserNode.put("Connected", UserList[i].getCurrentConnectionsCount());
 			UserNode.put("Deleted", UserList[i].isDeleted());
-
-			UserListNode.add_child("User", UserNode);
+			DataNode.add_child("User", UserNode);
 		}
 		else {
 			UserNode.clear();
 			UserNode.put("ID", "-1");
-			UserListNode.add_child("User", UserNode);
+			DataNode.add_child("User", UserNode);
 		}
 	}
 	UserList.clear();
@@ -99,7 +116,7 @@ void createXML() {
 		BanNode.put("BannedByUID", BanList[i].getBannedByUID());
 		BanNode.put("BanReason", BanList[i].getBanReason());
 		BanNode.put("Bantime", BanList[i].getBantime());
-		UserListNode.add_child("Ban", BanNode);
+		DataNode.add_child("Ban", BanNode);
 	}
 	BanList.clear();
 
@@ -110,8 +127,7 @@ void createXML() {
 		KickNode.put("KickedByNickname", KickList[i].getKickedByNickname());
 		KickNode.put("KickedByUID", KickList[i].getKickedByUID());
 		KickNode.put("KickReason", KickList[i].getKickReason());
-
-		UserListNode.add_child("Kick", KickNode);
+		DataNode.add_child("Kick", KickNode);
 	}
 	KickList.clear();
 
@@ -121,32 +137,15 @@ void createXML() {
 		FileNode.put("Filename", FileList[i].getFilename());
 		FileNode.put("UploadedByNickname", FileList[i].getUploadedByNickname());
 		FileNode.put("UploadedByID", FileList[i].getUploadedByID());
-
-		UserListNode.add_child("File", FileNode);
+		DataNode.add_child("File", FileNode);
 	}
 	FileList.clear();
 
-	AttributesNode.put("Generated", "by TS3_EnhancedClientList");
-
-	for (unsigned i = 0; i < parsedLogs.size(); i++) {
-		fieldParsedLogs.add("ParsedLogs", parsedLogs[i]);
-	}
-
-	AttributesNode.put_child("ParsedLogs", fieldParsedLogs);
-
-	ptime currentLocaltime = second_clock::local_time();
-	ptime currentUTC = second_clock::universal_time();
-
-	AttributesNode.put("CreationTimestamp_Localtime", timeToString(currentLocaltime));
-	AttributesNode.put("CreationTimestamp_UTC", timeToString(currentUTC));
-
-	UserListNode.add_child("Attributes", AttributesNode);
-	PropertyTree.add_child("UserList", UserListNode);
-
+	PropertyTree.add_child("Data", DataNode);
 	cout << "Creating XML..." << endl;
-	auto settings = boost::property_tree::xml_writer_make_settings<std::string>('\t', 1);
+
 	try {
-		write_xml(XMLFILE, PropertyTree, std::locale(), settings);
+		write_xml(XMLFILE, PropertyTree, locale(), xml_writer_make_settings<string>('\t', 1));
 	}
 	catch (xml_parser_error error) {
 		cout << "An error occured while creating the xml:" << endl << error.what() << endl;

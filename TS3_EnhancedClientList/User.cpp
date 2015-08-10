@@ -20,21 +20,9 @@ unsigned int User::getNicknameCount() { return Nickname.size(); }
 unsigned int User::getIPCount() { return IP.size(); }
 
 // Returns the information stored in the given ID slot.
-string User::getUniqueDateTime(unsigned int DateTimeNumber) {
-	if (DateTime.size() > DateTimeNumber)
-		return DateTime.at(DateTimeNumber);
-	else return "";
-}
-string User::getUniqueNickname(unsigned int NicknameNumber) {
-	if (Nickname.size() > NicknameNumber)
-		return Nickname.at(NicknameNumber);
-	else return "";
-}
-string User::getUniqueIP(unsigned int IPNumber) {
-	if (IP.size() > IPNumber)
-		return IP.at(IPNumber);
-	else return "";
-}
+string User::getUniqueDateTime(unsigned int DateTimeNumber) { return DateTime.at(DateTimeNumber); }
+string User::getUniqueNickname(unsigned int NicknameNumber) { return Nickname.at(NicknameNumber); }
+string User::getUniqueIP(unsigned int IPNumber) { return IP.at(IPNumber); }
 
 // Sets the given ID as user ID.
 void User::addID(unsigned int ID) {

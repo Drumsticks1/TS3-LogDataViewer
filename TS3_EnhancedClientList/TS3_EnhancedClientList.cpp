@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <time.h>
+#include "Constants.h"
 #include "fetchLogs.h"
 #include "parseXML.h"
 #include "parseLogs.h"
@@ -15,9 +16,6 @@
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::program_options;
-
-#define DEFAULTLOGDIRECTORY "./logs/"
-#define DEFAULTVIRTUALSERVER 1
 
 bool validXML = false;
 unsigned int VIRTUALSERVER = 0;
