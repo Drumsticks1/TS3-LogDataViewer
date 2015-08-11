@@ -15,6 +15,7 @@ using namespace std;
 
 vector <string> Logs;
 vector <string> ignoreLogs;
+extern unsigned int VIRTUALSERVER;
 
 // Fetches the list of log files that are in the log directory and saves it in a vector.
 bool fetchLogs(string LOGDIRECTORY) {
@@ -34,10 +35,10 @@ bool fetchLogs(string LOGDIRECTORY) {
 							string buffer_logignore;
 
 							logignore.seekg(0, logignore.end);
-							logignoreLength = (unsigned long)logignore.tellg();
+							logignoreLength = (unsigned int)logignore.tellg();
 							logignore.seekg(0, logignore.beg);
 
-							for (unsigned long i = 0; i < logignoreLength;) {
+							for (unsigned int i = 0; i < logignoreLength;) {
 								getline(logignore, buffer_logignore);
 								i += buffer_logignore.size() + 2;
 								ignoreLogs.push_back(buffer_logignore);
@@ -48,11 +49,20 @@ bool fetchLogs(string LOGDIRECTORY) {
 					else cout << "No valid logignore found - skipping..." << endl;
 
 					directory_iterator LogDirectory(LOGDIRECTORY);
+					string VS_log = "";
 					while (LogDirectory != directory_iterator()) {
 						if (is_regular_file(LogDirectory->status()) && !boost::filesystem::is_empty(LogDirectory->path()) && LogDirectory->path().extension() == ".log") {
-							if (LogDirectory->path().filename().string().at(38) == '1' && !IsIgnoredLog(LogDirectory->path().filename().string())) {
+							short VSEndPos = (short)LogDirectory->path().filename().string().find(".log");
+
+							for (short i = 38; i < VSEndPos; i++) {
+								VS_log += LogDirectory->path().filename().string()[i];
+							}
+
+							if (VS_log == to_string(VIRTUALSERVER) && !IsIgnoredLog(LogDirectory->path().filename().string())) {
 								Logs.push_back((LogDirectory->path().filename().string()));
 							}
+
+							VS_log.clear();
 						}
 						LogDirectory++;
 					}

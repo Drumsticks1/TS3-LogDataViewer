@@ -1,3 +1,4 @@
+// rebuildXML.php
 // Author : Drumsticks1
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
@@ -9,7 +10,8 @@
 	// Created EnhancedClientList directory - please modify the path according to your system.
 	$ECLDIRECTORY = "/var/www/EnhancedClientList";
 
-	// Change the default virtual server by modifying the following number.
+	// The default virtual server whose logfiles will be analyzed.
+	// Change the virtual server by modifying the following value.
 	$VIRTUALSERVER = "1";
 	
 	// You may need to adjust the path to your EnhancedClientList directory in the following line.

@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	if (!exists("lockfile")) {
+	if (!exists("lockfile") || SKIPLOCKFILE == true) {
 		fstream lockfile("lockfile", fstream::out);
 		string LOGDIRECTORY;
 		variables_map vm;
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (vm["virtualserver"].defaulted()) {
-			cout << "No virtualserver specified - using default value..." << endl;
+			cout << "No virtual server specified - using default value..." << endl;
 		}
 
 		if (!fetchLogs(LOGDIRECTORY)) {

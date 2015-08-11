@@ -27,12 +27,9 @@ WebFontConfig = {
 $('head').append('<link rel="stylesheet" href="./style/style.css" type="text/css" />');
 
 // Including javascripts via jquery.
-$.getScript('jquery.tablesorter.min.js', function () {
-});
-$.getScript('jquery.tablesorter.widgets.js', function () {
-});
-$.getScript('moment.min.js', function () {
-});
+$.getScript('jquery.tablesorter.min.js');
+$.getScript('jquery.tablesorter.widgets.js');
+$.getScript('moment.min.js');
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -91,7 +88,9 @@ function expandList(List, ID) {
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement('div');
             $(newDiv).prop('id', currentDiv);
-            $(newDiv).html(ListContent[j].firstChild.nodeValue);
+            if (i == 1) $(newDiv).html(ListContent[j].firstChild.nodeValue);
+            else $(newDiv).html(moment(ListContent[j].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+
             if (Row == 3) {
                 x.appendChild(newDiv);
             }
@@ -800,7 +799,7 @@ function buildControlSection() {
     var ctT_localtime = document.createElement('td');
     var ctT_utc = document.createElement('td');
     var ctT_moment = document.createElement('td');
-    var ctTdescription = document.createElement('div');
+    var ctTDescription = document.createElement('div');
 
     $(creationTimestampSection).prop('id', 'creationTimestampSection');
     $(creationTimestampTable).prop('id', 'creationTimestampTable');
@@ -814,7 +813,7 @@ function buildControlSection() {
     $(ctT_localtime).html('Analyzing data...');
     $(ctT_utc).html('Analyzing data...');
     $(ctT_moment).html('Analyzing data...');
-    $(ctTdescription).html('The DateTimes in the tables are displayed in your current timezone.');
+    $(ctTDescription).html('The DateTimes in the tables are displayed in your current timezone.');
 
     ctTHeadRow.appendChild(ctTHead_localtime);
     ctTHeadRow.appendChild(ctTHead_utc);
@@ -828,7 +827,7 @@ function buildControlSection() {
     ctTBody.appendChild(ctTBodyRow);
     creationTimestampTable.appendChild(ctTBody);
     creationTimestampSection.appendChild(creationTimestampTable);
-    creationTimestampSection.appendChild(ctTdescription);
+    creationTimestampSection.appendChild(ctTDescription);
 
     var connectedClientCountSection = document.createElement('div');
     var connectedClientsCount = document.createElement('div');

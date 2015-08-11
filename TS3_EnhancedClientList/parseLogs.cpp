@@ -24,7 +24,6 @@ extern vector <File> FileList;
 extern bool validXML;
 extern unsigned int VIRTUALSERVER;
 
-// Currently only supports Virtual Servers with numbers between 1 and 9 - Support for Virtual Servers > 9 will follow soon.
 #define LOGMATCHCONNECT			"|INFO    |VirtualServerBase|  " + to_string(VIRTUALSERVER) + "| client connected '"
 #define LOGMATCHDISCONNECT		"|INFO    |VirtualServerBase|  " + to_string(VIRTUALSERVER) + "| client disconnected '"
 #define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| client '"
@@ -34,7 +33,7 @@ extern unsigned int VIRTUALSERVER;
 // Parses the logs and stores the data in the UserList.
 void parseLogs(string LOGDIRECTORY) {
 	string buffer_logline, buffer_XMLInfoInput, LogFilePath, DateTime, Nickname, ID_string, IP, bannedByInvokerID, bannedByNickname, bannedByUID, banReason, bantime, kickedByNickname, kickedByUID, kickReason, uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID;
-	unsigned int ID, BanListID, KickListID, FileListID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, bannedByInvokerIDEndPos, bannedByNicknameEndPos, bannedByUIDEndPos, banReasonEndPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos, channelIDEndPos, filenameEndPos, uploadedByIDStartPos;
+	unsigned int virtualServerLength = to_string(VIRTUALSERVER).length(), ID, BanListID, KickListID, FileListID, NicknameLength, IDLength, IPLength, IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, bannedByInvokerIDEndPos, bannedByNicknameEndPos, bannedByUIDEndPos, banReasonEndPos, kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos, channelIDEndPos, filenameEndPos, uploadedByIDStartPos;
 	unsigned long logfileLength;
 	bool kickMatch, banMatch;
 
@@ -58,7 +57,10 @@ void parseLogs(string LOGDIRECTORY) {
 				}
 			}
 		}
-		else cout << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML..." << endl;
+		else {
+			cout << "Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML..." << endl;
+			parsedLogs.clear();
+		}
 	}
 
 	cout << "Parsing new logs..." << endl;
@@ -96,7 +98,7 @@ void parseLogs(string LOGDIRECTORY) {
 
 				// Connection matches.
 				if (buffer_logline.find(LOGMATCHCONNECT) != string::npos) {
-					NicknameStartPos = 77;
+					NicknameStartPos = 76 + virtualServerLength;
 
 					IPStartPos = 1 + (unsigned int)buffer_logline.rfind(" ");
 					IPLength = buffer_logline.length() - IPStartPos - 6; // - 6 for ignoring the port.
@@ -151,7 +153,7 @@ void parseLogs(string LOGDIRECTORY) {
 
 				// Disconnecting matches, including kick and ban matches.
 				else if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos) {
-					NicknameStartPos = 80;
+					NicknameStartPos = 79 + virtualServerLength;
 
 					IDStartPos = (unsigned int)buffer_logline.rfind("'(id:") + 5;
 
@@ -279,7 +281,7 @@ void parseLogs(string LOGDIRECTORY) {
 						uploadDateTime += buffer_logline[j];
 					}
 
-					for (unsigned int j = 75; j < channelIDEndPos; j++) {
+					for (unsigned int j = 74 + virtualServerLength; j < channelIDEndPos; j++) {
 						channelID += buffer_logline[j];
 					}
 

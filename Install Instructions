@@ -32,9 +32,9 @@ Linux:
 14. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
 15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
 16. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
-17. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH in the "rebuildXML.php".
+17. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
 18. Open the Webinterface by accessing the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
-19. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing (Important: Create the file on linux and don't copy it over from Windows!).
+19. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing.
 20. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
 
 

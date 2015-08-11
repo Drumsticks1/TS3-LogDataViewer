@@ -25,10 +25,10 @@ After all logfiles are parsed a XML file is created which then is used for displ
 You can either use the provided Webinterface (index.html) or implement the control section and the different tables into you existing website (see "Install Instructions").
 
 #### Control Section
-- Reload the Table via a button.
+- Rebuild the XML and reload the Table via a button.
 - Complete rebuild of the XML via a button (useful when changing log directories or after an failed database migration).
 - Timestamps of the XML creation (local time of the server and UTC).
-- Count of currently connected clients.
+- Count of the currently connected clients.
 - Scroll to the client table position of an ID.
 - Collapse all extended lists.
 - Switch between sorting by first or last Connections.
@@ -72,6 +72,7 @@ Date and Time | Channel ID | Filename | Uploaded by (Nickname) | Uploaded by (ID
 2015-07-09 19:18:18<br />(about 4 days ago) | 2 | /directory_sample/file_sample.txt | Drumsticks | 3
 
 ### Overall Program Features
+- You can change the virtual server whose logs will be analyzed by adjusting the VIRTUALSERVER value in the rebuildXML.php.
 - You can manually create a logignore and list the logfiles (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
 - In order to save time the program uses the information from the last created XML instead of parsing all logs again.
 - Lockfile: Only one instance of the program can run at once.
