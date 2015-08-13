@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
 		options_description description("TS3 Enhanced Client List - Program options");
 		description.add_options()
 			("help", "Shows this help screen.")
-			("logdirectory", value<string>()->default_value(DEFAULTLOGDIRECTORY), "Specify directory containing the logs.")
-			("virtualserver", value<unsigned int>()->default_value(DEFAULTVIRTUALSERVER), "Specify the virtual server (currently only supports numbers between 1 and 9).");
+			("logdirectory", value<string>()->default_value(DEFAULTLOGDIRECTORY), "Specify the directory containing the logs.")
+			("virtualserver", value<unsigned int>()->default_value(DEFAULTVIRTUALSERVER), "Specify the virtual server.");
 
 		try {
 			store(command_line_parser(argc, argv).options(description).run(), vm);
