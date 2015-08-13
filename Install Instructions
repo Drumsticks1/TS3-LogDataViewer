@@ -14,8 +14,11 @@ Linux:
 	5.1. Downloads the makefile, the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't necessary for compiling as it doesn't include any code).
 	5.2. Download the Boost Library package via "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0)(you may need to adjust the version number).
 	5.3. Install the packages "libboost-system1.55-dev", "libboost-filesystem1.55-dev" and "libboost-program-options1.55-dev" (you may need to adjust the version numbers).
-	5.4. Install the packages "make" and "g++" in order to compile using the makefile.
-	5.5. Compile with the makefile ("make -f makefile").
+	5.4. Download the pugixml library from it's website ("http://pugixml.org/").
+	5.5. Move the uncompressed folder into the directory you wish (default location set in the makefile: /usr/pugixml-1.6/) (you may need to adjust the version numbers).
+	5.6. Install the packages "make" and "g++" in order to compile using the makefile.
+	5.7. Check the include paths in the makefile and adjust them if necessary.
+	5.8. Compile with the makefile ("make -f makefile").
 6. Download jquery via the following link: "http://code.jquery.com/jquery-latest.min.js".
 7. Download the javascript file for the loading bar via the following link: "http://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js".
 8. Download the jquery plugin "moment.js" via the following link: "http://momentjs.com/downloads/moment.min.js".
