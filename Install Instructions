@@ -12,33 +12,34 @@ Linux:
 4. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3_EnhancedClientList/releases).
 5. Download the attached compiled file (TS3_EnhancedClientList.gz for Linux) from the release you are using (-> skip to step 6) or compile the code yourself using the provided makefile (-> follow the 5.x steps).
 	5.1. Downloads the makefile, the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't necessary for compiling as it doesn't include any code).
-	5.2. Download the Boost Library package via "http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0)(you may need to adjust the version number).
+	5.2. Download the Boost Library package via "https://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2/download" and extract it to your "/usr/" folder (--> /usr/boost_1_58_0)(you may need to adjust the version number).
 	5.3. Install the packages "libboost-system1.55-dev", "libboost-filesystem1.55-dev" and "libboost-program-options1.55-dev" (you may need to adjust the version numbers).
-	5.4. Download the pugixml library from it's website ("http://pugixml.org/").
+	5.4. Download the pugixml library from it's github page ("https://github.com/zeux/pugixml").
 	5.5. Move the uncompressed folder into the directory you wish (default location set in the makefile: /usr/pugixml-1.6/) (you may need to adjust the version numbers).
 	5.6. Install the packages "make" and "g++" in order to compile using the makefile.
 	5.7. Check the include paths in the makefile and adjust them if necessary.
 	5.8. Compile with the makefile ("make -f makefile").
-6. Download jquery via the following link: "http://code.jquery.com/jquery-latest.min.js".
-7. Download the javascript file for the loading bar via the following link: "http://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js".
-8. Download the jquery plugin "moment.js" via the following link: "http://momentjs.com/downloads/moment.min.js".
-9. Download the following files from the unofficial fork of the jquery plugin "tablesorter": http://mottie.github.io/tablesorter/docs/ :
-	- http://mottie.github.io/tablesorter/js/jquery.tablesorter.min.js
-	- http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js
+6. Download jQuery via this link: http://code.jquery.com/jquery-2.1.4.min.js
+7. Download the javascript file for the loading bar via the following link: "https://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js".
+8. Download the jquery plugin "moment.js" via the following link: "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js".
+9. Download the following files from the unofficial fork of the jquery plugin "tablesorter": https://mottie.github.io/tablesorter/docs/ :
+	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.js
+	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.min.js
 10. Move the "TS3_EnhancedClientList.js" and the other javascript files you just downloaded into your EnhancedClientList directory.
-11. If you want to use the predesigned index.html (headline and all tables) follow step 11 a), otherwise if you want to include the controls and the table into an existing webpage follow step 11 b).
-	11 a) Move the "index.html" into your created EnhancedClientList directory.
-	11 b) Include the control section by creating a div with the class "ts3-control" and include the "TS3_EnhancedClientList.js" and the "jquery-latest.min.js" into the head section of you webpage.
-		  You can now decide which of the following tables you want to include (same way as the control section): "ts3-clientTable", "ts3-banTable", "ts3-kickTable" and "ts3-uploadTable".
-12. Move the "styles" folder into your EnhancedClientList directory.
-13. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
-14. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
-15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
-16. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
-17. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
-18. Open the Webinterface by accessing the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
-19. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing.
-20. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
+11. If you want to use the predesigned index.html (headline and all tables) skip to step 12, otherwise if you want to include the controls and the table into an existing webpage follow the 11.x steps.
+	11.1. Include the control section by creating a div with the id "ts3-control".
+	11.2. Include the "TS3_EnhancedClientList.js" and the "jquery-2.1.4.min.js" into the head section of you webpage.
+	11.3. You can now decide which of the following tables you want to include by adding divs with the following ids: "ts3-clientTable", "ts3-banTable", "ts3-kickTable" and "ts3-uploadTable".
+12. Move the "index.html" into your created EnhancedClientList directory.
+13. Move the "styles" folder into your EnhancedClientList directory.
+14. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
+15. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
+16. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
+17. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
+18. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
+19. Open the Webinterface by accessing the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
+20. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing.
+21. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
 
 
 If there are any problems or improvement suggestions feel free to open an Issue on Github so I can improve the install instructions.

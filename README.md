@@ -93,15 +93,15 @@ NOTE: Compiled files for Linux and Windows can be downloaded via the release tab
 ### Dependencies
 All dependencies are covered in the install instructions.<br />
 You will need to download the following extern files:
-- One file for jquery:
-	- [jquery-latest.min.js](http://code.jquery.com/jquery-latest.min.js)
-- Two files from [this fork](http://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
-	- [jquery.tablesorter.min.js](http://mottie.github.io/tablesorter/dist/js/jquery.tablesorter.min.js)
-	- [jquery.tablesorter.widgets.js](http://mottie.github.io/tablesorter/js/jquery.tablesorter.widgets.js)
+- jQuery:
+	- [jquery-2.1.4.min.js](https://code.jquery.com/jquery-2.1.4.min.js)
+- Two files from [this fork](https://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
+	- [jquery.tablesorter.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.js)
+	- [jquery.tablesorter.widgets.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.min.js)
 - One file for the loading bar:
-	- [nanobar.min.js](http://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js)
+	- [nanobar.min.js](https://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js)
 - One file for moment.js:
-	- [moment.min.js](http://momentjs.com/downloads/moment.min.js)
+	- [moment.min.js](https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js)
 - On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).
 
 #### Teamspeak 3 server settings

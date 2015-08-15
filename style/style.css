@@ -11,7 +11,7 @@ body {
 }
 
 /* index.html header */
-h1.TS3-ECL {
+#TS3-ECL {
     font-family: 'Open Sans', Arial sans-serif;
     font-weight: normal;
     text-align: center;
@@ -23,15 +23,15 @@ h1.TS3-ECL {
     line-height: 70px;
 }
 
-.ts3-control, .ts3-clientTable, .ts3-banTable, .ts3-kickTable, .ts3-uploadTable {
+#ts3-control, #ts3-clientTable, #ts3-banTable, #ts3-kickTable, #ts3-uploadTable {
     margin: 25px 5px 0;
 }
 
-.ts3-control, .tablesorter, #navbar {
+#ts3-control, #navbar, .tablesorter {
     font-family: 'Open Sans', Arial, sans-serif;
 }
 
-.ts3-control button, #navbar button {
+#ts3-control button, #navbar button {
     font-family: 'Open Sans', Arial, sans-serif;
     flex-grow: 2;
     border: 1px solid #8093FF;
@@ -44,16 +44,16 @@ h1.TS3-ECL {
     border-radius: 5px;
 }
 
-.ts3-control button:active, #navbar button:active,
-.ts3-control button:hover, #navbar button:hover,
-.ts3-control button:focus, #navbar button:focus {
+#ts3-control button:active, #navbar button:active,
+#ts3-control button:hover, #navbar button:hover,
+#ts3-control button:focus, #navbar button:focus {
     color: white;
     background-color: #8093FF;
     outline: none;
     transition: background-color, color 200ms;
 }
 
-.ts3-control button:disabled {
+#ts3-control button:disabled {
     color: #999;
 }
 

@@ -2,9 +2,6 @@
 // Author: Drumsticks1
 // Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
-// Disable caching for jquery.
-$.ajaxSetup({cache: false});
-
 // Global Variables
 var ConnectedClientsCount, currentDiv, momentInterval, XML, ConnectionsSortType = true, nanobar;
 var clientTableSortOrder, banTableSortOrder = [[0, 1]], kickTableSortOrder = [[0, 1]], uploadTableSortOrder = [[0, 1]];
@@ -25,11 +22,6 @@ WebFontConfig = {
 
 // Including the style.css.
 $('head').append('<link rel="stylesheet" href="./style/style.css" type="text/css" />');
-
-// Including javascripts via jquery.
-$.getScript('jquery.tablesorter.min.js');
-$.getScript('jquery.tablesorter.widgets.js');
-$.getScript('moment.min.js');
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -54,8 +46,12 @@ function buildNewXML() {
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
     var i;
-    if (List == 'ips') i = 1;
-    else i = 2;
+    if (List == 'ips') {
+        i = 1;
+    }
+    else {
+        i = 2;
+    }
     currentDiv = List + '_' + ID + '_' + i;
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
         expandList(List, ID);
@@ -88,8 +84,12 @@ function expandList(List, ID) {
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement('div');
             $(newDiv).prop('id', currentDiv);
-            if (i == 1) $(newDiv).html(ListContent[j].firstChild.nodeValue);
-            else $(newDiv).html(moment(ListContent[j].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+            if (i == 1) {
+                $(newDiv).html(ListContent[j].firstChild.nodeValue);
+            }
+            else {
+                $(newDiv).html(moment(ListContent[j].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+            }
 
             if (Row == 3) {
                 x.appendChild(newDiv);
@@ -190,10 +190,16 @@ function addConnectionsParser() {
             if (cell.firstChild.localName == 'button') {
                 firstConnect = cell.childNodes[1].innerHTML;
             }
-            else firstConnect = cell.firstChild.innerHTML;
+            else {
+                firstConnect = cell.firstChild.innerHTML;
+            }
 
-            if (ConnectionsSortType) return firstConnect;
-            else return lastConnect;
+            if (ConnectionsSortType) {
+                return firstConnect;
+            }
+            else {
+                return lastConnect;
+            }
         },
         parsed: false,
         type: 'text'
@@ -211,7 +217,9 @@ function addIPsParser() {
             if (cell.firstChild.localName == 'button') {
                 return cell.childNodes[1].innerHTML;
             }
-            else return cell.firstChild.innerHTML;
+            else {
+                return cell.firstChild.innerHTML;
+            }
         },
         parsed: false,
         type: 'text'
@@ -220,23 +228,39 @@ function addIPsParser() {
 
 // Saves the current sort order of the existing tables.
 function saveSortOrder() {
-    if ($('#clientTable').length) clientTableSortOrder = $('#clientTable')[0].config.sortList;
-    if ($('#banTable').length) banTableSortOrder = $('#banTable')[0].config.sortList;
-    if ($('#kickTable').length) kickTableSortOrder = $('#kickTable')[0].config.sortList;
-    if ($('#uploadTable').length) uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
+    if ($('#clientTable').length) {
+        clientTableSortOrder = $('#clientTable')[0].config.sortList;
+    }
+    if ($('#banTable').length) {
+        banTableSortOrder = $('#banTable')[0].config.sortList;
+    }
+    if ($('#kickTable').length) {
+        kickTableSortOrder = $('#kickTable')[0].config.sortList;
+    }
+    if ($('#uploadTable').length) {
+        uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
+    }
 }
 
 // Applies the saved sort order to the existing tables.
 function applySortOrder() {
-    if ($('#clientTable').length && clientTableSortOrder !== undefined) $('#clientTable').trigger('sorton', [clientTableSortOrder]);
-    if ($('#banTable').length) $('#banTable').trigger('sorton', [banTableSortOrder]);
-    if ($('#kickTable').length) $('#kickTable').trigger('sorton', [kickTableSortOrder]);
-    if ($('#uploadTable').length) $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
+    if ($('#clientTable').length && clientTableSortOrder !== undefined) {
+        $('#clientTable').trigger('sorton', [clientTableSortOrder]);
+    }
+    if ($('#banTable').length) {
+        $('#banTable').trigger('sorton', [banTableSortOrder]);
+    }
+    if ($('#kickTable').length) {
+        $('#kickTable').trigger('sorton', [kickTableSortOrder]);
+    }
+    if ($('#uploadTable').length) {
+        $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
+    }
 }
 
 // Builds and shows the client table.
 function buildClientTable() {
-    $('.ts3-clientTable').empty();
+    $('#ts3-clientTable').empty();
     var User = XML.getElementsByTagName('User');
 
     var userTable = document.createElement('table');
@@ -318,15 +342,13 @@ function buildClientTable() {
 
             var divLastConnection = document.createElement('div');
             $(divLastConnection).prop('id', 'connections_' + ID + '_0');
-            var UTCFirstConnectionDateTime = moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss');
-            $(divLastConnection).html(UTCFirstConnectionDateTime);
+            $(divLastConnection).html(moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
             userBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
                 $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1));
-                var UTCLastConnectionDateTime = moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss');
-                $(divFirstConnection).html(UTCLastConnectionDateTime);
+                $(divFirstConnection).html(moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
                 userBodyCell_Connections.appendChild(divFirstConnection);
             }
 
@@ -360,7 +382,9 @@ function buildClientTable() {
                 $(userBodyCell_Connected).html('true');
                 ConnectedClientsCount++;
             }
-            else $(userBodyCell_Connected).html('false');
+            else {
+                $(userBodyCell_Connected).html('false');
+            }
             userBodyRow.appendChild(userBodyCell_Connected);
 
             $(userBodyCell_Deleted).html(Deleted);
@@ -374,7 +398,7 @@ function buildClientTable() {
 
     $(userTable).prop('id', 'clientTable');
     $(userTable).prop('class', 'tablesorter');
-    $('.ts3-clientTable').append(userTable);
+    $('#ts3-clientTable').append(userTable);
 
     if (document.getElementById('scrollToClientTable') === null) {
         var scrollToClientTable = document.createElement('button');
@@ -400,7 +424,7 @@ function buildClientTable() {
 
 // Builds and shows the ban table.
 function buildBanTable() {
-    $('.ts3-banTable').empty();
+    $('#ts3-banTable').empty();
     var Ban = XML.getElementsByTagName('Ban');
 
     var banTable = document.createElement('table');
@@ -448,12 +472,16 @@ function buildBanTable() {
         if (Ban[i].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
             BannedByUID = Ban[i].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
         }
-        else BannedByUID = 'No UID';
+        else {
+            BannedByUID = 'No UID';
+        }
         var BanReason;
         if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
             BanReason = Ban[i].getElementsByTagName('BanReason')[0].firstChild.nodeValue;
         }
-        else BanReason = 'No Reason given';
+        else {
+            BanReason = 'No Reason given';
+        }
         var Bantime = Ban[i].getElementsByTagName('Bantime')[0].firstChild.nodeValue;
 
         var banBodyRow = document.createElement('tr');
@@ -498,7 +526,7 @@ function buildBanTable() {
 
     $(banTable).prop('id', 'banTable');
     $(banTable).prop('class', 'tablesorter');
-    $('.ts3-banTable').append(banTable);
+    $('#ts3-banTable').append(banTable);
 
     if (document.getElementById('scrollToBanTable') === null) {
         var scrollToBanTable = document.createElement('button');
@@ -522,7 +550,7 @@ function buildBanTable() {
 
 // Builds and shows the kick table.
 function buildKickTable() {
-    $('.ts3-kickTable').empty();
+    $('#ts3-kickTable').empty();
     var Kick = XML.getElementsByTagName('Kick');
 
     var kickTable = document.createElement('table');
@@ -564,7 +592,9 @@ function buildKickTable() {
         if (Kick[i].getElementsByTagName('KickReason')[0].firstChild !== null) {
             KickReason = Kick[i].getElementsByTagName('KickReason')[0].firstChild.nodeValue;
         }
-        else KickReason = 'No Reason given';
+        else {
+            KickReason = 'No Reason given';
+        }
 
         var kickBodyRow = document.createElement('tr');
         var kickBodyCell_DateTime = document.createElement('td');
@@ -600,7 +630,7 @@ function buildKickTable() {
 
     $(kickTable).prop('id', 'kickTable');
     $(kickTable).prop('class', 'tablesorter');
-    $('.ts3-kickTable').append(kickTable);
+    $('#ts3-kickTable').append(kickTable);
 
     if (document.getElementById('scrollToKickTable') === null) {
         var scrollToKickTable = document.createElement('button');
@@ -623,7 +653,7 @@ function buildKickTable() {
 
 // Builds and shows the upload table.
 function buildUploadTable() {
-    $('.ts3-uploadTable').empty();
+    $('#ts3-uploadTable').empty();
     var File = XML.getElementsByTagName('File');
 
     var uploadTable = document.createElement('table');
@@ -689,7 +719,7 @@ function buildUploadTable() {
 
     $(uploadTable).prop('id', 'uploadTable');
     $(uploadTable).prop('class', 'tablesorter');
-    $('.ts3-uploadTable').append(uploadTable);
+    $('#ts3-uploadTable').append(uploadTable);
 
     if (document.getElementById('scrollToUploadTable') === null) {
         var scrollToUploadTable = document.createElement('button');
@@ -715,6 +745,7 @@ function buildTables() {
     nanobar.go(60);
     $.ajax({
         url: 'output.xml',
+        cache: false,
         error: function () {
             rebuildXML();
         },
@@ -722,15 +753,21 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
-            if ($('.ts3-clientTable').length) {
+            if ($('#ts3-clientTable').length) {
                 $('#scrollToClientTableRowSection').show();
                 $('#collapseAllSection').show();
                 $('.sortConnectionsSwitch').show();
                 buildClientTable();
             }
-            if ($('.ts3-banTable').length) buildBanTable();
-            if ($('.ts3-kickTable').length) buildKickTable();
-            if ($('.ts3-uploadTable').length) buildUploadTable();
+            if ($('#ts3-banTable').length) {
+                buildBanTable();
+            }
+            if ($('#ts3-kickTable').length) {
+                buildKickTable();
+            }
+            if ($('#ts3-uploadTable').length) {
+                buildUploadTable();
+            }
             applySortOrder();
 
             var Attributes = XML.getElementsByTagName('Attributes')[0];
@@ -744,11 +781,12 @@ function buildTables() {
                 $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
             }, 1000);
 
-            if (!$('.ts3-clientTable').length) {
+            if (!$('#ts3-clientTable').length) {
                 for (var i = 0; i < XML.getElementsByTagName('User').length; i++) {
                     if (XML.getElementsByTagName('User')[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
-                        if (XML.getElementsByTagName('User')[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1)
+                        if (XML.getElementsByTagName('User')[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1) {
                             ConnectedClientsCount++;
+                        }
                     }
                 }
             }
@@ -923,11 +961,11 @@ function buildControlSection() {
     controlSection.appendChild(collapseAllSection);
     controlSection.appendChild(sortConnectionsSwitch);
     controlSection.appendChild(navbar);
-    $('.ts3-control').append(controlSection);
+    $('#ts3-control').append(controlSection);
 }
 
 $(document).ready(function () {
-    if ($('.ts3-control').length) {
+    if ($('#ts3-control').length) {
         $.getScript('nanobar.min.js', function () {
             nanobar = new Nanobar({
                 bg: 'white',
@@ -936,10 +974,17 @@ $(document).ready(function () {
 
             buildControlSection();
             nanobar.go(25);
-            buildTables();
+
+            $.getScript('jquery.tablesorter.min.js', function () {
+                $.getScript('jquery.tablesorter.widgets.min.js', function () {
+                    $.getScript('moment.min.js', function () {
+                        buildTables();
+                    });
+                });
+            });
         });
     }
     else {
-        alert("Please include the control section by adding a div with the class 'ts3-control' to your html.");
+        alert("Please include the control section by adding a div with the id 'ts3-control' to your html.");
     }
 });

@@ -49,9 +49,10 @@ bool fetchLogs(string LOGDIRECTORY) {
 					else cout << "No valid logignore found - skipping..." << endl;
 
 					directory_iterator LogDirectory(LOGDIRECTORY);
-					string VS_log = "";
+					string VS_log;
 					while (LogDirectory != directory_iterator()) {
 						if (is_regular_file(LogDirectory->status()) && !boost::filesystem::is_empty(LogDirectory->path()) && LogDirectory->path().extension() == ".log") {
+							VS_log.clear();
 							short VSEndPos = (short)LogDirectory->path().filename().string().find(".log");
 
 							for (short i = 38; i < VSEndPos; i++) {
@@ -61,8 +62,6 @@ bool fetchLogs(string LOGDIRECTORY) {
 							if (VS_log == to_string(VIRTUALSERVER) && !IsIgnoredLog(LogDirectory->path().filename().string())) {
 								Logs.push_back((LogDirectory->path().filename().string()));
 							}
-
-							VS_log.clear();
 						}
 						LogDirectory++;
 					}
