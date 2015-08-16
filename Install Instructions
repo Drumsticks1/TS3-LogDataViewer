@@ -1,12 +1,12 @@
 // Author : Drumsticks1
-// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 This file contains the install instructions for the TS3_EnhancedClientList.
 
 Linux:
 
 1. Create a directory for the EnhancedClientList in your web directory (e.g. "/var/www/html/EnhancedClientList").
-	! Skipping the next step may result in serious security vulnerability of your webserver as anybody could be able to access this directory !
+	! Skipping the next step may result in serious security vulnerability of your server as anybody could be able to access this directory !
 2. Set up a .htaccess in this directory in order to restrict the access to the directory to you and chosen users or use a similar restriction method if you aren't using apache.
 3. Install the packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers).
 4. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3_EnhancedClientList/releases).
@@ -26,9 +26,9 @@ Linux:
 	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.js
 	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.min.js
 10. Move the "TS3_EnhancedClientList.js" and the other javascript files you just downloaded into your EnhancedClientList directory.
-11. If you want to use the predesigned index.html (headline and all tables) skip to step 12, otherwise if you want to include the controls and the table into an existing webpage follow the 11.x steps.
+11. If you want to use the provided index.html (headline and all tables) skip to step 12, otherwise if you want to include the controls and the table into an existing HTML follow the 11.x steps.
 	11.1. Include the control section by creating a div with the id "ts3-control".
-	11.2. Include the "TS3_EnhancedClientList.js" and the "jquery-2.1.4.min.js" into the head section of you webpage.
+	11.2. Include the "TS3_EnhancedClientList.js" and the "jquery-2.1.4.min.js" into the head section of you HTML.
 	11.3. You can now decide which of the following tables you want to include by adding divs with the following ids: "ts3-clientTable", "ts3-banTable", "ts3-kickTable" and "ts3-uploadTable".
 12. Move the "index.html" into your created EnhancedClientList directory.
 13. Move the "styles" folder into your EnhancedClientList directory.
@@ -37,10 +37,10 @@ Linux:
 16. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
 17. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
 18. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
-19. Open the Webinterface by accessing the directory containing the index.html in your webbrowser or open your self-created html on your webserver and enjoy scrolling through the tables.
-20. (Optional) Add a file named "logignore" in your logdirectory and add the names of logfiles which you want to exclude from the parsing.
-21. (Optional) If you would like to change the appearance of the Webinterface / your Website you can do this by editing the "style.css" according to your wishes.
+19. Open the web interface by accessing the directory containing the index.html in your browser or open your self-created HTML on your server and enjoy scrolling through the tables.
+20. (Optional) Add a file named "logignore" in your log directory and add the names of log files which you want to exclude from the parsing.
+21. (Optional) If you would like to change the appearance of the web interface / your website you can do this by editing the "style.css" according to your wishes.
 
 
-If there are any problems or improvement suggestions feel free to open an Issue on Github so I can improve the install instructions.
-Also feel free to open Issues on Github for feature requests and so on.
+If there are any problems or improvement suggestions feel free to open an Issue on GitHub so I can improve the install instructions.
+Also feel free to open Issues on GitHub for feature requests and so on.

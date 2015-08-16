@@ -1,16 +1,20 @@
 // TS3_EnhancedClientList.js
 // Author: Drumsticks1
-// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 // Global Variables
-var ConnectedClientsCount, currentDiv, momentInterval, XML, ConnectionsSortType = true, nanobar;
-var clientTableSortOrder, banTableSortOrder = [[0, 1]], kickTableSortOrder = [[0, 1]], uploadTableSortOrder = [[0, 1]];
+var ConnectedClientsCount, nanobar, currentDiv, momentInterval, XML, ConnectionsSortType = true,
+    clientTableSortOrder, banTableSortOrder = [[0, 1]],
+    kickTableSortOrder = [[0, 1]],
+    uploadTableSortOrder = [[0, 1]];
 
 // Including the Open Sans font.
 WebFontConfig = {
-    google: {families: ['Open+Sans::latin']}
+    google: {
+        families: ['Open+Sans::latin']
+    }
 };
-(function () {
+(function() {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
         '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
@@ -28,7 +32,7 @@ function rebuildXML() {
     nanobar.go(35);
     document.getElementById('rebuildXMLButton').disabled = true;
     document.getElementById('buildNewXMLButton').disabled = true;
-    $.get('rebuildXML.php', function () {
+    $.get('rebuildXML.php', function() {
         saveSortOrder();
         buildTables();
     });
@@ -37,7 +41,7 @@ function rebuildXML() {
 
 // Deletes the current XML and builds a new one after.
 function buildNewXML() {
-    $.get('deleteXML.php', function () {
+    $.get('deleteXML.php', function() {
         rebuildXML();
     });
     return false;
@@ -48,15 +52,13 @@ function expandcollapseList(List, ID) {
     var i;
     if (List == 'ips') {
         i = 1;
-    }
-    else {
+    } else {
         i = 2;
     }
     currentDiv = List + '_' + ID + '_' + i;
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
         expandList(List, ID);
-    }
-    else {
+    } else {
         collapseList(List, ID);
     }
 }
@@ -68,15 +70,14 @@ function expandList(List, ID) {
         Row = 3;
         ListUpper = 'IPs';
         i = 1;
-    }
-    else {
+    } else {
         Row = 2;
         ListUpper = 'Connections';
         i = 2;
     }
 
-    var x = document.getElementById(ID).childNodes[Row];
-    var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+    var x = document.getElementById(ID).childNodes[Row],
+        ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
     $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i));
     $('#' + List + 'Button_' + ID).parent().attr('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
@@ -86,19 +87,16 @@ function expandList(List, ID) {
             $(newDiv).prop('id', currentDiv);
             if (i == 1) {
                 $(newDiv).html(ListContent[j].firstChild.nodeValue);
-            }
-            else {
+            } else {
                 $(newDiv).html(moment(ListContent[j].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
             }
 
             if (Row == 3) {
                 x.appendChild(newDiv);
-            }
-            else {
+            } else {
                 x.insertBefore(newDiv, x.lastChild);
             }
-        }
-        else {
+        } else {
             $('#' + currentDiv).show();
         }
     }
@@ -111,8 +109,7 @@ function collapseList(List, ID) {
         Row = 3;
         ListUpper = 'IPs';
         i = 1;
-    }
-    else {
+    } else {
         Row = 2;
         ListUpper = 'Connections';
         i = 2;
@@ -166,10 +163,10 @@ function scrollToClientTableRow(Row_ID) {
 function addIgnoreMomentParser() {
     $.tablesorter.addParser({
         id: 'ignoreMoment',
-        is: function () {
+        is: function() {
             return false;
         },
-        format: function (s) {
+        format: function(s) {
             return s;
         },
         parsed: false,
@@ -181,23 +178,21 @@ function addIgnoreMomentParser() {
 function addConnectionsParser() {
     $.tablesorter.addParser({
         id: 'Connections',
-        is: function () {
+        is: function() {
             return false;
         },
-        format: function (s, table, cell) {
+        format: function(s, table, cell) {
             var firstConnect;
             var lastConnect = cell.lastChild.innerHTML;
             if (cell.firstChild.localName == 'button') {
                 firstConnect = cell.childNodes[1].innerHTML;
-            }
-            else {
+            } else {
                 firstConnect = cell.firstChild.innerHTML;
             }
 
             if (ConnectionsSortType) {
                 return firstConnect;
-            }
-            else {
+            } else {
                 return lastConnect;
             }
         },
@@ -210,14 +205,13 @@ function addConnectionsParser() {
 function addIPsParser() {
     $.tablesorter.addParser({
         id: 'IPs',
-        is: function () {
+        is: function() {
             return false;
         },
-        format: function (s, table, cell) {
+        format: function(s, table, cell) {
             if (cell.firstChild.localName == 'button') {
                 return cell.childNodes[1].innerHTML;
-            }
-            else {
+            } else {
                 return cell.firstChild.innerHTML;
             }
         },
@@ -331,8 +325,8 @@ function buildClientTable() {
                 $(buttonExpandCollapseConnections).attr('id', 'connectionsButton_' + ID);
                 $(buttonExpandCollapseConnections).html('+ ' + (Connections.length - 2));
 
-                (function (ID) {
-                    buttonExpandCollapseConnections.onclick = function () {
+                (function(ID) {
+                    buttonExpandCollapseConnections.onclick = function() {
                         expandcollapseList('connections', ID);
                     };
                 })(ID);
@@ -359,8 +353,8 @@ function buildClientTable() {
                 $(buttonExpandCollapseIPs).attr('id', 'ipsButton_' + ID);
                 $(buttonExpandCollapseIPs).html('+ ' + (IPs.length - 1));
 
-                (function (ID) {
-                    buttonExpandCollapseIPs.onclick = function () {
+                (function(ID) {
+                    buttonExpandCollapseIPs.onclick = function() {
                         expandcollapseList('ips', ID);
                     };
                 })(ID);
@@ -381,8 +375,7 @@ function buildClientTable() {
             if (Connected == 1) {
                 $(userBodyCell_Connected).html('true');
                 ConnectedClientsCount++;
-            }
-            else {
+            } else {
                 $(userBodyCell_Connected).html('false');
             }
             userBodyRow.appendChild(userBodyCell_Connected);
@@ -404,7 +397,7 @@ function buildClientTable() {
         var scrollToClientTable = document.createElement('button');
         $(scrollToClientTable).prop('id', 'scrollToClientTable');
         $(scrollToClientTable).html('Scroll to client table');
-        scrollToClientTable.onclick = function () {
+        scrollToClientTable.onclick = function() {
             scrollToDiv('clientTable');
         };
         document.getElementById('navbar').appendChild(scrollToClientTable);
@@ -415,8 +408,12 @@ function buildClientTable() {
     $('#clientTable')
         .tablesorter({
             headers: {
-                2: {sorter: 'Connections'},
-                3: {sorter: 'IPs'}
+                2: {
+                    sorter: 'Connections'
+                },
+                3: {
+                    sorter: 'IPs'
+                }
             }
         });
     $('#clientTable').trigger('applyWidgetId', ['stickyHeaders']);
@@ -471,15 +468,13 @@ function buildBanTable() {
         var BannedByUID;
         if (Ban[i].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
             BannedByUID = Ban[i].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
-        }
-        else {
+        } else {
             BannedByUID = 'No UID';
         }
         var BanReason;
         if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
             BanReason = Ban[i].getElementsByTagName('BanReason')[0].firstChild.nodeValue;
-        }
-        else {
+        } else {
             BanReason = 'No Reason given';
         }
         var Bantime = Ban[i].getElementsByTagName('Bantime')[0].firstChild.nodeValue;
@@ -532,7 +527,7 @@ function buildBanTable() {
         var scrollToBanTable = document.createElement('button');
         $(scrollToBanTable).prop('id', 'scrollToBanTable');
         $(scrollToBanTable).html('Scroll to ban table');
-        scrollToBanTable.onclick = function () {
+        scrollToBanTable.onclick = function() {
             scrollToDiv('banTable');
         };
         document.getElementById('navbar').appendChild(scrollToBanTable);
@@ -541,7 +536,9 @@ function buildBanTable() {
     addIgnoreMomentParser();
     $('#banTable').tablesorter({
         headers: {
-            0: {sorter: 'ignoreMoment'}
+            0: {
+                sorter: 'ignoreMoment'
+            }
         }
     });
     $('#banTable').trigger('applyWidgetId', ['stickyHeaders']);
@@ -591,8 +588,7 @@ function buildKickTable() {
         var KickReason;
         if (Kick[i].getElementsByTagName('KickReason')[0].firstChild !== null) {
             KickReason = Kick[i].getElementsByTagName('KickReason')[0].firstChild.nodeValue;
-        }
-        else {
+        } else {
             KickReason = 'No Reason given';
         }
 
@@ -636,7 +632,7 @@ function buildKickTable() {
         var scrollToKickTable = document.createElement('button');
         $(scrollToKickTable).prop('id', 'scrollToKickTable');
         $(scrollToKickTable).html('Scroll to kick table');
-        scrollToKickTable.onclick = function () {
+        scrollToKickTable.onclick = function() {
             scrollToDiv('kickTable');
         };
         document.getElementById('navbar').appendChild(scrollToKickTable);
@@ -645,7 +641,9 @@ function buildKickTable() {
     addIgnoreMomentParser();
     $('#kickTable').tablesorter({
         headers: {
-            0: {sorter: 'ignoreMoment'}
+            0: {
+                sorter: 'ignoreMoment'
+            }
         }
     });
     $('#kickTable').trigger('applyWidgetId', ['stickyHeaders']);
@@ -725,7 +723,7 @@ function buildUploadTable() {
         var scrollToUploadTable = document.createElement('button');
         $(scrollToUploadTable).prop('id', 'scrollToUploadTable');
         $(scrollToUploadTable).html('Scroll to upload table');
-        scrollToUploadTable.onclick = function () {
+        scrollToUploadTable.onclick = function() {
             scrollToDiv('uploadTable');
         };
         document.getElementById('navbar').appendChild(scrollToUploadTable);
@@ -734,7 +732,9 @@ function buildUploadTable() {
     addIgnoreMomentParser();
     $('#uploadTable').tablesorter({
         headers: {
-            0: {sorter: 'ignoreMoment'}
+            0: {
+                sorter: 'ignoreMoment'
+            }
         }
     });
     $('#uploadTable').trigger('applyWidgetId', ['stickyHeaders']);
@@ -746,10 +746,10 @@ function buildTables() {
     $.ajax({
         url: 'output.xml',
         cache: false,
-        error: function () {
+        error: function() {
             rebuildXML();
         },
-        success: function (tempXML) {
+        success: function(tempXML) {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
@@ -777,7 +777,7 @@ function buildTables() {
             $('#creationTimestamp_utc').html(CreationTimestampUTC);
 
             clearInterval(momentInterval);
-            momentInterval = setInterval(function () {
+            momentInterval = setInterval(function() {
                 $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
             }, 1000);
 
@@ -815,10 +815,10 @@ function buildControlSection() {
     $(rebuildXMLButton).html('Rebuild XML and reload tables');
     $(buildNewXMLButton).html('Delete XML and generate a new one');
 
-    rebuildXMLButton.onclick = function () {
+    rebuildXMLButton.onclick = function() {
         rebuildXML();
     };
-    buildNewXMLButton.onclick = function () {
+    buildNewXMLButton.onclick = function() {
         buildNewXML();
     };
 
@@ -887,7 +887,7 @@ function buildControlSection() {
     $(scrollToCTRInput).prop('min', '0');
     $(scrollToCTRButton).html('Scroll to ID in the client list');
 
-    scrollToCTRButton.onclick = function () {
+    scrollToCTRButton.onclick = function() {
         scrollToClientTableRow(document.getElementById('IDSelection').value);
     };
 
@@ -901,7 +901,7 @@ function buildControlSection() {
     $(collapseAllSection).prop('id', 'collapseAllSection');
     $(collapseAllButton).html('Collapse all expanded lists');
 
-    collapseAllButton.onclick = function () {
+    collapseAllButton.onclick = function() {
         collapseAll();
     };
 
@@ -924,7 +924,7 @@ function buildControlSection() {
     $(sortConnectionsSwitchSpanInner).prop('class', 'sortConnectionsSwitch-inner');
     $(sortConnectionsSwitchSpanSwitch).prop('class', 'sortConnectionsSwitch-switch');
 
-    sortConnectionsSwitchInput.onclick = function () {
+    sortConnectionsSwitchInput.onclick = function() {
         ConnectionsSortType = this.checked;
         saveSortOrder();
         $('#clientTable').trigger("updateCache");
@@ -944,10 +944,10 @@ function buildControlSection() {
     $(scrollBackToTopButton).html('Scroll back to top');
     $(scrollToControlSectionButton).html('Scroll to control section');
 
-    scrollBackToTopButton.onclick = function () {
+    scrollBackToTopButton.onclick = function() {
         scrollTo(0, 0);
     };
-    scrollToControlSectionButton.onclick = function () {
+    scrollToControlSectionButton.onclick = function() {
         scrollToDiv('controlSection');
     };
 
@@ -964,9 +964,9 @@ function buildControlSection() {
     $('#ts3-control').append(controlSection);
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
     if ($('#ts3-control').length) {
-        $.getScript('nanobar.min.js', function () {
+        $.getScript('nanobar.min.js', function() {
             nanobar = new Nanobar({
                 bg: 'white',
                 id: 'nanobar'
@@ -975,16 +975,15 @@ $(document).ready(function () {
             buildControlSection();
             nanobar.go(25);
 
-            $.getScript('jquery.tablesorter.min.js', function () {
-                $.getScript('jquery.tablesorter.widgets.min.js', function () {
-                    $.getScript('moment.min.js', function () {
+            $.getScript('jquery.tablesorter.min.js', function() {
+                $.getScript('jquery.tablesorter.widgets.min.js', function() {
+                    $.getScript('moment.min.js', function() {
                         buildTables();
                     });
                 });
             });
         });
-    }
-    else {
+    } else {
         alert("Please include the control section by adding a div with the id 'ts3-control' to your html.");
     }
 });
