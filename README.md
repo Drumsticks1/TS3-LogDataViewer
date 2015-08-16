@@ -2,7 +2,7 @@
 Enhanced Client List for Teamspeak3 Server.
 
 ## Short description
-TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server.<br /> It currently provides a control section and four detailed tables that can either be included in an existing website or used with the provided web interface (index.html):
+TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server. It currently provides a control section and four detailed tables that can either be included in an existing website or used with the provided web interface (index.html):
 - Control section
 - Client list
 - Ban list
@@ -10,7 +10,7 @@ TS3_EnhancedClientList creates detailed lists using the information written to t
 - File upload list
 
 ## How does it work ?
-The program needs the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended).<br /> The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected.<br /> After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
+The program needs the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
 
 ## Current Features
 ### Multiple sortable tables
@@ -40,18 +40,17 @@ You can either use the provided web interface (index.html) or implement the cont
 
 #### Client table layout and features
 
-ID | Nicknames                                                                     | Connections                                                                        | IPs                                             | Connections Count | Connected | Deleted
--- | ----------------------------------------------------------------------------- | :--------------------------------------------------------------------------------: | ----------------------------------------------- | ----------------- | --------- | -------
-3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | ( + 34 ) <br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07                        | ( + 6 )<br />88.888.888.75                      | 36                | true      | false
-4  | Random User                                                                   | 2015-18-07 15:11:02<br />2015-18-07 13:56:25                                       | 99.999.999.31                                   | 2                 | false     | false
-5  | Teamspeakuser                                                                 | ( - 1 )<br />2015-05-08 16:06:31<br />2015-05-08 10:13:54<br />2015-05-08 09:34:12 | ( - 1 )<br />12.345.678.90<br />217.000.000.000 | 3                 | false     | false
+ID  | Nicknames                                                                     | Connections                                                                        | IPs                                             | Connections Count | Connected | Deleted
+--- | ----------------------------------------------------------------------------- | :--------------------------------------------------------------------------------: | ----------------------------------------------- | ----------------- | --------- | -------
+3   | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | ( + 34 ) <br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07                        | ( + 6 )<br />88.888.888.75                      | 36                | true      | false
+4   | Random User                                                                   | 2015-18-07 15:11:02<br />2015-18-07 13:56:25                                       | 99.999.999.31                                   | 2                 | false     | false
+100 | Teamspeakuser                                                                 | ( - 1 )<br />2015-05-08 16:06:31<br />2015-05-08 10:13:54<br />2015-05-08 09:34:12 | ( - 1 )<br />12.345.678.90<br />217.000.000.000 | 3                 | false     | false
 
 - Chronological nickname history without duplicates.
 - Last and first connection time.
 - Last IP.
 - Expanding and Collapsing the Connections and the IPs list (expanding to a chronological list of all connections / IPs | collapsing back to the last and the first connections / the last IP).
   - The button shows how many entries will be shown / hidden.
-
 - Connected flag which shows if a user is currently connected.
 - Deleted flag which shows if the user got deleted (only works if this is logged --> user must be deleted while the server is running).
 
@@ -85,26 +84,22 @@ Date and Time                               | Channel ID | Filename             
 See the latest todo.h for planned features.
 
 ### It does not contain and never will
-- Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting).
+Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting).
 
 ## Installation
-As the file name already implies, the install instructions can be found in the file "Install Instructions".<br /> For now there are only installation instructions available for Linux.<br /> Experienced Users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/> NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on GitHub since v1.3.0 (TS3_EnhancedClientList.gz for Linux and TS3_EnhancedClientList.exe.gz for Windows).
+As the file name already implies, the install instructions can be found in the file "Install Instructions".<br /> For now there are only installation instructions available for Linux but experienced users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/> NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on GitHub since v1.3.0 (TS3_EnhancedClientList.gz for Linux and TS3_EnhancedClientList.exe.gz for Windows).
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br /> You will need to download the following extern files:
 - jQuery:
   - [jquery-2.1.4.min.js](https://code.jquery.com/jquery-2.1.4.min.js)
-
 - Two files from [this fork](https://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
   - [jquery.tablesorter.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.js)
   - [jquery.tablesorter.widgets.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.min.js)
-
 - One file for the loading bar:
   - [nanobar.min.js](https://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js)
-
 - One file for moment.js:
   - [moment.min.js](https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js)
-
 - On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).
 
 #### Teamspeak 3 server settings
