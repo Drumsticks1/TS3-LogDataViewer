@@ -964,25 +964,24 @@ function buildControlSection() {
     $('#ts3-control').append(controlSection);
 }
 
-$(document).ready(function() {
+$.when(
+    $.getScript('jquery.tablesorter.min.js'),
+    $.getScript('jquery.tablesorter.widgets.min.js'),
+    $.getScript('moment.min.js'),
+    $.getScript('nanobar.min.js'),
+    $.Deferred(function(deferred) {
+        $(deferred.resolve);
+    })
+).done(function() {
     if ($('#ts3-control').length) {
-        $.getScript('nanobar.min.js', function() {
-            nanobar = new Nanobar({
-                bg: 'white',
-                id: 'nanobar'
-            });
-
-            buildControlSection();
-            nanobar.go(25);
-
-            $.getScript('jquery.tablesorter.min.js', function() {
-                $.getScript('jquery.tablesorter.widgets.min.js', function() {
-                    $.getScript('moment.min.js', function() {
-                        buildTables();
-                    });
-                });
-            });
+        nanobar = new Nanobar({
+            bg: 'white',
+            id: 'nanobar'
         });
+
+        buildControlSection();
+        nanobar.go(25);
+        buildTables();
     } else {
         alert("Please include the control section by adding a div with the id 'ts3-control' to your html.");
     }
