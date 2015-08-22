@@ -24,8 +24,8 @@ int main(int argc, char* argv[]) {
 	if (exists("lockfile")) {
 		time_t currentTime, lockfileCreation = last_write_time("lockfile");
 		time(&currentTime);
-		if (difftime(currentTime, lockfileCreation) > 300) {
-			cout << "The lockfile is older than 5 minutes - removing..." << endl;
+		if (difftime(currentTime, lockfileCreation) > LOCKFILEEXPIRATION) {
+			cout << "The lockfile is older than " << LOCKFILEEXPIRATION <<  " seconds - removing..." << endl;
 			remove("lockfile");
 		}
 	}

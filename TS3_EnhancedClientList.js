@@ -3,9 +3,11 @@
 // GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 // Global Variables
-var ConnectedClientsCount, nanobar, currentDiv, momentInterval, XML, ConnectionsSortType = true,
+var ConnectedClientsCount, nanobar, currentDiv, momentInterval, XML, rebuildError = false,
+    ConnectionsSortType = true,
     clientTableSortOrder, banTableSortOrder = [[0, 1]],
     kickTableSortOrder = [[0, 1]],
+    complaintTableSortOrder = [[0, 1]],
     uploadTableSortOrder = [[0, 1]];
 
 // Including the Open Sans font.
@@ -231,6 +233,9 @@ function saveSortOrder() {
     if ($('#kickTable').length) {
         kickTableSortOrder = $('#kickTable')[0].config.sortList;
     }
+    if ($('#complaintTable').length) {
+        complaintTableSortOrder = $('#complaintTable')[0].config.sortList;
+    }
     if ($('#uploadTable').length) {
         uploadTableSortOrder = $('#uploadTable')[0].config.sortList;
     }
@@ -247,12 +252,15 @@ function applySortOrder() {
     if ($('#kickTable').length) {
         $('#kickTable').trigger('sorton', [kickTableSortOrder]);
     }
+    if ($('#complaintTable').length) {
+        $('#complaintTable').trigger('sorton', [complaintTableSortOrder]);
+    }
     if ($('#uploadTable').length) {
         $('#uploadTable').trigger('sorton', [uploadTableSortOrder]);
     }
 }
 
-// Builds and shows the client table.
+// Builds the client table.
 function buildClientTable() {
     $('#ts3-clientTable').empty();
     var User = XML.getElementsByTagName('User');
@@ -386,7 +394,6 @@ function buildClientTable() {
             userBody.appendChild(userBodyRow);
         }
     }
-
     userTable.appendChild(userBody);
 
     $(userTable).prop('id', 'clientTable');
@@ -396,7 +403,7 @@ function buildClientTable() {
     if (document.getElementById('scrollToClientTable') === null) {
         var scrollToClientTable = document.createElement('button');
         $(scrollToClientTable).prop('id', 'scrollToClientTable');
-        $(scrollToClientTable).html('Scroll to client table');
+        $(scrollToClientTable).html('Client table');
         scrollToClientTable.onclick = function() {
             scrollToDiv('clientTable');
         };
@@ -419,7 +426,7 @@ function buildClientTable() {
     $('#clientTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
 
-// Builds and shows the ban table.
+// Builds the ban table.
 function buildBanTable() {
     $('#ts3-banTable').empty();
     var Ban = XML.getElementsByTagName('Ban');
@@ -516,7 +523,6 @@ function buildBanTable() {
 
         banBody.appendChild(banBodyRow);
     }
-
     banTable.appendChild(banBody);
 
     $(banTable).prop('id', 'banTable');
@@ -526,7 +532,7 @@ function buildBanTable() {
     if (document.getElementById('scrollToBanTable') === null) {
         var scrollToBanTable = document.createElement('button');
         $(scrollToBanTable).prop('id', 'scrollToBanTable');
-        $(scrollToBanTable).html('Scroll to ban table');
+        $(scrollToBanTable).html('Ban table');
         scrollToBanTable.onclick = function() {
             scrollToDiv('banTable');
         };
@@ -545,7 +551,7 @@ function buildBanTable() {
 }
 
 
-// Builds and shows the kick table.
+// Builds the kick table.
 function buildKickTable() {
     $('#ts3-kickTable').empty();
     var Kick = XML.getElementsByTagName('Kick');
@@ -553,21 +559,21 @@ function buildKickTable() {
     var kickTable = document.createElement('table');
     var kickHead = document.createElement('thead');
     var kickHeadRow = document.createElement('tr');
-    var kickHeadCell_DateTime = document.createElement('th');
+    var kickHeadCell_KickDateTime = document.createElement('th');
     var kickHeadCell_KickedID = document.createElement('th');
     var kickHeadCell_KickedNickname = document.createElement('th');
     var kickHeadCell_KickedByNickname = document.createElement('th');
     var kickHeadCell_KickedByUID = document.createElement('th');
     var kickHeadCell_KickReason = document.createElement('th');
 
-    $(kickHeadCell_DateTime).html('Date and Time');
+    $(kickHeadCell_KickDateTime).html('Date and Time');
     $(kickHeadCell_KickedID).html('Kicked User (ID)');
     $(kickHeadCell_KickedNickname).html('Kicked User (Nickname)');
     $(kickHeadCell_KickedByNickname).html('Kicked by (Nickname)');
     $(kickHeadCell_KickedByUID).html('Kicked by (UID)');
     $(kickHeadCell_KickReason).html('Reason');
 
-    kickHeadRow.appendChild(kickHeadCell_DateTime);
+    kickHeadRow.appendChild(kickHeadCell_KickDateTime);
     kickHeadRow.appendChild(kickHeadCell_KickedID);
     kickHeadRow.appendChild(kickHeadCell_KickedNickname);
     kickHeadRow.appendChild(kickHeadCell_KickedByNickname);
@@ -621,7 +627,6 @@ function buildKickTable() {
 
         kickBody.appendChild(kickBodyRow);
     }
-
     kickTable.appendChild(kickBody);
 
     $(kickTable).prop('id', 'kickTable');
@@ -631,7 +636,7 @@ function buildKickTable() {
     if (document.getElementById('scrollToKickTable') === null) {
         var scrollToKickTable = document.createElement('button');
         $(scrollToKickTable).prop('id', 'scrollToKickTable');
-        $(scrollToKickTable).html('Scroll to kick table');
+        $(scrollToKickTable).html('Kick table');
         scrollToKickTable.onclick = function() {
             scrollToDiv('kickTable');
         };
@@ -649,7 +654,105 @@ function buildKickTable() {
     $('#kickTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
 
-// Builds and shows the upload table.
+// Builds the complaint table.
+function buildComplaintTable() {
+    $('#ts3-complaintTable').empty();
+    var Complaint = XML.getElementsByTagName('Complaint');
+
+    var complaintTable = document.createElement('table');
+    var complaintHead = document.createElement('thead');
+    var complaintHeadRow = document.createElement('tr');
+    var complaintHeadCell_ComplaintDateTime = document.createElement('th');
+    var complaintHeadCell_ComplaintForNickname = document.createElement('th');
+    var complaintHeadCell_ComplaintForID = document.createElement('th');
+    var complaintHeadCell_ComplaintReason = document.createElement('th');
+    var complaintHeadCell_ComplaintByNickname = document.createElement('th');
+    var complaintHeadCell_ComplaintByID = document.createElement('th');
+
+    $(complaintHeadCell_ComplaintDateTime).html('Date and Time');
+    $(complaintHeadCell_ComplaintForNickname).html('For User (Nickname)');
+    $(complaintHeadCell_ComplaintForID).html('For User (ID)');
+    $(complaintHeadCell_ComplaintReason).html('Reason');
+    $(complaintHeadCell_ComplaintByNickname).html('By User (Nickname)');
+    $(complaintHeadCell_ComplaintByID).html('By User (ID)');
+
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintDateTime);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintForNickname);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintForID);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintReason);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintByNickname);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintByID);
+
+    complaintHead.appendChild(complaintHeadRow);
+    complaintTable.appendChild(complaintHead);
+
+    var complaintBody = document.createElement('tbody');
+
+    for (var i = 0; i < Complaint.length; i++) {
+        var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue;
+        var ComplaintForNickname = Complaint[i].getElementsByTagName('ComplaintForNickname')[0].firstChild.nodeValue;
+        var ComplaintForID = Complaint[i].getElementsByTagName('ComplaintForID')[0].firstChild.nodeValue;
+        var ComplaintReason = Complaint[i].getElementsByTagName('ComplaintReason')[0].firstChild.nodeValue;
+        var ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
+        var ComplaintByID = Complaint[i].getElementsByTagName('ComplaintByID')[0].firstChild.nodeValue;
+
+        var complaintBodyRow = document.createElement('tr');
+        var complaintBodyCell_ComplaintDateTime = document.createElement('td');
+        var complaintBodyCell_ComplaintForNickname = document.createElement('td');
+        var complaintBodyCell_ComplaintForID = document.createElement('td');
+        var complaintBodyCell_ComplaintReason = document.createElement('td');
+        var complaintBodyCell_ComplaintByNickname = document.createElement('td');
+        var complaintBodyCell_ComplaintByID = document.createElement('td');
+
+        var UTCComplaintDateTime = moment(ComplaintDateTime + '+0000');
+        $(complaintBodyCell_ComplaintDateTime).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCComplaintDateTime).fromNow() + ')');
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
+
+        $(complaintBodyCell_ComplaintForNickname).html(ComplaintForNickname);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintForNickname);
+
+        $(complaintBodyCell_ComplaintForID).html(ComplaintForID);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintForID);
+
+        $(complaintBodyCell_ComplaintReason).html(ComplaintReason);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintReason);
+
+        $(complaintBodyCell_ComplaintByNickname).html(ComplaintByNickname);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintByNickname);
+
+        $(complaintBodyCell_ComplaintByID).html(ComplaintByID);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintByID);
+
+        complaintBody.appendChild(complaintBodyRow);
+    }
+    complaintTable.appendChild(complaintBody);
+
+    $(complaintTable).prop('id', 'complaintTable');
+    $(complaintTable).prop('class', 'tablesorter');
+    document.getElementById('ts3-complaintTable').appendChild(complaintTable);
+
+    if (document.getElementById('scrollToComplaintTable') === null) {
+        var scrollToComplaintTable = document.createElement('button');
+        $(scrollToComplaintTable).prop('id', 'scrollToComplaintTable');
+        $(scrollToComplaintTable).html('Complaint table');
+        scrollToComplaintTable.onclick = function() {
+            scrollToDiv('complaintTable');
+        };
+        document.getElementById('navbar').appendChild(scrollToComplaintTable);
+    }
+
+    addIgnoreMomentParser();
+    $('#complaintTable').tablesorter({
+        headers: {
+            0: {
+                sorter: 'ignoreMoment'
+            }
+        }
+    });
+    $('#complaintTable').trigger('applyWidgetId', ['stickyHeaders']);
+}
+
+// Builds the upload table.
 function buildUploadTable() {
     $('#ts3-uploadTable').empty();
     var File = XML.getElementsByTagName('File');
@@ -712,7 +815,6 @@ function buildUploadTable() {
 
         uploadBody.appendChild(uploadBodyRow);
     }
-
     uploadTable.appendChild(uploadBody);
 
     $(uploadTable).prop('id', 'uploadTable');
@@ -722,7 +824,7 @@ function buildUploadTable() {
     if (document.getElementById('scrollToUploadTable') === null) {
         var scrollToUploadTable = document.createElement('button');
         $(scrollToUploadTable).prop('id', 'scrollToUploadTable');
-        $(scrollToUploadTable).html('Scroll to upload table');
+        $(scrollToUploadTable).html('Upload table');
         scrollToUploadTable.onclick = function() {
             scrollToDiv('uploadTable');
         };
@@ -747,9 +849,15 @@ function buildTables() {
         url: 'output.xml',
         cache: false,
         error: function() {
-            rebuildXML();
+            if (rebuildError) {
+                alert("Rebuilding failed!");
+            } else {
+                rebuildError = true;
+                rebuildXML();
+            }
         },
         success: function(tempXML) {
+            rebuildError = false;
             XML = tempXML;
             ConnectedClientsCount = 0;
 
@@ -762,6 +870,9 @@ function buildTables() {
             }
             if ($('#ts3-kickTable').length) {
                 buildKickTable();
+            }
+            if ($('#ts3-complaintTable').length) {
+                buildComplaintTable();
             }
             if ($('#ts3-uploadTable').length) {
                 buildUploadTable();
@@ -797,7 +908,7 @@ function buildTables() {
     });
 }
 
-// Builds and shows the control section.
+// Builds the control section.
 function buildControlSection() {
     var controlSection = document.createElement('div');
     var rebuildSection = document.createElement('div');
@@ -942,8 +1053,8 @@ function buildControlSection() {
     var scrollToControlSectionButton = document.createElement('button');
 
     $(navbar).prop('id', 'navbar');
-    $(scrollBackToTopButton).html('Scroll back to top');
-    $(scrollToControlSectionButton).html('Scroll to control section');
+    $(scrollBackToTopButton).html('Back to top');
+    $(scrollToControlSectionButton).html('Control section');
     clientTableControlSection.appendChild(sortConnectionsSwitch);
 
     scrollBackToTopButton.onclick = function() {

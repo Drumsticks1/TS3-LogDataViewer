@@ -12,7 +12,7 @@ private:
 	string uploadDateTime, filename, uploadedByNickname;
 
 public:
-	void uploadFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID);
+	void addFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID);
 
 	string getUploadDateTime();
 	unsigned int getChannelID();

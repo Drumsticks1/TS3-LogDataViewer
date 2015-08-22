@@ -12,7 +12,7 @@ using namespace std;
 vector <File> FileList;
 
 // Adds a new file with the given data to the list.
-void File::uploadFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
+void File::addFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
 	this->uploadDateTime = uploadDateTime;
 	this->channelID = channelID;
 	this->filename = filename;

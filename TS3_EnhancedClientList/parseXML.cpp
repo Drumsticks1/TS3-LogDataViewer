@@ -9,6 +9,7 @@
 #include "User.h"
 #include "Ban.h"
 #include "Kick.h"
+#include "Complaint.h"
 #include "File.h"
 #include <boost/filesystem.hpp>
 #include "src/pugixml.hpp"
@@ -22,6 +23,7 @@ vector <string> parsedLogs;
 extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
+extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 extern unsigned int VIRTUALSERVER;
 
@@ -30,8 +32,8 @@ bool parseXML() {
 	if (boost::filesystem::exists(XMLFILE)) {
 		if (boost::filesystem::is_regular_file(XMLFILE)) {
 			if (!boost::filesystem::is_empty(XMLFILE)) {
-				unsigned int ID, BanListID = 0, KickListID = 0, FileListID = 0, bannedID, bannedByInvokerID, bantime, kickedID, channelID, uploadedByID;
-				string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason, kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, uploadDateTime, filename, uploadedByNickname;
+				unsigned int ID, BanListID = 0, KickListID = 0, ComplaintListID = 0, FileListID = 0, bannedID, bannedByInvokerID, bantime, kickedID, complaintForID, complaintByID, channelID, uploadedByID;
+				string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason, kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, complaintDateTime, complaintForNickname, complaintReason, complaintByNickname, uploadDateTime, filename, uploadedByNickname;
 				xml_document oldXML;
 
 				cout << "Parsing old XML..." << endl;
@@ -105,6 +107,19 @@ bool parseXML() {
 					KickListID++;
 				}
 
+				for (xml_node ComplaintNode = oldXML.child("Data").child("Complaint"); ComplaintNode; ComplaintNode = ComplaintNode.next_sibling("Complaint")) {
+					complaintDateTime = ComplaintNode.child("ComplaintDateTime").first_child().value();
+					complaintForNickname = ComplaintNode.child("ComplaintForNickname").first_child().value();
+					complaintForID = stoul(ComplaintNode.child("ComplaintForID").first_child().value());
+					complaintReason = ComplaintNode.child("ComplaintReason").first_child().value();
+					complaintByNickname = ComplaintNode.child("ComplaintByNickname").first_child().value();
+					complaintByID = stoul(ComplaintNode.child("ComplaintByID").first_child().value());
+
+					ComplaintList.resize(ComplaintListID + 1);
+					ComplaintList[ComplaintListID].addComplaint(complaintDateTime, complaintForNickname, complaintForID, complaintReason, complaintByNickname, complaintByID);
+					ComplaintListID++;
+				}
+
 				for (xml_node FileNode = oldXML.child("Data").child("File"); FileNode; FileNode = FileNode.next_sibling("File")) {
 					uploadDateTime = FileNode.child("UploadDateTime").first_child().value();
 					channelID = stoul(FileNode.child("ChannelID").first_child().value());
@@ -113,7 +128,7 @@ bool parseXML() {
 					uploadedByID = stoul(FileNode.child("UploadedByID").first_child().value());
 
 					FileList.resize(FileListID + 1);
-					FileList[FileListID].uploadFile(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
+					FileList[FileListID].addFile(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
 					FileListID++;
 				}
 				return true;

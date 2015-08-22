@@ -9,5 +9,8 @@
 #define DEFAULTLOGDIRECTORY "./logs/"
 #define DEFAULTVIRTUALSERVER 1
 
+// Lockfile expiration time (in seconds).
+#define LOCKFILEEXPIRATION 300
+
 // DEBUGGING: Option for skipping the lockfile check (default option for release versions should always be false).
 #define SKIPLOCKFILE false

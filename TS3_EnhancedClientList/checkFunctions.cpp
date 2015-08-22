@@ -7,6 +7,7 @@
 #include "User.h"
 #include "Ban.h"
 #include "Kick.h"
+#include "Complaint.h"
 #include "File.h"
 
 using namespace std;
@@ -17,6 +18,7 @@ extern vector <string> ignoreLogs;
 extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
+extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 
 // Checks if a DateTime is already existing for the current user.
@@ -73,6 +75,16 @@ bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNi
 	for (unsigned int i = 0; i < KickList.size(); i++) {
 		if (KickList[i].getKickDateTime() == kickDateTime && KickList[i].getKickedID() == kickedID && KickList[i].getKickedNickname() == kickedNickname &&
 			KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason) return true;
+	}
+	return false;
+}
+
+// Checks if a complaint is already existing in the ComplaintList
+bool IsDuplicateComplaint(string complaintDateTime, string complaintForNickname, unsigned int complaintForID, string complaintReason, string complaintByNickname, unsigned int complaintByID) {
+	for (unsigned int i = 0; i < ComplaintList.size(); i++) {
+		if (ComplaintList[i].getComplaintDateTime() == complaintDateTime && ComplaintList[i].getComplaintForNickname() == complaintForNickname &&
+			ComplaintList[i].getComplaintForID() == complaintForID && ComplaintList[i].getComplaintReason() == complaintReason &&
+			ComplaintList[i].getComplaintByNickname() == complaintByNickname && ComplaintList[i].getComplaintByID() == complaintByID) return true;
 	}
 	return false;
 }

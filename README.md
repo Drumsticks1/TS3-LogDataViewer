@@ -1,5 +1,5 @@
 # TS3_EnhancedClientList
-Enhanced Client List for Teamspeak3 Server.
+Much more than only an enhanced client list for your Teamspeak3 server.
 
 ## Short description
 TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server. It currently provides a control section and four detailed tables that can either be included in an existing website or used with the provided web interface (index.html):
@@ -7,6 +7,7 @@ TS3_EnhancedClientList creates detailed lists using the information written to t
 - Client list
 - Ban list
 - Kick list
+- Complaint list
 - File upload list
 
 ## How does it work ?
@@ -14,10 +15,11 @@ The program needs the log files of the TS3 server (logging has to be enabled in 
 
 ## Current Features
 ### Multiple sortable tables
-- Client List
-- Ban List
-- Kick List
-- File upload List
+- Client list
+- Ban list
+- Kick list
+- Complaint list
+- File upload list
 
 ### Custom implementation or provided web interface
 You can either use the provided web interface (index.html) or implement the control section and the different tables into you existing website (see "Install Instructions").
@@ -36,6 +38,7 @@ You can either use the provided web interface (index.html) or implement the cont
   - Scroll to client table
   - Scroll to ban table
   - Scroll to kick table
+  - Scroll to complaint table
   - Scroll to upload table
 
 #### Client table layout and features
@@ -65,6 +68,13 @@ Date and Time                                | Banned User (ID) | Banned User (N
 Date and Time                                    | Kicked User (ID) | Kicked User (Nickname) | Kicked by (Nickname) | Kicked by (UID)     | Reason
 ------------------------------------------------ | ---------------- | ---------------------- | -------------------- | ------------------- | --------
 2015-04-23 15:22:39<br/>(about three months ago) | 285              | TrollingTrollUser      | Drumsticks           | XXXXXXXXXXXXXXXXXX= | Trolling
+
+#### Complaint table layout
+
+Date and Time                           | For User (Nickname) | For User (ID) | Reason                   | By User (Nickname)     | By User (ID)
+--------------------------------------- | ------------------- | ------------- | ------------------------ | ---------------------- | ------------
+2015-08-11 18:09:17 (about 12 days ago) | Obvious Troll       | 18            | Massive Spamming         | Random Communitymember | 14
+2015-08-11 18:15:17 (about 12 days ago) | Obvious Troll       | 18            | Spamming in channel chat | xXHaXxXorXx            | 19
 
 #### File upload table layout
 
@@ -103,7 +113,8 @@ All dependencies are covered in the install instructions.<br /> You will need to
 - On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).
 
 #### Teamspeak 3 server settings
-Logging of Clients and File transfer must be enabled in the server settings as the program depends on this information. <br /> It is recommended to enable all logging options in the server options.
+It is recommended to enable all logging options in the server options.<br />
+Otherwise you can enable the logging options according to the tables you use (e.g. complaints have to be logged for the complaint table).
 
 ## Support
 If there are any problems, improvement suggestions or feature requests feel free to open an Issue on GitHub.

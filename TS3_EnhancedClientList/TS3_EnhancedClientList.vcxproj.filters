@@ -45,6 +45,9 @@
     <ClCompile Include="File.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Complaint.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="todo.h">
@@ -78,6 +81,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="File.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Complaint.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

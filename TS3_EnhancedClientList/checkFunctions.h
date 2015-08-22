@@ -23,5 +23,8 @@ bool IsDuplicateBan(string DateTime, string Nickname, unsigned int ID, unsigned 
 // Checks if a kick is already existing in the KickList.
 bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason);
 
+// Checks if a complaint is already existing in the ComplaintList
+bool IsDuplicateComplaint(string complaintDateTime, string complaintForNickname, unsigned int complaintForID, string complaintReason, string complaintByNickname, unsigned int complaintByID);
+
 // Checks if a file is already existing in the FileList.
 bool IsDuplicateFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID);

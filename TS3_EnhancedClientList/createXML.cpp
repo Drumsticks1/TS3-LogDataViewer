@@ -9,6 +9,7 @@
 #include "User.h"
 #include "Ban.h"
 #include "Kick.h"
+#include "Complaint.h"
 #include "File.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
@@ -22,6 +23,7 @@ extern vector <string> parsedLogs;
 extern vector <User> UserList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
+extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 extern unsigned int VIRTUALSERVER;
 
@@ -117,6 +119,16 @@ void createXML() {
 		KickNode.add("KickedByNickname", KickList[i].getKickedByNickname());
 		KickNode.add("KickedByUID", KickList[i].getKickedByUID());
 		KickNode.add("KickReason", KickList[i].getKickReason());
+	}
+
+	for (unsigned int i = 0; i < ComplaintList.size(); i++) {
+		ptree& ComplaintNode = Data.add("Complaint", "");
+		ComplaintNode.add("ComplaintDateTime", ComplaintList[i].getComplaintDateTime());
+		ComplaintNode.add("ComplaintForNickname", ComplaintList[i].getComplaintForNickname());
+		ComplaintNode.add("ComplaintForID", ComplaintList[i].getComplaintForID());
+		ComplaintNode.add("ComplaintReason", ComplaintList[i].getComplaintReason());
+		ComplaintNode.add("ComplaintByNickname", ComplaintList[i].getComplaintByNickname());
+		ComplaintNode.add("ComplaintByID", ComplaintList[i].getComplaintByID());
 	}
 
 	for (unsigned int i = 0; i < FileList.size(); i++) {

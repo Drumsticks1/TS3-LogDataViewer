@@ -20,7 +20,7 @@ body {
     height: 70px;
     line-height: 70px;
 }
-#ts3-control, #ts3-clientTable, #ts3-banTable, #ts3-kickTable, #ts3-uploadTable {
+#ts3-control, #ts3-clientTable, #ts3-banTable, #ts3-kickTable, #ts3-complaintTable, #ts3-uploadTable {
     margin: 25px 5px 0;
 }
 #ts3-control, #navbar, .tablesorter {
@@ -180,7 +180,7 @@ table.tablesorter button {
     border: 1px solid #8093FF;
     text-align: center;
     padding: 3px 10px;
-    background: #FFF;
+    background: white;
     color: #8093FF;
     font-size: 0.8rem;
     font-weight: 300;
@@ -244,7 +244,7 @@ table.tablesorter button:active, table.tablesorter button:hover, table.tablesort
     display: block;
     width: 16px;
     margin: 6px;
-    background: #8093FF;
+    background: white;
     position: absolute;
     top: 2px;
     bottom: 2px;

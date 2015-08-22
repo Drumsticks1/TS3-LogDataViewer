@@ -6,7 +6,7 @@ This file contains the install instructions for the TS3_EnhancedClientList.
 Linux:
 
 1. Create a directory for the EnhancedClientList in your web directory (e.g. "/var/www/html/EnhancedClientList").
-	! Skipping the next step may result in serious security vulnerability of your server as anybody could be able to access this directory !
+	! Skipping the next step may result in serious security vulnerability of your server as anybody would be able to access this directory !
 2. Set up a .htaccess in this directory in order to restrict the access to the directory to you and chosen users or use a similar restriction method if you aren't using apache.
 3. Install the packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers).
 4. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3_EnhancedClientList/releases).
@@ -29,7 +29,7 @@ Linux:
 11. If you want to use the provided index.html (headline and all tables) skip to step 12, otherwise if you want to include the controls and the table into an existing HTML follow the 11.x steps.
 	11.1. Include the control section by creating a div with the id "ts3-control".
 	11.2. Include the "TS3_EnhancedClientList.js" and the "jquery-2.1.4.min.js" into the head section of you HTML.
-	11.3. You can now decide which of the following tables you want to include by adding divs with the following ids: "ts3-clientTable", "ts3-banTable", "ts3-kickTable" and "ts3-uploadTable".
+	11.3. You can now decide which of the following tables you want to include by adding divs with the following ids: "ts3-clientTable", "ts3-banTable", "ts3-kickTable", "ts3-complaintTable" and "ts3-uploadTable".
 12. Move the "index.html" into your created EnhancedClientList directory.
 13. Move the "styles" folder into your EnhancedClientList directory.
 14. Move the downloaded or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
