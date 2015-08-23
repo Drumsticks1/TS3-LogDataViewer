@@ -89,6 +89,7 @@
     <ClCompile Include="Kick.cpp" />
     <ClCompile Include="parseLogs.cpp" />
     <ClCompile Include="parseXML.cpp" />
+    <ClCompile Include="timeFunctions.cpp" />
     <ClCompile Include="TS3_EnhancedClientList.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="createXML.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="timeFunctions.h" />
     <ClInclude Include="Kick.h" />
     <ClInclude Include="parseLogs.h" />
     <ClInclude Include="parseXML.h" />

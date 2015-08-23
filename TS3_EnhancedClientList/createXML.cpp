@@ -11,13 +11,12 @@
 #include "Kick.h"
 #include "Complaint.h"
 #include "File.h"
+#include "timeFunctions.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
-#include <boost/date_time.hpp>
 
 using namespace std;
 using namespace boost::property_tree;
-using namespace boost::posix_time;
 
 extern vector <string> parsedLogs;
 extern vector <User> UserList;
@@ -26,30 +25,6 @@ extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 extern unsigned int VIRTUALSERVER;
-
-// Returns the given time structure as string in the format "dd.mm.yyyy hh:mm:ss".
-string timeToString(ptime t) {
-	unsigned short year, month, day, hours, minutes, seconds;
-	year = t.date().year();
-	month = t.date().month();
-	day = t.date().day();
-	hours = t.time_of_day().hours();
-	minutes = t.time_of_day().minutes();
-	seconds = t.time_of_day().seconds();
-
-	string curTime = "";
-	if (day < 10) { curTime += "0"; }
-	curTime += to_string(day) + ".";
-	if (month < 10) { curTime += "0"; }
-	curTime += to_string(month) + "." + to_string(year) + " ";
-	if (hours < 10) { curTime += "0"; }
-	curTime += to_string(hours) + ":";
-	if (minutes < 10) { curTime += "0"; }
-	curTime += to_string(minutes) + ":";
-	if (seconds < 10) { curTime += "0"; }
-	curTime += to_string(seconds);
-	return curTime;
-}
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML() {
@@ -61,11 +36,8 @@ void createXML() {
 	AttributesNode.add("Generated", "by TS3 Enhanced Client List");
 	AttributesNode.add("VirtualServer", VIRTUALSERVER);
 
-	ptime currentLocaltime = second_clock::local_time();
-	ptime currentUTC = second_clock::universal_time();
-
-	AttributesNode.add("CreationTimestamp_Localtime", timeToString(currentLocaltime));
-	AttributesNode.add("CreationTimestamp_UTC", timeToString(currentUTC));
+	AttributesNode.add("CreationTimestamp_Localtime", getCurrentLocaltime());
+	AttributesNode.add("CreationTimestamp_UTC", getCurrentUTC());
 
 	ptree& ParsedLogs = AttributesNode.add("ParsedLogs", "");
 	for (unsigned i = 0; i < parsedLogs.size(); i++) {
