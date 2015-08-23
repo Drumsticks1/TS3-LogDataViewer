@@ -1,6 +1,6 @@
 // deleteXML.php
 // Author : Drumsticks1
-// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 <?php
 	// Created EnhancedClientList directory - please modify the path according to your system.

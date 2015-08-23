@@ -1,6 +1,6 @@
 // fetchLogs.cpp : Fetching of the log files.
 // Author : Drumsticks1
-// Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 #include <iostream>
 #include <fstream>

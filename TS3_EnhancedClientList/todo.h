@@ -1,14 +1,17 @@
-/* Todo:
-general
+// todo.h
+// Author : Drumsticks1
+// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+
+/*
+general:
 	- add additional ignore files for the tables.
 	- optimize the code for better performance.
 	- make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- limit rebuilds on serverside, maybe add cron.
 	- standalone (using electron).
+	- log to file instead of console output.
 
 Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
-
-Example:
-	- Add gh-pages branch with an example.
+Example: Add gh-pages branch with an example.
 */

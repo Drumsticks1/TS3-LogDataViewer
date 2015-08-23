@@ -57,6 +57,9 @@ body {
     float: left;
     padding: 5px;
 }
+#collapseAllSection{
+  margin-right: 5px;
+}
 #rebuildXMLButton {
     float: left;
     width: 100%;
@@ -88,9 +91,6 @@ body {
     -moz-border-radius: 0 0 10px 10px;
     border-radius: 0 0 10px 10px;
 }
-#clientTableControlSection {
-    min-width: 400px;
-}
 #connectedClientsCountSection, #collapseAllSection, #buildNewXMLButton {
     clear: left;
 }
@@ -99,17 +99,13 @@ body {
 }
 #IDSelection {
     font-family: 'Open Sans', Arial, sans-serif;
-    border: 1px solid grey;
+    border: 1px solid #8093FF;
     border-radius: 20px;
     padding: 8px 10px;
 }
 #scrollToClientTableRowSection, #collapseAllSection {
     padding-bottom: 5px;
     float: left;
-}
-.sortConnectionsSwitch {
-    float: left;
-    margin-left: 5px;
 }
 #scrollToClientTableRowSection button {
     margin-left: 5px;
@@ -193,6 +189,7 @@ table.tablesorter button:active, table.tablesorter button:hover, table.tablesort
     transition: background-color, color 200ms;
 }
 .sortConnectionsSwitch {
+    float: left;
     position: relative;
     width: 175px;
     -webkit-user-select: none;
@@ -207,6 +204,7 @@ table.tablesorter button:active, table.tablesorter button:hover, table.tablesort
     display: block;
     overflow: hidden;
     cursor: pointer;
+    width: 100%;
     border: 1px solid #8093FF;
     border-radius: 20px;
 }

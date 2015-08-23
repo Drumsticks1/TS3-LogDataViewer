@@ -1,6 +1,6 @@
 # Makefile for TS3_EnhancedClientList
 # Author : Drumsticks1
-# Github : https://github.com/Drumsticks1/TS3_EnhancedClientList
+# GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 CC = /usr/bin/g++
 CFLAGS = -Wall -g -std=c++11
