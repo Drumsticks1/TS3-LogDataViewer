@@ -10,6 +10,8 @@
 #include "parseXML.h"
 #include "parseLogs.h"
 #include "createXML.h"
+#include "timeFunctions.h"
+#include "customStreams.h"
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
@@ -20,12 +22,17 @@ using namespace boost::program_options;
 bool validXML = false;
 unsigned int VIRTUALSERVER = 0;
 
+ofstream programLogfile(PROGRAMLOGFILE);
+TeeDevice fileOutput(cout, programLogfile);
+TeeStream outputStream(fileOutput);
+
 int main(int argc, char* argv[]) {
+	programLogfile << "Last program run" << endl << endl << getCurrentUTC() << " (UTC)" << endl << getCurrentLocaltime() << " (Local time)" << endl << endl;
 	if (exists("lockfile")) {
 		time_t currentTime, lockfileCreation = last_write_time("lockfile");
 		time(&currentTime);
 		if (difftime(currentTime, lockfileCreation) > LOCKFILEEXPIRATION) {
-			cout << "The lockfile is older than " << LOCKFILEEXPIRATION <<  " seconds - removing..." << endl;
+			outputStream << "The lockfile is older than " << LOCKFILEEXPIRATION << " seconds - removing..." << endl;
 			remove("lockfile");
 		}
 	}
@@ -46,7 +53,7 @@ int main(int argc, char* argv[]) {
 			notify(vm);
 
 			if (vm.count("help")) {
-				cout << endl << description << endl;
+				outputStream << endl << description << endl;
 				lockfile.close();
 				remove("lockfile");
 				return 0;
@@ -56,7 +63,7 @@ int main(int argc, char* argv[]) {
 				LOGDIRECTORY = vm["logdirectory"].as<string>();
 				// Prevents errors when '.../logs' is used instead of '.../logs/'.
 				if (LOGDIRECTORY[LOGDIRECTORY.size() - 1] != '/') {
-					cout << "'" + LOGDIRECTORY + "' is an invalid path - trying '" + LOGDIRECTORY + "/'." << endl;
+					outputStream << "'" + LOGDIRECTORY + "' is an invalid path - trying '" + LOGDIRECTORY + "/'." << endl;
 					LOGDIRECTORY.push_back('/');
 				}
 			}
@@ -66,41 +73,41 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		catch (exception& ex) {
-			cout << "An error occurred: " << ex.what() << endl << "Skipping command line parameters..." << endl;
+			outputStream << "An error occurred: " << ex.what() << endl << "Skipping command line parameters..." << endl;
 			LOGDIRECTORY = DEFAULTLOGDIRECTORY;
 			VIRTUALSERVER = DEFAULTVIRTUALSERVER;
 		}
 
 		if (vm["logdirectory"].defaulted()) {
-			cout << "No logdirectory specified - using default path..." << endl;
+			outputStream << "No logdirectory specified - using default path..." << endl;
 		}
 
 		if (vm["virtualserver"].defaulted()) {
-			cout << "No virtual server specified - using default value..." << endl;
+			outputStream << "No virtual server specified - using default value..." << endl;
 		}
 
 		if (!fetchLogs(LOGDIRECTORY)) {
-			cout << "The program will now exit..." << endl;
+			outputStream << "The program will now exit..." << endl;
 			lockfile.close();
 			remove("lockfile");
 			return 0;
 		}
 
 		if (!parseXML()) {
-			cout << "XML isn't valid - skipping XML parsing..." << endl;
+			outputStream << "XML isn't valid - skipping XML parsing..." << endl;
 		}
 		else validXML = true;
 
 		parseLogs(LOGDIRECTORY);
 		createXML();
 
+		fileOutput.close();
 		lockfile.close();
 		remove("lockfile");
 		return 0;
 	}
 	else {
-		cout << "The program is already running..." << endl
-			<< "This program instance will now exit..." << endl;
+		outputStream << "The program is already running..." << endl << "This program instance will now exit..." << endl;
 		return 0;
 	}
 }

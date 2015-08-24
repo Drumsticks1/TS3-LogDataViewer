@@ -12,6 +12,7 @@
 #include "Complaint.h"
 #include "File.h"
 #include "timeFunctions.h"
+#include "customStreams.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
@@ -25,10 +26,11 @@ extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 extern unsigned int VIRTUALSERVER;
+extern TeeStream outputStream;
 
 // Creates a XML for storing the data extracted from the logs.
 void createXML() {
-	cout << "Preparing XML-Creation..." << endl;
+	outputStream << "Preparing XML-Creation..." << endl;
 
 	ptree PropertyTree;
 	ptree& Data = PropertyTree.add("Data", "");
@@ -112,12 +114,14 @@ void createXML() {
 		FileNode.add("UploadedByID", FileList[i].getUploadedByID());
 	}
 
-	cout << "Creating XML..." << endl;
+	outputStream << "Creating XML..." << endl;
 
 	try {
 		write_xml(XMLFILE, PropertyTree, locale(), xml_writer_make_settings<string>('\t', 1));
 	}
 	catch (xml_parser_error error) {
-		cout << "An error occured while creating the xml:" << endl << error.what() << endl;
+		outputStream << "An error occured while creating the xml:" << endl << error.what() << endl;
 	}
+
+	outputStream << "XML Creation completed." << endl;
 }

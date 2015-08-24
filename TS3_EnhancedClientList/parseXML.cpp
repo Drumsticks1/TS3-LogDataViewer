@@ -11,6 +11,7 @@
 #include "Kick.h"
 #include "Complaint.h"
 #include "File.h"
+#include "customStreams.h"
 #include <boost/filesystem.hpp>
 #include "src/pugixml.hpp"
 #define PUGIXML_HEADER_ONLY
@@ -26,6 +27,7 @@ extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 extern unsigned int VIRTUALSERVER;
+extern TeeStream outputStream;
 
 // Parses the XML if existing.
 bool parseXML() {
@@ -36,17 +38,17 @@ bool parseXML() {
 				string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason, kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason, complaintDateTime, complaintForNickname, complaintReason, complaintByNickname, uploadDateTime, filename, uploadedByNickname;
 				xml_document oldXML;
 
-				cout << "Parsing old XML..." << endl;
+				outputStream << "Parsing old XML..." << endl;
 
 				xml_parse_result result = oldXML.load_file(XMLFILE);
 				if (!result) {
-					cout << "An error occured while parsing the XML:" << endl << result.description() << endl;
+					outputStream << "An error occured while parsing the XML:" << endl << result.description() << endl;
 					return false;
 				}
 
 				for (xml_node AttributesNode = oldXML.child("Data").child("Attributes"); AttributesNode; AttributesNode = AttributesNode.next_sibling("Attributes")) {
 					if (AttributesNode.child("VirtualServer").first_child().value() != to_string(VIRTUALSERVER)) {
-						cout << "The last XML was created for another virtual server - skipping use of XML..." << endl;
+						outputStream << "The last XML was created for another virtual server - skipping use of XML..." << endl;
 						return false;
 					}
 

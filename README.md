@@ -89,6 +89,7 @@ Date and Time                               | Channel ID | Filename             
 - In order to save time the program uses the information from the last created XML instead of parsing all logs again.
 - Lockfile: Only one instance of the program can run at once.
   - If a lockfile is older that 5 minutes it is deleted when running the program.<br />This prevents problems caused by lockfiles remaining when the program is terminated manually / an uncaught exception occurs.
+- Log file containing the console output of the last program run.
 
 ### Planned Features
 See the latest todo.h for planned features.

@@ -10,7 +10,6 @@ general:
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- limit rebuilds on serverside, maybe add cron.
 	- standalone (using electron).
-	- log to file instead of console output.
 
 Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
 Example: Add gh-pages branch with an example.

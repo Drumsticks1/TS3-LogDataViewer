@@ -101,6 +101,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="createXML.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="customStreams.h" />
     <ClInclude Include="timeFunctions.h" />
     <ClInclude Include="Kick.h" />
     <ClInclude Include="parseLogs.h" />

@@ -5,6 +5,9 @@
 // XML output file.
 #define XMLFILE "output.xml"
 
+// Program log file.
+#define PROGRAMLOGFILE "ECL.log"
+
 // Default logdirectory and virtual server.
 #define DEFAULTLOGDIRECTORY "./logs/"
 #define DEFAULTVIRTUALSERVER 1

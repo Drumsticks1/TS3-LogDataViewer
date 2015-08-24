@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <boost/filesystem.hpp>
 #include "checkFunctions.h"
+#include "customStreams.h"
 
 using namespace boost::filesystem;
 using namespace std;
@@ -16,17 +17,18 @@ using namespace std;
 vector <string> Logs;
 vector <string> ignoreLogs;
 extern unsigned int VIRTUALSERVER;
+extern TeeStream outputStream;
 
 // Fetches the list of log files that are in the log directory and saves it in a vector.
 bool fetchLogs(string LOGDIRECTORY) {
-	cout << "Checking logdirectory..." << endl;
+	outputStream << "Checking logdirectory..." << endl;
 
 	path log_directory(LOGDIRECTORY);
 	try {
 		if (exists(log_directory)) {
 			if (is_directory(log_directory)) {
 				if (!boost::filesystem::is_empty(log_directory)) {
-					cout << "Fetching logs..." << endl;
+					outputStream << "Fetching logs..." << endl;
 					string LogignorePath = LOGDIRECTORY + "logignore";
 					if (is_regular_file(LogignorePath)) {
 						if (!boost::filesystem::is_empty(LogignorePath)) {
@@ -44,9 +46,9 @@ bool fetchLogs(string LOGDIRECTORY) {
 								ignoreLogs.push_back(buffer_logignore);
 							}
 						}
-						else cout << "The logignore seems to be empty - skipping..." << endl;
+						else outputStream << "The logignore seems to be empty - skipping..." << endl;
 					}
-					else cout << "No valid logignore found - skipping..." << endl;
+					else outputStream << "No valid logignore found - skipping..." << endl;
 
 					directory_iterator LogDirectory(LOGDIRECTORY);
 					string VS_log;
@@ -67,31 +69,31 @@ bool fetchLogs(string LOGDIRECTORY) {
 					}
 				}
 				else {
-					cout << "The log directory seems to be empty." << endl;
+					outputStream << "The log directory seems to be empty." << endl;
 					return false;
 				}
 			}
 			else {
-				cout << "The log directory seems not to be a directory." << endl;
+				outputStream << "The log directory seems not to be a directory." << endl;
 				return false;
 			}
 		}
 		else {
-			cout << "The log directory seems not to exist." << endl;
+			outputStream << "The log directory seems not to exist." << endl;
 			return false;
 		}
 	}
 	catch (const filesystem_error& error) {
-		cout << "An error ocurred while fetching the logfiles:" << endl << error.what() << endl;
+		outputStream << "An error ocurred while fetching the logfiles:" << endl << error.what() << endl;
 		return false;
 	}
 
 	if (Logs.size() == 0) {
-		cout << "The log directory contains no valid logs." << endl;
+		outputStream << "The log directory contains no valid logs." << endl;
 		return false;
 	}
 
-	cout << "Sorting logs..." << endl;
+	outputStream << "Sorting logs..." << endl;
 	sort(Logs.begin(), Logs.end());
 	return true;
 }

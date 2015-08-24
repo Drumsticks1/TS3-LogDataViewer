@@ -12,7 +12,7 @@ Linux:
 	4.1. Downloads the makefile, the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't necessary for compiling as it doesn't include any code).
 	4.2. Download the Boost Library package via "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2" and extract it to your "/usr/" folder (--> /usr/boost_1_59_0)(you may need to adjust the version number).
 	4.3. Compile the required libraries (in /usr/boost_1_59_0: "./bootstrap.sh" and then "./b2 --with-program_options --with-filesystem --with-system --with-date_time --runtime-link=static --variant=release").
-	4.4. Install the packages "libboost-system1.55-dev", "libboost-filesystem1.55-dev" and "libboost-program-options1.55-dev" (you may need to adjust the version numbers).
+	4.4. Install the packages "libboost-iostreams1.55", "libboost-system1.55", "libboost-filesystem1.55" and "libboost-program-options1.55" (you may need to adjust the version numbers).
 	4.5. Download the pugixml library from it's github page ("https://github.com/zeux/pugixml") and uncompress it.
 	4.6. Move the uncompressed folder into the directory you wish (default location set in the makefile: /usr/pugixml-1.6/) (you may need to adjust the version numbers).
 	4.7. Install the packages "make" and "g++" in order to compile using the makefile.
