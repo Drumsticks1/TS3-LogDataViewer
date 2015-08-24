@@ -10,8 +10,8 @@
 #include "parseXML.h"
 #include "parseLogs.h"
 #include "createXML.h"
-#include "boost/filesystem.hpp"
-#include "boost/program_options.hpp"
+#include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
 
 using namespace std;
 using namespace boost::filesystem;
@@ -53,7 +53,6 @@ int main(int argc, char* argv[]) {
 			}
 
 			if (vm.count("logdirectory")) {
-				string x = vm["logdirectory"].as<string>();
 				LOGDIRECTORY = vm["logdirectory"].as<string>();
 				// Prevents errors when '.../logs' is used instead of '.../logs/'.
 				if (LOGDIRECTORY[LOGDIRECTORY.size() - 1] != '/') {
@@ -66,8 +65,8 @@ int main(int argc, char* argv[]) {
 				VIRTUALSERVER = vm["virtualserver"].as<unsigned int>();
 			}
 		}
-		catch (error& error) {
-			cout << error.what() << endl << "Skipping command line parameters and using their default values..." << endl;
+		catch (exception& ex) {
+			cout << "An error occurred: " << ex.what() << endl << "Skipping command line parameters..." << endl;
 			LOGDIRECTORY = DEFAULTLOGDIRECTORY;
 			VIRTUALSERVER = DEFAULTVIRTUALSERVER;
 		}

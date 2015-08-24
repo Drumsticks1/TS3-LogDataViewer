@@ -110,7 +110,6 @@ All dependencies are covered in the install instructions.<br /> You will need to
   - [nanobar.min.js](https://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js)
 - One file for moment.js:
   - [moment.min.js](https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js)
-- On UNIX systems: the UNIX packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers) (There seems to be no need for this on Windows).
 
 #### Teamspeak 3 server settings
 It is recommended to enable all logging options in the server options.<br />
