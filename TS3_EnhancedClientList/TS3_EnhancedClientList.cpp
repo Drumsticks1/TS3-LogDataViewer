@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 			("virtualserver", value<unsigned int>()->default_value(DEFAULTVIRTUALSERVER), "Specify the virtual server.");
 
 		try {
-			store(command_line_parser(argc, argv).options(description).run(), vm);
+			store(parse_command_line(argc, argv, description), vm);
 			notify(vm);
 
 			if (vm.count("help")) {
@@ -101,7 +101,6 @@ int main(int argc, char* argv[]) {
 		parseLogs(LOGDIRECTORY);
 		createXML();
 
-		fileOutput.close();
 		lockfile.close();
 		remove("lockfile");
 		return 0;

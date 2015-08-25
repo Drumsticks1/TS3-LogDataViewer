@@ -28,7 +28,7 @@ bool fetchLogs(string LOGDIRECTORY) {
 		if (exists(log_directory)) {
 			if (is_directory(log_directory)) {
 				if (!boost::filesystem::is_empty(log_directory)) {
-					outputStream << "Fetching logs..." << endl;
+					outputStream << "Fetching logignore..." << endl;
 					string LogignorePath = LOGDIRECTORY + "logignore";
 					if (is_regular_file(LogignorePath)) {
 						if (!boost::filesystem::is_empty(LogignorePath)) {
@@ -50,6 +50,7 @@ bool fetchLogs(string LOGDIRECTORY) {
 					}
 					else outputStream << "No valid logignore found - skipping..." << endl;
 
+					outputStream << "Fetching logs..." << endl;
 					directory_iterator LogDirectory(LOGDIRECTORY);
 					string VS_log;
 					while (LogDirectory != directory_iterator()) {

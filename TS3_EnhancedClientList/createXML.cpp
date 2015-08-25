@@ -43,7 +43,7 @@ void createXML() {
 
 	ptree& ParsedLogs = AttributesNode.add("ParsedLogs", "");
 	for (unsigned i = 0; i < parsedLogs.size(); i++) {
-		ParsedLogs.add("ParsedLogs", parsedLogs[i]);
+		ParsedLogs.add("P", parsedLogs[i]);
 	}
 
 	for (unsigned int i = 0; i < UserList.size(); i++) {
@@ -53,17 +53,17 @@ void createXML() {
 
 			ptree& Nicknames = UserNode.add("Nicknames", "");
 			for (unsigned int j = 0; j < UserList[i].getNicknameCount(); j++) {
-				Nicknames.add("Nicknames", UserList[i].getUniqueNickname(j));
+				Nicknames.add("N", UserList[i].getUniqueNickname(j));
 			}
 
 			ptree& Connections = UserNode.add("Connections", "");
 			for (unsigned int j = 0; j < UserList[i].getDateTimeCount(); j++) {
-				Connections.add("Connections", UserList[i].getUniqueDateTime(j));
+				Connections.add("C", UserList[i].getUniqueDateTime(j));
 			}
 
 			ptree& IPs = UserNode.add("IPs", "");
 			for (unsigned int j = 0; j < UserList[i].getIPCount(); j++) {
-				IPs.add("IPs", UserList[i].getUniqueIP(j));
+				IPs.add("I", UserList[i].getUniqueIP(j));
 			}
 
 			UserNode.add("Connection_Count", UserList[i].getDateTimeCount());
@@ -117,11 +117,10 @@ void createXML() {
 	outputStream << "Creating XML..." << endl;
 
 	try {
-		write_xml(XMLFILE, PropertyTree, locale(), xml_writer_make_settings<string>('\t', 1));
+		write_xml(XMLFILE, PropertyTree);
+		outputStream << "XML Creation completed." << endl;
 	}
 	catch (xml_parser_error error) {
 		outputStream << "An error occured while creating the xml:" << endl << error.what() << endl;
 	}
-
-	outputStream << "XML Creation completed." << endl;
 }

@@ -79,7 +79,7 @@ function expandList(List, ID) {
     }
 
     var x = document.getElementById(ID).childNodes[Row],
-        ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+        ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
     $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i));
     $('#' + List + 'Button_' + ID).parent().attr('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
@@ -117,7 +117,7 @@ function collapseList(List, ID) {
         i = 2;
     }
 
-    var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper);
+    var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
     $('#' + List + 'Button_' + ID).html('+ ' + (ListContent.length - i));
     $('#' + List + 'Button_' + ID).parent().attr('expanded', false);
 
@@ -300,9 +300,9 @@ function buildClientTable() {
     for (var i = 0; i < User.length; i++) {
         var ID = User[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
         if (ID == i) {
-            var Nicknames = User[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('Nicknames');
-            var Connections = User[ID].getElementsByTagName('Connections')[0].getElementsByTagName('Connections');
-            var IPs = User[ID].getElementsByTagName('IPs')[0].getElementsByTagName('IPs');
+            var Nicknames = User[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N');
+            var Connections = User[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C');
+            var IPs = User[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I');
             var Connection_Count = User[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue;
             var Connected = User[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue;
             var Deleted = User[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;

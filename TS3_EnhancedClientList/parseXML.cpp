@@ -52,7 +52,7 @@ bool parseXML() {
 						return false;
 					}
 
-					for (xml_node ParsedLogs = AttributesNode.child("ParsedLogs").child("ParsedLogs"); ParsedLogs; ParsedLogs = ParsedLogs.next_sibling("ParsedLogs")) {
+					for (xml_node ParsedLogs = AttributesNode.child("ParsedLogs").child("P"); ParsedLogs; ParsedLogs = ParsedLogs.next_sibling("P")) {
 						parsedLogs.emplace_back(ParsedLogs.first_child().value());
 					}
 				}
@@ -63,15 +63,15 @@ bool parseXML() {
 						UserList.resize(ID + 1);
 						UserList[ID].addID(ID);
 
-						for (xml_node Nicknames = UserNode.child("Nicknames").child("Nicknames"); Nicknames; Nicknames = Nicknames.next_sibling("Nicknames")) {
+						for (xml_node Nicknames = UserNode.child("Nicknames").child("N"); Nicknames; Nicknames = Nicknames.next_sibling("N")) {
 							UserList[ID].addNicknameReverse(Nicknames.first_child().value());
 						}
 
-						for (xml_node Connections = UserNode.child("Connections").child("Connections"); Connections; Connections = Connections.next_sibling("Connections")) {
+						for (xml_node Connections = UserNode.child("Connections").child("C"); Connections; Connections = Connections.next_sibling("C")) {
 							UserList[ID].addDateTimeReverse(Connections.first_child().value());
 						}
 
-						for (xml_node IPs = UserNode.child("IPs").child("IPs"); IPs; IPs = IPs.next_sibling("IPs")) {
+						for (xml_node IPs = UserNode.child("IPs").child("I"); IPs; IPs = IPs.next_sibling("I")) {
 							UserList[ID].addIPReverse(IPs.first_child().value());
 						}
 
