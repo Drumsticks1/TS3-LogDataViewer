@@ -11,7 +11,7 @@ using namespace std;
 
 vector <Kick> KickList;
 
-// Adds a ban with the given data.
+// Sets the data of the current Kick object according to the given data.
 void Kick::addKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason) {
 	this->kickDateTime = kickDateTime;
 	this->kickedID = kickedID;

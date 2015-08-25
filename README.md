@@ -59,29 +59,29 @@ ID  | Nicknames                                                                 
 
 #### Ban table layout
 
-Date and Time                                | Banned User (ID) | Banned User (Nickname) | Banned by (Nickname) | Banned by (InvokerID) | Banned by (UID)     | Reason  | Bantime
--------------------------------------------- | ---------------- | ---------------------- | -------------------- | --------------------- | ------------------- | ------- | -------
-2015-07-28 13:32:32<br />(about 3 hours ago) | Drumsticks-Test  | 12                     | 3                    | Drumsticks            | XXXXXXXXXXXXXXXXXX= | Testban | 1800
+Date and Time                                | Banned ID | Banned Nickname | Banned IP       | Banned by Nickname | Banned by ID | Reason  | Bantime
+-------------------------------------------- | --------- | --------------- | --------------- | ------------------ | ------------ | ------- | -------
+2015-07-28 13:32:32<br />(about 3 hours ago) | 12        | Drumsticks-Test | 111.222.333.444 | Drumsticks         | 3            | Testban | 1800
 
 #### Kick table layout
 
-Date and Time                                    | Kicked User (ID) | Kicked User (Nickname) | Kicked by (Nickname) | Kicked by (UID)     | Reason
------------------------------------------------- | ---------------- | ---------------------- | -------------------- | ------------------- | --------
-2015-04-23 15:22:39<br/>(about three months ago) | 285              | TrollingTrollUser      | Drumsticks           | XXXXXXXXXXXXXXXXXX= | Trolling
+Date and Time                                    | Kicked ID | Kicked Nickname   | Kicked by Nickname | Kicked by UID       | Reason
+------------------------------------------------ | --------- | ----------------- | ------------------ | ------------------- | --------
+2015-04-23 15:22:39<br/>(about three months ago) | 285       | TrollingTrollUser | Drumsticks         | XXXXXXXXXXXXXXXXXX= | Trolling
 
 #### Complaint table layout
 
-Date and Time                           | For User (Nickname) | For User (ID) | Reason                   | By User (Nickname)     | By User (ID)
---------------------------------------- | ------------------- | ------------- | ------------------------ | ---------------------- | ------------
-2015-08-11 18:09:17 (about 12 days ago) | Obvious Troll       | 18            | Massive Spamming         | Random Communitymember | 14
-2015-08-11 18:15:17 (about 12 days ago) | Obvious Troll       | 18            | Spamming in channel chat | xXHaXxXorXx            | 19
+Date and Time                           | About Nickname | About ID | Reason                   | By Nickname            | By ID
+--------------------------------------- | -------------- | -------- | ------------------------ | ---------------------- | -----
+2015-08-11 18:09:17 (about 12 days ago) | Obvious Troll  | 18       | Massive Spamming         | Random Communitymember | 14
+2015-08-11 18:15:17 (about 12 days ago) | Obvious Troll  | 18       | Spamming in channel chat | xXHaXxXorXx            | 19
 
 #### File upload table layout
 
-Date and Time                               | Channel ID | Filename                          | Uploaded by (Nickname) | Uploaded by (ID)
-------------------------------------------- | ---------- | --------------------------------- | ---------------------- | ----------------
-2015-07-09 19:17:58<br />(about 4 days ago) | 2          | /file_sample.txt                  | Drumsticks             | 3
-2015-07-09 19:18:18<br />(about 4 days ago) | 2          | /directory_sample/file_sample.txt | Drumsticks             | 3
+Date and Time                               | Channel ID | Filename                          | Uploaded by Nickname | Uploaded by ID
+------------------------------------------- | ---------- | --------------------------------- | -------------------- | --------------
+2015-07-09 19:17:58<br />(about 4 days ago) | 2          | /file_sample.txt                  | Drumsticks           | 3
+2015-07-09 19:18:18<br />(about 4 days ago) | 2          | /directory_sample/file_sample.txt | Drumsticks           | 3
 
 ### Overall Program Features
 - You can change the virtual server whose logs will be analyzed by adjusting the value of  the VIRTUALSERVER variable in the rebuildXML.php.
@@ -95,7 +95,7 @@ Date and Time                               | Channel ID | Filename             
 See the latest todo.h for planned features.
 
 ### It does not contain and never will
-Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting).
+Any information that isn't logged.
 
 ## Installation
 As the file name already implies, the install instructions can be found in the file "Install Instructions".<br /> For now there are only installation instructions available for Linux but experienced users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/> NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on GitHub since v1.3.0 (TS3_EnhancedClientList.gz for Linux and TS3_EnhancedClientList.exe.gz for Windows).

@@ -8,17 +8,19 @@ using namespace std;
 // Class for the ban data.
 class Ban {
 private:
-	unsigned int bannedID, bannedByInvokerID, bantime;
-	string banDateTime, bannedNickname, bannedByNickname, bannedByUID, banReason;
+	unsigned int bannedID, bannedByID, bantime;
+	string banDateTime, bannedIP, bannedUID, bannedNickname, bannedByNickname, bannedByUID, banReason;
 
 public:
-	void addBan(string banDateTime, string bannedNickname, unsigned int bannedID, unsigned int bannedByInvokerID, string bannedByNickname, string bannedByUID, string banReason, unsigned int bantime);
+	void addBan(string banDateTime, unsigned int bannedID, string bannedNickname, string bannedUID, string bannedIP, string bannedByNickname, unsigned int bannedByID, string bannedByUID, string banReason, unsigned int bantime);
 
 	string getBanDateTime();
-	string getBannedNickname();
 	unsigned int getBannedID();
-	unsigned int getbannedByInvokerID();
+	string getBannedNickname();
+	string getBannedUID();
+	string getBannedIP();
 	string getBannedByNickname();
+	unsigned int getBannedByID();
 	string getBannedByUID();
 	string getBanReason();
 	unsigned int getBantime();

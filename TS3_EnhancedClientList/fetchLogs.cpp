@@ -62,7 +62,7 @@ bool fetchLogs(string LOGDIRECTORY) {
 								VS_log += LogDirectory->path().filename().string()[i];
 							}
 
-							if (VS_log == to_string(VIRTUALSERVER) && !IsIgnoredLog(LogDirectory->path().filename().string())) {
+							if (VS_log == to_string(VIRTUALSERVER) && !isIgnoredLog(LogDirectory->path().filename().string())) {
 								Logs.push_back((LogDirectory->path().filename().string()));
 							}
 						}

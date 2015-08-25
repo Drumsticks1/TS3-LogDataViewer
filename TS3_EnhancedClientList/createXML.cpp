@@ -76,10 +76,12 @@ void createXML() {
 	for (unsigned int i = 0; i < BanList.size(); i++) {
 		ptree& BanNode = Data.add("Ban", "");
 		BanNode.add("BanDateTime", BanList[i].getBanDateTime());
-		BanNode.add("BannedNickname", BanList[i].getBannedNickname());
 		BanNode.add("BannedID", BanList[i].getBannedID());
-		BanNode.add("BannedByInvokerID", BanList[i].getbannedByInvokerID());
+		BanNode.add("BannedNickname", BanList[i].getBannedNickname());
+		BanNode.add("BannedUID", BanList[i].getBannedUID());
+		BanNode.add("BannedIP", BanList[i].getBannedIP());
 		BanNode.add("BannedByNickname", BanList[i].getBannedByNickname());
+		BanNode.add("BannedByID", BanList[i].getBannedByID());
 		BanNode.add("BannedByUID", BanList[i].getBannedByUID());
 		BanNode.add("BanReason", BanList[i].getBanReason());
 		BanNode.add("Bantime", BanList[i].getBantime());
@@ -98,8 +100,8 @@ void createXML() {
 	for (unsigned int i = 0; i < ComplaintList.size(); i++) {
 		ptree& ComplaintNode = Data.add("Complaint", "");
 		ComplaintNode.add("ComplaintDateTime", ComplaintList[i].getComplaintDateTime());
-		ComplaintNode.add("ComplaintForNickname", ComplaintList[i].getComplaintForNickname());
-		ComplaintNode.add("ComplaintForID", ComplaintList[i].getComplaintForID());
+		ComplaintNode.add("ComplaintAboutNickname", ComplaintList[i].getComplaintAboutNickname());
+		ComplaintNode.add("ComplaintAboutID", ComplaintList[i].getComplaintAboutID());
 		ComplaintNode.add("ComplaintReason", ComplaintList[i].getComplaintReason());
 		ComplaintNode.add("ComplaintByNickname", ComplaintList[i].getComplaintByNickname());
 		ComplaintNode.add("ComplaintByID", ComplaintList[i].getComplaintByID());

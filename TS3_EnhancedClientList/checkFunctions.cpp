@@ -22,7 +22,7 @@ extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 
 // Checks if a DateTime is already existing for the current user.
-bool IsDuplicateDateTime(unsigned int ID, string DateTime) {
+bool isDuplicateDateTime(unsigned int ID, string DateTime) {
 	for (unsigned int i = 0; i < UserList[ID].getDateTimeCount(); i++) {
 		if (UserList[ID].getUniqueDateTime(i) == DateTime) {
 			return true;
@@ -32,7 +32,7 @@ bool IsDuplicateDateTime(unsigned int ID, string DateTime) {
 }
 
 // Checks if a log is already existing in the parsedLogs list.
-bool IsDuplicateLog(string log) {
+bool isDuplicateLog(string log) {
 	for (unsigned int i = 0; i < parsedLogs.size(); i++) {
 		if (log == parsedLogs[i]) return true;
 	}
@@ -40,7 +40,7 @@ bool IsDuplicateLog(string log) {
 }
 
 // Checks if a log is existing in the ignoreLogs list.
-bool IsIgnoredLog(string log) {
+bool isIgnoredLog(string log) {
 	for (unsigned int i = 0; i < ignoreLogs.size(); i++) {
 		if (log == ignoreLogs[i]) return true;
 	}
@@ -48,7 +48,7 @@ bool IsIgnoredLog(string log) {
 }
 
 // Checks if the order of Logs and ParsedLogs is matching.
-bool IsMatchingLogOrder() {
+bool isMatchingLogOrder() {
 	for (unsigned int i = 0; i < parsedLogs.size(); i++) {
 		if (i < Logs.size()) {
 			if (parsedLogs[i] != Logs[i]) {
@@ -60,18 +60,36 @@ bool IsMatchingLogOrder() {
 	return true;
 }
 
+// Checks if the two ban rules are matching with a ban disconnect.
+bool isMatchingBanRules(string bannedByNickname, string banReason, string bantime, string lastUIDBanRule, string lastIPBanRule) {
+	string UID = lastUIDBanRule, IP = lastIPBanRule;
+	if (bannedByNickname == "Server") {
+		bannedByNickname = "server";
+	}
+
+	if (UID.find(" by client '" + bannedByNickname + "'(") != string::npos && IP.find(" by client '" + bannedByNickname + "'(") != string::npos) {
+		if (UID.find("| ban added reason='" + banReason + "' cluid='") != string::npos && IP.find("| ban added reason='" + banReason + "' ip='") != string::npos) {
+			if (UID.find("bantime=" + bantime + " ") != string::npos && IP.find("bantime=" + bantime + " ") != string::npos) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 // Checks if a ban is already existing in the BanList.
-bool IsDuplicateBan(string banDateTime, string bannedNickname, unsigned int bannedID, unsigned int bannedByInvokerID, string bannedByNickname, string bannedByUID, string banReason, unsigned int bantime) {
+bool isDuplicateBan(string banDateTime, unsigned int bannedID, string bannedNickname, string bannedUID, string bannedIP, string bannedByNickname, unsigned int bannedByID, string bannedByUID, string banReason, unsigned int bantime) {
 	for (unsigned int i = 0; i < BanList.size(); i++) {
-		if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedNickname() == bannedNickname && BanList[i].getBannedID() == bannedID &&
-			BanList[i].getbannedByInvokerID() == bannedByInvokerID && BanList[i].getBannedByNickname() == bannedByNickname &&
-			BanList[i].getBannedByUID() == bannedByUID && BanList[i].getBanReason() == banReason && BanList[i].getBantime() == bantime) return true;
+		if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedID() == bannedID && BanList[i].getBannedNickname() == bannedNickname &&
+			BanList[i].getBannedUID() == bannedUID && BanList[i].getBannedIP() == bannedIP && BanList[i].getBannedByID() == bannedByID &&
+			BanList[i].getBannedByNickname() == bannedByNickname && BanList[i].getBannedByUID() == bannedByUID && BanList[i].getBanReason() == banReason &&
+			BanList[i].getBantime() == bantime) return true;
 	}
 	return false;
 }
 
 // Checks if a kick is already existing in the KickList.
-bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason) {
+bool isDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason) {
 	for (unsigned int i = 0; i < KickList.size(); i++) {
 		if (KickList[i].getKickDateTime() == kickDateTime && KickList[i].getKickedID() == kickedID && KickList[i].getKickedNickname() == kickedNickname &&
 			KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason) return true;
@@ -80,17 +98,17 @@ bool IsDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNi
 }
 
 // Checks if a complaint is already existing in the ComplaintList
-bool IsDuplicateComplaint(string complaintDateTime, string complaintForNickname, unsigned int complaintForID, string complaintReason, string complaintByNickname, unsigned int complaintByID) {
+bool isDuplicateComplaint(string complaintDateTime, string complaintAboutNickname, unsigned int complaintAboutID, string complaintReason, string complaintByNickname, unsigned int complaintByID) {
 	for (unsigned int i = 0; i < ComplaintList.size(); i++) {
-		if (ComplaintList[i].getComplaintDateTime() == complaintDateTime && ComplaintList[i].getComplaintForNickname() == complaintForNickname &&
-			ComplaintList[i].getComplaintForID() == complaintForID && ComplaintList[i].getComplaintReason() == complaintReason &&
+		if (ComplaintList[i].getComplaintDateTime() == complaintDateTime && ComplaintList[i].getComplaintAboutNickname() == complaintAboutNickname &&
+			ComplaintList[i].getComplaintAboutID() == complaintAboutID && ComplaintList[i].getComplaintReason() == complaintReason &&
 			ComplaintList[i].getComplaintByNickname() == complaintByNickname && ComplaintList[i].getComplaintByID() == complaintByID) return true;
 	}
 	return false;
 }
 
 // Checks if a file is already existing in the FileList.
-bool IsDuplicateFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
+bool isDuplicateFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
 	for (unsigned int i = 0; i < FileList.size(); i++) {
 		if (FileList[i].getUploadDateTime() == uploadDateTime && FileList[i].getChannelID() == channelID && FileList[i].getFilename() == filename &&
 			FileList[i].getUploadedByNickname() == uploadedByNickname && FileList[i].getUploadedByID() == uploadedByID) return true;

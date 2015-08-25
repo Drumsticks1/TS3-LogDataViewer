@@ -11,7 +11,7 @@ using namespace std;
 
 vector <File> FileList;
 
-// Adds a new file with the given data to the list.
+// Sets the data of the current File object according to the given data.
 void File::addFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
 	this->uploadDateTime = uploadDateTime;
 	this->channelID = channelID;

@@ -9,11 +9,14 @@
 
 vector <Ban> BanList;
 
-void Ban::addBan(string banDateTime, string bannedNickname, unsigned int bannedID, unsigned int bannedByInvokerID, string bannedByNickname, string bannedByUID, string banReason, unsigned int bantime) {
+// Sets the data of the current Ban object according to the given data.
+void Ban::addBan(string banDateTime, unsigned int bannedID, string bannedNickname, string bannedUID, string bannedIP, string bannedByNickname, unsigned int bannedByID, string bannedByUID, string banReason, unsigned int bantime) {
 	this->banDateTime = banDateTime;
-	this->bannedNickname = bannedNickname;
 	this->bannedID = bannedID;
-	this->bannedByInvokerID = bannedByInvokerID;
+	this->bannedNickname = bannedNickname;
+	this->bannedUID = bannedUID;
+	this->bannedIP = bannedIP;
+	this->bannedByID = bannedByID;
 	this->bannedByNickname = bannedByNickname;
 	this->bannedByUID = bannedByUID;
 	this->banReason = banReason;
@@ -22,10 +25,12 @@ void Ban::addBan(string banDateTime, string bannedNickname, unsigned int bannedI
 
 // Returns the requested information.
 string Ban::getBanDateTime() { return banDateTime; }
-string Ban::getBannedNickname() { return bannedNickname; }
 unsigned int Ban::getBannedID() { return bannedID; }
-unsigned int Ban::getbannedByInvokerID() { return bannedByInvokerID; }
+string Ban::getBannedNickname() { return bannedNickname; }
+string Ban::getBannedUID() { return bannedUID; }
+string Ban::getBannedIP() { return bannedIP; }
 string Ban::getBannedByNickname() { return bannedByNickname; }
+unsigned int Ban::getBannedByID() { return bannedByID; }
 string Ban::getBannedByUID() { return bannedByUID; }
 string Ban::getBanReason() { return banReason; }
 unsigned int Ban::getBantime() { return bantime; }

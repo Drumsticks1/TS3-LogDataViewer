@@ -437,27 +437,33 @@ function buildBanTable() {
     var banHeadCell_BanDateTime = document.createElement('th');
     var banHeadCell_BannedID = document.createElement('th');
     var banHeadCell_BannedNickname = document.createElement('th');
+    //var banHeadCell_BannedUID = document.createElement('th');
+    var banHeadCell_BannedIP = document.createElement('th');
     var banHeadCell_BannedByNickname = document.createElement('th');
-    var banHeadCell_BannedByInvokerID = document.createElement('th');
-    var banHeadCell_BannedByUID = document.createElement('th');
+    var banHeadCell_BannedByID = document.createElement('th');
+    //var banHeadCell_BannedByUID = document.createElement('th');
     var banHeadCell_BanReason = document.createElement('th');
     var banHeadCell_Bantime = document.createElement('th');
 
     $(banHeadCell_BanDateTime).html('Date and Time');
-    $(banHeadCell_BannedID).html('Banned User (ID)');
-    $(banHeadCell_BannedNickname).html('Banned User (Nickname)');
-    $(banHeadCell_BannedByNickname).html('Banned by (Nickname)');
-    $(banHeadCell_BannedByInvokerID).html('Banned by (InvokerID)');
-    $(banHeadCell_BannedByUID).html('Banned by (UID)');
+    $(banHeadCell_BannedID).html('Banned ID');
+    $(banHeadCell_BannedNickname).html('Banned Nickname');
+    //$(banHeadCell_BannedUID).html('Banned UID');
+    $(banHeadCell_BannedIP).html('Banned IP');
+    $(banHeadCell_BannedByNickname).html('Banned by Nickname');
+    $(banHeadCell_BannedByID).html('Banned by ID');
+    //$(banHeadCell_BannedByUID).html('Banned by UID');
     $(banHeadCell_BanReason).html('Reason');
     $(banHeadCell_Bantime).html('Bantime');
 
     banHeadRow.appendChild(banHeadCell_BanDateTime);
     banHeadRow.appendChild(banHeadCell_BannedID);
     banHeadRow.appendChild(banHeadCell_BannedNickname);
+    //banHeadRow.appendChild(banHeadCell_BannedUID);
+    banHeadRow.appendChild(banHeadCell_BannedIP);
     banHeadRow.appendChild(banHeadCell_BannedByNickname);
-    banHeadRow.appendChild(banHeadCell_BannedByInvokerID);
-    banHeadRow.appendChild(banHeadCell_BannedByUID);
+    banHeadRow.appendChild(banHeadCell_BannedByID);
+    //banHeadRow.appendChild(banHeadCell_BannedByUID);
     banHeadRow.appendChild(banHeadCell_BanReason);
     banHeadRow.appendChild(banHeadCell_Bantime);
 
@@ -470,9 +476,15 @@ function buildBanTable() {
         var BanDateTime = Ban[i].getElementsByTagName('BanDateTime')[0].firstChild.nodeValue;
         var BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue;
         var BannedNickname = Ban[i].getElementsByTagName('BannedNickname')[0].firstChild.nodeValue;
+        var BannedUID = Ban[i].getElementsByTagName('BannedUID')[0].firstChild.nodeValue;
+        var BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue;
         var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue;
-        var BannedByInvokerID = Ban[i].getElementsByTagName('BannedByInvokerID')[0].firstChild.nodeValue;
-        var BannedByUID;
+        var BannedByID, BannedByUID;
+        if (BannedIP != "Unknown") {
+            BannedByID = Ban[i].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
+        } else {
+            BannedByID = "Unknown";
+        }
         if (Ban[i].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
             BannedByUID = Ban[i].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
         } else {
@@ -490,9 +502,11 @@ function buildBanTable() {
         var banBodyCell_BanDateTime = document.createElement('td');
         var banBodyCell_BannedID = document.createElement('td');
         var banBodyCell_BannedNickname = document.createElement('td');
+        //var banBodyCell_BannedUID = document.createElement('td');
+        var banBodyCell_BannedIP = document.createElement('td');
         var banBodyCell_BannedByNickname = document.createElement('td');
-        var banBodyCell_BannedByInvokerID = document.createElement('td');
-        var banBodyCell_BannedByUID = document.createElement('td');
+        var banBodyCell_BannedByID = document.createElement('td');
+        // var banBodyCell_BannedByUID = document.createElement('td');
         var banBodyCell_BanReason = document.createElement('td');
         var banBodyCell_Bantime = document.createElement('td');
 
@@ -506,14 +520,20 @@ function buildBanTable() {
         $(banBodyCell_BannedNickname).html(BannedNickname);
         banBodyRow.appendChild(banBodyCell_BannedNickname);
 
+        //$(banBodyCell_BannedUID).html(BannedUID);
+        //banBodyRow.appendChild(banBodyCell_BannedUID);
+
+        $(banBodyCell_BannedIP).html(BannedIP);
+        banBodyRow.appendChild(banBodyCell_BannedIP);
+
         $(banBodyCell_BannedByNickname).html(BannedByNickname);
         banBodyRow.appendChild(banBodyCell_BannedByNickname);
 
-        $(banBodyCell_BannedByInvokerID).html(BannedByInvokerID);
-        banBodyRow.appendChild(banBodyCell_BannedByInvokerID);
+        $(banBodyCell_BannedByID).html(BannedByID);
+        banBodyRow.appendChild(banBodyCell_BannedByID);
 
-        $(banBodyCell_BannedByUID).html(BannedByUID);
-        banBodyRow.appendChild(banBodyCell_BannedByUID);
+        //$(banBodyCell_BannedByUID).html(BannedByUID);
+        //banBodyRow.appendChild(banBodyCell_BannedByUID);
 
         $(banBodyCell_BanReason).html(BanReason);
         banBodyRow.appendChild(banBodyCell_BanReason);
@@ -567,10 +587,10 @@ function buildKickTable() {
     var kickHeadCell_KickReason = document.createElement('th');
 
     $(kickHeadCell_KickDateTime).html('Date and Time');
-    $(kickHeadCell_KickedID).html('Kicked User (ID)');
-    $(kickHeadCell_KickedNickname).html('Kicked User (Nickname)');
-    $(kickHeadCell_KickedByNickname).html('Kicked by (Nickname)');
-    $(kickHeadCell_KickedByUID).html('Kicked by (UID)');
+    $(kickHeadCell_KickedID).html('Kicked User ID');
+    $(kickHeadCell_KickedNickname).html('Kicked User Nickname');
+    $(kickHeadCell_KickedByNickname).html('Kicked by Nickname');
+    $(kickHeadCell_KickedByUID).html('Kicked by UID');
     $(kickHeadCell_KickReason).html('Reason');
 
     kickHeadRow.appendChild(kickHeadCell_KickDateTime);
@@ -663,22 +683,22 @@ function buildComplaintTable() {
     var complaintHead = document.createElement('thead');
     var complaintHeadRow = document.createElement('tr');
     var complaintHeadCell_ComplaintDateTime = document.createElement('th');
-    var complaintHeadCell_ComplaintForNickname = document.createElement('th');
-    var complaintHeadCell_ComplaintForID = document.createElement('th');
+    var complaintHeadCell_ComplaintAboutNickname = document.createElement('th');
+    var complaintHeadCell_ComplaintAboutID = document.createElement('th');
     var complaintHeadCell_ComplaintReason = document.createElement('th');
     var complaintHeadCell_ComplaintByNickname = document.createElement('th');
     var complaintHeadCell_ComplaintByID = document.createElement('th');
 
     $(complaintHeadCell_ComplaintDateTime).html('Date and Time');
-    $(complaintHeadCell_ComplaintForNickname).html('For User (Nickname)');
-    $(complaintHeadCell_ComplaintForID).html('For User (ID)');
+    $(complaintHeadCell_ComplaintAboutNickname).html('About Nickname');
+    $(complaintHeadCell_ComplaintAboutID).html('About ID');
     $(complaintHeadCell_ComplaintReason).html('Reason');
-    $(complaintHeadCell_ComplaintByNickname).html('By User (Nickname)');
-    $(complaintHeadCell_ComplaintByID).html('By User (ID)');
+    $(complaintHeadCell_ComplaintByNickname).html('By Nickname');
+    $(complaintHeadCell_ComplaintByID).html('By ID');
 
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintDateTime);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintForNickname);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintForID);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutNickname);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutID);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintReason);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintByNickname);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintByID);
@@ -690,16 +710,16 @@ function buildComplaintTable() {
 
     for (var i = 0; i < Complaint.length; i++) {
         var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue;
-        var ComplaintForNickname = Complaint[i].getElementsByTagName('ComplaintForNickname')[0].firstChild.nodeValue;
-        var ComplaintForID = Complaint[i].getElementsByTagName('ComplaintForID')[0].firstChild.nodeValue;
+        var ComplaintAboutNickname = Complaint[i].getElementsByTagName('ComplaintAboutNickname')[0].firstChild.nodeValue;
+        var ComplaintAboutID = Complaint[i].getElementsByTagName('ComplaintAboutID')[0].firstChild.nodeValue;
         var ComplaintReason = Complaint[i].getElementsByTagName('ComplaintReason')[0].firstChild.nodeValue;
         var ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
         var ComplaintByID = Complaint[i].getElementsByTagName('ComplaintByID')[0].firstChild.nodeValue;
 
         var complaintBodyRow = document.createElement('tr');
         var complaintBodyCell_ComplaintDateTime = document.createElement('td');
-        var complaintBodyCell_ComplaintForNickname = document.createElement('td');
-        var complaintBodyCell_ComplaintForID = document.createElement('td');
+        var complaintBodyCell_ComplaintAboutNickname = document.createElement('td');
+        var complaintBodyCell_ComplaintAboutID = document.createElement('td');
         var complaintBodyCell_ComplaintReason = document.createElement('td');
         var complaintBodyCell_ComplaintByNickname = document.createElement('td');
         var complaintBodyCell_ComplaintByID = document.createElement('td');
@@ -708,11 +728,11 @@ function buildComplaintTable() {
         $(complaintBodyCell_ComplaintDateTime).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCComplaintDateTime).fromNow() + ')');
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
 
-        $(complaintBodyCell_ComplaintForNickname).html(ComplaintForNickname);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintForNickname);
+        $(complaintBodyCell_ComplaintAboutNickname).html(ComplaintAboutNickname);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutNickname);
 
-        $(complaintBodyCell_ComplaintForID).html(ComplaintForID);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintForID);
+        $(complaintBodyCell_ComplaintAboutID).html(ComplaintAboutID);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutID);
 
         $(complaintBodyCell_ComplaintReason).html(ComplaintReason);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintReason);
@@ -769,8 +789,8 @@ function buildUploadTable() {
     $(uploadHeadCell_UploadDateTime).html('Date and Time');
     $(uploadHeadCell_ChannelID).html('Channel ID');
     $(uploadHeadCell_Filename).html('Filename');
-    $(uploadHeadCell_uploadedByNickname).html('Uploaded By (Nickname)');
-    $(uploadHeadCell_uploadedByID).html('Uploaded By (ID)');
+    $(uploadHeadCell_uploadedByNickname).html('Uploaded by Nickname');
+    $(uploadHeadCell_uploadedByID).html('Uploaded by ID');
 
     uploadHeadRow.appendChild(uploadHeadCell_UploadDateTime);
     uploadHeadRow.appendChild(uploadHeadCell_ChannelID);

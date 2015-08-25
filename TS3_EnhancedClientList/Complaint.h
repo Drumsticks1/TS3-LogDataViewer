@@ -8,15 +8,15 @@ using namespace std;
 // Class for the complaint data.
 class Complaint {
 private:
-	string complaintDateTime, complaintForNickname, complaintReason, complaintByNickname;
-	unsigned int complaintForID, complaintByID;
+	string complaintDateTime, complaintAboutNickname, complaintReason, complaintByNickname;
+	unsigned int complaintAboutID, complaintByID;
 
 public:
-	void addComplaint(string complaintDateTime, string complaintForNickname, unsigned int complaintForID, string complaintReason, string complaintByNickname, unsigned int complaintByID);
+	void addComplaint(string complaintDateTime, string complaintAboutNickname, unsigned int complaintAboutID, string complaintReason, string complaintByNickname, unsigned int complaintByID);
 
 	string getComplaintDateTime();
-	string getComplaintForNickname();
-	unsigned int getComplaintForID();
+	string getComplaintAboutNickname();
+	unsigned int getComplaintAboutID();
 	string getComplaintReason();
 	string getComplaintByNickname();
 	unsigned int getComplaintByID();

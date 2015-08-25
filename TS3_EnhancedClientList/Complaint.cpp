@@ -12,10 +12,10 @@ using namespace std;
 vector <Complaint> ComplaintList;
 
 // Adds a new complaint with the given data to the list.
-void Complaint::addComplaint(string complaintDateTime, string complaintForNickname, unsigned int complaintForID, string complaintReason, string complaintByNickname, unsigned int complaintByID) {
+void Complaint::addComplaint(string complaintDateTime, string complaintAboutNickname, unsigned int complaintAboutID, string complaintReason, string complaintByNickname, unsigned int complaintByID) {
 	this->complaintDateTime = complaintDateTime;
-	this->complaintForNickname = complaintForNickname;
-	this->complaintForID = complaintForID;
+	this->complaintAboutNickname = complaintAboutNickname;
+	this->complaintAboutID = complaintAboutID;
 	this->complaintReason = complaintReason;
 	this->complaintByNickname = complaintByNickname;
 	this->complaintByID = complaintByID;
@@ -23,8 +23,8 @@ void Complaint::addComplaint(string complaintDateTime, string complaintForNickna
 
 // Returns the requested information.
 string Complaint::getComplaintDateTime() { return complaintDateTime; }
-string Complaint::getComplaintForNickname() { return complaintForNickname; }
-unsigned int Complaint::getComplaintForID() { return complaintForID; }
+string Complaint::getComplaintAboutNickname() { return complaintAboutNickname; }
+unsigned int Complaint::getComplaintAboutID() { return complaintAboutID; }
 string Complaint::getComplaintReason() { return complaintReason; }
 string Complaint::getComplaintByNickname() { return complaintByNickname; }
 unsigned int Complaint::getComplaintByID() { return complaintByID; }
