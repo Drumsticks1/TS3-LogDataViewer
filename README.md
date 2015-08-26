@@ -63,6 +63,8 @@ Date and Time                                | Banned ID | Banned Nickname | Ban
 -------------------------------------------- | --------- | --------------- | --------------- | ------------------ | ------------ | ------- | -------
 2015-07-28 13:32:32<br />(about 3 hours ago) | 12        | Drumsticks-Test | 111.222.333.444 | Drumsticks         | 3            | Testban | 1800
 
+- You can switch between the IDs and the UIDs by using the button "Switch between IDs and UIDs in the ban table" in the control section.
+
 #### Kick table layout
 
 Date and Time                                    | Kicked ID | Kicked Nickname   | Kicked by Nickname | Kicked by UID       | Reason

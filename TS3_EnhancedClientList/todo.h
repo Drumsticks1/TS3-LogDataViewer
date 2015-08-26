@@ -10,8 +10,7 @@ general:
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- limit rebuilds on serverside, maybe add cron.
 	- standalone (using electron).
-	- make it possible to switch between IDs and UIDs in the ban table.
-	- add extendable options bars to the navbar and for the tables (Client table controls and ban table controls).
+	- add expandable option bars to the navbar for the tables with extra options (client table controls and ban table controls).
 
 Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
 	- Add custom bans.

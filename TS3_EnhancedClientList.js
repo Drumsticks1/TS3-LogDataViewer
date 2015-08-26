@@ -1119,7 +1119,7 @@ function buildControlSection() {
     var switchBetweenIDandUIDButton = document.createElement('button');
 
     $(switchBetweenIDandUIDSection).prop('id', 'switchBetweenIDandUIDSection');
-    $(switchBetweenIDandUIDButton).html('Switch between ID and UID in the ban table.');
+    $(switchBetweenIDandUIDButton).html('Switch between IDs and UIDs in the ban table');
 
     switchBetweenIDandUIDButton.onclick = function() {
         switchBetweenIDAndUID();
