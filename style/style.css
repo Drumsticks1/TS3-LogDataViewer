@@ -53,7 +53,7 @@ body {
     border-radius: 10px;
     padding: 5px 10px;
 }
-#creationTimestampSection, #rebuildSection, #clientTableControlSection, #connectedClientsCountSection {
+#creationTimestampSection, #rebuildSection, #clientTableControlSection, #connectedClientsCountSection, #switchBetweenIDandUIDSection {
     float: left;
     padding: 5px;
 }
@@ -91,7 +91,7 @@ body {
     -moz-border-radius: 0 0 10px 10px;
     border-radius: 0 0 10px 10px;
 }
-#connectedClientsCountSection, #collapseAllSection, #buildNewXMLButton {
+#connectedClientsCountSection, #collapseAllSection, #buildNewXMLButton, #switchBetweenIDandUIDSection {
     clear: left;
 }
 #connectedClientsCount {

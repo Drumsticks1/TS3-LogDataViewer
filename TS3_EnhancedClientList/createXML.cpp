@@ -40,6 +40,7 @@ void createXML() {
 
 	AttributesNode.add("CreationTimestamp_Localtime", getCurrentLocaltime());
 	AttributesNode.add("CreationTimestamp_UTC", getCurrentUTC());
+	AttributesNode.add("SKIPLOCKFILE", SKIPLOCKFILE);
 
 	ptree& ParsedLogs = AttributesNode.add("ParsedLogs", "");
 	for (unsigned i = 0; i < parsedLogs.size(); i++) {

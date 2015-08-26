@@ -122,8 +122,8 @@ function collapseList(List, ID) {
     $('#' + List + 'Button_' + ID).parent().attr('expanded', false);
 
     if (document.getElementById(ID) !== null) {
-        var x = document.getElementById(ID).childNodes[Row];
-        for (var j = 1; j < x.childNodes.length - 2; j++) {
+        var x = document.getElementById(ID).childNodes[Row].childNodes;
+        for (var j = 1; j < x.length - 2; j++) {
             $('#' + List + '_' + ID + '_' + j).hide();
         }
         if (Row == 3) {
@@ -134,13 +134,13 @@ function collapseList(List, ID) {
 
 // Collapses all expanded lists.
 function collapseAll() {
-    var j, x = document.getElementById('clientTable').lastChild;
-    for (j = 0; j < x.childNodes.length; j++) {
-        if (x.childNodes.item(j).childNodes.item(2).getAttribute('expanded') === 'true') {
-            collapseList('connections', x.childNodes.item(j).getAttribute('id'));
+    var j, x = document.getElementById('clientTable').lastChild.childNodes;
+    for (j = 0; j < x.length; j++) {
+        if (x.item(j).childNodes.item(2).getAttribute('expanded') === 'true') {
+            collapseList('connections', x.item(j).getAttribute('id'));
         }
-        if (x.childNodes.item(j).childNodes.item(3).getAttribute('expanded') === 'true') {
-            collapseList('ips', x.childNodes.item(j).getAttribute('id'));
+        if (x.item(j).childNodes.item(3).getAttribute('expanded') === 'true') {
+            collapseList('ips', x.item(j).getAttribute('id'));
         }
     }
 }
@@ -260,6 +260,48 @@ function applySortOrder() {
     }
 }
 
+// [Description pending]
+function switchBetweenIDAndUID() {
+    var j, rowID, banID, bannedByID, bannedByUID, Ban = XML.getElementsByTagName('Ban'),
+        x = document.getElementById('banTable').lastChild.childNodes;
+
+    // ID --> UID
+    if (document.getElementById('banTable').getAttribute('uid') === 'false') {
+        for (j = 0; j < x.length; j++) {
+            rowID = x.item(j).getAttribute('id');
+            banID = rowID.substring(4, rowID.length);
+
+            if (Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
+                BannedByUID = Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
+            } else {
+                BannedByUID = 'No UID';
+            }
+
+            $(document.getElementById(rowID).childNodes[1]).html(Ban[banID].getElementsByTagName('BannedUID')[0].firstChild.nodeValue);
+            $(document.getElementById(rowID).childNodes[5]).html(BannedByUID);
+        }
+        $('#banTable').attr('uid', 'true');
+    }
+
+    // UID --> ID
+    else if (document.getElementById('banTable').getAttribute('uid') === 'true') {
+        for (j = 0; j < x.length; j++) {
+            rowID = x.item(j).getAttribute('id');
+            banID = rowID.substring(4, rowID.length);
+
+            if (document.getElementById(rowID).childNodes[3] != "Unknown") {
+                BannedByID = Ban[banID].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
+            } else {
+                BannedByID = "Unknown";
+            }
+
+            $(document.getElementById(rowID).childNodes[1]).html(Ban[banID].getElementsByTagName('BannedID')[0].firstChild.nodeValue);
+            $(document.getElementById(rowID).childNodes[5]).html(BannedByID);
+        }
+        $('#banTable').attr('uid', 'false');
+    }
+}
+
 // Builds the client table.
 function buildClientTable() {
     $('#ts3-clientTable').empty();
@@ -330,7 +372,7 @@ function buildClientTable() {
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement('button');
-                $(buttonExpandCollapseConnections).attr('id', 'connectionsButton_' + ID);
+                $(buttonExpandCollapseConnections).prop('id', 'connectionsButton_' + ID);
                 $(buttonExpandCollapseConnections).html('+ ' + (Connections.length - 2));
 
                 (function(ID) {
@@ -358,7 +400,7 @@ function buildClientTable() {
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
-                $(buttonExpandCollapseIPs).attr('id', 'ipsButton_' + ID);
+                $(buttonExpandCollapseIPs).prop('id', 'ipsButton_' + ID);
                 $(buttonExpandCollapseIPs).html('+ ' + (IPs.length - 1));
 
                 (function(ID) {
@@ -437,33 +479,27 @@ function buildBanTable() {
     var banHeadCell_BanDateTime = document.createElement('th');
     var banHeadCell_BannedID = document.createElement('th');
     var banHeadCell_BannedNickname = document.createElement('th');
-    //var banHeadCell_BannedUID = document.createElement('th');
     var banHeadCell_BannedIP = document.createElement('th');
     var banHeadCell_BannedByNickname = document.createElement('th');
     var banHeadCell_BannedByID = document.createElement('th');
-    //var banHeadCell_BannedByUID = document.createElement('th');
     var banHeadCell_BanReason = document.createElement('th');
     var banHeadCell_Bantime = document.createElement('th');
 
     $(banHeadCell_BanDateTime).html('Date and Time');
     $(banHeadCell_BannedID).html('Banned ID');
     $(banHeadCell_BannedNickname).html('Banned Nickname');
-    //$(banHeadCell_BannedUID).html('Banned UID');
     $(banHeadCell_BannedIP).html('Banned IP');
     $(banHeadCell_BannedByNickname).html('Banned by Nickname');
     $(banHeadCell_BannedByID).html('Banned by ID');
-    //$(banHeadCell_BannedByUID).html('Banned by UID');
     $(banHeadCell_BanReason).html('Reason');
     $(banHeadCell_Bantime).html('Bantime');
 
     banHeadRow.appendChild(banHeadCell_BanDateTime);
     banHeadRow.appendChild(banHeadCell_BannedID);
     banHeadRow.appendChild(banHeadCell_BannedNickname);
-    //banHeadRow.appendChild(banHeadCell_BannedUID);
     banHeadRow.appendChild(banHeadCell_BannedIP);
     banHeadRow.appendChild(banHeadCell_BannedByNickname);
     banHeadRow.appendChild(banHeadCell_BannedByID);
-    //banHeadRow.appendChild(banHeadCell_BannedByUID);
     banHeadRow.appendChild(banHeadCell_BanReason);
     banHeadRow.appendChild(banHeadCell_Bantime);
 
@@ -476,19 +512,13 @@ function buildBanTable() {
         var BanDateTime = Ban[i].getElementsByTagName('BanDateTime')[0].firstChild.nodeValue;
         var BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue;
         var BannedNickname = Ban[i].getElementsByTagName('BannedNickname')[0].firstChild.nodeValue;
-        var BannedUID = Ban[i].getElementsByTagName('BannedUID')[0].firstChild.nodeValue;
         var BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue;
         var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue;
-        var BannedByID, BannedByUID;
+        var BannedByID;
         if (BannedIP != "Unknown") {
             BannedByID = Ban[i].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
         } else {
             BannedByID = "Unknown";
-        }
-        if (Ban[i].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
-            BannedByUID = Ban[i].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
-        } else {
-            BannedByUID = 'No UID';
         }
         var BanReason;
         if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
@@ -499,14 +529,14 @@ function buildBanTable() {
         var Bantime = Ban[i].getElementsByTagName('Bantime')[0].firstChild.nodeValue;
 
         var banBodyRow = document.createElement('tr');
+        $(banBodyRow).prop('id', 'ban_' + i);
+
         var banBodyCell_BanDateTime = document.createElement('td');
         var banBodyCell_BannedID = document.createElement('td');
         var banBodyCell_BannedNickname = document.createElement('td');
-        //var banBodyCell_BannedUID = document.createElement('td');
         var banBodyCell_BannedIP = document.createElement('td');
         var banBodyCell_BannedByNickname = document.createElement('td');
         var banBodyCell_BannedByID = document.createElement('td');
-        // var banBodyCell_BannedByUID = document.createElement('td');
         var banBodyCell_BanReason = document.createElement('td');
         var banBodyCell_Bantime = document.createElement('td');
 
@@ -520,9 +550,6 @@ function buildBanTable() {
         $(banBodyCell_BannedNickname).html(BannedNickname);
         banBodyRow.appendChild(banBodyCell_BannedNickname);
 
-        //$(banBodyCell_BannedUID).html(BannedUID);
-        //banBodyRow.appendChild(banBodyCell_BannedUID);
-
         $(banBodyCell_BannedIP).html(BannedIP);
         banBodyRow.appendChild(banBodyCell_BannedIP);
 
@@ -531,9 +558,6 @@ function buildBanTable() {
 
         $(banBodyCell_BannedByID).html(BannedByID);
         banBodyRow.appendChild(banBodyCell_BannedByID);
-
-        //$(banBodyCell_BannedByUID).html(BannedByUID);
-        //banBodyRow.appendChild(banBodyCell_BannedByUID);
 
         $(banBodyCell_BanReason).html(BanReason);
         banBodyRow.appendChild(banBodyCell_BanReason);
@@ -547,6 +571,7 @@ function buildBanTable() {
 
     $(banTable).prop('id', 'banTable');
     $(banTable).prop('class', 'tablesorter');
+    $(banTable).attr('uid', false);
     document.getElementById('ts3-banTable').appendChild(banTable);
 
     if (document.getElementById('scrollToBanTable') === null) {
@@ -569,7 +594,6 @@ function buildBanTable() {
     });
     $('#banTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
-
 
 // Builds the kick table.
 function buildKickTable() {
@@ -921,6 +945,10 @@ function buildTables() {
             }
             $('#connectedClientsCount').html(ConnectedClientsCount);
 
+            if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == "true") {
+                alert("Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.");
+            }
+
             nanobar.go(100);
             document.getElementById('rebuildXMLButton').disabled = false;
             document.getElementById('buildNewXMLButton').disabled = false;
@@ -1058,6 +1086,7 @@ function buildControlSection() {
     sortConnectionsSwitchLabel.appendChild(sortConnectionsSwitchSpanInner);
     sortConnectionsSwitchLabel.appendChild(sortConnectionsSwitchSpanSwitch);
     sortConnectionsSwitch.appendChild(sortConnectionsSwitchLabel);
+    clientTableControlSection.appendChild(sortConnectionsSwitch);
 
     var connectedClientsCountSection = document.createElement('div');
     var connectedClientsCount = document.createElement('div');
@@ -1075,7 +1104,6 @@ function buildControlSection() {
     $(navbar).prop('id', 'navbar');
     $(scrollBackToTopButton).html('Back to top');
     $(scrollToControlSectionButton).html('Control section');
-    clientTableControlSection.appendChild(sortConnectionsSwitch);
 
     scrollBackToTopButton.onclick = function() {
         scrollTo(0, 0);
@@ -1087,10 +1115,23 @@ function buildControlSection() {
     navbar.appendChild(scrollBackToTopButton);
     navbar.appendChild(scrollToControlSectionButton);
 
+    var switchBetweenIDandUIDSection = document.createElement('div');
+    var switchBetweenIDandUIDButton = document.createElement('button');
+
+    $(switchBetweenIDandUIDSection).prop('id', 'switchBetweenIDandUIDSection');
+    $(switchBetweenIDandUIDButton).html('Switch between ID and UID in the ban table.');
+
+    switchBetweenIDandUIDButton.onclick = function() {
+        switchBetweenIDAndUID();
+    };
+
+    switchBetweenIDandUIDSection.appendChild(switchBetweenIDandUIDButton);
+
     controlSection.appendChild(creationTimestampSection);
     controlSection.appendChild(rebuildSection);
     controlSection.appendChild(clientTableControlSection);
     controlSection.appendChild(connectedClientsCountSection);
+    controlSection.appendChild(switchBetweenIDandUIDSection);
     controlSection.appendChild(navbar);
     document.getElementById('ts3-control').appendChild(controlSection);
 }
