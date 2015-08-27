@@ -10,7 +10,6 @@ body {
     padding-bottom: 51px;
 }
 #TS3-ECL {
-    font-family: 'Open Sans', Arial sans-serif;
     font-weight: normal;
     text-align: center;
     color: white;
@@ -23,12 +22,11 @@ body {
 #ts3-control, #ts3-clientTable, #ts3-banTable, #ts3-kickTable, #ts3-complaintTable, #ts3-uploadTable {
     margin: 25px 5px 0;
 }
-#ts3-control, #navbar, .tablesorter {
+#TS3-ECL, #ts3-control, #ts3-control button, #IDSelection, .tablesorter, .tablesorter button {
     font-family: 'Open Sans', Arial, sans-serif;
 }
-#ts3-control button, #navbar button {
-    font-family: 'Open Sans', Arial, sans-serif;
-    flex-grow: 2;
+#ts3-control button {
+    flex-grow: 1;
     border: 1px solid #8093FF;
     text-align: center;
     padding: 8px 10px;
@@ -38,7 +36,7 @@ body {
     font-weight: 300;
     border-radius: 20px;
 }
-#ts3-control button:active, #navbar button:active, #ts3-control button:hover, #navbar button:hover, #ts3-control button:focus, #navbar button:focus {
+#ts3-control button:active, #ts3-control button:hover, #ts3-control button:focus {
     color: white;
     background-color: #8093FF;
     outline: none;
@@ -48,7 +46,7 @@ body {
     color: #999;
 }
 #controlSection {
-    border: 2px solid #E6E6E6;
+    border: 1px solid #E6E6E6;
     overflow: auto;
     border-radius: 10px;
     padding: 5px 10px;
@@ -98,7 +96,6 @@ body {
     display: inline;
 }
 #IDSelection {
-    font-family: 'Open Sans', Arial, sans-serif;
     border: 1px solid #8093FF;
     border-radius: 20px;
     padding: 8px 10px;
@@ -128,11 +125,12 @@ body {
 #clientTable td:nth-child(3) {
     text-align: center;
 }
-table.tablesorter {
+.tablesorter {
     background-color: #CDCDCD;
     font-size: 12pt;
     width: 100%;
     text-align: left;
+    border-spacing: 1px;
     -webkit-border-radius: 10px 10px 0 0;
     -moz-border-radius: 10px 10px 0 0;
     border-radius: 10px 10px 0 0;
@@ -140,23 +138,23 @@ table.tablesorter {
 .tablesorter-sticky-visible {
     background-color: white;
 }
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+.tablesorter thead tr th, .tablesorter tfoot tr th {
     border: 1px solid #E6E6E6;
     font-size: 14pt;
     font-weight: 300;
     padding: 5px;
 }
-table.tablesorter thead tr th:first-child {
+.tablesorter thead tr th:first-child {
     -webkit-border-top-left-radius: 10px;
     -moz-border-radius-topleft: 10px;
     border-top-left-radius: 10px;
 }
-table.tablesorter thead tr th:last-child {
+.tablesorter thead tr th:last-child {
     -webkit-border-top-right-radius: 10px;
     -moz-border-radius-topright: 10px;
     border-top-right-radius: 10px;
 }
-table.tablesorter tbody td {
+.tablesorter tbody td {
     color: #3D3D3D;
     padding: 4px;
     background-color: white;
@@ -165,14 +163,13 @@ table.tablesorter tbody td {
 .tablesorter-header {
     background: #E6E6E6 url(bg.png) no-repeat center right;
 }
-.tablesorter-header.tablesorter-headerAsc {
-    background: #E6E6E6 url(asc.png) no-repeat center right;
+.tablesorter-headerAsc {
+    background-image: url(asc.png);
 }
-.tablesorter-header.tablesorter-headerDesc {
-    background: #E6E6E6 url(desc.png) no-repeat center right;
+.tablesorter-headerDesc {
+    background-image: url(desc.png);
 }
-table.tablesorter button {
-    font-family: 'Open Sans', Arial, sans-serif;
+.tablesorter button {
     border: 1px solid #8093FF;
     text-align: center;
     padding: 3px 10px;
@@ -182,7 +179,7 @@ table.tablesorter button {
     font-weight: 300;
     border-radius: 20px;
 }
-table.tablesorter button:active, table.tablesorter button:hover, table.tablesorter button:focus {
+.tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
     color: white;
     background-color: #8093FF;
     outline: none;
@@ -215,7 +212,6 @@ table.tablesorter button:active, table.tablesorter button:hover, table.tablesort
     transition: margin 0.3s ease-in 0s;
 }
 .sortConnectionsSwitch-inner:before, .sortConnectionsSwitch-inner:after {
-    display: block;
     float: left;
     width: 50%;
     padding: 0;
@@ -223,6 +219,7 @@ table.tablesorter button:active, table.tablesorter button:hover, table.tablesort
     font-size: 0.8rem;
     color: white;
     font-family: 'Open Sans', Arial, sans-serif;
+    color: #8093FF;
     font-weight: 300;
     box-sizing: border-box;
 }
@@ -230,12 +227,10 @@ table.tablesorter button:active, table.tablesorter button:hover, table.tablesort
     content: "Sort by last connect";
     padding-left: 10px;
     background-color: white;
-    color: #8093FF;
 }
 .sortConnectionsSwitch-inner:after {
     content: "Sort by first connect";
     padding-right: 10px;
-    color: #8093FF;
     text-align: right;
 }
 .sortConnectionsSwitch-switch {
