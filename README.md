@@ -1,5 +1,5 @@
 # TS3_EnhancedClientList
-Much more than only an enhanced client list for your Teamspeak3 server.
+Much more than only an enhanced client list for your Teamspeak 3 server.
 
 ## Short description
 TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server. It currently provides a control section and four detailed tables that can either be included in an existing website or used with the provided web interface (index.html):

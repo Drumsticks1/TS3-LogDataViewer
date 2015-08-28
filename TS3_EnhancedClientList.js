@@ -260,10 +260,11 @@ function applySortOrder() {
     }
 }
 
-// [Description pending]
+// Switches between ID/UID columns in the ban table.
 function switchBetweenIDAndUID() {
     var j, rowID, banID, bannedByID, bannedByUID, Ban = XML.getElementsByTagName('Ban'),
-        x = document.getElementById('banTable').lastChild.childNodes;
+        x = document.getElementById('banTable').lastChild.childNodes,
+        banTableHeadRow = document.getElementById('banTable').firstChild.firstChild;
 
     // ID --> UID
     if (document.getElementById('banTable').getAttribute('uid') === 'false') {
@@ -280,6 +281,8 @@ function switchBetweenIDAndUID() {
             $(document.getElementById(rowID).childNodes[1]).html(Ban[banID].getElementsByTagName('BannedUID')[0].firstChild.nodeValue);
             $(document.getElementById(rowID).childNodes[5]).html(BannedByUID);
         }
+        $(banTableHeadRow.childNodes[1]).html('Banned UID');
+        $(banTableHeadRow.childNodes[5]).html('Banned by UID');
         $('#banTable').attr('uid', 'true');
     }
 
@@ -289,15 +292,17 @@ function switchBetweenIDAndUID() {
             rowID = x.item(j).getAttribute('id');
             banID = rowID.substring(4, rowID.length);
 
-            if (document.getElementById(rowID).childNodes[3] != "Unknown") {
+            if (document.getElementById(rowID).childNodes[3] != 'Unknown') {
                 BannedByID = Ban[banID].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
             } else {
-                BannedByID = "Unknown";
+                BannedByID = 'Unknown';
             }
 
             $(document.getElementById(rowID).childNodes[1]).html(Ban[banID].getElementsByTagName('BannedID')[0].firstChild.nodeValue);
             $(document.getElementById(rowID).childNodes[5]).html(BannedByID);
         }
+        $(banTableHeadRow.childNodes[1]).html('Banned ID');
+        $(banTableHeadRow.childNodes[5]).html('Banned by ID');
         $('#banTable').attr('uid', 'false');
     }
 }
@@ -470,7 +475,14 @@ function buildClientTable() {
 
 // Builds the ban table.
 function buildBanTable() {
-    $('#ts3-banTable').empty();
+    var UID;
+    if (document.getElementById('banTable') !== null) {
+        UID = document.getElementById('banTable').getAttribute('uid');
+        $('#ts3-banTable').empty();
+    } else {
+        UID = false;
+    }
+
     var Ban = XML.getElementsByTagName('Ban');
 
     var banTable = document.createElement('table');
@@ -515,10 +527,10 @@ function buildBanTable() {
         var BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue;
         var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue;
         var BannedByID;
-        if (BannedIP != "Unknown") {
+        if (BannedIP != 'Unknown') {
             BannedByID = Ban[i].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
         } else {
-            BannedByID = "Unknown";
+            BannedByID = 'Unknown';
         }
         var BanReason;
         if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
@@ -582,6 +594,10 @@ function buildBanTable() {
             scrollToDiv('banTable');
         };
         document.getElementById('navbar').appendChild(scrollToBanTable);
+    }
+
+    if (UID == 'true') {
+        switchBetweenIDAndUID();
     }
 
     addIgnoreMomentParser();
@@ -894,7 +910,7 @@ function buildTables() {
         cache: false,
         error: function() {
             if (rebuildError) {
-                alert("Rebuilding failed!");
+                alert('Rebuilding failed!');
             } else {
                 rebuildError = true;
                 rebuildXML();
@@ -945,8 +961,8 @@ function buildTables() {
             }
             $('#connectedClientsCount').html(ConnectedClientsCount);
 
-            if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == "true") {
-                alert("Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.");
+            if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
+                alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
             }
 
             nanobar.go(100);
@@ -1078,7 +1094,7 @@ function buildControlSection() {
     sortConnectionsSwitchInput.onclick = function() {
         ConnectionsSortType = this.checked;
         saveSortOrder();
-        $('#clientTable').trigger("updateCache");
+        $('#clientTable').trigger('updateCache');
         applySortOrder();
     };
 
@@ -1155,6 +1171,6 @@ $.when(
         nanobar.go(25);
         buildTables();
     } else {
-        alert("Please include the control section by adding a div with the id 'ts3-control' to your html.");
+        alert('Please include the control section by adding a div with the id "ts3-control" to your html.');
     }
 });
