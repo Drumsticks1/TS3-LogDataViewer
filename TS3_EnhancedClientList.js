@@ -10,25 +10,6 @@ var ConnectedClientsCount, nanobar, currentDiv, momentInterval, XML, rebuildErro
     complaintTableSortOrder = [[0, 1]],
     uploadTableSortOrder = [[0, 1]];
 
-// Including the Open Sans font.
-WebFontConfig = {
-    google: {
-        families: ['Open+Sans::latin']
-    }
-};
-(function() {
-    var wf = document.createElement('script');
-    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    wf.type = 'text/javascript';
-    wf.async = 'true';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(wf, s);
-})();
-
-// Including the style.css.
-$('head').append('<link rel="stylesheet" href="./style/style.css" type="text/css" />');
-
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
     nanobar.go(35);
@@ -945,6 +926,7 @@ function buildTables() {
             $('#creationTimestamp_localtime').html(CreationTimestampLocaltime);
             $('#creationTimestamp_utc').html(CreationTimestampUTC);
 
+            $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
                 $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
@@ -1152,15 +1134,7 @@ function buildControlSection() {
     document.getElementById('ts3-control').appendChild(controlSection);
 }
 
-$.when(
-    $.getScript('jquery.tablesorter.min.js'),
-    $.getScript('jquery.tablesorter.widgets.min.js'),
-    $.getScript('moment.min.js'),
-    $.getScript('nanobar.min.js'),
-    $.Deferred(function(deferred) {
-        $(deferred.resolve);
-    })
-).done(function() {
+$(document).ready(function() {
     if ($('#ts3-control').length) {
         nanobar = new Nanobar({
             bg: 'white',

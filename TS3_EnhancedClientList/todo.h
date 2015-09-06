@@ -10,7 +10,8 @@ general:
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- standalone (using electron).
 	- limit rebuilds on serverside, maybe add cron.
-	- Replace the navbar and parts of the control section with an expandable sidebar menu.
+	- add query clients to client list or a query client list?
+	- use foundation as css framework.
 
 Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
 	- Add custom bans.

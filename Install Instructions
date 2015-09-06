@@ -19,16 +19,25 @@ Linux:
 	4.8. Check the include paths in the makefile and adjust them if necessary.
 	4.9. Compile with the makefile ("make -f makefile").
 5. Download jQuery via this link: http://code.jquery.com/jquery-2.1.4.min.js
-6. Download the javascript file for the loading bar via the following link: "https://raw.githubusercontent.com/jacoborus/nanobar/master/nanobar.min.js".
+6. Download the javascript file for the loading bar via the following link: "https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js".
 7. Download the jquery plugin "moment.js" via the following link: "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js".
 8. Download the following files from the unofficial fork of the jquery plugin "tablesorter": https://mottie.github.io/tablesorter/docs/ :
-	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.js
-	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.5/js/jquery.tablesorter.widgets.min.js
+	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.3/js/jquery.tablesorter.min.js
+	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.3/js/jquery.tablesorter.widgets.min.js
 9. Move the "TS3_EnhancedClientList.js" and the other javascript files you just downloaded into your EnhancedClientList directory.
-10. If you want to use the provided index.html (headline and all tables) skip to step 11, otherwise if you want to include the controls and the table into an existing HTML follow the 10.x steps.
+10. If you want to use the provided index.html (recommended - headline and all tables) skip to step 11, otherwise if you want to include the controls and the table into an existing HTML follow the 10.x steps.
 	10.1. Include the control section by creating a div with the id "ts3-control".
-	10.2. Include the "TS3_EnhancedClientList.js" and the "jquery-2.1.4.min.js" into the head section of you HTML.
-	10.3. You can now decide which of the following tables you want to include by adding divs with the following ids: "ts3-clientTable", "ts3-banTable", "ts3-kickTable", "ts3-complaintTable" and "ts3-uploadTable".
+	10.2. Include the following lines into your head-section:
+			<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+			<link href='style/style.css' rel='stylesheet' type='text/css'>
+	10.3. Include the following lines at the end of they body (right before the </body> tag):
+			<script type='text/javascript' src='jquery-2.1.4.min.js'></script>
+			<script type='text/javascript' src='jquery.tablesorter.min.js'></script>
+			<script type='text/javascript' src='jquery.tablesorter.widgets.min.js'></script>
+			<script type='text/javascript' src='moment.min.js'></script>
+			<script type='text/javascript' src='nanobar.min.js'></script>
+			<script type='text/javascript' src='TS3_EnhancedClientList.js'></script>
+	10.4. You can now decide which of the following tables you want to include by adding divs with the following ids: "ts3-clientTable", "ts3-banTable", "ts3-kickTable", "ts3-complaintTable" and "ts3-uploadTable".
 11. Move the "index.html" into your created EnhancedClientList directory.
 12. Move the "styles" folder into your EnhancedClientList directory.
 13. Move the downloaded and unzipped or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
