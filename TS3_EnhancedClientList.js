@@ -32,13 +32,7 @@ function buildNewXML() {
 
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
-    var i;
-    if (List == 'ips') {
-        i = 1;
-    } else {
-        i = 2;
-    }
-    currentDiv = List + '_' + ID + '_' + i;
+    currentDiv = List + '_' + ID + '_1';
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden') === true) {
         expandList(List, ID);
     } else {
@@ -291,8 +285,38 @@ function switchBetweenIDAndUID() {
 // Builds the client table.
 function buildClientTable() {
     $('#ts3-clientTable').empty();
-    var User = XML.getElementsByTagName('User');
+    var clientTableControlSection = document.createElement('div');
+    var connectionsSortTypeButton = document.createElement('button');
+    $(connectionsSortTypeButton).prop('id', 'connectionsSortTypeButton');
+    $(connectionsSortTypeButton).prop('class', 'small-12 medium-8 large-6 columns');
+    $(connectionsSortTypeButton).html('Currently sorting the connections by the last connect');
 
+    connectionsSortTypeButton.onclick = function() {
+        if (ConnectionsSortType) {
+            $(connectionsSortTypeButton).html('Currently sorting the connections by the first connect');
+            ConnectionsSortType = false;
+        } else {
+            $(connectionsSortTypeButton).html('Currently sorting the connections by the last connect');
+            ConnectionsSortType = true;
+        }
+        saveSortOrder();
+        $('#clientTable').trigger('updateCache');
+        applySortOrder();
+    };
+    clientTableControlSection.appendChild(connectionsSortTypeButton);
+
+    var collapseAllButton = document.createElement('button');
+    $(collapseAllButton).prop('id', 'collapseAllButton');
+    $(collapseAllButton).prop('class', 'small-12 medium-4 large-6 columns');
+    $(collapseAllButton).html('Collapse expanded lists');
+
+    collapseAllButton.onclick = function() {
+        collapseAll();
+    };
+    clientTableControlSection.appendChild(collapseAllButton);
+    document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
+
+    var User = XML.getElementsByTagName('User');
     var userTable = document.createElement('table');
     var userHead = document.createElement('thead');
     var userHeadRow = document.createElement('tr');
@@ -433,7 +457,7 @@ function buildClientTable() {
         $(scrollToClientTable).prop('id', 'scrollToClientTable');
         $(scrollToClientTable).html('Client table');
         scrollToClientTable.onclick = function() {
-            scrollToDiv('clientTable');
+            scrollToDiv('ts3-clientTable');
         };
         document.getElementById('navbar').appendChild(scrollToClientTable);
     }
@@ -456,16 +480,23 @@ function buildClientTable() {
 
 // Builds the ban table.
 function buildBanTable() {
-    var UID;
+    var UIDState;
     if (document.getElementById('banTable') !== null) {
-        UID = document.getElementById('banTable').getAttribute('uid');
+        UIDState = document.getElementById('banTable').getAttribute('uid');
         $('#ts3-banTable').empty();
     } else {
-        UID = false;
+        UIDState = false;
     }
 
-    var Ban = XML.getElementsByTagName('Ban');
+    var switchBetweenIDandUIDButton = document.createElement('button');
+    $(switchBetweenIDandUIDButton).prop('id', 'switchBetweenIDandUIDButton');
+    $(switchBetweenIDandUIDButton).html('Switch between IDs and UIDs');
+    switchBetweenIDandUIDButton.onclick = function() {
+        switchBetweenIDAndUID();
+    };
+    document.getElementById('ts3-banTable').appendChild(switchBetweenIDandUIDButton);
 
+    var Ban = XML.getElementsByTagName('Ban');
     var banTable = document.createElement('table');
     var banHead = document.createElement('thead');
     var banHeadRow = document.createElement('tr');
@@ -572,12 +603,12 @@ function buildBanTable() {
         $(scrollToBanTable).prop('id', 'scrollToBanTable');
         $(scrollToBanTable).html('Ban table');
         scrollToBanTable.onclick = function() {
-            scrollToDiv('banTable');
+            scrollToDiv('ts3-banTable');
         };
         document.getElementById('navbar').appendChild(scrollToBanTable);
     }
 
-    if (UID == 'true') {
+    if (UIDState == 'true') {
         switchBetweenIDAndUID();
     }
 
@@ -596,7 +627,6 @@ function buildBanTable() {
 function buildKickTable() {
     $('#ts3-kickTable').empty();
     var Kick = XML.getElementsByTagName('Kick');
-
     var kickTable = document.createElement('table');
     var kickHead = document.createElement('thead');
     var kickHeadRow = document.createElement('tr');
@@ -679,7 +709,7 @@ function buildKickTable() {
         $(scrollToKickTable).prop('id', 'scrollToKickTable');
         $(scrollToKickTable).html('Kick table');
         scrollToKickTable.onclick = function() {
-            scrollToDiv('kickTable');
+            scrollToDiv('ts3-kickTable');
         };
         document.getElementById('navbar').appendChild(scrollToKickTable);
     }
@@ -699,7 +729,6 @@ function buildKickTable() {
 function buildComplaintTable() {
     $('#ts3-complaintTable').empty();
     var Complaint = XML.getElementsByTagName('Complaint');
-
     var complaintTable = document.createElement('table');
     var complaintHead = document.createElement('thead');
     var complaintHeadRow = document.createElement('tr');
@@ -777,7 +806,7 @@ function buildComplaintTable() {
         $(scrollToComplaintTable).prop('id', 'scrollToComplaintTable');
         $(scrollToComplaintTable).html('Complaint table');
         scrollToComplaintTable.onclick = function() {
-            scrollToDiv('complaintTable');
+            scrollToDiv('ts3-complaintTable');
         };
         document.getElementById('navbar').appendChild(scrollToComplaintTable);
     }
@@ -797,7 +826,6 @@ function buildComplaintTable() {
 function buildUploadTable() {
     $('#ts3-uploadTable').empty();
     var File = XML.getElementsByTagName('File');
-
     var uploadTable = document.createElement('table');
     var uploadHead = document.createElement('thead');
     var uploadHeadRow = document.createElement('tr');
@@ -867,7 +895,7 @@ function buildUploadTable() {
         $(scrollToUploadTable).prop('id', 'scrollToUploadTable');
         $(scrollToUploadTable).html('Upload table');
         scrollToUploadTable.onclick = function() {
-            scrollToDiv('uploadTable');
+            scrollToDiv('ts3-uploadTable');
         };
         document.getElementById('navbar').appendChild(scrollToUploadTable);
     }
@@ -903,7 +931,6 @@ function buildTables() {
             ConnectedClientsCount = 0;
 
             if ($('#ts3-clientTable').length) {
-                $('#clientTableControlSection').show();
                 buildClientTable();
             }
             if ($('#ts3-banTable').length) {
@@ -941,7 +968,7 @@ function buildTables() {
                     }
                 }
             }
-            $('#connectedClientsCount').html(ConnectedClientsCount);
+            $('#connectedClientsCount').html('Connected clients: ' + ConnectedClientsCount);
 
             if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
                 alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
@@ -957,29 +984,6 @@ function buildTables() {
 // Builds the control section.
 function buildControlSection() {
     var controlSection = document.createElement('div');
-    var rebuildSection = document.createElement('div');
-    var rebuildXMLButton = document.createElement('button');
-    var buildNewXMLButton = document.createElement('button');
-
-    $(controlSection).prop('id', 'controlSection');
-    $(rebuildSection).prop('id', 'rebuildSection');
-    $(rebuildXMLButton).prop('id', 'rebuildXMLButton');
-    $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
-    $(rebuildXMLButton).prop('disabled', 'true');
-    $(buildNewXMLButton).prop('disabled', 'true');
-    $(rebuildXMLButton).html('Rebuild XML and reload tables');
-    $(buildNewXMLButton).html('Delete XML and generate a new one');
-
-    rebuildXMLButton.onclick = function() {
-        rebuildXML();
-    };
-    buildNewXMLButton.onclick = function() {
-        buildNewXML();
-    };
-
-    rebuildSection.appendChild(rebuildXMLButton);
-    rebuildSection.appendChild(buildNewXMLButton);
-
     var creationTimestampSection = document.createElement('div');
     var creationTimestampTable = document.createElement('table');
     var ctTHead = document.createElement('thead');
@@ -992,21 +996,27 @@ function buildControlSection() {
     var ctT_localtime = document.createElement('td');
     var ctT_utc = document.createElement('td');
     var ctT_moment = document.createElement('td');
-    var ctTDescription = document.createElement('div');
 
+    var connectedClientsCount = document.createElement('div');
+
+    $(controlSection).prop('id', 'controlSection');
+    $(controlSection).prop('class', 'row');
     $(creationTimestampSection).prop('id', 'creationTimestampSection');
+    $(creationTimestampSection).prop('class', 'small-12 medium-8 large-8 columns');
     $(creationTimestampTable).prop('id', 'creationTimestampTable');
     $(ctT_localtime).prop('id', 'creationTimestamp_localtime');
     $(ctT_utc).prop('id', 'creationTimestamp_utc');
     $(ctT_moment).prop('id', 'creationTimestamp_moment');
-    $(creationTimestampSection).html('Creation DateTime of the current XML:');
+    $(creationTimestampSection).html('Creation DateTime of the current XML');
     $(ctTHead_localtime).html('Server localtime');
     $(ctTHead_utc).html('UTC');
     $(ctTHead_moment).html('moment.js');
     $(ctT_localtime).html('Analyzing...');
     $(ctT_utc).html('Analyzing...');
     $(ctT_moment).html('Analyzing...');
-    $(ctTDescription).html('The DateTimes in the tables are displayed in your current timezone.');
+
+    $(connectedClientsCount).prop('id', 'connectedClientsCount');
+    $(connectedClientsCount).html('Analyzing data...');
 
     ctTHeadRow.appendChild(ctTHead_localtime);
     ctTHeadRow.appendChild(ctTHead_utc);
@@ -1020,121 +1030,51 @@ function buildControlSection() {
     ctTBody.appendChild(ctTBodyRow);
     creationTimestampTable.appendChild(ctTBody);
     creationTimestampSection.appendChild(creationTimestampTable);
-    creationTimestampSection.appendChild(ctTDescription);
+    creationTimestampSection.appendChild(connectedClientsCount);
 
-    var clientTableControlSection = document.createElement('div');
-    var scrollToClientTableRowSection = document.createElement('div');
-    var scrollToCTRInput = document.createElement('input');
-    var scrollToCTRButton = document.createElement('button');
+    var rebuildSection = document.createElement('div');
+    var rebuildXMLButton = document.createElement('button');
+    var buildNewXMLButton = document.createElement('button');
 
-    $(clientTableControlSection).prop('id', 'clientTableControlSection');
-    $(clientTableControlSection).hide();
-    $(scrollToClientTableRowSection).prop('id', 'scrollToClientTableRowSection');
-    $(scrollToCTRInput).prop('id', 'IDSelection');
-    $(scrollToCTRInput).prop('type', 'number');
-    $(scrollToCTRInput).prop('min', '0');
-    $(scrollToCTRInput).prop('placeholder', 'Enter an ID');
-    $(scrollToCTRButton).html('Scroll to ID in the client list');
+    $(rebuildSection).prop('id', 'rebuildSection');
+    $(rebuildSection).prop('class', 'small-12 medium-4 large-4 columns');
+    $(rebuildXMLButton).prop('id', 'rebuildXMLButton');
+    $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
+    $(rebuildXMLButton).prop('disabled', 'true');
+    $(buildNewXMLButton).prop('disabled', 'true');
+    $(rebuildXMLButton).html('Update current XML');
+    $(buildNewXMLButton).html('Generate new XML');
 
-    scrollToCTRButton.onclick = function() {
-        scrollToClientTableRow(document.getElementById('IDSelection').value);
+    rebuildXMLButton.onclick = function() {
+        rebuildXML();
+    };
+    buildNewXMLButton.onclick = function() {
+        buildNewXML();
     };
 
-    scrollToClientTableRowSection.appendChild(scrollToCTRInput);
-    scrollToClientTableRowSection.appendChild(scrollToCTRButton);
-    clientTableControlSection.appendChild(scrollToClientTableRowSection);
-
-    var collapseAllSection = document.createElement('div');
-    var collapseAllButton = document.createElement('button');
-
-    $(collapseAllSection).prop('id', 'collapseAllSection');
-    $(collapseAllButton).html('Collapse all expanded lists');
-
-    collapseAllButton.onclick = function() {
-        collapseAll();
-    };
-
-    collapseAllSection.appendChild(collapseAllButton);
-    clientTableControlSection.appendChild(collapseAllSection);
-
-    var sortConnectionsSwitch = document.createElement('div');
-    var sortConnectionsSwitchInput = document.createElement('input');
-    var sortConnectionsSwitchLabel = document.createElement('label');
-    var sortConnectionsSwitchSpanInner = document.createElement('span');
-    var sortConnectionsSwitchSpanSwitch = document.createElement('span');
-
-    $(sortConnectionsSwitch).prop('class', 'sortConnectionsSwitch');
-    $(sortConnectionsSwitchInput).prop('type', 'checkbox');
-    $(sortConnectionsSwitchInput).prop('class', 'sortConnectionsSwitch-checkbox');
-    $(sortConnectionsSwitchInput).prop('id', 'sortConnectionsSwitch');
-    $(sortConnectionsSwitchInput).prop('checked', true);
-    $(sortConnectionsSwitchLabel).prop('class', 'sortConnectionsSwitch-label');
-    $(sortConnectionsSwitchLabel).prop('for', 'sortConnectionsSwitch');
-    $(sortConnectionsSwitchSpanInner).prop('class', 'sortConnectionsSwitch-inner');
-    $(sortConnectionsSwitchSpanSwitch).prop('class', 'sortConnectionsSwitch-switch');
-
-    sortConnectionsSwitchInput.onclick = function() {
-        ConnectionsSortType = this.checked;
-        saveSortOrder();
-        $('#clientTable').trigger('updateCache');
-        applySortOrder();
-    };
-
-    sortConnectionsSwitch.appendChild(sortConnectionsSwitchInput);
-    sortConnectionsSwitchLabel.appendChild(sortConnectionsSwitchSpanInner);
-    sortConnectionsSwitchLabel.appendChild(sortConnectionsSwitchSpanSwitch);
-    sortConnectionsSwitch.appendChild(sortConnectionsSwitchLabel);
-    clientTableControlSection.appendChild(sortConnectionsSwitch);
-
-    var connectedClientsCountSection = document.createElement('div');
-    var connectedClientsCount = document.createElement('div');
-    $(connectedClientsCountSection).prop('id', 'connectedClientsCountSection');
-    $(connectedClientsCount).prop('id', 'connectedClientsCount');
-    $(connectedClientsCountSection).html('Connected clients: ');
-    $(connectedClientsCount).html('Analyzing data...');
-
-    connectedClientsCountSection.appendChild(connectedClientsCount);
+    rebuildSection.appendChild(rebuildXMLButton);
+    rebuildSection.appendChild(buildNewXMLButton);
 
     var navbar = document.createElement('div');
     var scrollBackToTopButton = document.createElement('button');
-    var scrollToControlSectionButton = document.createElement('button');
 
     $(navbar).prop('id', 'navbar');
     $(scrollBackToTopButton).html('Back to top');
-    $(scrollToControlSectionButton).html('Control section');
 
     scrollBackToTopButton.onclick = function() {
         scrollTo(0, 0);
     };
-    scrollToControlSectionButton.onclick = function() {
-        scrollToDiv('controlSection');
-    };
 
     navbar.appendChild(scrollBackToTopButton);
-    navbar.appendChild(scrollToControlSectionButton);
-
-    var switchBetweenIDandUIDSection = document.createElement('div');
-    var switchBetweenIDandUIDButton = document.createElement('button');
-
-    $(switchBetweenIDandUIDSection).prop('id', 'switchBetweenIDandUIDSection');
-    $(switchBetweenIDandUIDButton).html('Switch between IDs and UIDs in the ban table');
-
-    switchBetweenIDandUIDButton.onclick = function() {
-        switchBetweenIDAndUID();
-    };
-
-    switchBetweenIDandUIDSection.appendChild(switchBetweenIDandUIDButton);
 
     controlSection.appendChild(creationTimestampSection);
     controlSection.appendChild(rebuildSection);
-    controlSection.appendChild(clientTableControlSection);
-    controlSection.appendChild(connectedClientsCountSection);
-    controlSection.appendChild(switchBetweenIDandUIDSection);
     controlSection.appendChild(navbar);
     document.getElementById('ts3-control').appendChild(controlSection);
 }
 
 $(document).ready(function() {
+    $(document).foundation();
     if ($('#ts3-control').length) {
         nanobar = new Nanobar({
             bg: 'white',

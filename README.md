@@ -2,7 +2,7 @@
 Much more than only an enhanced client list for your Teamspeak 3 server.
 
 ## Short description
-TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server. It currently provides a control section and four detailed tables that can either be included in an existing website or used with the provided web interface (index.html):
+TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server. It currently provides a control section and five detailed tables that come with a provided web interface (index.html):
 - Control section
 - Client list
 - Ban list
@@ -11,7 +11,7 @@ TS3_EnhancedClientList creates detailed lists using the information written to t
 - File upload list
 
 ## How does it work ?
-The program needs the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
+The program requires the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
 
 ## Current Features
 ### Multiple sortable tables
@@ -21,20 +21,13 @@ The program needs the log files of the TS3 server (logging has to be enabled in 
 - Complaint list
 - File upload list
 
-### Custom implementation or provided web interface
-You can either use the provided web interface (index.html) or implement the control section and the different tables into you existing website (see "Install Instructions").
-
 #### Control Section
-- Rebuild the XML and reload the Table via a button.
-- Complete rebuild of the XML via a button (useful when changing log directories or after an failed database migration).
+- Update the current XML via a button.
+- Generate a new XML via a button (useful when changing log directories or after an failed database migration).
 - Timestamps of the XML creation (local time of the server and UTC).
 - Count of the currently connected clients.
-- Scroll to the client table position of an ID.
-- Collapse all extended lists.
-- Switch between sorting by first or last Connections.
 - Navbar (fixed at the bottom of the page) which contains the following buttons (scroll buttons of not included tables won't appear):
   - Scroll back to top
-  - Scroll to control section
   - Scroll to client table
   - Scroll to ban table
   - Scroll to kick table
@@ -42,6 +35,10 @@ You can either use the provided web interface (index.html) or implement the cont
   - Scroll to upload table
 
 #### Client table layout and features
+
+Controls for the client table:
+- Switch between sorting by first or last Connections via the a button.
+- Collapse all extended lists via a button.
 
 ID  | Nicknames                                                                     | Connections                                                                        | IPs                                             | Connections Count | Connected | Deleted
 --- | ----------------------------------------------------------------------------- | :--------------------------------------------------------------------------------: | ----------------------------------------------- | ----------------- | --------- | -------
@@ -59,11 +56,12 @@ ID  | Nicknames                                                                 
 
 #### Ban table layout
 
+Controls for the ban table:
+- Switch between the IDs and the UIDs by using the button "Switch between IDs and UIDs".
+
 Date and Time                                | Banned ID | Banned Nickname | Banned IP       | Banned by Nickname | Banned by ID | Reason  | Bantime
 -------------------------------------------- | --------- | --------------- | --------------- | ------------------ | ------------ | ------- | -------
 2015-07-28 13:32:32<br />(about 3 hours ago) | 12        | Drumsticks-Test | 111.222.333.444 | Drumsticks         | 3            | Testban | 1800
-
-- You can switch between the IDs and the UIDs by using the button "Switch between IDs and UIDs in the ban table" in the control section.
 
 #### Kick table layout
 
@@ -104,6 +102,8 @@ As the file name already implies, the install instructions can be found in the f
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br /> You will need to download the following extern files:
+- The front-end framework Foundation:
+  - [foundation-5.5.2.zip](http://foundation.zurb.com/cdn/releases/foundation-5.5.2.zip)
 - jQuery:
   - [jquery-2.1.4.min.js](https://code.jquery.com/jquery-2.1.4.min.js)
 - Two files from [this fork](https://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":

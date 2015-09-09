@@ -11,7 +11,6 @@ general:
 	- standalone (using electron).
 	- limit rebuilds on serverside, maybe add cron.
 	- add query clients to client list or a query client list?
-	- use foundation as css framework.
 
 Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
 	- Add custom bans.

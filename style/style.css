@@ -5,108 +5,58 @@ GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 Feel free to modify this file according to your wishes.
 */
 
-body {
-    margin: 0;
-    padding-bottom: 51px;
+button {
+    border: 1px solid rgba(0, 0, 0, 0.10);
+}
+button:disabled {
+    color: black;
+}
+table {
+    border: none;
+    background-color: #CDCDCD;
+    font-size: 12pt;
+    width: 100%;
+    text-align: left;
+    border-collapse: separate;
+    border-spacing: 1px;
+}
+table tbody td {
+    color: #3D3D3D;
+    padding: 4px;
+    background-color: white;
+    vertical-align: top;
+}
+.row {
+    max-width: 100%
 }
 #TS3-ECL {
-    font-weight: normal;
+    margin: 0;
     text-align: center;
+    background-color: #2ba6cb;
     color: white;
-    background-color: #8093FF;
-    margin-top: 0;
-    min-width: 600px;
-    height: 70px;
-    line-height: 70px;
 }
-#ts3-control, #ts3-clientTable, #ts3-banTable, #ts3-kickTable, #ts3-complaintTable, #ts3-uploadTable {
-    margin: 25px 5px 0;
-}
-#TS3-ECL, #ts3-control, #ts3-control button, #IDSelection, .tablesorter, .tablesorter button {
+#TS3-ECL, #ts3-control, .tablesorter, button {
     font-family: 'Open Sans', Arial, sans-serif;
 }
-#ts3-control button {
-    flex-grow: 1;
-    border: 1px solid #8093FF;
-    text-align: center;
-    padding: 8px 10px;
-    background: white;
-    color: #8093FF;
-    font-size: 0.8rem;
-    font-weight: 300;
-    border-radius: 20px;
-}
-#ts3-control button:active, #ts3-control button:hover, #ts3-control button:focus {
-    color: white;
-    background-color: #8093FF;
-    outline: none;
-    transition: background-color, color 200ms;
-}
-#ts3-control button:disabled {
-    color: #999;
-}
 #controlSection {
-    border: 1px solid #E6E6E6;
-    overflow: auto;
-    border-radius: 10px;
-    padding: 5px 10px;
-}
-#creationTimestampSection, #rebuildSection, #clientTableControlSection, #connectedClientsCountSection, #switchBetweenIDandUIDSection {
-    float: left;
-    padding: 5px;
-}
-#collapseAllSection {
-    margin-right: 5px;
-}
-#rebuildXMLButton {
-    float: left;
-    width: 100%;
-}
-#buildNewXMLButton {
-    float: right;
-    margin: 5px 0;
-}
-#creationTimestampSection {
-    min-width: 510px;
+    margin-top: 20px;
+    padding: 0;
 }
 #creationTimestampTable {
-    border-spacing: 5px;
-    max-width: 493px;
-    margin: 10px 0;
+    margin: 0.75rem 0;
 }
-#creationTimestampTable thead tr th, #creationTimestampTable tbody tr td {
+#TS3-ECL, #creationTimestampTable thead tr th {
     font-weight: normal;
-    border: 1px solid #8093FF;
-    padding: 5px;
 }
-#creationTimestampTable thead tr th {
-    -webkit-border-radius: 10px 10px 0 0;
-    -moz-border-radius: 10px 10px 0 0;
-    border-radius: 10px 10px 0 0;
+#rebuildSection, #creationTimestampSection {
+    margin-bottom: 20px;
 }
-#creationTimestampTable tbody tr td {
-    -webkit-border-radius: 0 0 10px 10px;
-    -moz-border-radius: 0 0 10px 10px;
-    border-radius: 0 0 10px 10px;
+#rebuildXMLButton, #buildNewXMLButton, #switchBetweenIDandUIDButton {
+    width: 100%;
+    margin: 0;
 }
-#connectedClientsCountSection, #collapseAllSection, #buildNewXMLButton, #switchBetweenIDandUIDSection {
-    clear: left;
-}
-#connectedClientsCount {
-    display: inline;
-}
-#IDSelection {
-    border: 1px solid #8093FF;
-    border-radius: 20px;
-    padding: 8px 10px;
-}
-#scrollToClientTableRowSection, #collapseAllSection {
-    padding-bottom: 5px;
-    float: left;
-}
-#scrollToClientTableRowSection button {
-    margin-left: 5px;
-    padding: 8px 10px;
+#collapseAllButton, #connectionsSortTypeButton {
+    margin: 0;
 }
 #navbar {
     display: flex;
@@ -116,49 +66,26 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 5px 10px 10px;
     box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, 0.75);
 }
 #navbar button {
-    margin: 0 4px;
+    flex-grow: 1;
+    color: white;
+    font-size: 0.8rem;
+    padding: 0.75rem;
+    margin: 0;
 }
 #clientTable td:nth-child(3) {
     text-align: center;
 }
-.tablesorter {
-    background-color: #CDCDCD;
-    font-size: 12pt;
-    width: 100%;
-    text-align: left;
-    border-spacing: 1px;
-    -webkit-border-radius: 10px 10px 0 0;
-    -moz-border-radius: 10px 10px 0 0;
-    border-radius: 10px 10px 0 0;
-}
-.tablesorter-sticky-visible {
-    background-color: white;
+#ts3-uploadTable{
+  margin-bottom: 44px;
 }
 .tablesorter thead tr th, .tablesorter tfoot tr th {
     border: 1px solid #E6E6E6;
     font-size: 14pt;
-    font-weight: 300;
+    font-weight: normal;
     padding: 5px;
-}
-.tablesorter thead tr th:first-child {
-    -webkit-border-top-left-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    border-top-left-radius: 10px;
-}
-.tablesorter thead tr th:last-child {
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-right-radius: 10px;
-}
-.tablesorter tbody td {
-    color: #3D3D3D;
-    padding: 4px;
-    background-color: white;
-    vertical-align: top;
 }
 .tablesorter-header {
     background: #E6E6E6 url(bg.png) no-repeat center right;
@@ -170,85 +97,17 @@ body {
     background-image: url(desc.png);
 }
 .tablesorter button {
-    border: 1px solid #8093FF;
-    text-align: center;
-    padding: 3px 10px;
     background: white;
-    color: #8093FF;
+    color: #008CBA;
+    position: static;
+    width: 100%;
+    padding: 5px 0px;
+    margin-bottom: 5px;
     font-size: 0.8rem;
-    font-weight: 300;
-    border-radius: 20px;
 }
 .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
     color: white;
-    background-color: #8093FF;
+    background-color: #007095;
     outline: none;
     transition: background-color, color 200ms;
-}
-.sortConnectionsSwitch {
-    float: left;
-    position: relative;
-    width: 175px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-.sortConnectionsSwitch-checkbox {
-    display: none;
-    margin: 0;
-}
-.sortConnectionsSwitch-label {
-    display: block;
-    overflow: hidden;
-    cursor: pointer;
-    width: 100%;
-    border: 1px solid #8093FF;
-    border-radius: 20px;
-}
-.sortConnectionsSwitch-inner {
-    display: block;
-    width: 200%;
-    margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-.sortConnectionsSwitch-inner:before, .sortConnectionsSwitch-inner:after {
-    float: left;
-    width: 50%;
-    padding: 0;
-    line-height: 34px;
-    font-size: 0.8rem;
-    color: white;
-    font-family: 'Open Sans', Arial, sans-serif;
-    color: #8093FF;
-    font-weight: 300;
-    box-sizing: border-box;
-}
-.sortConnectionsSwitch-inner:before {
-    content: "Sort by last connect";
-    padding-left: 10px;
-    background-color: white;
-}
-.sortConnectionsSwitch-inner:after {
-    content: "Sort by first connect";
-    padding-right: 10px;
-    text-align: right;
-}
-.sortConnectionsSwitch-switch {
-    display: block;
-    width: 16px;
-    margin: 6px;
-    background: white;
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
-    right: 141px;
-    border: 2px solid #8093FF;
-    border-radius: 20px;
-    transition: all 0.3s ease-in 0s;
-}
-.sortConnectionsSwitch-checkbox:checked + .sortConnectionsSwitch-label .sortConnectionsSwitch-inner {
-    margin-left: 0;
-}
-.sortConnectionsSwitch-checkbox:checked + .sortConnectionsSwitch-label .sortConnectionsSwitch-switch {
-    right: 0;
 }
