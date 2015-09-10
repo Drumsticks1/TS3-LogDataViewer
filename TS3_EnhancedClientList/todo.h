@@ -8,9 +8,11 @@ general:
 	- add additional optional ignore files for the tables.
 	- make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
-	- standalone (using electron).
 	- limit rebuilds on serverside, maybe add cron.
 	- add query clients to client list or a query client list?
+	- use local storage for saving options.
+	- change navbar for small displays (expandable navbar at the top for screens < 640p - currently collides with sticky headers).
+	- update readme about foundation and responsive design.
 
 Bans: Currently only includes the bans that kicked the banned user (= the banned user had to be online when he got banned).
 	- Add custom bans.

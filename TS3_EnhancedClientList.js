@@ -125,6 +125,7 @@ function scrollToDiv(Div_ID) {
     document.getElementById(Div_ID).scrollIntoView();
 }
 
+/* Dev: currently unused.
 // Scroll to the given Row in the client list.
 function scrollToClientTableRow(Row_ID) {
     if (document.getElementById(Row_ID) !== null) {
@@ -135,6 +136,7 @@ function scrollToClientTableRow(Row_ID) {
         window.scrollBy(0, -sHeight);
     }
 }
+*/
 
 // Adds a custom parser which ignores the moment.js timestamps.
 function addIgnoreMomentParser() {
@@ -288,15 +290,16 @@ function buildClientTable() {
     var clientTableControlSection = document.createElement('div');
     var connectionsSortTypeButton = document.createElement('button');
     $(connectionsSortTypeButton).prop('id', 'connectionsSortTypeButton');
+    $(clientTableControlSection).prop('class', 'row');
     $(connectionsSortTypeButton).prop('class', 'small-12 medium-8 large-6 columns');
-    $(connectionsSortTypeButton).html('Currently sorting the connections by the last connect');
+    $(connectionsSortTypeButton).html('Currently sorting connections by the last connect');
 
     connectionsSortTypeButton.onclick = function() {
         if (ConnectionsSortType) {
-            $(connectionsSortTypeButton).html('Currently sorting the connections by the first connect');
+            $(connectionsSortTypeButton).html('Currently sorting connections by the first connect');
             ConnectionsSortType = false;
         } else {
-            $(connectionsSortTypeButton).html('Currently sorting the connections by the last connect');
+            $(connectionsSortTypeButton).html('Currently sorting connections by the last connect');
             ConnectionsSortType = true;
         }
         saveSortOrder();
@@ -369,6 +372,14 @@ function buildClientTable() {
             var userBodyCell_Deleted = document.createElement('td');
 
             $(userBodyRow).prop('id', ID);
+
+            $(userBodyCell_ID).attr('data-title', 'ID');
+            $(userBodyCell_Nicknames).attr('data-title', 'Nicknames');
+            $(userBodyCell_Connections).attr('data-title', 'Connections');
+            $(userBodyCell_IPs).attr('data-title', 'IPs');
+            $(userBodyCell_ConnectionCount).attr('data-title', 'Connection Count');
+            $(userBodyCell_Connected).attr('data-title', 'Connected');
+            $(userBodyCell_Deleted).attr('data-title', 'Deleted');
 
             $(userBodyCell_ID).html(ID);
             userBodyRow.appendChild(userBodyCell_ID);
@@ -449,13 +460,13 @@ function buildClientTable() {
     userTable.appendChild(userBody);
 
     $(userTable).prop('id', 'clientTable');
-    $(userTable).prop('class', 'tablesorter');
+    $(userTable).prop('class', 'ui-table-reflow');
     document.getElementById('ts3-clientTable').appendChild(userTable);
 
     if (document.getElementById('scrollToClientTable') === null) {
         var scrollToClientTable = document.createElement('button');
         $(scrollToClientTable).prop('id', 'scrollToClientTable');
-        $(scrollToClientTable).html('Client table');
+        $(scrollToClientTable).html('Clients');
         scrollToClientTable.onclick = function() {
             scrollToDiv('ts3-clientTable');
         };
@@ -464,17 +475,16 @@ function buildClientTable() {
 
     addConnectionsParser();
     addIPsParser();
-    $('#clientTable')
-        .tablesorter({
-            headers: {
-                2: {
-                    sorter: 'Connections'
-                },
-                3: {
-                    sorter: 'IPs'
-                }
+    $('#clientTable').tablesorter({
+        headers: {
+            2: {
+                sorter: 'Connections'
+            },
+            3: {
+                sorter: 'IPs'
             }
-        });
+        }
+    });
     $('#clientTable').trigger('applyWidgetId', ['stickyHeaders']);
 }
 
@@ -504,8 +514,8 @@ function buildBanTable() {
     var banHeadCell_BannedID = document.createElement('th');
     var banHeadCell_BannedNickname = document.createElement('th');
     var banHeadCell_BannedIP = document.createElement('th');
-    var banHeadCell_BannedByNickname = document.createElement('th');
     var banHeadCell_BannedByID = document.createElement('th');
+    var banHeadCell_BannedByNickname = document.createElement('th');
     var banHeadCell_BanReason = document.createElement('th');
     var banHeadCell_Bantime = document.createElement('th');
 
@@ -513,8 +523,8 @@ function buildBanTable() {
     $(banHeadCell_BannedID).html('Banned ID');
     $(banHeadCell_BannedNickname).html('Banned Nickname');
     $(banHeadCell_BannedIP).html('Banned IP');
-    $(banHeadCell_BannedByNickname).html('Banned by Nickname');
     $(banHeadCell_BannedByID).html('Banned by ID');
+    $(banHeadCell_BannedByNickname).html('Banned by Nickname');
     $(banHeadCell_BanReason).html('Reason');
     $(banHeadCell_Bantime).html('Bantime');
 
@@ -522,8 +532,8 @@ function buildBanTable() {
     banHeadRow.appendChild(banHeadCell_BannedID);
     banHeadRow.appendChild(banHeadCell_BannedNickname);
     banHeadRow.appendChild(banHeadCell_BannedIP);
-    banHeadRow.appendChild(banHeadCell_BannedByNickname);
     banHeadRow.appendChild(banHeadCell_BannedByID);
+    banHeadRow.appendChild(banHeadCell_BannedByNickname);
     banHeadRow.appendChild(banHeadCell_BanReason);
     banHeadRow.appendChild(banHeadCell_Bantime);
 
@@ -537,13 +547,13 @@ function buildBanTable() {
         var BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue;
         var BannedNickname = Ban[i].getElementsByTagName('BannedNickname')[0].firstChild.nodeValue;
         var BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue;
-        var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue;
         var BannedByID;
         if (BannedIP != 'Unknown') {
             BannedByID = Ban[i].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
         } else {
             BannedByID = 'Unknown';
         }
+        var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue;
         var BanReason;
         if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
             BanReason = Ban[i].getElementsByTagName('BanReason')[0].firstChild.nodeValue;
@@ -559,31 +569,48 @@ function buildBanTable() {
         var banBodyCell_BannedID = document.createElement('td');
         var banBodyCell_BannedNickname = document.createElement('td');
         var banBodyCell_BannedIP = document.createElement('td');
-        var banBodyCell_BannedByNickname = document.createElement('td');
         var banBodyCell_BannedByID = document.createElement('td');
+        var banBodyCell_BannedByNickname = document.createElement('td');
         var banBodyCell_BanReason = document.createElement('td');
         var banBodyCell_Bantime = document.createElement('td');
 
+        $(banBodyCell_BanDateTime).attr('data-title', 'Date and Time');
+        $(banBodyCell_BannedID).attr('data-title', 'Banned ID');
+        $(banBodyCell_BannedNickname).attr('data-title', 'Banned Nickname');
+        $(banBodyCell_BannedIP).attr('data-title', 'Banned IP');
+        $(banBodyCell_BannedByID).attr('data-title', 'Banned by ID');
+        $(banBodyCell_BannedByNickname).attr('data-title', 'Banned by Nickname');
+        $(banBodyCell_BanReason).attr('data-title', 'Reason');
+        $(banBodyCell_Bantime).attr('data-title', 'Bantime');
+
         var UTCBanDateTime = moment(BanDateTime + '+0000');
-        $(banBodyCell_BanDateTime).html(UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCBanDateTime).fromNow() + ')');
+        var banBodyCell_BanDateTime_Div = document.createElement('div');
+        $(banBodyCell_BanDateTime_Div).html(UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCBanDateTime).fromNow() + ')');
+        banBodyCell_BanDateTime.appendChild(banBodyCell_BanDateTime_Div);
         banBodyRow.appendChild(banBodyCell_BanDateTime);
 
         $(banBodyCell_BannedID).html(BannedID);
         banBodyRow.appendChild(banBodyCell_BannedID);
 
-        $(banBodyCell_BannedNickname).html(BannedNickname);
+        var banBodyCell_BannedNickname_Div = document.createElement('div');
+        $(banBodyCell_BannedNickname_Div).html(BannedNickname);
+        banBodyCell_BannedNickname.appendChild(banBodyCell_BannedNickname_Div);
         banBodyRow.appendChild(banBodyCell_BannedNickname);
 
         $(banBodyCell_BannedIP).html(BannedIP);
         banBodyRow.appendChild(banBodyCell_BannedIP);
 
-        $(banBodyCell_BannedByNickname).html(BannedByNickname);
-        banBodyRow.appendChild(banBodyCell_BannedByNickname);
-
         $(banBodyCell_BannedByID).html(BannedByID);
         banBodyRow.appendChild(banBodyCell_BannedByID);
 
-        $(banBodyCell_BanReason).html(BanReason);
+        var banBodyCell_BannedByNickname_Div = document.createElement('div');
+        $(banBodyCell_BannedByNickname_Div).html(BannedByNickname);
+        banBodyCell_BannedByNickname.appendChild(banBodyCell_BannedByNickname_Div);
+        banBodyRow.appendChild(banBodyCell_BannedByNickname);
+
+        var banBodyCell_BanReason_Div = document.createElement('div');
+        $(banBodyCell_BanReason_Div).html(BanReason);
+        banBodyCell_BanReason.appendChild(banBodyCell_BanReason_Div);
         banBodyRow.appendChild(banBodyCell_BanReason);
 
         $(banBodyCell_Bantime).html(Bantime);
@@ -594,14 +621,14 @@ function buildBanTable() {
     banTable.appendChild(banBody);
 
     $(banTable).prop('id', 'banTable');
-    $(banTable).prop('class', 'tablesorter');
+    $(banTable).prop('class', 'ui-table-reflow');
     $(banTable).attr('uid', false);
     document.getElementById('ts3-banTable').appendChild(banTable);
 
     if (document.getElementById('scrollToBanTable') === null) {
         var scrollToBanTable = document.createElement('button');
         $(scrollToBanTable).prop('id', 'scrollToBanTable');
-        $(scrollToBanTable).html('Ban table');
+        $(scrollToBanTable).html('Bans');
         scrollToBanTable.onclick = function() {
             scrollToDiv('ts3-banTable');
         };
@@ -677,23 +704,38 @@ function buildKickTable() {
         var kickBodyCell_KickedByUID = document.createElement('td');
         var kickBodyCell_KickReason = document.createElement('td');
 
+        $(kickBodyCell_DateTime).attr('data-title', 'Date and Time');
+        $(kickBodyCell_KickedID).attr('data-title', 'Kicked ID');
+        $(kickBodyCell_KickedNickname).attr('data-title', 'Kicked Nickname');
+        $(kickBodyCell_KickedByNickname).attr('data-title', 'Kicked by Nickname');
+        $(kickBodyCell_KickedByUID).attr('data-title', 'Banned by UID');
+        $(kickBodyCell_KickReason).attr('data-title', 'Reason');
+
         var UTCKickDateTime = moment(KickDateTime + '+0000');
-        $(kickBodyCell_DateTime).html(UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCKickDateTime).fromNow() + ')');
+        var kickBodyCell_DateTime_Div = document.createElement('div');
+        $(kickBodyCell_DateTime_Div).html(UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCKickDateTime).fromNow() + ')');
+        kickBodyCell_DateTime.appendChild(kickBodyCell_DateTime_Div);
         kickBodyRow.appendChild(kickBodyCell_DateTime);
 
         $(kickBodyCell_KickedID).html(KickedID);
         kickBodyRow.appendChild(kickBodyCell_KickedID);
 
-        $(kickBodyCell_KickedNickname).html(KickedNickname);
+        var kickBodyCell_KickedNickname_Div = document.createElement('div');
+        $(kickBodyCell_KickedNickname_Div).html(KickedNickname);
+        kickBodyCell_KickedNickname.appendChild(kickBodyCell_KickedNickname_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedNickname);
 
-        $(kickBodyCell_KickedByNickname).html(KickedByNickname);
+        var kickBodyCell_KickedByNickname_Div = document.createElement('div');
+        $(kickBodyCell_KickedByNickname_Div).html(KickedByNickname);
+        kickBodyCell_KickedByNickname.appendChild(kickBodyCell_KickedByNickname_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedByNickname);
 
         $(kickBodyCell_KickedByUID).html(KickedByUID);
         kickBodyRow.appendChild(kickBodyCell_KickedByUID);
 
-        $(kickBodyCell_KickReason).html(KickReason);
+        var kickBodyCell_KickReason_Div = document.createElement('div');
+        $(kickBodyCell_KickReason_Div).html(KickReason);
+        kickBodyCell_KickReason.appendChild(kickBodyCell_KickReason_Div);
         kickBodyRow.appendChild(kickBodyCell_KickReason);
 
         kickBody.appendChild(kickBodyRow);
@@ -701,13 +743,13 @@ function buildKickTable() {
     kickTable.appendChild(kickBody);
 
     $(kickTable).prop('id', 'kickTable');
-    $(kickTable).prop('class', 'tablesorter');
+    $(kickTable).prop('class', 'ui-table-reflow');
     document.getElementById('ts3-kickTable').appendChild(kickTable);
 
     if (document.getElementById('scrollToKickTable') === null) {
         var scrollToKickTable = document.createElement('button');
         $(scrollToKickTable).prop('id', 'scrollToKickTable');
-        $(scrollToKickTable).html('Kick table');
+        $(scrollToKickTable).html('Kicks');
         scrollToKickTable.onclick = function() {
             scrollToDiv('ts3-kickTable');
         };
@@ -733,25 +775,25 @@ function buildComplaintTable() {
     var complaintHead = document.createElement('thead');
     var complaintHeadRow = document.createElement('tr');
     var complaintHeadCell_ComplaintDateTime = document.createElement('th');
-    var complaintHeadCell_ComplaintAboutNickname = document.createElement('th');
     var complaintHeadCell_ComplaintAboutID = document.createElement('th');
+    var complaintHeadCell_ComplaintAboutNickname = document.createElement('th');
     var complaintHeadCell_ComplaintReason = document.createElement('th');
-    var complaintHeadCell_ComplaintByNickname = document.createElement('th');
     var complaintHeadCell_ComplaintByID = document.createElement('th');
+    var complaintHeadCell_ComplaintByNickname = document.createElement('th');
 
     $(complaintHeadCell_ComplaintDateTime).html('Date and Time');
-    $(complaintHeadCell_ComplaintAboutNickname).html('About Nickname');
     $(complaintHeadCell_ComplaintAboutID).html('About ID');
+    $(complaintHeadCell_ComplaintAboutNickname).html('About Nickname');
     $(complaintHeadCell_ComplaintReason).html('Reason');
-    $(complaintHeadCell_ComplaintByNickname).html('By Nickname');
     $(complaintHeadCell_ComplaintByID).html('By ID');
+    $(complaintHeadCell_ComplaintByNickname).html('By Nickname');
 
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintDateTime);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutNickname);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutID);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutNickname);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintReason);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintByNickname);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintByID);
+    complaintHeadRow.appendChild(complaintHeadCell_ComplaintByNickname);
 
     complaintHead.appendChild(complaintHeadRow);
     complaintTable.appendChild(complaintHead);
@@ -760,51 +802,66 @@ function buildComplaintTable() {
 
     for (var i = 0; i < Complaint.length; i++) {
         var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue;
-        var ComplaintAboutNickname = Complaint[i].getElementsByTagName('ComplaintAboutNickname')[0].firstChild.nodeValue;
         var ComplaintAboutID = Complaint[i].getElementsByTagName('ComplaintAboutID')[0].firstChild.nodeValue;
+        var ComplaintAboutNickname = Complaint[i].getElementsByTagName('ComplaintAboutNickname')[0].firstChild.nodeValue;
         var ComplaintReason = Complaint[i].getElementsByTagName('ComplaintReason')[0].firstChild.nodeValue;
-        var ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
         var ComplaintByID = Complaint[i].getElementsByTagName('ComplaintByID')[0].firstChild.nodeValue;
+        var ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
 
         var complaintBodyRow = document.createElement('tr');
         var complaintBodyCell_ComplaintDateTime = document.createElement('td');
-        var complaintBodyCell_ComplaintAboutNickname = document.createElement('td');
         var complaintBodyCell_ComplaintAboutID = document.createElement('td');
+        var complaintBodyCell_ComplaintAboutNickname = document.createElement('td');
         var complaintBodyCell_ComplaintReason = document.createElement('td');
-        var complaintBodyCell_ComplaintByNickname = document.createElement('td');
         var complaintBodyCell_ComplaintByID = document.createElement('td');
+        var complaintBodyCell_ComplaintByNickname = document.createElement('td');
+
+        $(complaintBodyCell_ComplaintDateTime).attr('data-title', 'Date and Time');
+        $(complaintBodyCell_ComplaintAboutID).attr('data-title', 'About ID');
+        $(complaintBodyCell_ComplaintAboutNickname).attr('data-title', 'About Nickname');
+        $(complaintBodyCell_ComplaintReason).attr('data-title', 'Reason');
+        $(complaintBodyCell_ComplaintByID).attr('data-title', 'By ID');
+        $(complaintBodyCell_ComplaintByNickname).attr('data-title', 'By Nickname');
 
         var UTCComplaintDateTime = moment(ComplaintDateTime + '+0000');
-        $(complaintBodyCell_ComplaintDateTime).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCComplaintDateTime).fromNow() + ')');
+        var complaintBodyCell_ComplaintDateTime_Div = document.createElement('div');
+        $(complaintBodyCell_ComplaintDateTime_Div).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCComplaintDateTime).fromNow() + ')');
+        complaintBodyCell_ComplaintDateTime.appendChild(complaintBodyCell_ComplaintDateTime_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
-
-        $(complaintBodyCell_ComplaintAboutNickname).html(ComplaintAboutNickname);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutNickname);
 
         $(complaintBodyCell_ComplaintAboutID).html(ComplaintAboutID);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutID);
 
-        $(complaintBodyCell_ComplaintReason).html(ComplaintReason);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintReason);
+        var complaintBodyCell_ComplaintAboutNickname_Div = document.createElement('div');
+        $(complaintBodyCell_ComplaintAboutNickname_Div).html(ComplaintAboutNickname);
+        complaintBodyCell_ComplaintAboutNickname.appendChild(complaintBodyCell_ComplaintAboutNickname_Div);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutNickname);
 
-        $(complaintBodyCell_ComplaintByNickname).html(ComplaintByNickname);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintByNickname);
+        var complaintBodyCell_ComplaintReason_Div = document.createElement('div');
+        $(complaintBodyCell_ComplaintReason_Div).html(ComplaintReason);
+        complaintBodyCell_ComplaintReason.appendChild(complaintBodyCell_ComplaintReason_Div);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintReason);
 
         $(complaintBodyCell_ComplaintByID).html(ComplaintByID);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintByID);
+
+        var complaintBodyCell_ComplaintByNickname_Div = document.createElement('div');
+        $(complaintBodyCell_ComplaintByNickname_Div).html(ComplaintByNickname);
+        complaintBodyCell_ComplaintByNickname.appendChild(complaintBodyCell_ComplaintByNickname_Div);
+        complaintBodyRow.appendChild(complaintBodyCell_ComplaintByNickname);
 
         complaintBody.appendChild(complaintBodyRow);
     }
     complaintTable.appendChild(complaintBody);
 
     $(complaintTable).prop('id', 'complaintTable');
-    $(complaintTable).prop('class', 'tablesorter');
+    $(complaintTable).prop('class', 'ui-table-reflow');
     document.getElementById('ts3-complaintTable').appendChild(complaintTable);
 
     if (document.getElementById('scrollToComplaintTable') === null) {
         var scrollToComplaintTable = document.createElement('button');
         $(scrollToComplaintTable).prop('id', 'scrollToComplaintTable');
-        $(scrollToComplaintTable).html('Complaint table');
+        $(scrollToComplaintTable).html('Complaints');
         scrollToComplaintTable.onclick = function() {
             scrollToDiv('ts3-complaintTable');
         };
@@ -832,20 +889,20 @@ function buildUploadTable() {
     var uploadHeadCell_UploadDateTime = document.createElement('th');
     var uploadHeadCell_ChannelID = document.createElement('th');
     var uploadHeadCell_Filename = document.createElement('th');
-    var uploadHeadCell_uploadedByNickname = document.createElement('th');
-    var uploadHeadCell_uploadedByID = document.createElement('th');
+    var uploadHeadCell_UploadedByID = document.createElement('th');
+    var uploadHeadCell_UploadedByNickname = document.createElement('th');
 
     $(uploadHeadCell_UploadDateTime).html('Date and Time');
     $(uploadHeadCell_ChannelID).html('Channel ID');
     $(uploadHeadCell_Filename).html('Filename');
-    $(uploadHeadCell_uploadedByNickname).html('Uploaded by Nickname');
-    $(uploadHeadCell_uploadedByID).html('Uploaded by ID');
+    $(uploadHeadCell_UploadedByID).html('Uploaded by ID');
+    $(uploadHeadCell_UploadedByNickname).html('Uploaded by Nickname');
 
     uploadHeadRow.appendChild(uploadHeadCell_UploadDateTime);
     uploadHeadRow.appendChild(uploadHeadCell_ChannelID);
     uploadHeadRow.appendChild(uploadHeadCell_Filename);
-    uploadHeadRow.appendChild(uploadHeadCell_uploadedByNickname);
-    uploadHeadRow.appendChild(uploadHeadCell_uploadedByID);
+    uploadHeadRow.appendChild(uploadHeadCell_UploadedByID);
+    uploadHeadRow.appendChild(uploadHeadCell_UploadedByNickname);
 
     uploadHead.appendChild(uploadHeadRow);
     uploadTable.appendChild(uploadHead);
@@ -856,44 +913,56 @@ function buildUploadTable() {
         var UploadDateTime = File[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue;
         var ChannelID = File[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue;
         var Filename = File[i].getElementsByTagName('Filename')[0].firstChild.nodeValue;
-        var UploadedByNickname = File[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue;
         var UploadedByID = File[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue;
+        var UploadedByNickname = File[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue;
 
         var uploadBodyRow = document.createElement('tr');
         var uploadBodyCell_UploadDateTime = document.createElement('td');
         var uploadBodyCell_ChannelID = document.createElement('td');
         var uploadBodyCell_Filename = document.createElement('td');
-        var uploadBodyCell_uploadedByNickname = document.createElement('td');
-        var uploadBodyCell_uploadedByID = document.createElement('td');
+        var uploadBodyCell_UploadedByID = document.createElement('td');
+        var uploadBodyCell_UploadedByNickname = document.createElement('td');
+
+        $(uploadBodyCell_UploadDateTime).attr('data-title', 'Date and Time');
+        $(uploadBodyCell_ChannelID).attr('data-title', 'Channel ID');
+        $(uploadBodyCell_Filename).attr('data-title', 'Filename');
+        $(uploadBodyCell_UploadedByID).attr('data-title', 'Uploaded by ID');
+        $(uploadBodyCell_UploadedByNickname).attr('data-title', 'Uploaded by Nickname');
 
         var UTCUploadDateTime = moment(UploadDateTime + '+0000');
-        $(uploadBodyCell_UploadDateTime).html(UTCUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCUploadDateTime.fromNow() + ')');
+        var uploadBodyCell_UploadDateTime_Div = document.createElement('div');
+        $(uploadBodyCell_UploadDateTime_Div).html(UTCUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCUploadDateTime.fromNow() + ')');
+        uploadBodyCell_UploadDateTime.appendChild(uploadBodyCell_UploadDateTime_Div);
         uploadBodyRow.appendChild(uploadBodyCell_UploadDateTime);
 
         $(uploadBodyCell_ChannelID).html(ChannelID);
         uploadBodyRow.appendChild(uploadBodyCell_ChannelID);
 
-        $(uploadBodyCell_Filename).html(Filename);
+        var uploadBodyCell_Filename_Div = document.createElement('div');
+        $(uploadBodyCell_Filename_Div).html(Filename);
+        uploadBodyCell_Filename.appendChild(uploadBodyCell_Filename_Div);
         uploadBodyRow.appendChild(uploadBodyCell_Filename);
 
-        $(uploadBodyCell_uploadedByNickname).html(UploadedByNickname);
-        uploadBodyRow.appendChild(uploadBodyCell_uploadedByNickname);
+        $(uploadBodyCell_UploadedByID).html(UploadedByID);
+        uploadBodyRow.appendChild(uploadBodyCell_UploadedByID);
 
-        $(uploadBodyCell_uploadedByID).html(UploadedByID);
-        uploadBodyRow.appendChild(uploadBodyCell_uploadedByID);
+        var uploadBodyCell_UploadedByNickname_Div = document.createElement('div');
+        $(uploadBodyCell_UploadedByNickname_Div).html(UploadedByNickname);
+        uploadBodyCell_UploadedByNickname.appendChild(uploadBodyCell_UploadedByNickname_Div);
+        uploadBodyRow.appendChild(uploadBodyCell_UploadedByNickname);
 
         uploadBody.appendChild(uploadBodyRow);
     }
     uploadTable.appendChild(uploadBody);
 
     $(uploadTable).prop('id', 'uploadTable');
-    $(uploadTable).prop('class', 'tablesorter');
+    $(uploadTable).prop('class', 'ui-table-reflow');
     document.getElementById('ts3-uploadTable').appendChild(uploadTable);
 
     if (document.getElementById('scrollToUploadTable') === null) {
         var scrollToUploadTable = document.createElement('button');
         $(scrollToUploadTable).prop('id', 'scrollToUploadTable');
-        $(scrollToUploadTable).html('Upload table');
+        $(scrollToUploadTable).html('Uploads');
         scrollToUploadTable.onclick = function() {
             scrollToDiv('ts3-uploadTable');
         };

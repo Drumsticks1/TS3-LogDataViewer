@@ -33,7 +33,7 @@ Linux:
 15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
 16. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
 17. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
-18. Access the web interface (e.g. "https://your-webserver.com/html/EnhancedClientList/").
+18. Access the web interface (e.g. "https://your-webserver.com/EnhancedClientList/").
 19. (Optional) Add a file named "logignore" in your log directory and add the names of log files which you want to exclude from the parsing.
 20. (Optional) If you would like to change the appearance of the web interface / your website you can do this by editing the "style.css" according to your wishes.
 

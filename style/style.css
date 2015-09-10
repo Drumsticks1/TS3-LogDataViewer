@@ -62,24 +62,36 @@ table tbody td {
     display: flex;
     position: fixed;
     background-color: white;
+    box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, 0.75);
     font-size: 12pt;
-    bottom: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, 0.75);
+    bottom: 0;
 }
+
+/* Will be used for navbar settings for small displays.
+@media only screen and (min-width: 640px) {
+    #navbar {
+        bottom: 0;
+    }
+}
+For small displays (currently collides with sticky headers).
+@media only screen and (max-width: 640px) {
+    #navbar {
+        top: 0;
+    }
+}
+*/
+
 #navbar button {
     flex-grow: 1;
     color: white;
     font-size: 0.8rem;
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
     margin: 0;
 }
-#clientTable td:nth-child(3) {
-    text-align: center;
-}
-#ts3-uploadTable{
-  margin-bottom: 44px;
+#ts3-uploadTable {
+    margin-bottom: 44px;
 }
 .tablesorter thead tr th, .tablesorter tfoot tr th {
     border: 1px solid #E6E6E6;
@@ -100,8 +112,8 @@ table tbody td {
     background: white;
     color: #008CBA;
     position: static;
-    width: 100%;
-    padding: 5px 0px;
+    width: 50%;
+    padding: 5px 0;
     margin-bottom: 5px;
     font-size: 0.8rem;
 }
@@ -110,4 +122,33 @@ table tbody td {
     background-color: #007095;
     outline: none;
     transition: background-color, color 200ms;
+}
+@media ( max-width: 850px) {
+    .tablesorter-sticky-visible {
+        display: none;
+    }
+    .ui-table-reflow td, .ui-table-reflow th {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        float: right;
+        width: 100% !important;
+    }
+    .ui-table-reflow td div {
+        clear: right;
+        float: right;
+        width: 50%;
+        overflow: auto;
+    }
+    .ui-table-reflow tbody td[data-title]:before {
+        color: #469;
+        font-size: .9em;
+        content: attr(data-title);
+        float: left;
+        width: 50%;
+        height: 100%;
+        white-space: pre-wrap;
+        text-align: left;
+        display: inline-block;
+    }
 }

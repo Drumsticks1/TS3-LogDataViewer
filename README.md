@@ -41,7 +41,7 @@ Controls for the client table:
 - Collapse all extended lists via a button.
 
 ID  | Nicknames                                                                     | Connections                                                                        | IPs                                             | Connections Count | Connected | Deleted
---- | ----------------------------------------------------------------------------- | :--------------------------------------------------------------------------------: | ----------------------------------------------- | ----------------- | --------- | -------
+--- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------- | ----------------- | --------- | -------
 3   | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | ( + 34 ) <br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07                        | ( + 6 )<br />88.888.888.75                      | 36                | true      | false
 4   | Random User                                                                   | 2015-18-07 15:11:02<br />2015-18-07 13:56:25                                       | 99.999.999.31                                   | 2                 | false     | false
 100 | Teamspeakuser                                                                 | ( - 1 )<br />2015-05-08 16:06:31<br />2015-05-08 10:13:54<br />2015-05-08 09:34:12 | ( - 1 )<br />12.345.678.90<br />217.000.000.000 | 3                 | false     | false
@@ -59,9 +59,9 @@ ID  | Nicknames                                                                 
 Controls for the ban table:
 - Switch between the IDs and the UIDs by using the button "Switch between IDs and UIDs".
 
-Date and Time                                | Banned ID | Banned Nickname | Banned IP       | Banned by Nickname | Banned by ID | Reason  | Bantime
--------------------------------------------- | --------- | --------------- | --------------- | ------------------ | ------------ | ------- | -------
-2015-07-28 13:32:32<br />(about 3 hours ago) | 12        | Drumsticks-Test | 111.222.333.444 | Drumsticks         | 3            | Testban | 1800
+Date and Time                                | Banned ID | Banned Nickname | Banned IP       | Banned by ID  | Banned by Nickname | Reason  | Bantime
+-------------------------------------------- | --------- | --------------- | --------------- | ------------- | ------------------ | ------- | -------
+2015-07-28 13:32:32<br />(about 3 hours ago) | 12        | Drumsticks-Test | 111.222.333.444 | 3             | Drumsticks         | Testban | 1800
 
 #### Kick table layout
 
@@ -71,17 +71,17 @@ Date and Time                                    | Kicked ID | Kicked Nickname  
 
 #### Complaint table layout
 
-Date and Time                           | About Nickname | About ID | Reason                   | By Nickname            | By ID
---------------------------------------- | -------------- | -------- | ------------------------ | ---------------------- | -----
-2015-08-11 18:09:17 (about 12 days ago) | Obvious Troll  | 18       | Massive Spamming         | Random Communitymember | 14
-2015-08-11 18:15:17 (about 12 days ago) | Obvious Troll  | 18       | Spamming in channel chat | xXHaXxXorXx            | 19
+Date and Time                           | About ID | About Nickname | Reason                   | By ID | By Nickname
+--------------------------------------- | -------- | -------------- | ------------------------ | ----- | ----------------------
+2015-08-11 18:09:17 (about 12 days ago) | 18       | Obvious Troll  | Massive Spamming         | 14    | Random Communitymember
+2015-08-11 18:15:17 (about 12 days ago) | 18       | Obvious Troll  | Spamming in channel chat | 19    | xXHaXxXorXx
 
 #### File upload table layout
 
-Date and Time                               | Channel ID | Filename                          | Uploaded by Nickname | Uploaded by ID
-------------------------------------------- | ---------- | --------------------------------- | -------------------- | --------------
-2015-07-09 19:17:58<br />(about 4 days ago) | 2          | /file_sample.txt                  | Drumsticks           | 3
-2015-07-09 19:18:18<br />(about 4 days ago) | 2          | /directory_sample/file_sample.txt | Drumsticks           | 3
+Date and Time                               | Channel ID | Filename                          | Uploaded by ID | Uploaded by Nickname
+------------------------------------------- | ---------- | --------------------------------- | -------------- | --------------------
+2015-07-09 19:17:58<br />(about 4 days ago) | 2          | /file_sample.txt                  | 3              | Drumsticks
+2015-07-09 19:18:18<br />(about 4 days ago) | 2          | /directory_sample/file_sample.txt | 3              | Drumsticks
 
 ### Overall Program Features
 - You can change the virtual server whose logs will be analyzed by adjusting the value of  the VIRTUALSERVER variable in the rebuildXML.php.
