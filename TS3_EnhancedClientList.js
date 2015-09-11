@@ -255,11 +255,14 @@ function switchBetweenIDAndUID() {
                 BannedByUID = 'No UID';
             }
 
-            $(document.getElementById(rowID).childNodes[1]).html(Ban[banID].getElementsByTagName('BannedUID')[0].firstChild.nodeValue);
-            $(document.getElementById(rowID).childNodes[5]).html(BannedByUID);
+            $(document.getElementById(rowID).childNodes[1].lastChild).html(Ban[banID].getElementsByTagName('BannedUID')[0].firstChild.nodeValue);
+            $(document.getElementById(rowID).childNodes[4].lastChild).html(BannedByUID);
+
+            $(document.getElementById(rowID).childNodes[1]).attr('data-title', 'Banned UID');
+            $(document.getElementById(rowID).childNodes[4]).attr('data-title', 'Banned by UID');
         }
         $(banTableHeadRow.childNodes[1]).html('Banned UID');
-        $(banTableHeadRow.childNodes[5]).html('Banned by UID');
+        $(banTableHeadRow.childNodes[4]).html('Banned by UID');
         $('#banTable').attr('uid', 'true');
     }
 
@@ -275,11 +278,14 @@ function switchBetweenIDAndUID() {
                 BannedByID = 'Unknown';
             }
 
-            $(document.getElementById(rowID).childNodes[1]).html(Ban[banID].getElementsByTagName('BannedID')[0].firstChild.nodeValue);
-            $(document.getElementById(rowID).childNodes[5]).html(BannedByID);
+            $(document.getElementById(rowID).childNodes[1].lastChild).html(Ban[banID].getElementsByTagName('BannedID')[0].firstChild.nodeValue);
+            $(document.getElementById(rowID).childNodes[4].lastChild).html(BannedByID);
+
+            $(document.getElementById(rowID).childNodes[1]).attr('data-title', 'Banned ID');
+            $(document.getElementById(rowID).childNodes[4]).attr('data-title', 'Banned by ID');
         }
         $(banTableHeadRow.childNodes[1]).html('Banned ID');
-        $(banTableHeadRow.childNodes[5]).html('Banned by ID');
+        $(banTableHeadRow.childNodes[4]).html('Banned by ID');
         $('#banTable').attr('uid', 'false');
     }
 }
@@ -589,7 +595,9 @@ function buildBanTable() {
         banBodyCell_BanDateTime.appendChild(banBodyCell_BanDateTime_Div);
         banBodyRow.appendChild(banBodyCell_BanDateTime);
 
-        $(banBodyCell_BannedID).html(BannedID);
+        var banBodyCell_BannedID_Div = document.createElement('div');
+        $(banBodyCell_BannedID_Div).html(BannedID);
+        banBodyCell_BannedID.appendChild(banBodyCell_BannedID_Div);
         banBodyRow.appendChild(banBodyCell_BannedID);
 
         var banBodyCell_BannedNickname_Div = document.createElement('div');
@@ -600,7 +608,9 @@ function buildBanTable() {
         $(banBodyCell_BannedIP).html(BannedIP);
         banBodyRow.appendChild(banBodyCell_BannedIP);
 
-        $(banBodyCell_BannedByID).html(BannedByID);
+        var banBodyCell_BannedByID_Div = document.createElement('div');
+        $(banBodyCell_BannedByID_Div).html(BannedByID);
+        banBodyCell_BannedByID.appendChild(banBodyCell_BannedByID_Div);
         banBodyRow.appendChild(banBodyCell_BannedByID);
 
         var banBodyCell_BannedByNickname_Div = document.createElement('div');
@@ -708,7 +718,7 @@ function buildKickTable() {
         $(kickBodyCell_KickedID).attr('data-title', 'Kicked ID');
         $(kickBodyCell_KickedNickname).attr('data-title', 'Kicked Nickname');
         $(kickBodyCell_KickedByNickname).attr('data-title', 'Kicked by Nickname');
-        $(kickBodyCell_KickedByUID).attr('data-title', 'Banned by UID');
+        $(kickBodyCell_KickedByUID).attr('data-title', 'Kicked by UID');
         $(kickBodyCell_KickReason).attr('data-title', 'Reason');
 
         var UTCKickDateTime = moment(KickDateTime + '+0000');
@@ -730,7 +740,9 @@ function buildKickTable() {
         kickBodyCell_KickedByNickname.appendChild(kickBodyCell_KickedByNickname_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedByNickname);
 
-        $(kickBodyCell_KickedByUID).html(KickedByUID);
+        var kickBodyCell_KickedByUID_Div = document.createElement('div');
+        $(kickBodyCell_KickedByUID_Div).html(KickedByUID);
+        kickBodyCell_KickedByUID.appendChild(kickBodyCell_KickedByUID_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedByUID);
 
         var kickBodyCell_KickReason_Div = document.createElement('div');
