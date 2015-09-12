@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-// Checks if a DateTime is already existing for the current user.
+// Checks if a DateTime is already existing for the current client.
 bool isDuplicateDateTime(unsigned int ID, string DateTime);
 
 // Checks if a log is already existing in the parsedLogs list.

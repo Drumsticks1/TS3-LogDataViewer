@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include <boost/filesystem.hpp>
-#include "User.h"
+#include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -19,7 +19,7 @@ using namespace std;
 
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
-extern vector <User> UserList;
+extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
@@ -36,7 +36,7 @@ extern TeeStream outputStream;
 #define LOGMATCHDELETEUSER2		") got deleted by client '"
 #define LOGMATCHFILEUPLOAD		"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| file upload to ("
 
-// Parses the logs and stores the data in the UserList.
+// Parses the logs and stores the data in the ClientList.
 void parseLogs(string LOGDIRECTORY) {
 	string buffer_logline, LogFilePath, DateTime, Nickname, ID_string, IP,
 		lastUIDBanRule, lastIPBanRule, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, bantime,
@@ -130,25 +130,25 @@ void parseLogs(string LOGDIRECTORY) {
 					}
 
 					ID = stoul(ID_string);
-					if (UserList.size() < ID + 1) UserList.resize(ID + 1);
+					if (ClientList.size() < ID + 1) ClientList.resize(ID + 1);
 
-					if (UserList[ID].getID() != ID) {
-						UserList[ID].addID(ID);
+					if (ClientList[ID].getID() != ID) {
+						ClientList[ID].addID(ID);
 					}
 
-					UserList[ID].addNickname(Nickname);
+					ClientList[ID].addNickname(Nickname);
 
 					if (validXML) {
 						if (!isDuplicateDateTime(ID, DateTime)) {
-							UserList[ID].addDateTime(DateTime);
+							ClientList[ID].addDateTime(DateTime);
 						}
 					}
-					else UserList[ID].addDateTime(DateTime);
+					else ClientList[ID].addDateTime(DateTime);
 
-					UserList[ID].addIP(IP);
+					ClientList[ID].addIP(IP);
 
 					if (i + 1 == Logs.size()) {
-						UserList[ID].connect();
+						ClientList[ID].connect();
 					}
 				}
 
@@ -184,17 +184,17 @@ void parseLogs(string LOGDIRECTORY) {
 					}
 
 					ID = stoul(ID_string);
-					if (UserList.size() < ID + 1) {
-						UserList.resize(ID + 1);
-						UserList[ID].addID(ID);
+					if (ClientList.size() < ID + 1) {
+						ClientList.resize(ID + 1);
+						ClientList[ID].addID(ID);
 					}
 
-					if (UserList[ID].getNicknameCount() == 0 || UserList[ID].getUniqueNickname(0) != Nickname) {
-						UserList[ID].addNickname(Nickname);
+					if (ClientList[ID].getNicknameCount() == 0 || ClientList[ID].getUniqueNickname(0) != Nickname) {
+						ClientList[ID].addNickname(Nickname);
 					}
 
 					if (i + 1 == Logs.size()) {
-						UserList[ID].disconnect();
+						ClientList[ID].disconnect();
 					}
 
 					// Bans
@@ -402,7 +402,7 @@ void parseLogs(string LOGDIRECTORY) {
 					}
 				}
 
-				// User Deletions
+				// Client Deletions
 				else if (buffer_logline.find(LOGMATCHDELETEUSER1) != string::npos) {
 					if (buffer_logline.find(LOGMATCHDELETEUSER2) != string::npos) {
 						IDEndPos = buffer_logline.rfind(") got deleted by client '");
@@ -415,7 +415,7 @@ void parseLogs(string LOGDIRECTORY) {
 						}
 
 						ID = stoul(ID_string);
-						UserList[ID].deleteUser();
+						ClientList[ID].deleteClient();
 					}
 				}
 

@@ -1,4 +1,4 @@
-// User.h
+// Client.h
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
@@ -7,12 +7,12 @@
 
 using namespace std;
 
-// Class for the User data.
-class User {
+// Class for the Client data.
+class Client {
 private:
 	unsigned int ID = 0;
 	vector <string> DateTime, Nickname, IP;
-	int CurrentConnectionsCount = 0;
+	int ConnectedState = 0;
 	bool deleted = false;
 
 public:
@@ -37,8 +37,8 @@ public:
 
 	void connect();
 	void disconnect();
-	int getCurrentConnectionsCount();
+	int getConnectedState();
 
-	void deleteUser();
-	bool isDeleted();
+	void deleteClient();
+	int isDeleted();
 };

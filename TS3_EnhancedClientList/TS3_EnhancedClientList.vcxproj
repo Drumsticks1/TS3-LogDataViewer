@@ -91,7 +91,7 @@
     <ClCompile Include="parseXML.cpp" />
     <ClCompile Include="timeFunctions.cpp" />
     <ClCompile Include="TS3_EnhancedClientList.cpp" />
-    <ClCompile Include="User.cpp" />
+    <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ban.h" />
@@ -107,7 +107,7 @@
     <ClInclude Include="parseLogs.h" />
     <ClInclude Include="parseXML.h" />
     <ClInclude Include="todo.h" />
-    <ClInclude Include="User.h" />
+    <ClInclude Include="Client.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

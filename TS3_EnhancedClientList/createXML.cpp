@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Constants.h"
-#include "User.h"
+#include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -20,7 +20,7 @@ using namespace std;
 using namespace boost::property_tree;
 
 extern vector <string> parsedLogs;
-extern vector <User> UserList;
+extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
@@ -47,31 +47,31 @@ void createXML() {
 		ParsedLogs.add("P", parsedLogs[i]);
 	}
 
-	for (unsigned int i = 0; i < UserList.size(); i++) {
-		ptree& UserNode = Data.add("User", "");
-		if (UserList[i].getID() != 0) {
-			UserNode.add("ID", UserList[i].getID());
+	for (unsigned int i = 0; i < ClientList.size(); i++) {
+		ptree& ClientNode = Data.add("Client", "");
+		if (ClientList[i].getID() != 0) {
+			ClientNode.add("ID", ClientList[i].getID());
 
-			ptree& Nicknames = UserNode.add("Nicknames", "");
-			for (unsigned int j = 0; j < UserList[i].getNicknameCount(); j++) {
-				Nicknames.add("N", UserList[i].getUniqueNickname(j));
+			ptree& Nicknames = ClientNode.add("Nicknames", "");
+			for (unsigned int j = 0; j < ClientList[i].getNicknameCount(); j++) {
+				Nicknames.add("N", ClientList[i].getUniqueNickname(j));
 			}
 
-			ptree& Connections = UserNode.add("Connections", "");
-			for (unsigned int j = 0; j < UserList[i].getDateTimeCount(); j++) {
-				Connections.add("C", UserList[i].getUniqueDateTime(j));
+			ptree& Connections = ClientNode.add("Connections", "");
+			for (unsigned int j = 0; j < ClientList[i].getDateTimeCount(); j++) {
+				Connections.add("C", ClientList[i].getUniqueDateTime(j));
 			}
 
-			ptree& IPs = UserNode.add("IPs", "");
-			for (unsigned int j = 0; j < UserList[i].getIPCount(); j++) {
-				IPs.add("I", UserList[i].getUniqueIP(j));
+			ptree& IPs = ClientNode.add("IPs", "");
+			for (unsigned int j = 0; j < ClientList[i].getIPCount(); j++) {
+				IPs.add("I", ClientList[i].getUniqueIP(j));
 			}
 
-			UserNode.add("Connection_Count", UserList[i].getDateTimeCount());
-			UserNode.add("Connected", UserList[i].getCurrentConnectionsCount());
-			UserNode.add("Deleted", UserList[i].isDeleted());
+			ClientNode.add("Connection_Count", ClientList[i].getDateTimeCount());
+			ClientNode.add("Connected", ClientList[i].getConnectedState());
+			ClientNode.add("Deleted", ClientList[i].isDeleted());
 		}
-		else UserNode.add("ID", "-1");
+		else ClientNode.add("ID", "-1");
 	}
 
 	for (unsigned int i = 0; i < BanList.size(); i++) {

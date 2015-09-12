@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Constants.h"
-#include "User.h"
+#include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -21,7 +21,7 @@ using namespace std;
 using namespace pugi;
 
 vector <string> parsedLogs;
-extern vector <User> UserList;
+extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
@@ -61,26 +61,26 @@ bool parseXML() {
 						}
 					}
 
-					for (xml_node UserNode = oldXML.child("Data").child("User"); UserNode; UserNode = UserNode.next_sibling("User")) {
-						if ((string)UserNode.child("ID").first_child().value() != "-1") {
-							ID = stoul(UserNode.child("ID").first_child().value());
-							UserList.resize(ID + 1);
-							UserList[ID].addID(ID);
+					for (xml_node ClientNode = oldXML.child("Data").child("Client"); ClientNode; ClientNode = ClientNode.next_sibling("Client")) {
+						if ((string)ClientNode.child("ID").first_child().value() != "-1") {
+							ID = stoul(ClientNode.child("ID").first_child().value());
+							ClientList.resize(ID + 1);
+							ClientList[ID].addID(ID);
 
-							for (xml_node Nicknames = UserNode.child("Nicknames").child("N"); Nicknames; Nicknames = Nicknames.next_sibling("N")) {
-								UserList[ID].addNicknameReverse(Nicknames.first_child().value());
+							for (xml_node Nicknames = ClientNode.child("Nicknames").child("N"); Nicknames; Nicknames = Nicknames.next_sibling("N")) {
+								ClientList[ID].addNicknameReverse(Nicknames.first_child().value());
 							}
 
-							for (xml_node Connections = UserNode.child("Connections").child("C"); Connections; Connections = Connections.next_sibling("C")) {
-								UserList[ID].addDateTimeReverse(Connections.first_child().value());
+							for (xml_node Connections = ClientNode.child("Connections").child("C"); Connections; Connections = Connections.next_sibling("C")) {
+								ClientList[ID].addDateTimeReverse(Connections.first_child().value());
 							}
 
-							for (xml_node IPs = UserNode.child("IPs").child("I"); IPs; IPs = IPs.next_sibling("I")) {
-								UserList[ID].addIPReverse(IPs.first_child().value());
+							for (xml_node IPs = ClientNode.child("IPs").child("I"); IPs; IPs = IPs.next_sibling("I")) {
+								ClientList[ID].addIPReverse(IPs.first_child().value());
 							}
 
-							if ((string)UserNode.child("Deleted").first_child().value() == "true") {
-								UserList[ID].deleteUser();
+							if ((string)ClientNode.child("Deleted").first_child().value() == "1") {
+								ClientList[ID].deleteClient();
 							}
 						}
 					}
@@ -143,7 +143,7 @@ bool parseXML() {
 				}
 				catch (exception& ex) {
 					outputStream << "An error occured while parsing the XML:" << endl << ex.what() << endl;
-					UserList.clear();
+					ClientList.clear();
 					BanList.clear();
 					KickList.clear();
 					ComplaintList.clear();

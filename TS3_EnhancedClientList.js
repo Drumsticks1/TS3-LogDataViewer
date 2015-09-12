@@ -54,7 +54,7 @@ function expandList(List, ID) {
     }
 
     var x = document.getElementById(ID).childNodes[Row],
-        ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
+        ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
     $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i));
     $('#' + List + 'Button_' + ID).parent().attr('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
@@ -92,7 +92,7 @@ function collapseList(List, ID) {
         i = 2;
     }
 
-    var ListContent = XML.getElementsByTagName('User')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
+    var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
     $('#' + List + 'Button_' + ID).html('+ ' + (ListContent.length - i));
     $('#' + List + 'Button_' + ID).parent().attr('expanded', false);
 
@@ -325,77 +325,77 @@ function buildClientTable() {
     clientTableControlSection.appendChild(collapseAllButton);
     document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
 
-    var User = XML.getElementsByTagName('User');
-    var userTable = document.createElement('table');
-    var userHead = document.createElement('thead');
-    var userHeadRow = document.createElement('tr');
-    var userHeadCell_ID = document.createElement('th');
-    var userHeadCell_Nicknames = document.createElement('th');
-    var userHeadCell_Connections = document.createElement('th');
-    var userHeadCell_IPs = document.createElement('th');
-    var userHeadCell_ConnectionCount = document.createElement('th');
-    var userHeadCell_Connected = document.createElement('th');
-    var userHeadCell_Deleted = document.createElement('th');
+    var Client = XML.getElementsByTagName('Client');
+    var clientTable = document.createElement('table');
+    var clientHead = document.createElement('thead');
+    var clientHeadRow = document.createElement('tr');
+    var clientHeadCell_ID = document.createElement('th');
+    var clientHeadCell_Nicknames = document.createElement('th');
+    var clientHeadCell_Connections = document.createElement('th');
+    var clientHeadCell_IPs = document.createElement('th');
+    var clientHeadCell_ConnectionCount = document.createElement('th');
+    var clientHeadCell_Connected = document.createElement('th');
+    var clientHeadCell_Deleted = document.createElement('th');
 
-    $(userHeadCell_ID).html('ID');
-    $(userHeadCell_Nicknames).html('Nicknames');
-    $(userHeadCell_Connections).html('Connections');
-    $(userHeadCell_IPs).html('IPs');
-    $(userHeadCell_ConnectionCount).html('Connection Count');
-    $(userHeadCell_Connected).html('Connected');
-    $(userHeadCell_Deleted).html('Deleted');
+    $(clientHeadCell_ID).html('ID');
+    $(clientHeadCell_Nicknames).html('Nicknames');
+    $(clientHeadCell_Connections).html('Connections');
+    $(clientHeadCell_IPs).html('IPs');
+    $(clientHeadCell_ConnectionCount).html('Connection Count');
+    $(clientHeadCell_Connected).html('Connected');
+    $(clientHeadCell_Deleted).html('Deleted');
 
-    userHeadRow.appendChild(userHeadCell_ID);
-    userHeadRow.appendChild(userHeadCell_Nicknames);
-    userHeadRow.appendChild(userHeadCell_Connections);
-    userHeadRow.appendChild(userHeadCell_IPs);
-    userHeadRow.appendChild(userHeadCell_ConnectionCount);
-    userHeadRow.appendChild(userHeadCell_Connected);
-    userHeadRow.appendChild(userHeadCell_Deleted);
+    clientHeadRow.appendChild(clientHeadCell_ID);
+    clientHeadRow.appendChild(clientHeadCell_Nicknames);
+    clientHeadRow.appendChild(clientHeadCell_Connections);
+    clientHeadRow.appendChild(clientHeadCell_IPs);
+    clientHeadRow.appendChild(clientHeadCell_ConnectionCount);
+    clientHeadRow.appendChild(clientHeadCell_Connected);
+    clientHeadRow.appendChild(clientHeadCell_Deleted);
 
-    userHead.appendChild(userHeadRow);
-    userTable.appendChild(userHead);
+    clientHead.appendChild(clientHeadRow);
+    clientTable.appendChild(clientHead);
 
-    var userBody = document.createElement('tbody');
+    var clientBody = document.createElement('tbody');
 
-    for (var i = 0; i < User.length; i++) {
-        var ID = User[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
+    for (var i = 0; i < Client.length; i++) {
+        var ID = Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
         if (ID == i) {
-            var Nicknames = User[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N');
-            var Connections = User[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C');
-            var IPs = User[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I');
-            var Connection_Count = User[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue;
-            var Connected = User[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue;
-            var Deleted = User[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;
+            var Nicknames = Client[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N');
+            var Connections = Client[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C');
+            var IPs = Client[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I');
+            var Connection_Count = Client[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue;
+            var Connected = Client[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue;
+            var Deleted = Client[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;
 
-            var userBodyRow = document.createElement('tr');
-            var userBodyCell_ID = document.createElement('td');
-            var userBodyCell_Nicknames = document.createElement('td');
-            var userBodyCell_Connections = document.createElement('td');
-            var userBodyCell_IPs = document.createElement('td');
-            var userBodyCell_ConnectionCount = document.createElement('td');
-            var userBodyCell_Connected = document.createElement('td');
-            var userBodyCell_Deleted = document.createElement('td');
+            var clientBodyRow = document.createElement('tr');
+            var clientBodyCell_ID = document.createElement('td');
+            var clientBodyCell_Nicknames = document.createElement('td');
+            var clientBodyCell_Connections = document.createElement('td');
+            var clientBodyCell_IPs = document.createElement('td');
+            var clientBodyCell_ConnectionCount = document.createElement('td');
+            var clientBodyCell_Connected = document.createElement('td');
+            var clientBodyCell_Deleted = document.createElement('td');
 
-            $(userBodyRow).prop('id', ID);
+            $(clientBodyRow).prop('id', ID);
 
-            $(userBodyCell_ID).attr('data-title', 'ID');
-            $(userBodyCell_Nicknames).attr('data-title', 'Nicknames');
-            $(userBodyCell_Connections).attr('data-title', 'Connections');
-            $(userBodyCell_IPs).attr('data-title', 'IPs');
-            $(userBodyCell_ConnectionCount).attr('data-title', 'Connection Count');
-            $(userBodyCell_Connected).attr('data-title', 'Connected');
-            $(userBodyCell_Deleted).attr('data-title', 'Deleted');
+            $(clientBodyCell_ID).attr('data-title', 'ID');
+            $(clientBodyCell_Nicknames).attr('data-title', 'Nicknames');
+            $(clientBodyCell_Connections).attr('data-title', 'Connections');
+            $(clientBodyCell_IPs).attr('data-title', 'IPs');
+            $(clientBodyCell_ConnectionCount).attr('data-title', 'Connection Count');
+            $(clientBodyCell_Connected).attr('data-title', 'Connected');
+            $(clientBodyCell_Deleted).attr('data-title', 'Deleted');
 
-            $(userBodyCell_ID).html(ID);
-            userBodyRow.appendChild(userBodyCell_ID);
+            $(clientBodyCell_ID).html(ID);
+            clientBodyRow.appendChild(clientBodyCell_ID);
 
             for (var j = 0; j < Nicknames.length; j++) {
                 var divNicknames = document.createElement('div');
                 $(divNicknames).html(Nicknames[j].firstChild.nodeValue);
-                userBodyCell_Nicknames.appendChild(divNicknames);
+                clientBodyCell_Nicknames.appendChild(divNicknames);
             }
-            userBodyRow.appendChild(userBodyCell_Nicknames);
+            clientBodyRow.appendChild(clientBodyCell_Nicknames);
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement('button');
@@ -408,22 +408,22 @@ function buildClientTable() {
                     };
                 })(ID);
 
-                userBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
+                clientBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
             var divLastConnection = document.createElement('div');
             $(divLastConnection).prop('id', 'connections_' + ID + '_0');
             $(divLastConnection).html(moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
-            userBodyCell_Connections.appendChild(divLastConnection);
+            clientBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
                 $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1));
                 $(divFirstConnection).html(moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
-                userBodyCell_Connections.appendChild(divFirstConnection);
+                clientBodyCell_Connections.appendChild(divFirstConnection);
             }
 
-            userBodyRow.appendChild(userBodyCell_Connections);
+            clientBodyRow.appendChild(clientBodyCell_Connections);
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
@@ -436,38 +436,42 @@ function buildClientTable() {
                     };
                 })(ID);
 
-                userBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
+                clientBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
             var divLastIP = document.createElement('div');
             $(divLastIP).prop('id', 'ips_' + ID + '_0');
             $(divLastIP).html(IPs[0].firstChild.nodeValue);
-            userBodyCell_IPs.appendChild(divLastIP);
+            clientBodyCell_IPs.appendChild(divLastIP);
 
-            userBodyRow.appendChild(userBodyCell_IPs);
+            clientBodyRow.appendChild(clientBodyCell_IPs);
 
-            $(userBodyCell_ConnectionCount).html(Connection_Count);
-            userBodyRow.appendChild(userBodyCell_ConnectionCount);
+            $(clientBodyCell_ConnectionCount).html(Connection_Count);
+            clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
 
             if (Connected == 1) {
-                $(userBodyCell_Connected).html('true');
+                $(clientBodyCell_Connected).html('true');
                 ConnectedClientsCount++;
             } else {
-                $(userBodyCell_Connected).html('false');
+                $(clientBodyCell_Connected).html('false');
             }
-            userBodyRow.appendChild(userBodyCell_Connected);
+            clientBodyRow.appendChild(clientBodyCell_Connected);
 
-            $(userBodyCell_Deleted).html(Deleted);
-            userBodyRow.appendChild(userBodyCell_Deleted);
+            if (Deleted == 1) {
+                $(clientBodyCell_Deleted).html('true');
+            } else {
+                $(clientBodyCell_Deleted).html('false');
+            }
+            clientBodyRow.appendChild(clientBodyCell_Deleted);
 
-            userBody.appendChild(userBodyRow);
+            clientBody.appendChild(clientBodyRow);
         }
     }
-    userTable.appendChild(userBody);
+    clientTable.appendChild(clientBody);
 
-    $(userTable).prop('id', 'clientTable');
-    $(userTable).prop('class', 'ui-table-reflow');
-    document.getElementById('ts3-clientTable').appendChild(userTable);
+    $(clientTable).prop('id', 'clientTable');
+    $(clientTable).prop('class', 'ui-table-reflow');
+    document.getElementById('ts3-clientTable').appendChild(clientTable);
 
     if (document.getElementById('scrollToClientTable') === null) {
         var scrollToClientTable = document.createElement('button');
@@ -675,8 +679,8 @@ function buildKickTable() {
     var kickHeadCell_KickReason = document.createElement('th');
 
     $(kickHeadCell_KickDateTime).html('Date and Time');
-    $(kickHeadCell_KickedID).html('Kicked User ID');
-    $(kickHeadCell_KickedNickname).html('Kicked User Nickname');
+    $(kickHeadCell_KickedID).html('Kicked Client ID');
+    $(kickHeadCell_KickedNickname).html('Kicked Client Nickname');
     $(kickHeadCell_KickedByNickname).html('Kicked by Nickname');
     $(kickHeadCell_KickedByUID).html('Kicked by UID');
     $(kickHeadCell_KickReason).html('Reason');
@@ -1041,9 +1045,9 @@ function buildTables() {
             }, 1000);
 
             if (!$('#ts3-clientTable').length) {
-                for (var i = 0; i < XML.getElementsByTagName('User').length; i++) {
-                    if (XML.getElementsByTagName('User')[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
-                        if (XML.getElementsByTagName('User')[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1) {
+                for (var i = 0; i < XML.getElementsByTagName('Client').length; i++) {
+                    if (XML.getElementsByTagName('Client')[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
+                        if (XML.getElementsByTagName('Client')[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1) {
                             ConnectedClientsCount++;
                         }
                     }

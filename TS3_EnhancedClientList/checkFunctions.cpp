@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <vector>
-#include "User.h"
+#include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -15,16 +15,16 @@ using namespace std;
 extern vector <string> Logs;
 extern vector <string> parsedLogs;
 extern vector <string> ignoreLogs;
-extern vector <User> UserList;
+extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
 extern vector <File> FileList;
 
-// Checks if a DateTime is already existing for the current user.
+// Checks if a DateTime is already existing for the current client.
 bool isDuplicateDateTime(unsigned int ID, string DateTime) {
-	for (unsigned int i = 0; i < UserList[ID].getDateTimeCount(); i++) {
-		if (UserList[ID].getUniqueDateTime(i) == DateTime) {
+	for (unsigned int i = 0; i < ClientList[ID].getDateTimeCount(); i++) {
+		if (ClientList[ID].getUniqueDateTime(i) == DateTime) {
 			return true;
 		}
 	}
