@@ -14,6 +14,9 @@ TS3_EnhancedClientList creates detailed lists using the information written to t
 The program requires the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
 
 ## Current Features
+### [Responsive web design](http://www.w3schools.com/html/html_responsive.asp)
+The responsive front-end framework was used for a smooth change between various display sizes.
+On displays with a width smaller than 1024px the tables are switching to another layout which is optimized for smaller displays.
 ### Multiple sortable tables
 - Client list
 - Ban list
@@ -22,11 +25,12 @@ The program requires the log files of the TS3 server (logging has to be enabled 
 - File upload list
 
 #### Control Section
+- Select which tables you want to be built and displayed.
 - Update the current XML via a button.
 - Generate a new XML via a button (useful when changing log directories or after an failed database migration).
 - Timestamps of the XML creation (local time of the server and UTC).
 - Count of the currently connected clients.
-- Navbar (fixed at the bottom of the page) which contains the following buttons (scroll buttons of not included tables won't appear):
+- Navbar (fixed at the bottom of the page) which contains the following buttons (scroll buttons of unselected tables won't appear):
   - Scroll back to top
   - Scroll to client table
   - Scroll to ban table
@@ -37,7 +41,7 @@ The program requires the log files of the TS3 server (logging has to be enabled 
 #### Client table layout and features
 
 Controls for the client table:
-- Switch between sorting by first or last Connections via the a button.
+- Switch between sorting by first or last Connections via a button.
 - Collapse all extended lists via a button.
 
 ID  | Nicknames                                                                     | Connections                                                                        | IPs                                             | Connections Count | Connected | Deleted
@@ -76,7 +80,7 @@ Date and Time                           | About ID | About Nickname | Reason    
 2015-08-11 18:09:17 (about 12 days ago) | 18       | Obvious Troll  | Massive Spamming         | 14    | Random Communitymember
 2015-08-11 18:15:17 (about 12 days ago) | 18       | Obvious Troll  | Spamming in channel chat | 19    | xXHaXxXorXx
 
-#### File upload table layout
+#### Upload table layout
 
 Date and Time                               | Channel ID | Filename                          | Uploaded by ID | Uploaded by Nickname
 ------------------------------------------- | ---------- | --------------------------------- | -------------- | --------------------
@@ -84,6 +88,7 @@ Date and Time                               | Channel ID | Filename             
 2015-07-09 19:18:18<br />(about 4 days ago) | 2          | /directory_sample/file_sample.txt | 3              | Drumsticks
 
 ### Overall Program Features
+- You can select which tables you want to be built and displayed. This selection is saved to your local storage.
 - You can change the virtual server whose logs will be analyzed by adjusting the value of  the VIRTUALSERVER variable in the rebuildXML.php.
 - You can manually create a logignore and list the log files (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
 - In order to save time the program uses the information from the last created XML instead of parsing all logs again.

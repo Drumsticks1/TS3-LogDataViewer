@@ -273,6 +273,61 @@ function switchBetweenIDAndUID() {
     }
 }
 
+// Imports and uses the local storage data for the given table.
+function importLocalStorage(table) {
+    if (localStorage.getItem(table)) {
+        var checkState = localStorage.getItem(table);
+        if (localStorage.getItem(table) === '0') {
+            checkState = false;
+        } else {
+            checkState = true;
+        }
+        $('#' + table + 'Checkbox').prop('checked', checkState);
+        if ($('#' + table + 'Checkbox').is(':checked') === false) {
+            $('#ts3-' + table).hide();
+        }
+    } else {
+        $('#' + table + 'Checkbox').prop('checked', true);
+        localStorage.setItem(table, '1');
+    }
+}
+
+// Adds a checkbox listener for the given table.
+function addTableCheckboxListener(table) {
+    $('#' + table + 'Checkbox').click(function() {
+        var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
+        if (this.checked) {
+            localStorage.setItem(table, '1');
+            if (sessionStorage.getItem(table + '-built') == '0') {
+                nanobar.go(50);
+                window['build' + leadingCapitalLetterTable]();
+                nanobar.go(100);
+            }
+            $('#ts3-' + table).show();
+            $('#scrollTo' + leadingCapitalLetterTable).show();
+        } else {
+            localStorage.setItem(table, '0');
+            $('#ts3-' + table).hide();
+            $('#scrollTo' + leadingCapitalLetterTable).hide();
+        }
+    });
+}
+
+// executes importLocalStorage() and addTableCheckboxListener() for every table.
+function localStorageAndTableCheckboxListener(table) {
+    importLocalStorage('clientTable');
+    importLocalStorage('banTable');
+    importLocalStorage('kickTable');
+    importLocalStorage('complaintTable');
+    importLocalStorage('uploadTable');
+    addTableCheckboxListener('clientTable');
+    addTableCheckboxListener('banTable');
+    addTableCheckboxListener('kickTable');
+    addTableCheckboxListener('complaintTable');
+    addTableCheckboxListener('uploadTable');
+}
+
+
 // Builds the client table.
 function buildClientTable() {
     $('#ts3-clientTable').empty();
@@ -382,8 +437,7 @@ function buildClientTable() {
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement('button');
-                $(buttonExpandCollapseConnections).prop('id', 'connectionsButton_' + ID);
-                $(buttonExpandCollapseConnections).html('+ ' + (Connections.length - 2));
+                $(buttonExpandCollapseConnections).prop('id', 'connectionsButton_' + ID).html('+ ' + (Connections.length - 2));
 
                 (function(ID) {
                     buttonExpandCollapseConnections.onclick = function() {
@@ -395,14 +449,12 @@ function buildClientTable() {
             }
 
             var divLastConnection = document.createElement('div');
-            $(divLastConnection).prop('id', 'connections_' + ID + '_0');
-            $(divLastConnection).html(moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+            $(divLastConnection).prop('id', 'connections_' + ID + '_0').html(moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
             clientBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
-                $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1));
-                $(divFirstConnection).html(moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+                $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1)).html(moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
                 clientBodyCell_Connections.appendChild(divFirstConnection);
             }
 
@@ -410,8 +462,7 @@ function buildClientTable() {
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
-                $(buttonExpandCollapseIPs).prop('id', 'ipsButton_' + ID);
-                $(buttonExpandCollapseIPs).html('+ ' + (IPs.length - 1));
+                $(buttonExpandCollapseIPs).prop('id', 'ipsButton_' + ID).html('+ ' + (IPs.length - 1));
 
                 (function(ID) {
                     buttonExpandCollapseIPs.onclick = function() {
@@ -423,8 +474,7 @@ function buildClientTable() {
             }
 
             var divLastIP = document.createElement('div');
-            $(divLastIP).prop('id', 'ips_' + ID + '_0');
-            $(divLastIP).html(IPs[0].firstChild.nodeValue);
+            $(divLastIP).prop('id', 'ips_' + ID + '_0').html(IPs[0].firstChild.nodeValue);
             clientBodyCell_IPs.appendChild(divLastIP);
 
             clientBodyRow.appendChild(clientBodyCell_IPs);
@@ -452,19 +502,10 @@ function buildClientTable() {
     }
     clientTable.appendChild(clientBody);
 
-    $(clientTable).prop('id', 'clientTable');
-    $(clientTable).addClass('ui-table-reflow');
+    $(clientTable).prop('id', 'clientTable').addClass('ui-table-reflow');
     document.getElementById('ts3-clientTable').appendChild(clientTable);
 
-    if (document.getElementById('scrollToClientTable') === null) {
-        var scrollToClientTable = document.createElement('button');
-        $(scrollToClientTable).prop('id', 'scrollToClientTable');
-        $(scrollToClientTable).html('Clients');
-        scrollToClientTable.onclick = function() {
-            scrollToDiv('ts3-clientTable');
-        };
-        document.getElementById('navbar').appendChild(scrollToClientTable);
-    }
+    $('#scrollToClientTable').show();
 
     addConnectionsParser();
     addIPsParser();
@@ -479,6 +520,7 @@ function buildClientTable() {
         }
     });
     $('#clientTable').trigger('applyWidgetId', ['stickyHeaders']);
+    sessionStorage.setItem('clientTable-built', '1');
 }
 
 // Builds the ban table.
@@ -617,20 +659,8 @@ function buildBanTable() {
     }
     banTable.appendChild(banBody);
 
-    $(banTable).prop('id', 'banTable');
-    $(banTable).addClass('ui-table-reflow');
-    $(banTable).attr('uid', false);
+    $(banTable).prop('id', 'banTable').addClass('ui-table-reflow').attr('uid', false);
     document.getElementById('ts3-banTable').appendChild(banTable);
-
-    if (document.getElementById('scrollToBanTable') === null) {
-        var scrollToBanTable = document.createElement('button');
-        $(scrollToBanTable).prop('id', 'scrollToBanTable');
-        $(scrollToBanTable).html('Bans');
-        scrollToBanTable.onclick = function() {
-            scrollToDiv('ts3-banTable');
-        };
-        document.getElementById('navbar').appendChild(scrollToBanTable);
-    }
 
     if (UIDState == 'true') {
         switchBetweenIDAndUID();
@@ -645,6 +675,8 @@ function buildBanTable() {
         }
     });
     $('#banTable').trigger('applyWidgetId', ['stickyHeaders']);
+    sessionStorage.setItem('banTable-built', '1');
+    $('#scrollToBanTable').show();
 }
 
 // Builds the kick table.
@@ -741,19 +773,8 @@ function buildKickTable() {
     }
     kickTable.appendChild(kickBody);
 
-    $(kickTable).prop('id', 'kickTable');
-    $(kickTable).addClass('ui-table-reflow');
+    $(kickTable).prop('id', 'kickTable').addClass('ui-table-reflow');
     document.getElementById('ts3-kickTable').appendChild(kickTable);
-
-    if (document.getElementById('scrollToKickTable') === null) {
-        var scrollToKickTable = document.createElement('button');
-        $(scrollToKickTable).prop('id', 'scrollToKickTable');
-        $(scrollToKickTable).html('Kicks');
-        scrollToKickTable.onclick = function() {
-            scrollToDiv('ts3-kickTable');
-        };
-        document.getElementById('navbar').appendChild(scrollToKickTable);
-    }
 
     addIgnoreMomentParser();
     $('#kickTable').tablesorter({
@@ -764,6 +785,8 @@ function buildKickTable() {
         }
     });
     $('#kickTable').trigger('applyWidgetId', ['stickyHeaders']);
+    sessionStorage.setItem('kickTable-built', '1');
+    $('#scrollToKickTable').show();
 }
 
 // Builds the complaint table.
@@ -853,19 +876,8 @@ function buildComplaintTable() {
     }
     complaintTable.appendChild(complaintBody);
 
-    $(complaintTable).prop('id', 'complaintTable');
-    $(complaintTable).addClass('ui-table-reflow');
+    $(complaintTable).prop('id', 'complaintTable').addClass('ui-table-reflow');
     document.getElementById('ts3-complaintTable').appendChild(complaintTable);
-
-    if (document.getElementById('scrollToComplaintTable') === null) {
-        var scrollToComplaintTable = document.createElement('button');
-        $(scrollToComplaintTable).prop('id', 'scrollToComplaintTable');
-        $(scrollToComplaintTable).html('Complaints');
-        scrollToComplaintTable.onclick = function() {
-            scrollToDiv('ts3-complaintTable');
-        };
-        document.getElementById('navbar').appendChild(scrollToComplaintTable);
-    }
 
     addIgnoreMomentParser();
     $('#complaintTable').tablesorter({
@@ -876,6 +888,8 @@ function buildComplaintTable() {
         }
     });
     $('#complaintTable').trigger('applyWidgetId', ['stickyHeaders']);
+    sessionStorage.setItem('complaintTable-built', '1');
+    $('#scrollToComplaintTable').show();
 }
 
 // Builds the upload table.
@@ -954,19 +968,8 @@ function buildUploadTable() {
     }
     uploadTable.appendChild(uploadBody);
 
-    $(uploadTable).prop('id', 'uploadTable');
-    $(uploadTable).addClass('ui-table-reflow');
+    $(uploadTable).prop('id', 'uploadTable').addClass('ui-table-reflow');
     document.getElementById('ts3-uploadTable').appendChild(uploadTable);
-
-    if (document.getElementById('scrollToUploadTable') === null) {
-        var scrollToUploadTable = document.createElement('button');
-        $(scrollToUploadTable).prop('id', 'scrollToUploadTable');
-        $(scrollToUploadTable).html('Uploads');
-        scrollToUploadTable.onclick = function() {
-            scrollToDiv('ts3-uploadTable');
-        };
-        document.getElementById('navbar').appendChild(scrollToUploadTable);
-    }
 
     addIgnoreMomentParser();
     $('#uploadTable').tablesorter({
@@ -977,6 +980,8 @@ function buildUploadTable() {
         }
     });
     $('#uploadTable').trigger('applyWidgetId', ['stickyHeaders']);
+    sessionStorage.setItem('uploadTable-built', '1');
+    $('#scrollToUploadTable').show();
 }
 
 // Builds the tables using the XML.
@@ -998,36 +1003,47 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
-            if ($('#ts3-clientTable').length) {
+            if (localStorage.getItem('clientTable') != '0') {
                 buildClientTable();
+            } else {
+                sessionStorage.setItem('clientTable-built', '0');
             }
-            if ($('#ts3-banTable').length) {
+            if (localStorage.getItem('banTable') != '0') {
                 buildBanTable();
+            } else {
+                sessionStorage.setItem('banTable-built', '0');
             }
-            if ($('#ts3-kickTable').length) {
+            if (localStorage.getItem('kickTable') != '0') {
                 buildKickTable();
+            } else {
+                sessionStorage.setItem('kickTable-built', '0');
             }
-            if ($('#ts3-complaintTable').length) {
+            if (localStorage.getItem('complaintTable') != '0') {
                 buildComplaintTable();
+            } else {
+                sessionStorage.setItem('complaintTable-built', '0');
             }
-            if ($('#ts3-uploadTable').length) {
+            if (localStorage.getItem('uploadTable') != '0') {
                 buildUploadTable();
+            } else {
+                sessionStorage.setItem('uploadTable-built', '0');
             }
             applySortOrder();
 
             var Attributes = XML.getElementsByTagName('Attributes')[0];
             var CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue;
             var CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
+
             $('#creationTimestamp_localtime').html(CreationTimestampLocaltime);
             $('#creationTimestamp_utc').html(CreationTimestampUTC);
-
             $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
                 $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
             }, 1000);
 
-            if (!$('#ts3-clientTable').length) {
+            if (!$('#clientTable').length || !$('#clientTable').is(':visible')) {
                 for (var i = 0; i < XML.getElementsByTagName('Client').length; i++) {
                     if (XML.getElementsByTagName('Client')[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
                         if (XML.getElementsByTagName('Client')[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1) {
@@ -1042,9 +1058,9 @@ function buildTables() {
                 alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
             }
 
-            nanobar.go(100);
             document.getElementById('rebuildXMLButton').disabled = false;
             document.getElementById('buildNewXMLButton').disabled = false;
+            nanobar.go(100);
         }
     });
 }
@@ -1052,6 +1068,61 @@ function buildTables() {
 // Builds the control section.
 function buildControlSection() {
     var controlSection = document.createElement('div');
+    var tableSelectionSection = document.createElement('div');
+    var tableSelectionDescription = document.createElement('div');
+    var clientTableCheckboxSection = document.createElement('div');
+    var banTableCheckboxSection = document.createElement('div');
+    var kickTableCheckboxSection = document.createElement('div');
+    var complaintTableCheckboxSection = document.createElement('div');
+    var uploadTableCheckboxSection = document.createElement('div');
+    var clientTableCheckbox = document.createElement('input');
+    var banTableCheckbox = document.createElement('input');
+    var kickTableCheckbox = document.createElement('input');
+    var complaintTableCheckbox = document.createElement('input');
+    var uploadTableCheckbox = document.createElement('input');
+    var clientTableCheckboxLabel = document.createElement('label');
+    var banTableCheckboxLabel = document.createElement('label');
+    var kickTableCheckboxLabel = document.createElement('label');
+    var complaintTableCheckboxLabel = document.createElement('label');
+    var uploadTableCheckboxLabel = document.createElement('label');
+
+    $(controlSection).prop('id', 'controlSection').prop('class', 'row');
+    $(tableSelectionSection).prop('id', 'tableSelectionSection').prop('class', 'small-12 medium-12 large-12 columns row');
+    $(tableSelectionDescription).prop('id', 'tableSelectionDescription').prop('class', 'small-12 medium-12 large-4 columns').html('Select which of the tables you want');
+    $(clientTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
+    $(banTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
+    $(kickTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
+    $(complaintTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
+    $(uploadTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns end');
+    $(clientTableCheckbox).prop('id', 'clientTableCheckbox').prop('type', 'checkbox');
+    $(banTableCheckbox).prop('id', 'banTableCheckbox').prop('type', 'checkbox');
+    $(kickTableCheckbox).prop('id', 'kickTableCheckbox').prop('type', 'checkbox');
+    $(complaintTableCheckbox).prop('id', 'complaintTableCheckbox').prop('type', 'checkbox');
+    $(uploadTableCheckbox).prop('id', 'uploadTableCheckbox').prop('type', 'checkbox');
+    $(clientTableCheckboxLabel).prop('for', 'clientTableCheckbox').html('Client Table');
+    $(banTableCheckboxLabel).prop('for', 'banTableCheckbox').html('Ban Table');
+    $(kickTableCheckboxLabel).prop('for', 'kickTableCheckbox').html('Kick Table');
+    $(complaintTableCheckboxLabel).prop('for', 'complaintTableCheckbox').html('Complaint Table');
+    $(uploadTableCheckboxLabel).prop('for', 'uploadTableCheckbox').html('Upload Table');
+
+    clientTableCheckboxSection.appendChild(clientTableCheckbox);
+    clientTableCheckboxSection.appendChild(clientTableCheckboxLabel);
+    banTableCheckboxSection.appendChild(banTableCheckbox);
+    banTableCheckboxSection.appendChild(banTableCheckboxLabel);
+    kickTableCheckboxSection.appendChild(kickTableCheckbox);
+    kickTableCheckboxSection.appendChild(kickTableCheckboxLabel);
+    complaintTableCheckboxSection.appendChild(complaintTableCheckbox);
+    complaintTableCheckboxSection.appendChild(complaintTableCheckboxLabel);
+    uploadTableCheckboxSection.appendChild(uploadTableCheckbox);
+    uploadTableCheckboxSection.appendChild(uploadTableCheckboxLabel);
+
+    tableSelectionSection.appendChild(tableSelectionDescription);
+    tableSelectionSection.appendChild(clientTableCheckboxSection);
+    tableSelectionSection.appendChild(banTableCheckboxSection);
+    tableSelectionSection.appendChild(kickTableCheckboxSection);
+    tableSelectionSection.appendChild(complaintTableCheckboxSection);
+    tableSelectionSection.appendChild(uploadTableCheckboxSection);
+
     var creationTimestampSection = document.createElement('div');
     var creationTimestampTable = document.createElement('table');
     var ctTHead = document.createElement('thead');
@@ -1064,27 +1135,17 @@ function buildControlSection() {
     var ctT_localtime = document.createElement('td');
     var ctT_utc = document.createElement('td');
     var ctT_moment = document.createElement('td');
-
     var connectedClientsCount = document.createElement('div');
 
-    $(controlSection).prop('id', 'controlSection');
-    $(controlSection).prop('class', 'row');
-    $(creationTimestampSection).prop('id', 'creationTimestampSection');
-    $(creationTimestampSection).prop('class', 'small-12 medium-8 large-8 columns');
+    $(creationTimestampSection).prop('id', 'creationTimestampSection').prop('class', 'small-12 medium-8 large-8 columns').html('Creation DateTime of the current XML');
     $(creationTimestampTable).prop('id', 'creationTimestampTable');
-    $(ctT_localtime).prop('id', 'creationTimestamp_localtime');
-    $(ctT_utc).prop('id', 'creationTimestamp_utc');
-    $(ctT_moment).prop('id', 'creationTimestamp_moment');
-    $(creationTimestampSection).html('Creation DateTime of the current XML');
+    $(ctT_localtime).prop('id', 'creationTimestamp_localtime').html('Analyzing...');
+    $(ctT_utc).prop('id', 'creationTimestamp_utc').html('Analyzing...');
+    $(ctT_moment).prop('id', 'creationTimestamp_moment').html('Analyzing...');
     $(ctTHead_localtime).html('Server localtime');
     $(ctTHead_utc).html('UTC');
     $(ctTHead_moment).html('moment.js');
-    $(ctT_localtime).html('Analyzing...');
-    $(ctT_utc).html('Analyzing...');
-    $(ctT_moment).html('Analyzing...');
-
-    $(connectedClientsCount).prop('id', 'connectedClientsCount');
-    $(connectedClientsCount).html('Analyzing data...');
+    $(connectedClientsCount).prop('id', 'connectedClientsCount').html('Analyzing data...');
 
     ctTHeadRow.appendChild(ctTHead_localtime);
     ctTHeadRow.appendChild(ctTHead_utc);
@@ -1104,14 +1165,9 @@ function buildControlSection() {
     var rebuildXMLButton = document.createElement('button');
     var buildNewXMLButton = document.createElement('button');
 
-    $(rebuildSection).prop('id', 'rebuildSection');
-    $(rebuildSection).prop('class', 'small-12 medium-4 large-4 columns');
-    $(rebuildXMLButton).prop('id', 'rebuildXMLButton');
-    $(buildNewXMLButton).prop('id', 'buildNewXMLButton');
-    $(rebuildXMLButton).prop('disabled', 'true');
-    $(buildNewXMLButton).prop('disabled', 'true');
-    $(rebuildXMLButton).html('Update current XML');
-    $(buildNewXMLButton).html('Generate new XML');
+    $(rebuildSection).prop('id', 'rebuildSection').prop('class', 'small-12 medium-4 large-4 columns');
+    $(rebuildXMLButton).prop('id', 'rebuildXMLButton').prop('disabled', 'true').html('Update current XML');
+    $(buildNewXMLButton).prop('id', 'buildNewXMLButton').prop('disabled', 'true').html('Generate new XML');
 
     rebuildXMLButton.onclick = function() {
         rebuildXML();
@@ -1125,16 +1181,47 @@ function buildControlSection() {
 
     var navbar = document.createElement('div');
     var scrollBackToTopButton = document.createElement('button');
+    var scrollToClientTable = document.createElement('button');
+    var scrollToBanTable = document.createElement('button');
+    var scrollToKickTable = document.createElement('button');
+    var scrollToComplaintTable = document.createElement('button');
+    var scrollToUploadTable = document.createElement('button');
 
     $(navbar).prop('id', 'navbar');
+    $(scrollToClientTable).prop('id', 'scrollToClientTable').html('Clients').hide();
+    $(scrollToBanTable).prop('id', 'scrollToBanTable').html('Bans').hide();
+    $(scrollToKickTable).prop('id', 'scrollToKickTable').html('Kicks').hide();
+    $(scrollToComplaintTable).prop('id', 'scrollToComplaintTable').html('Complaints').hide();
+    $(scrollToUploadTable).prop('id', 'scrollToUploadTable').html('Uploads').hide();
     $(scrollBackToTopButton).html('Top');
 
     scrollBackToTopButton.onclick = function() {
         scrollTo(0, 0);
     };
+    scrollToClientTable.onclick = function() {
+        scrollToDiv('ts3-clientTable');
+    };
+    scrollToBanTable.onclick = function() {
+        scrollToDiv('ts3-banTable');
+    };
+    scrollToKickTable.onclick = function() {
+        scrollToDiv('ts3-kickTable');
+    };
+    scrollToComplaintTable.onclick = function() {
+        scrollToDiv('ts3-complaintTable');
+    };
+    scrollToUploadTable.onclick = function() {
+        scrollToDiv('ts3-uploadTable');
+    };
 
     navbar.appendChild(scrollBackToTopButton);
+    navbar.appendChild(scrollToClientTable);
+    navbar.appendChild(scrollToBanTable);
+    navbar.appendChild(scrollToKickTable);
+    navbar.appendChild(scrollToComplaintTable);
+    navbar.appendChild(scrollToUploadTable);
 
+    controlSection.appendChild(tableSelectionSection);
     controlSection.appendChild(creationTimestampSection);
     controlSection.appendChild(rebuildSection);
     controlSection.appendChild(navbar);
@@ -1151,8 +1238,9 @@ $(document).ready(function() {
 
         buildControlSection();
         nanobar.go(25);
+        localStorageAndTableCheckboxListener();
         buildTables();
     } else {
-        alert('Please include the control section by adding a div with the id "ts3-control" to your html.');
+        alert('The html is missing the control section. Please use the provided index.html.');
     }
 });

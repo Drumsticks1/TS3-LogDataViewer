@@ -10,9 +10,8 @@ general:
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- limit rebuilds on serverside, maybe add cron.
 	- add query clients to client list or a query client list?
-	- use local storage for saving options.
-	- update readme about foundation and responsive design.
 	- add button for switching between small and big display tables on big displays.
+	- add sort order to local storage.
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
 	- Add custom bans.
