@@ -125,19 +125,6 @@ function scrollToDiv(Div_ID) {
     document.getElementById(Div_ID).scrollIntoView();
 }
 
-/* Dev: currently unused.
-// Scroll to the given Row in the client list.
-function scrollToClientTableRow(Row_ID) {
-    if (document.getElementById(Row_ID) !== null) {
-        scrollToDiv(Row_ID);
-        var $sticky, sHeight;
-        $sticky = $('#clientTable')[0].config.widgetOptions.$sticky;
-        sHeight = $sticky.height() || 0;
-        window.scrollBy(0, -sHeight);
-    }
-}
-*/
-
 // Adds a custom parser which ignores the moment.js timestamps.
 function addIgnoreMomentParser() {
     $.tablesorter.addParser({
@@ -161,18 +148,14 @@ function addConnectionsParser() {
             return false;
         },
         format: function(s, table, cell) {
-            var firstConnect;
-            var lastConnect = cell.lastChild.innerHTML;
-            if (cell.firstChild.localName == 'button') {
-                firstConnect = cell.childNodes[1].innerHTML;
-            } else {
-                firstConnect = cell.firstChild.innerHTML;
-            }
-
             if (ConnectionsSortType) {
-                return firstConnect;
+                if (cell.firstChild.localName == 'button') {
+                    return cell.childNodes[1].innerHTML;
+                } else {
+                    return cell.firstChild.innerHTML;
+                }
             } else {
-                return lastConnect;
+                return cell.lastChild.innerHTML;
             }
         },
         parsed: false,
@@ -470,7 +453,7 @@ function buildClientTable() {
     clientTable.appendChild(clientBody);
 
     $(clientTable).prop('id', 'clientTable');
-    $(clientTable).prop('class', 'ui-table-reflow');
+    $(clientTable).addClass('ui-table-reflow');
     document.getElementById('ts3-clientTable').appendChild(clientTable);
 
     if (document.getElementById('scrollToClientTable') === null) {
@@ -635,7 +618,7 @@ function buildBanTable() {
     banTable.appendChild(banBody);
 
     $(banTable).prop('id', 'banTable');
-    $(banTable).prop('class', 'ui-table-reflow');
+    $(banTable).addClass('ui-table-reflow');
     $(banTable).attr('uid', false);
     document.getElementById('ts3-banTable').appendChild(banTable);
 
@@ -759,7 +742,7 @@ function buildKickTable() {
     kickTable.appendChild(kickBody);
 
     $(kickTable).prop('id', 'kickTable');
-    $(kickTable).prop('class', 'ui-table-reflow');
+    $(kickTable).addClass('ui-table-reflow');
     document.getElementById('ts3-kickTable').appendChild(kickTable);
 
     if (document.getElementById('scrollToKickTable') === null) {
@@ -871,7 +854,7 @@ function buildComplaintTable() {
     complaintTable.appendChild(complaintBody);
 
     $(complaintTable).prop('id', 'complaintTable');
-    $(complaintTable).prop('class', 'ui-table-reflow');
+    $(complaintTable).addClass('ui-table-reflow');
     document.getElementById('ts3-complaintTable').appendChild(complaintTable);
 
     if (document.getElementById('scrollToComplaintTable') === null) {
@@ -972,7 +955,7 @@ function buildUploadTable() {
     uploadTable.appendChild(uploadBody);
 
     $(uploadTable).prop('id', 'uploadTable');
-    $(uploadTable).prop('class', 'ui-table-reflow');
+    $(uploadTable).addClass('ui-table-reflow');
     document.getElementById('ts3-uploadTable').appendChild(uploadTable);
 
     if (document.getElementById('scrollToUploadTable') === null) {
@@ -998,7 +981,7 @@ function buildUploadTable() {
 
 // Builds the tables using the XML.
 function buildTables() {
-    nanobar.go(60);
+    nanobar.go(50);
     $.ajax({
         url: 'output.xml',
         cache: false,
@@ -1144,7 +1127,7 @@ function buildControlSection() {
     var scrollBackToTopButton = document.createElement('button');
 
     $(navbar).prop('id', 'navbar');
-    $(scrollBackToTopButton).html('Back to top');
+    $(scrollBackToTopButton).html('Top');
 
     scrollBackToTopButton.onclick = function() {
         scrollTo(0, 0);

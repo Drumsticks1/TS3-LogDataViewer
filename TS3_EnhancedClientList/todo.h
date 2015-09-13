@@ -11,9 +11,7 @@ general:
 	- limit rebuilds on serverside, maybe add cron.
 	- add query clients to client list or a query client list?
 	- use local storage for saving options.
-	- change navbar for small displays (expandable navbar at the bottom for small screens).
 	- update readme about foundation and responsive design.
-	- fix table widths bigger than the window width (maybe scrolling in wraps, maybe switching to view for smaller displays).
 	- add button for switching between small and big display tables on big displays.
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).

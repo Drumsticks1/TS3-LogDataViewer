@@ -51,7 +51,7 @@ button {
     flex-grow: 1;
     color: #fff;
     font-size: .8rem;
-    padding: .75rem .5rem
+    padding: .75em .5em
 }
 #ts3-uploadTable {
     margin-bottom: 44px
@@ -91,7 +91,7 @@ td, th {
     background-color: #007095;
     color: #fff
 }
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .tablesorter-sticky-visible {
         display: none
     }
@@ -109,6 +109,7 @@ td, th {
     .ui-table-reflow tbody > tr > td > div {
         clear: right;
         float: right;
+        max-width: calc(50vw - 5px);
         width: 50%;
         overflow: auto
     }
@@ -117,6 +118,7 @@ td, th {
         font-size: .9em;
         content: attr(data-title);
         float: left;
+        max-width: calc(50vw - 5px);
         width: 50%;
         display: inline-block
     }
