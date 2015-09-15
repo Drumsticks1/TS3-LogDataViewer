@@ -11,16 +11,32 @@ button {
 .row {
     max-width: 100%!important
 }
-label {
-    margin-left: 5px
+input[type='checkbox'] {
+    display: none
 }
-input[type='checkbox'], label {
-    cursor: pointer
+label {
+    display: block;
+    padding: 0.6rem;
+    cursor: pointer;
+    background-color: #9f9f9f;
+    border: 1px solid rgb(149, 149, 149)
+}
+:checked + label {
+    background-color: rgb(93, 164, 35);
+    border: 1px solid rgb(84, 148, 32)
+}
+label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
+    color: #fff
+}
+#navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
+    background-color: #fff
+}
+#tableSelectionSection > div {
+    padding: 0
 }
 #TS3-ECL {
     text-align: center;
-    background-color: #2ba6cb;
-    color: #fff
+    background-color: #2ba6cb
 }
 #TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button {
     font-family: 'Open Sans', Arial, sans-serif;
@@ -33,19 +49,22 @@ input[type='checkbox'], label {
 #creationTimestampTable {
     margin: .75rem 0
 }
-#tableSelectionSection, #creationTimestampSection, #rebuildSection {
+#tableSelectionSection {
+    margin-bottom: 15px;
+    text-align: center
+}
+#creationTimestampSection, #rebuildSection {
     margin-bottom: 20px
 }
-#TS3-ECL, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton {
+#TS3-ECL, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row {
     margin: 0
 }
-#buildNewXMLButton, #creationTimestampTable, #rebuildXMLButton, #switchBetweenIDandUIDButton, .tablesorter {
+#tableSelectionSection, #buildNewXMLButton, #creationTimestampTable, #rebuildXMLButton, #switchBetweenIDandUIDButton, .tablesorter {
     width: 100%
 }
 #navbar {
     display: flex;
     position: fixed;
-    background-color: #fff;
     box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, .75);
     font-size: 12pt;
     left: 0;
@@ -55,7 +74,6 @@ input[type='checkbox'], label {
 }
 #navbar button {
     flex-grow: 1;
-    color: #fff;
     font-size: .8rem;
     padding: .75em .5em
 }
@@ -67,7 +85,6 @@ td, th {
 }
 #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td {
     padding: 4px;
-    background-color: #fff;
     vertical-align: top
 }
 .tablesorter > thead > tr > th {
@@ -85,7 +102,6 @@ td, th {
     background-image: url(desc.png)
 }
 .tablesorter button {
-    background: #fff;
     color: #008CBA;
     position: static;
     width: 50%;
@@ -95,7 +111,6 @@ td, th {
 }
 .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
     background-color: #007095;
-    color: #fff
 }
 @media (max-width: 1024px) {
     .tablesorter-sticky-visible {

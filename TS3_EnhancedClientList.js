@@ -1068,7 +1068,6 @@ function buildTables() {
 function buildControlSection() {
     var controlSection = document.createElement('div');
     var tableSelectionSection = document.createElement('div');
-    var tableSelectionDescription = document.createElement('div');
     var clientTableCheckboxSection = document.createElement('div');
     var banTableCheckboxSection = document.createElement('div');
     var kickTableCheckboxSection = document.createElement('div');
@@ -1086,23 +1085,22 @@ function buildControlSection() {
     var uploadTableCheckboxLabel = document.createElement('label');
 
     $(controlSection).prop('id', 'controlSection').prop('class', 'row');
-    $(tableSelectionSection).prop('id', 'tableSelectionSection').prop('class', 'small-12 medium-12 large-12 columns row');
-    $(tableSelectionDescription).prop('id', 'tableSelectionDescription').prop('class', 'small-12 medium-12 large-4 columns').html('Select which of the tables you want');
-    $(clientTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
-    $(banTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
-    $(kickTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
-    $(complaintTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns');
-    $(uploadTableCheckboxSection).prop('class', 'small-6 medium-4 large-4 columns end');
+    $(tableSelectionSection).prop('id', 'tableSelectionSection').prop('class', 'columns row');
+    $(clientTableCheckboxSection).prop('class', 'small-12 medium-12 large-6 columns');
+    $(banTableCheckboxSection).prop('class', 'small-12 medium-6 large-6 columns');
+    $(kickTableCheckboxSection).prop('class', 'small-12 medium-6 large-4 columns');
+    $(complaintTableCheckboxSection).prop('class', 'small-12 medium-6 large-4 columns');
+    $(uploadTableCheckboxSection).prop('class', 'small-12 medium-6 large-4 columns');
     $(clientTableCheckbox).prop('id', 'clientTableCheckbox').prop('type', 'checkbox');
     $(banTableCheckbox).prop('id', 'banTableCheckbox').prop('type', 'checkbox');
     $(kickTableCheckbox).prop('id', 'kickTableCheckbox').prop('type', 'checkbox');
     $(complaintTableCheckbox).prop('id', 'complaintTableCheckbox').prop('type', 'checkbox');
     $(uploadTableCheckbox).prop('id', 'uploadTableCheckbox').prop('type', 'checkbox');
-    $(clientTableCheckboxLabel).prop('for', 'clientTableCheckbox').html('Clients');
-    $(banTableCheckboxLabel).prop('for', 'banTableCheckbox').html('Bans');
-    $(kickTableCheckboxLabel).prop('for', 'kickTableCheckbox').html('Kicks');
-    $(complaintTableCheckboxLabel).prop('for', 'complaintTableCheckbox').html('Complaints');
-    $(uploadTableCheckboxLabel).prop('for', 'uploadTableCheckbox').html('Uploads');
+    $(clientTableCheckboxLabel).prop('for', 'clientTableCheckbox').html('Client table');
+    $(banTableCheckboxLabel).prop('for', 'banTableCheckbox').html('Ban table');
+    $(kickTableCheckboxLabel).prop('for', 'kickTableCheckbox').html('Kick table');
+    $(complaintTableCheckboxLabel).prop('for', 'complaintTableCheckbox').html('Complaint table');
+    $(uploadTableCheckboxLabel).prop('for', 'uploadTableCheckbox').html('Upload table');
 
     clientTableCheckboxSection.appendChild(clientTableCheckbox);
     clientTableCheckboxSection.appendChild(clientTableCheckboxLabel);
@@ -1115,7 +1113,6 @@ function buildControlSection() {
     uploadTableCheckboxSection.appendChild(uploadTableCheckbox);
     uploadTableCheckboxSection.appendChild(uploadTableCheckboxLabel);
 
-    tableSelectionSection.appendChild(tableSelectionDescription);
     tableSelectionSection.appendChild(clientTableCheckboxSection);
     tableSelectionSection.appendChild(banTableCheckboxSection);
     tableSelectionSection.appendChild(kickTableCheckboxSection);
