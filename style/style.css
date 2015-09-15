@@ -19,11 +19,18 @@ label {
     padding: 0.6rem;
     cursor: pointer;
     background-color: #9f9f9f;
-    border: 1px solid rgb(149, 149, 149)
+    border: 1px solid #898989;
+    transition: background-color 300ms ease-out
+}
+label:hover {
+    background-color: #898989
 }
 :checked + label {
-    background-color: rgb(93, 164, 35);
-    border: 1px solid rgb(84, 148, 32)
+    background-color: #5da423;
+    border: 1px solid #549420
+}
+:checked + label:hover {
+    background-color: #549420
 }
 label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
     color: #fff

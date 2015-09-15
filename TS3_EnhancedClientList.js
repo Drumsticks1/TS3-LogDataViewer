@@ -65,7 +65,7 @@ function expandList(List, ID) {
             if (i == 1) {
                 $(newDiv).html(ListContent[j].firstChild.nodeValue);
             } else {
-                $(newDiv).html(moment(ListContent[j].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+                $(newDiv).html(UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue));
             }
 
             if (Row == 3) {
@@ -118,11 +118,6 @@ function collapseAll() {
             collapseList('ips', x.item(j).getAttribute('id'));
         }
     }
-}
-
-// Scroll to the div with the given ID.
-function scrollToDiv(Div_ID) {
-    document.getElementById(Div_ID).scrollIntoView();
 }
 
 // Adds a custom parser which ignores the moment.js timestamps.
@@ -327,6 +322,49 @@ function localStorageAndTableCheckboxListener(table) {
     addTableCheckboxListener('uploadTable');
 }
 
+// Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
+function UTCDateStringToDate(dateString) {
+    var year = dateString.substr(0, 4),
+        month = dateString.substr(5, 2),
+        day = dateString.substr(8, 2),
+        hours = dateString.substr(11, 2),
+        minutes = dateString.substr(14, 2),
+        seconds = dateString.substr(17, 2);
+    return new Date(year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds + ' +0000');
+}
+
+// Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a localtime string with the same format.
+function UTCDateStringToLocaltimeString(dateString) {
+    var dateObject = UTCDateStringToDate(dateString),
+        month = dateObject.getMonth() + 1,
+        day = dateObject.getDate(),
+        hours = dateObject.getHours(),
+        minutes = dateObject.getMinutes(),
+        seconds = dateObject.getSeconds(),
+        dateObject_string = dateObject.getFullYear() + '-';
+
+    if (month < 10) {
+        dateObject_string += '0';
+    }
+    dateObject_string += month + '-';
+    if (day < 10) {
+        dateObject_string += '0';
+    }
+    dateObject_string += day + ' ';
+    if (hours < 10) {
+        dateObject_string += '0';
+    }
+    dateObject_string += hours + ':';
+    if (minutes < 10) {
+        dateObject_string += '0';
+    }
+    dateObject_string += minutes + ':';
+    if (seconds < 10) {
+        dateObject_string += '0';
+    }
+    dateObject_string += seconds;
+    return dateObject_string;
+}
 
 // Builds the client table.
 function buildClientTable() {
@@ -361,7 +399,7 @@ function buildClientTable() {
         collapseAll();
     };
     clientTableControlSection.appendChild(collapseAllButton);
-    document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
+    document.getElementById('ts3-clientTable').appendChild(clientTableControlSection);
 
     var Client = XML.getElementsByTagName('Client');
     var clientTable = document.createElement('table');
@@ -449,12 +487,12 @@ function buildClientTable() {
             }
 
             var divLastConnection = document.createElement('div');
-            $(divLastConnection).prop('id', 'connections_' + ID + '_0').html(moment(Connections[0].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+            $(divLastConnection).prop('id', 'connections_' + ID + '_0').html(UTCDateStringToLocaltimeString(Connections[0].firstChild.nodeValue));
             clientBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
-                $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1)).html(moment(Connections[Connections.length - 1].firstChild.nodeValue + '+0000').format('YYYY-MM-DD HH:mm:ss'));
+                $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1)).html(UTCDateStringToLocaltimeString(Connections[Connections.length - 1].firstChild.nodeValue));
                 clientBodyCell_Connections.appendChild(divFirstConnection);
             }
 
@@ -616,9 +654,9 @@ function buildBanTable() {
         $(banBodyCell_BanReason).attr('data-title', 'Reason');
         $(banBodyCell_Bantime).attr('data-title', 'Bantime');
 
-        var UTCBanDateTime = moment(BanDateTime + '+0000');
+        var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime));
         var banBodyCell_BanDateTime_Div = document.createElement('div');
-        $(banBodyCell_BanDateTime_Div).html(UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCBanDateTime).fromNow() + ')');
+        $(banBodyCell_BanDateTime_Div).html(UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCBanDateTime.fromNow() + ')');
         banBodyCell_BanDateTime.appendChild(banBodyCell_BanDateTime_Div);
         banBodyRow.appendChild(banBodyCell_BanDateTime);
 
@@ -738,9 +776,9 @@ function buildKickTable() {
         $(kickBodyCell_KickedByUID).attr('data-title', 'Kicked by UID');
         $(kickBodyCell_KickReason).attr('data-title', 'Reason');
 
-        var UTCKickDateTime = moment(KickDateTime + '+0000');
+        var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime));
         var kickBodyCell_DateTime_Div = document.createElement('div');
-        $(kickBodyCell_DateTime_Div).html(UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCKickDateTime).fromNow() + ')');
+        $(kickBodyCell_DateTime_Div).html(UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCKickDateTime.fromNow() + ')');
         kickBodyCell_DateTime.appendChild(kickBodyCell_DateTime_Div);
         kickBodyRow.appendChild(kickBodyCell_DateTime);
 
@@ -843,9 +881,9 @@ function buildComplaintTable() {
         $(complaintBodyCell_ComplaintByID).attr('data-title', 'By ID');
         $(complaintBodyCell_ComplaintByNickname).attr('data-title', 'By Nickname');
 
-        var UTCComplaintDateTime = moment(ComplaintDateTime + '+0000');
+        var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime));
         var complaintBodyCell_ComplaintDateTime_Div = document.createElement('div');
-        $(complaintBodyCell_ComplaintDateTime_Div).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + moment(UTCComplaintDateTime).fromNow() + ')');
+        $(complaintBodyCell_ComplaintDateTime_Div).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCComplaintDateTime.fromNow() + ')');
         complaintBodyCell_ComplaintDateTime.appendChild(complaintBodyCell_ComplaintDateTime_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
 
@@ -940,7 +978,7 @@ function buildUploadTable() {
         $(uploadBodyCell_UploadedByID).attr('data-title', 'Uploaded by ID');
         $(uploadBodyCell_UploadedByNickname).attr('data-title', 'Uploaded by Nickname');
 
-        var UTCUploadDateTime = moment(UploadDateTime + '+0000');
+        var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime));
         var uploadBodyCell_UploadDateTime_Div = document.createElement('div');
         $(uploadBodyCell_UploadDateTime_Div).html(UTCUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCUploadDateTime.fromNow() + ')');
         uploadBodyCell_UploadDateTime.appendChild(uploadBodyCell_UploadDateTime_Div);
@@ -1201,19 +1239,19 @@ function buildControlSection() {
         scrollTo(0, 0);
     };
     scrollToClientTable.onclick = function() {
-        scrollToDiv('ts3-clientTable');
+        document.getElementById('ts3-clientTable').scrollIntoView();
     };
     scrollToBanTable.onclick = function() {
-        scrollToDiv('ts3-banTable');
+        document.getElementById('ts3-banTable').scrollIntoView();
     };
     scrollToKickTable.onclick = function() {
-        scrollToDiv('ts3-kickTable');
+        document.getElementById('ts3-kickTable').scrollIntoView();
     };
     scrollToComplaintTable.onclick = function() {
-        scrollToDiv('ts3-complaintTable');
+        document.getElementById('ts3-complaintTable').scrollIntoView();
     };
     scrollToUploadTable.onclick = function() {
-        scrollToDiv('ts3-uploadTable');
+        document.getElementById('ts3-uploadTable').scrollIntoView();
     };
 
     navbar.appendChild(scrollBackToTopButton);
