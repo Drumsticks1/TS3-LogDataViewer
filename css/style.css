@@ -100,20 +100,20 @@ td, th {
     padding: 5px 15px 5px 5px
 }
 .tablesorter-header {
-    background: url(bg.png) center right no-repeat #E6E6E6
+    background: url(../img/bg.png) center right no-repeat #E6E6E6
 }
 .tablesorter-headerAsc {
-    background-image: url(asc.png)
+    background-image: url(../img/asc.png)
 }
 .tablesorter-headerDesc {
-    background-image: url(desc.png)
+    background-image: url(../img/desc.png)
 }
 .tablesorter button {
     color: #008CBA;
     position: static;
+    margin: 0 25% 5px 25%;
     width: 50%;
     padding: 5px 0;
-    margin-bottom: 5px;
     font-size: .8rem
 }
 .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {

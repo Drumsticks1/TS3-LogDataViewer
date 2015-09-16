@@ -15,7 +15,7 @@ function rebuildXML() {
     nanobar.go(35);
     document.getElementById('rebuildXMLButton').disabled = true;
     document.getElementById('buildNewXMLButton').disabled = true;
-    $.get('rebuildXML.php', function() {
+    $.get('./rebuildXML.php', function() {
         saveSortOrder();
         buildTables();
     });
@@ -24,7 +24,7 @@ function rebuildXML() {
 
 // Deletes the current XML and builds a new one after.
 function buildNewXML() {
-    $.get('deleteXML.php', function() {
+    $.get('./deleteXML.php', function() {
         rebuildXML();
     });
     return false;
@@ -1024,7 +1024,7 @@ function buildUploadTable() {
 function buildTables() {
     nanobar.go(50);
     $.ajax({
-        url: 'output.xml',
+        url: './output.xml',
         cache: false,
         error: function() {
             if (rebuildError) {

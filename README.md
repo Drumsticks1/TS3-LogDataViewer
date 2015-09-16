@@ -107,8 +107,6 @@ As the file name already implies, the install instructions can be found in the f
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br /> You will need to download the following extern files:
-- The front-end framework Foundation:
-  - [foundation-5.5.2.zip](http://foundation.zurb.com/cdn/releases/foundation-5.5.2.zip)
 - jQuery:
   - [jquery-2.1.4.min.js](https://code.jquery.com/jquery-2.1.4.min.js)
 - Two files from [this fork](https://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
@@ -118,6 +116,8 @@ All dependencies are covered in the install instructions.<br /> You will need to
   - [nanobar.min.js](https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js)
 - One file for moment.js:
   - [moment.min.js](https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js)
+- The front-end framework Foundation (Please only select "Grid", "Buttons" and "Tables" for the custom download):
+  - [foundation-5.5.2.zip](http://foundation.zurb.com/develop/download.html#customizeFoundation)
 
 #### Teamspeak 3 server settings
 It is recommended to enable all logging options in the server options.<br />

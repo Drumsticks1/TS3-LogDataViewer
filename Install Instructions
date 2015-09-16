@@ -18,16 +18,16 @@ Linux:
 	4.7. Install the packages "make" and "g++" in order to compile using the makefile.
 	4.8. Check the include paths in the makefile and adjust them if necessary.
 	4.9. Compile with the makefile ("make -f makefile").
-5. Download Foundation via this link: "http://foundation.zurb.com/cdn/releases/foundation-5.5.2.zip".
+5. Download a custom Foundation build with only "Grid", "Buttons" and "Tables" selected: "http://foundation.zurb.com/develop/download.html#customizeFoundation".
 6. Download jQuery via this link: "http://code.jquery.com/jquery-2.1.4.min.js".
 7. Download the javascript file for the loading bar via the following link: "https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js".
 8. Download the jquery plugin "moment.js" via the following link: "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js".
 9. Download the following files from the unofficial fork of the jquery plugin "tablesorter": https://mottie.github.io/tablesorter/docs/ :
 	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.3/js/jquery.tablesorter.min.js
 	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.3/js/jquery.tablesorter.widgets.min.js
-10. Move the "TS3_EnhancedClientList.js" and the other javascript files you just downloaded into your EnhancedClientList directory.
-11. Unzip the foundation-5.5.2.zip and copy the "js" and the "css" folders into your EnhancedClientList directory.
-12. Move the "index.html" and the "styles" folder into your created EnhancedClientList directory.
+10. Move the "css", "img" and the "js" folders as well as the "index.html" from the last release into your EnhancedClientList directory.
+11. Unzip the foundation-5.5.2-custom.zip and move the content of the "js" and the "css" folders into the same-named folders in your EnhancedClientList directory.
+12. Move the other javascript files you downloaded into the "js" folder in the EnhancedClientList directory.
 13. Move the downloaded and unzipped or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
 14. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
 15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
