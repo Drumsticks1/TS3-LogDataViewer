@@ -10,7 +10,7 @@
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
-#include "File.h"
+#include "Upload.h"
 #include "timeFunctions.h"
 #include "customStreams.h"
 #include <boost/property_tree/ptree.hpp>
@@ -24,7 +24,7 @@ extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
-extern vector <File> FileList;
+extern vector <Upload> UploadList;
 extern unsigned int VIRTUALSERVER;
 extern TeeStream outputStream;
 
@@ -108,13 +108,13 @@ void createXML() {
 		ComplaintNode.add("ComplaintByID", ComplaintList[i].getComplaintByID());
 	}
 
-	for (unsigned int i = 0; i < FileList.size(); i++) {
-		ptree& FileNode = Data.add("File", "");
-		FileNode.add("UploadDateTime", FileList[i].getUploadDateTime());
-		FileNode.add("ChannelID", FileList[i].getChannelID());
-		FileNode.add("Filename", FileList[i].getFilename());
-		FileNode.add("UploadedByNickname", FileList[i].getUploadedByNickname());
-		FileNode.add("UploadedByID", FileList[i].getUploadedByID());
+	for (unsigned int i = 0; i < UploadList.size(); i++) {
+		ptree& UploadNode = Data.add("Upload", "");
+		UploadNode.add("UploadDateTime", UploadList[i].getUploadDateTime());
+		UploadNode.add("ChannelID", UploadList[i].getChannelID());
+		UploadNode.add("Filename", UploadList[i].getFilename());
+		UploadNode.add("UploadedByNickname", UploadList[i].getUploadedByNickname());
+		UploadNode.add("UploadedByID", UploadList[i].getUploadedByID());
 	}
 
 	outputStream << "Creating XML..." << endl;

@@ -39,9 +39,6 @@
     <ClCompile Include="Ban.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Complaint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,6 +46,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Upload.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,9 +80,6 @@
     <ClInclude Include="Ban.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Complaint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Upload.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

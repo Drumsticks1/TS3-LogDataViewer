@@ -85,7 +85,7 @@
     <ClCompile Include="fetchLogs.cpp" />
     <ClCompile Include="checkFunctions.cpp" />
     <ClCompile Include="createXML.cpp" />
-    <ClCompile Include="File.cpp" />
+    <ClCompile Include="Upload.cpp" />
     <ClCompile Include="Kick.cpp" />
     <ClCompile Include="parseLogs.cpp" />
     <ClCompile Include="parseXML.cpp" />
@@ -100,7 +100,7 @@
     <ClInclude Include="checkFunctions.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="createXML.h" />
-    <ClInclude Include="File.h" />
+    <ClInclude Include="Upload.h" />
     <ClInclude Include="customStreams.h" />
     <ClInclude Include="timeFunctions.h" />
     <ClInclude Include="Kick.h" />

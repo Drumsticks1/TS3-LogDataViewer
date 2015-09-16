@@ -8,7 +8,7 @@
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
-#include "File.h"
+#include "Upload.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
-extern vector <File> FileList;
+extern vector <Upload> UploadList;
 
 // Checks if a DateTime is already existing for the current client.
 bool isDuplicateDateTime(unsigned int ID, string DateTime) {
@@ -107,11 +107,11 @@ bool isDuplicateComplaint(string complaintDateTime, string complaintAboutNicknam
 	return false;
 }
 
-// Checks if a file is already existing in the FileList.
-bool isDuplicateFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
-	for (unsigned int i = 0; i < FileList.size(); i++) {
-		if (FileList[i].getUploadDateTime() == uploadDateTime && FileList[i].getChannelID() == channelID && FileList[i].getFilename() == filename &&
-			FileList[i].getUploadedByNickname() == uploadedByNickname && FileList[i].getUploadedByID() == uploadedByID) return true;
+// Checks if an upload is already existing in the UploadList.
+bool isDuplicateUpload(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
+	for (unsigned int i = 0; i < UploadList.size(); i++) {
+		if (UploadList[i].getUploadDateTime() == uploadDateTime && UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename &&
+			UploadList[i].getUploadedByNickname() == uploadedByNickname && UploadList[i].getUploadedByID() == uploadedByID) return true;
 	}
 	return false;
 }

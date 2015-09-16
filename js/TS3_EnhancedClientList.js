@@ -308,7 +308,7 @@ function addTableCheckboxListener(table) {
     });
 }
 
-// executes importLocalStorage() and addTableCheckboxListener() for every table.
+// Executes importLocalStorage() and addTableCheckboxListener() for every table.
 function localStorageAndTableCheckboxListener(table) {
     importLocalStorage('clientTable');
     importLocalStorage('banTable');
@@ -931,7 +931,7 @@ function buildComplaintTable() {
 // Builds the upload table.
 function buildUploadTable() {
     $('#ts3-uploadTable').empty();
-    var File = XML.getElementsByTagName('File');
+    var Upload = XML.getElementsByTagName('Upload');
     var uploadTable = document.createElement('table');
     var uploadHead = document.createElement('thead');
     var uploadHeadRow = document.createElement('tr');
@@ -958,12 +958,12 @@ function buildUploadTable() {
 
     var uploadBody = document.createElement('tbody');
 
-    for (var i = 0; i < File.length; i++) {
-        var UploadDateTime = File[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue;
-        var ChannelID = File[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue;
-        var Filename = File[i].getElementsByTagName('Filename')[0].firstChild.nodeValue;
-        var UploadedByID = File[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue;
-        var UploadedByNickname = File[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue;
+    for (var i = 0; i < Upload.length; i++) {
+        var UploadDateTime = Upload[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue;
+        var ChannelID = Upload[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue;
+        var Filename = Upload[i].getElementsByTagName('Filename')[0].firstChild.nodeValue;
+        var UploadedByID = Upload[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue;
+        var UploadedByNickname = Upload[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue;
 
         var uploadBodyRow = document.createElement('tr');
         var uploadBodyCell_UploadDateTime = document.createElement('td');
@@ -1020,6 +1020,22 @@ function buildUploadTable() {
     document.getElementById('scrollToUploadTable').style.display = '';
 }
 
+// Imports the local storage, builds a table when it will have content and sets the session storage.
+function buildTableWithAlertCheckAndLocalStorage(table) {
+    if (localStorage.getItem(table) != '0') {
+        var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
+        if (XML.getElementsByTagName(leadingCapitalLetterTable.substring(0, table.search('Table'))).length) {
+            window['build' + leadingCapitalLetterTable]();
+        } else {
+            var alertBox = document.createElement('div');
+            $(alertBox).prop('class', 'alertBox').html('No ' + table.substring(0, table.search('Table')) + 's were found.');
+            document.getElementById('ts3-' + table).appendChild(alertBox);
+        }
+    } else {
+        sessionStorage.setItem(table + '-built', '0');
+    }
+}
+
 // Builds the tables using the XML.
 function buildTables() {
     nanobar.go(50);
@@ -1039,31 +1055,11 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
-            if (localStorage.getItem('clientTable') != '0') {
-                buildClientTable();
-            } else {
-                sessionStorage.setItem('clientTable-built', '0');
-            }
-            if (localStorage.getItem('banTable') != '0') {
-                buildBanTable();
-            } else {
-                sessionStorage.setItem('banTable-built', '0');
-            }
-            if (localStorage.getItem('kickTable') != '0') {
-                buildKickTable();
-            } else {
-                sessionStorage.setItem('kickTable-built', '0');
-            }
-            if (localStorage.getItem('complaintTable') != '0') {
-                buildComplaintTable();
-            } else {
-                sessionStorage.setItem('complaintTable-built', '0');
-            }
-            if (localStorage.getItem('uploadTable') != '0') {
-                buildUploadTable();
-            } else {
-                sessionStorage.setItem('uploadTable-built', '0');
-            }
+            buildTableWithAlertCheckAndLocalStorage('clientTable');
+            buildTableWithAlertCheckAndLocalStorage('banTable');
+            buildTableWithAlertCheckAndLocalStorage('kickTable');
+            buildTableWithAlertCheckAndLocalStorage('complaintTable');
+            buildTableWithAlertCheckAndLocalStorage('uploadTable');
             applySortOrder();
 
             var Attributes = XML.getElementsByTagName('Attributes')[0];

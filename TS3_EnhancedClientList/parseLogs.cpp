@@ -11,7 +11,7 @@
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
-#include "File.h"
+#include "Upload.h"
 #include "checkFunctions.h"
 #include "customStreams.h"
 
@@ -23,7 +23,7 @@ extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
-extern vector <File> FileList;
+extern vector <Upload> UploadList;
 extern bool validXML;
 extern unsigned int VIRTUALSERVER;
 extern TeeStream outputStream;
@@ -43,7 +43,7 @@ void parseLogs(string LOGDIRECTORY) {
 		kickedByNickname, kickedByUID, kickReason,
 		complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID,
 		uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID;
-	unsigned int BanListID, KickListID, ComplaintListID, FileListID, ID, virtualServerLength = to_string(VIRTUALSERVER).size(),
+	unsigned int BanListID, KickListID, ComplaintListID, UploadListID, ID, virtualServerLength = to_string(VIRTUALSERVER).size(),
 		NicknameLength, IDLength, IPLength,
 		IDStartPos, IDEndPos, NicknameStartPos, IPStartPos,
 		bannedByNicknameStartPos, bannedByNicknameEndPos, bannedByUIDEndPos, banReasonEndPos, bannedIPStartPos, bannedIPEndPos, bannedUIDStartPos, bannedUIDEndPos, bannedByIDStartPos,
@@ -62,8 +62,8 @@ void parseLogs(string LOGDIRECTORY) {
 	if (ComplaintList.size() > 0) ComplaintListID = ComplaintList.size();
 	else ComplaintListID = 0;
 
-	if (FileList.size() > 0) FileListID = FileList.size();
-	else FileListID = 0;
+	if (UploadList.size() > 0) UploadListID = UploadList.size();
+	else UploadListID = 0;
 
 	if (validXML) {
 		if (isMatchingLogOrder()) {
@@ -395,10 +395,10 @@ void parseLogs(string LOGDIRECTORY) {
 						uploadedByID += buffer_logline[j];
 					}
 
-					if (!isDuplicateFile(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID))) {
-						FileList.resize(FileListID + 1);
-						FileList[FileListID].addFile(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID));
-						FileListID++;
+					if (!isDuplicateUpload(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID))) {
+						UploadList.resize(UploadListID + 1);
+						UploadList[UploadListID].addUpload(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID));
+						UploadListID++;
 					}
 				}
 

@@ -29,5 +29,5 @@ bool isDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNi
 // Checks if a complaint is already existing in the ComplaintList
 bool isDuplicateComplaint(string complaintDateTime, string complaintAboutNickname, unsigned int complaintAboutID, string complaintReason, string complaintByNickname, unsigned int complaintByID);
 
-// Checks if a file is already existing in the FileList.
-bool isDuplicateFile(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID);
+// Checks if an upload is already existing in the UploadList.
+bool isDuplicateUpload(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID);

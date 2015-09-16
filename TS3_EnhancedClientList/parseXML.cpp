@@ -10,7 +10,7 @@
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
-#include "File.h"
+#include "Upload.h"
 #include "customStreams.h"
 #include <boost/filesystem.hpp>
 #include "src/pugixml.hpp"
@@ -25,7 +25,7 @@ extern vector <Client> ClientList;
 extern vector <Ban> BanList;
 extern vector <Kick> KickList;
 extern vector <Complaint> ComplaintList;
-extern vector <File> FileList;
+extern vector <Upload> UploadList;
 extern unsigned int VIRTUALSERVER;
 extern TeeStream outputStream;
 
@@ -34,7 +34,7 @@ bool parseXML() {
 	if (boost::filesystem::exists(XMLFILE)) {
 		if (boost::filesystem::is_regular_file(XMLFILE)) {
 			if (!boost::filesystem::is_empty(XMLFILE)) {
-				unsigned int ID, BanListID = 0, KickListID = 0, ComplaintListID = 0, FileListID = 0, bannedID, bannedByID, bantime, kickedID, complaintAboutID, complaintByID, channelID, uploadedByID;
+				unsigned int ID, BanListID = 0, KickListID = 0, ComplaintListID = 0, UploadListID = 0, bannedID, bannedByID, bantime, kickedID, complaintAboutID, complaintByID, channelID, uploadedByID;
 				string banDateTime, bannedNickname, bannedIP, bannedUID, bannedByNickname, bannedByUID, banReason,
 					kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason,
 					complaintDateTime, complaintAboutNickname, complaintReason, complaintByNickname,
@@ -128,16 +128,16 @@ bool parseXML() {
 						ComplaintListID++;
 					}
 
-					for (xml_node FileNode = oldXML.child("Data").child("File"); FileNode; FileNode = FileNode.next_sibling("File")) {
-						uploadDateTime = FileNode.child("UploadDateTime").first_child().value();
-						channelID = stoul(FileNode.child("ChannelID").first_child().value());
-						filename = FileNode.child("Filename").first_child().value();
-						uploadedByNickname = FileNode.child("UploadedByNickname").first_child().value();
-						uploadedByID = stoul(FileNode.child("UploadedByID").first_child().value());
+					for (xml_node UploadNode = oldXML.child("Data").child("Upload"); UploadNode; UploadNode = UploadNode.next_sibling("Upload")) {
+						uploadDateTime = UploadNode.child("UploadDateTime").first_child().value();
+						channelID = stoul(UploadNode.child("ChannelID").first_child().value());
+						filename = UploadNode.child("Filename").first_child().value();
+						uploadedByNickname = UploadNode.child("UploadedByNickname").first_child().value();
+						uploadedByID = stoul(UploadNode.child("UploadedByID").first_child().value());
 
-						FileList.resize(FileListID + 1);
-						FileList[FileListID].addFile(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
-						FileListID++;
+						UploadList.resize(UploadListID + 1);
+						UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
+						UploadListID++;
 					}
 					return true;
 				}
@@ -147,7 +147,7 @@ bool parseXML() {
 					BanList.clear();
 					KickList.clear();
 					ComplaintList.clear();
-					FileList.clear();
+					UploadList.clear();
 					return false;
 				}
 			}

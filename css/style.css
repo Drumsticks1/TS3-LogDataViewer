@@ -32,7 +32,7 @@ label:hover {
 :checked + label:hover {
     background-color: #549420
 }
-label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
+.alertBox, label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
     color: #fff
 }
 #navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
@@ -45,7 +45,7 @@ label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button
     text-align: center;
     background-color: #2ba6cb
 }
-#TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button {
+.alertBox, #TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button {
     font-family: 'Open Sans', Arial, sans-serif;
     font-weight: 400
 }
@@ -60,7 +60,7 @@ label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button
     margin-bottom: 15px;
     text-align: center
 }
-#creationTimestampSection, #rebuildSection {
+.alertBox, #creationTimestampSection, #rebuildSection {
     margin-bottom: 20px
 }
 #TS3-ECL, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row {
@@ -117,7 +117,12 @@ td, th {
     font-size: .8rem
 }
 .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
-    background-color: #007095;
+    background-color: #007095
+}
+.alertBox {
+    text-align: center;
+    padding: 0.6rem;
+    background-color: #9f9f9f
 }
 @media (max-width: 1024px) {
     .tablesorter-sticky-visible {
