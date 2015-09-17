@@ -10,6 +10,9 @@ TS3_EnhancedClientList creates detailed lists using the information written to t
 - Complaint list
 - File upload list
 
+## Example page
+[This example](http://drumsticks1.github.io/TS3_EnhancedClientList/) is set up with gh-pages and shows the design as well as all features of the latest release version.
+
 ## How does it work ?
 The program requires the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
 

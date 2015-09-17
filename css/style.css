@@ -16,7 +16,7 @@ input[type='checkbox'] {
 }
 label {
     display: block;
-    padding: 0.6rem;
+    padding: .6rem;
     cursor: pointer;
     background-color: #9f9f9f;
     border: 1px solid #898989;
@@ -38,11 +38,10 @@ label:hover {
 #navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
     background-color: #fff
 }
-#tableSelectionSection > div {
+#tableSelectionSection > div, #controlSection {
     padding: 0
 }
 #TS3-ECL {
-    text-align: center;
     background-color: #2ba6cb
 }
 .alertBox, #TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button {
@@ -50,14 +49,15 @@ label:hover {
     font-weight: 400
 }
 #controlSection {
-    margin-top: 20px;
-    padding: 0
+    margin-top: 20px
 }
 #creationTimestampTable {
     margin: .75rem 0
 }
 #tableSelectionSection {
-    margin-bottom: 15px;
+    margin-bottom: 15px
+}
+#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-ECL, #controlSection {
     text-align: center
 }
 .alertBox, #creationTimestampSection, #rebuildSection {
@@ -120,8 +120,7 @@ td, th {
     background-color: #007095
 }
 .alertBox {
-    text-align: center;
-    padding: 0.6rem;
+    padding: .6rem;
     background-color: #9f9f9f
 }
 @media (max-width: 1024px) {
@@ -154,5 +153,8 @@ td, th {
         max-width: calc(50vw - 5px);
         width: 50%;
         display: inline-block
+    }
+    .ui-table-reflow > tbody > tr > td > button {
+        margin: 0 0 5px 0
     }
 }
