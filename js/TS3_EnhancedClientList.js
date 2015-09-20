@@ -222,7 +222,7 @@ function switchBetweenIDAndUID() {
         banTableHeadRow = document.getElementById('banTable').firstChild.firstChild;
 
     // ID --> UID
-    if (document.getElementById('banTable').getAttribute('uid') === 'false') {
+    if (localStorage.getItem('UIDState') === '0') {
         for (j = 0; j < x.length; j++) {
             rowID = x.item(j).getAttribute('id');
             banID = rowID.substring(4, rowID.length);
@@ -241,11 +241,11 @@ function switchBetweenIDAndUID() {
         }
         $(banTableHeadRow.childNodes[1]).html('Banned UID');
         $(banTableHeadRow.childNodes[4]).html('Banned by UID');
-        $('#banTable').attr('uid', 'true');
+        localStorage.setItem('UIDState', '1');
     }
 
     // UID --> ID
-    else if (document.getElementById('banTable').getAttribute('uid') === 'true') {
+    else if (localStorage.getItem('UIDState') === '1') {
         for (j = 0; j < x.length; j++) {
             rowID = x.item(j).getAttribute('id');
             banID = rowID.substring(4, rowID.length);
@@ -264,7 +264,7 @@ function switchBetweenIDAndUID() {
         }
         $(banTableHeadRow.childNodes[1]).html('Banned ID');
         $(banTableHeadRow.childNodes[4]).html('Banned by ID');
-        $('#banTable').attr('uid', 'false');
+        localStorage.setItem('UIDState', '0');
     }
 }
 
@@ -368,13 +368,15 @@ function UTCDateStringToLocaltimeString(dateString) {
 
 // Builds the client table.
 function buildClientTable() {
-    $('#ts3-clientTable').empty();
     var clientTableControlSection = document.createElement('div');
-    var connectionsSortTypeButton = document.createElement('button');
-    $(connectionsSortTypeButton).prop('id', 'connectionsSortTypeButton');
     $(clientTableControlSection).prop('class', 'row');
-    $(connectionsSortTypeButton).prop('class', 'small-12 medium-8 large-6 columns');
-    $(connectionsSortTypeButton).html('Currently sorting connections by the last connect');
+
+    var clientTableHeading = document.createElement('div');
+    $(clientTableHeading).prop('class', 'tableheading large-12 columns').html('Client table');
+    clientTableControlSection.appendChild(clientTableHeading);
+
+    var connectionsSortTypeButton = document.createElement('button');
+    $(connectionsSortTypeButton).prop('id', 'connectionsSortTypeButton').prop('class', 'small-12 medium-8 large-6 columns').html('Currently sorting connections by the last connect');
 
     connectionsSortTypeButton.onclick = function() {
         if (ConnectionsSortType) {
@@ -385,15 +387,13 @@ function buildClientTable() {
             ConnectionsSortType = true;
         }
         saveSortOrder();
-        $('#clientTable').trigger('updateCache');
+        $(clientTable).trigger('updateCache');
         applySortOrder();
     };
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
     var collapseAllButton = document.createElement('button');
-    $(collapseAllButton).prop('id', 'collapseAllButton');
-    $(collapseAllButton).prop('class', 'small-12 medium-4 large-6 columns');
-    $(collapseAllButton).html('Collapse expanded lists');
+    $(collapseAllButton).prop('id', 'collapseAllButton').prop('class', 'small-12 medium-4 large-6 columns').html('Collapse expanded lists');
 
     collapseAllButton.onclick = function() {
         collapseAll();
@@ -545,7 +545,7 @@ function buildClientTable() {
 
     addConnectionsParser();
     addIPsParser();
-    $('#clientTable').tablesorter({
+    $(clientTable).tablesorter({
         headers: {
             2: {
                 sorter: 'Connections'
@@ -555,27 +555,31 @@ function buildClientTable() {
             }
         }
     });
-    $('#clientTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $(clientTable).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('clientTable-built', '1');
     document.getElementById('scrollToClientTable').style.display = '';
 }
 
 // Builds the ban table.
 function buildBanTable() {
-    var UIDState;
-    if (document.getElementById('banTable') !== null) {
-        UIDState = document.getElementById('banTable').getAttribute('uid');
-        $('#ts3-banTable').empty();
-    } else {
-        UIDState = false;
+    if (localStorage.getItem('UIDState') === null) {
+        localStorage.setItem('UIDState', '0');
     }
+
+    var banTableControlSection = document.createElement('div');
+    $(banTableControlSection).prop('class', 'row');
+
+    var banTableHeading = document.createElement('div');
+    $(banTableHeading).prop('class', 'tableheading large-12 columns').html('Ban table');
+    banTableControlSection.appendChild(banTableHeading);
 
     var switchBetweenIDandUIDButton = document.createElement('button');
     $(switchBetweenIDandUIDButton).prop('id', 'switchBetweenIDandUIDButton').html('Switch between IDs and UIDs');
     switchBetweenIDandUIDButton.onclick = function() {
         switchBetweenIDAndUID();
     };
-    document.getElementById('ts3-banTable').appendChild(switchBetweenIDandUIDButton);
+    banTableControlSection.appendChild(switchBetweenIDandUIDButton);
+    document.getElementById('ts3-banTable').appendChild(banTableControlSection);
 
     var Ban = XML.getElementsByTagName('Ban');
     var banTable = document.createElement('table');
@@ -695,29 +699,38 @@ function buildBanTable() {
     }
     banTable.appendChild(banBody);
 
-    $(banTable).prop('id', 'banTable').addClass('ui-table-reflow').attr('uid', false);
+    $(banTable).prop('id', 'banTable').addClass('ui-table-reflow');
     document.getElementById('ts3-banTable').appendChild(banTable);
 
-    if (UIDState == 'true') {
+    if (localStorage.getItem('UIDState') === '1') {
+        localStorage.setItem('UIDState', '0');
         switchBetweenIDAndUID();
     }
 
     addIgnoreMomentParser();
-    $('#banTable').tablesorter({
+    $(banTable).tablesorter({
         headers: {
             0: {
                 sorter: 'ignoreMoment'
             }
         }
     });
-    $('#banTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $(banTable).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('banTable-built', '1');
     document.getElementById('scrollToBanTable').style.display = '';
 }
 
 // Builds the kick table.
 function buildKickTable() {
-    $('#ts3-kickTable').empty();
+    var kickTableControlSection = document.createElement('div');
+    $(kickTableControlSection).prop('class', 'row');
+
+    var kickTableHeading = document.createElement('div');
+    $(kickTableHeading).prop('class', 'tableheading large-12 columns').html('Kick table');
+    kickTableControlSection.appendChild(kickTableHeading);
+
+    document.getElementById('ts3-kickTable').appendChild(kickTableControlSection);
+
     var Kick = XML.getElementsByTagName('Kick');
     var kickTable = document.createElement('table');
     var kickHead = document.createElement('thead');
@@ -813,21 +826,29 @@ function buildKickTable() {
     document.getElementById('ts3-kickTable').appendChild(kickTable);
 
     addIgnoreMomentParser();
-    $('#kickTable').tablesorter({
+    $(kickTable).tablesorter({
         headers: {
             0: {
                 sorter: 'ignoreMoment'
             }
         }
     });
-    $('#kickTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $(kickTable).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('kickTable-built', '1');
     document.getElementById('scrollToKickTable').style.display = '';
 }
 
 // Builds the complaint table.
 function buildComplaintTable() {
-    $('#ts3-complaintTable').empty();
+    var complaintTableControlSection = document.createElement('div');
+    $(complaintTableControlSection).prop('class', 'row');
+
+    var complaintTableHeading = document.createElement('div');
+    $(complaintTableHeading).prop('class', 'tableheading large-12 columns').html('Complaint table');
+    complaintTableControlSection.appendChild(complaintTableHeading);
+
+    document.getElementById('ts3-complaintTable').appendChild(complaintTableControlSection);
+
     var Complaint = XML.getElementsByTagName('Complaint');
     var complaintTable = document.createElement('table');
     var complaintHead = document.createElement('thead');
@@ -916,21 +937,29 @@ function buildComplaintTable() {
     document.getElementById('ts3-complaintTable').appendChild(complaintTable);
 
     addIgnoreMomentParser();
-    $('#complaintTable').tablesorter({
+    $(complaintTable).tablesorter({
         headers: {
             0: {
                 sorter: 'ignoreMoment'
             }
         }
     });
-    $('#complaintTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $(complaintTable).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('complaintTable-built', '1');
     document.getElementById('scrollToComplaintTable').style.display = '';
 }
 
 // Builds the upload table.
 function buildUploadTable() {
-    $('#ts3-uploadTable').empty();
+    var uploadTableControlSection = document.createElement('div');
+    $(uploadTableControlSection).prop('class', 'row');
+
+    var uploadTableHeading = document.createElement('div');
+    $(uploadTableHeading).prop('class', 'tableheading large-12 columns').html('Upload table');
+    uploadTableControlSection.appendChild(uploadTableHeading);
+
+    document.getElementById('ts3-uploadTable').appendChild(uploadTableControlSection);
+
     var Upload = XML.getElementsByTagName('Upload');
     var uploadTable = document.createElement('table');
     var uploadHead = document.createElement('thead');
@@ -1008,20 +1037,21 @@ function buildUploadTable() {
     document.getElementById('ts3-uploadTable').appendChild(uploadTable);
 
     addIgnoreMomentParser();
-    $('#uploadTable').tablesorter({
+    $(uploadTable).tablesorter({
         headers: {
             0: {
                 sorter: 'ignoreMoment'
             }
         }
     });
-    $('#uploadTable').trigger('applyWidgetId', ['stickyHeaders']);
+    $(uploadTable).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('uploadTable-built', '1');
     document.getElementById('scrollToUploadTable').style.display = '';
 }
 
 // Imports the local storage, builds a table when it will have content and sets the session storage.
 function buildTableWithAlertCheckAndLocalStorage(table) {
+    $('#ts3-' + table).empty();
     if (localStorage.getItem(table) != '0') {
         var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
         if (XML.getElementsByTagName(leadingCapitalLetterTable.substring(0, table.search('Table'))).length) {

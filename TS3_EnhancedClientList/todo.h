@@ -12,6 +12,7 @@ general:
 	- add query clients to client list or a query client list?
 	- add button for switching between small and big display tables on big displays.
 	- add sort order to local storage.
+	- add button to switch between bantime in seconds and bantime in x.
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
 	- Add custom bans.

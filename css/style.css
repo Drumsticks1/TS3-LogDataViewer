@@ -5,7 +5,7 @@ GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 Feel free to modify this file according to your wishes.
 */
 
-button {
+button, .tableheading {
     border: 1px solid rgba(0, 0, 0, .1)
 }
 .row {
@@ -32,7 +32,7 @@ label:hover {
 :checked + label:hover {
     background-color: #549420
 }
-.alertBox, label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
+.alertBox, label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
     color: #fff
 }
 #navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
@@ -41,10 +41,10 @@ label:hover {
 #tableSelectionSection > div, #controlSection {
     padding: 0
 }
-#TS3-ECL {
+#TS3-ECL, .tableheading {
     background-color: #2ba6cb
 }
-.alertBox, #TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button {
+.alertBox, #TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading {
     font-family: 'Open Sans', Arial, sans-serif;
     font-weight: 400
 }
@@ -57,13 +57,13 @@ label:hover {
 #tableSelectionSection {
     margin-bottom: 15px
 }
-#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-ECL, #controlSection {
+#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-ECL, #controlSection, .tableheading {
     text-align: center
 }
 .alertBox, #creationTimestampSection, #rebuildSection {
     margin-bottom: 20px
 }
-#TS3-ECL, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row {
+#TS3-ECL, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
     margin: 0
 }
 #tableSelectionSection, #buildNewXMLButton, #creationTimestampTable, #rebuildXMLButton, #switchBetweenIDandUIDButton, .tablesorter {
@@ -90,6 +90,10 @@ label:hover {
 td, th {
     border: 1px solid #cdcdcd
 }
+#TS3-ECL, .tableheading {
+    padding: .5rem 1rem;
+    font-size: 1.75em
+}
 #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td {
     padding: 4px;
     vertical-align: top
@@ -111,7 +115,7 @@ td, th {
 .tablesorter button {
     color: #008CBA;
     position: static;
-    margin: 0 25% 5px 25%;
+    margin: 0 25% 5px;
     width: 50%;
     padding: 5px 0;
     font-size: .8rem
@@ -155,6 +159,6 @@ td, th {
         display: inline-block
     }
     .ui-table-reflow > tbody > tr > td > button {
-        margin: 0 0 5px 0
+        margin: 0 0 5px
     }
 }
