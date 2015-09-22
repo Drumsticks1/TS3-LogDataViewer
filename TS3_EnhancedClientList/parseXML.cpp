@@ -34,11 +34,11 @@ bool parseXML() {
 	if (boost::filesystem::exists(XMLFILE)) {
 		if (boost::filesystem::is_regular_file(XMLFILE)) {
 			if (!boost::filesystem::is_empty(XMLFILE)) {
-				unsigned int ID, BanListID = 0, KickListID = 0, ComplaintListID = 0, UploadListID = 0, bannedID, bannedByID, bantime, kickedID, complaintAboutID, complaintByID, channelID, uploadedByID;
+				unsigned int ID, BanListID = 0, KickListID = 0, ComplaintListID = 0, UploadListID = 0, bannedID, bannedByID, bantime, kickedID, complaintAboutID, complaintByID, channelID, uploadedByID, deletedByID;
 				string banDateTime, bannedNickname, bannedIP, bannedUID, bannedByNickname, bannedByUID, banReason,
 					kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason,
 					complaintDateTime, complaintAboutNickname, complaintReason, complaintByNickname,
-					uploadDateTime, filename, uploadedByNickname;
+					uploadDateTime, filename, uploadedByNickname, deletedByNickname;
 				xml_document oldXML;
 
 				outputStream << "Parsing old XML..." << endl;
@@ -134,9 +134,11 @@ bool parseXML() {
 						filename = UploadNode.child("Filename").first_child().value();
 						uploadedByNickname = UploadNode.child("UploadedByNickname").first_child().value();
 						uploadedByID = stoul(UploadNode.child("UploadedByID").first_child().value());
+						deletedByNickname = UploadNode.child("DeletedByNickname").first_child().value();
+						deletedByID = stoul(UploadNode.child("DeletedByID").first_child().value());
 
 						UploadList.resize(UploadListID + 1);
-						UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
+						UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID, deletedByNickname, deletedByID);
 						UploadListID++;
 					}
 					return true;

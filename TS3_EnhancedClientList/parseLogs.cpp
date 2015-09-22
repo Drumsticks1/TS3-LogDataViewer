@@ -34,7 +34,8 @@ extern TeeStream outputStream;
 #define LOGMATCHDISCONNECT		"|INFO    |VirtualServerBase|  " + to_string(VIRTUALSERVER) + "| client disconnected '"
 #define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| client '"
 #define LOGMATCHDELETEUSER2		") got deleted by client '"
-#define LOGMATCHFILEUPLOAD		"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| file upload to ("
+#define LOGMATCHUPLOAD			"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| file upload to"
+#define LOGMATCHUPLOADDELETION	"|INFO    |VirtualServer |  " + to_string(VIRTUALSERVER) + "| file deleted from"
 
 // Parses the logs and stores the data in the ClientList.
 void parseLogs(string LOGDIRECTORY) {
@@ -42,14 +43,16 @@ void parseLogs(string LOGDIRECTORY) {
 		lastUIDBanRule, lastIPBanRule, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, bantime,
 		kickedByNickname, kickedByUID, kickReason,
 		complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID,
-		uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID;
+		uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID,
+		deletedByNickname, deletedByID;
 	unsigned int BanListID, KickListID, ComplaintListID, UploadListID, ID, virtualServerLength = to_string(VIRTUALSERVER).size(),
 		NicknameLength, IDLength, IPLength,
 		IDStartPos, IDEndPos, NicknameStartPos, IPStartPos,
 		bannedByNicknameStartPos, bannedByNicknameEndPos, bannedByUIDEndPos, banReasonEndPos, bannedIPStartPos, bannedIPEndPos, bannedUIDStartPos, bannedUIDEndPos, bannedByIDStartPos,
 		kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos,
 		complaintAboutNicknameEndPos, complaintAboutIDEndPos, complaintByNicknameStartPos, complaintByIDStartPos,
-		uploadedByIDStartPos, channelIDEndPos, filenameEndPos;
+		uploadedByIDStartPos, channelIDEndPos, filenameEndPos,
+		deletedByIDStartPos;
 	unsigned long logfileLength;
 	bool kickMatch, banMatch;
 
@@ -364,7 +367,7 @@ void parseLogs(string LOGDIRECTORY) {
 				}
 
 				// Uploads
-				else if (buffer_logline.find(LOGMATCHFILEUPLOAD) != string::npos) {
+				else if (buffer_logline.find(LOGMATCHUPLOAD) != string::npos) {
 					uploadDateTime.clear();
 					channelID.clear();
 					filename.clear();
@@ -400,6 +403,36 @@ void parseLogs(string LOGDIRECTORY) {
 						UploadList[UploadListID].addUpload(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID));
 						UploadListID++;
 					}
+				}
+
+				// Upload Deletions
+				else if (buffer_logline.find(LOGMATCHUPLOADDELETION) != string::npos) {
+					channelID.clear();
+					filename.clear();
+					deletedByNickname.clear();
+					deletedByID.clear();
+
+					channelIDEndPos = buffer_logline.find(")");
+					filenameEndPos = buffer_logline.rfind("' by client '");
+					deletedByIDStartPos = 5 + buffer_logline.rfind("'(id:");
+
+					for (unsigned int j = 77 + virtualServerLength; j < channelIDEndPos; j++) {
+						channelID += buffer_logline[j];
+					}
+
+					for (unsigned int j = channelIDEndPos + 4; j < filenameEndPos; j++) {
+						filename += buffer_logline[j];
+					}
+
+					for (unsigned int j = filenameEndPos + 13; j < deletedByIDStartPos - 5; j++) {
+						deletedByNickname += buffer_logline[j];
+					}
+
+					for (unsigned int j = deletedByIDStartPos; j < buffer_logline.size() - 1; j++) {
+						deletedByID += buffer_logline[j];
+					}
+
+					addDeletedBy(stoul(channelID), filename, deletedByNickname, stoul(deletedByID));
 				}
 
 				// Client Deletions

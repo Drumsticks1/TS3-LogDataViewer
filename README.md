@@ -92,6 +92,7 @@ Date and Time                               | Channel ID | Filename             
 
 ### Overall Program Features
 - You can select which tables you want to be built and displayed. This selection is saved to your local storage.
+- You can sort the tables and this sort order is saved to your local storage (this includes the sort type of the connections (= sort by the last or the first connects)).
 - You can change the virtual server whose logs will be analyzed by adjusting the value of  the VIRTUALSERVER variable in the rebuildXML.php.
 - You can manually create a logignore and list the log files (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
 - In order to save time the program uses the information from the last created XML instead of parsing all logs again.
