@@ -506,19 +506,18 @@ function buildClientTable() {
     addConnectionsParser();
     addIPsParser();
     $(clientTable).tablesorter({
-            headers: {
-                2: {
-                    sorter: 'Connections'
-                },
-                3: {
-                    sorter: 'IPs'
-                }
+        headers: {
+            2: {
+                sorter: 'Connections'
             },
-            sortList: JSON.parse(localStorage.getItem('clientTableSortOrder'))
-        }).bind('sortEnd', function() {
-            localStorage.setItem('clientTableSortOrder', JSON.stringify($(clientTable)[0].config.sortList));
-        })
-        .trigger('applyWidgetId', ['stickyHeaders']);
+            3: {
+                sorter: 'IPs'
+            }
+        },
+        sortList: JSON.parse(localStorage.getItem('clientTableSortOrder'))
+    }).bind('sortEnd', function() {
+        localStorage.setItem('clientTableSortOrder', JSON.stringify($(clientTable)[0].config.sortList));
+    }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('clientTable-built', '1');
     document.getElementById('scrollToClientTable').style.display = '';
 }
@@ -672,17 +671,15 @@ function buildBanTable() {
 
     addIgnoreMomentParser();
     $(banTable).tablesorter({
-            headers: {
-                0: {
-                    sorter: 'ignoreMoment'
-                }
-            },
-            sortList: JSON.parse(localStorage.getItem('banTableSortOrder'))
-        })
-        .bind('sortEnd', function() {
-            localStorage.setItem('banTableSortOrder', JSON.stringify($(banTable)[0].config.sortList));
-        })
-        .trigger('applyWidgetId', ['stickyHeaders']);
+        headers: {
+            0: {
+                sorter: 'ignoreMoment'
+            }
+        },
+        sortList: JSON.parse(localStorage.getItem('banTableSortOrder'))
+    }).bind('sortEnd', function() {
+        localStorage.setItem('banTableSortOrder', JSON.stringify($(banTable)[0].config.sortList));
+    }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('banTable-built', '1');
     document.getElementById('scrollToBanTable').style.display = '';
 }
@@ -794,17 +791,15 @@ function buildKickTable() {
 
     addIgnoreMomentParser();
     $(kickTable).tablesorter({
-            headers: {
-                0: {
-                    sorter: 'ignoreMoment'
-                }
-            },
-            sortList: JSON.parse(localStorage.getItem('kickTableSortOrder'))
-        })
-        .bind('sortEnd', function() {
-            localStorage.setItem('kickTableSortOrder', JSON.stringify($(kickTable)[0].config.sortList));
-        })
-        .trigger('applyWidgetId', ['stickyHeaders']);
+        headers: {
+            0: {
+                sorter: 'ignoreMoment'
+            }
+        },
+        sortList: JSON.parse(localStorage.getItem('kickTableSortOrder'))
+    }).bind('sortEnd', function() {
+        localStorage.setItem('kickTableSortOrder', JSON.stringify($(kickTable)[0].config.sortList));
+    }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('kickTable-built', '1');
     document.getElementById('scrollToKickTable').style.display = '';
 }
@@ -909,16 +904,15 @@ function buildComplaintTable() {
 
     addIgnoreMomentParser();
     $(complaintTable).tablesorter({
-            headers: {
-                0: {
-                    sorter: 'ignoreMoment'
-                }
-            },
-            sortList: JSON.parse(localStorage.getItem('complaintTableSortOrder'))
-        }).bind('sortEnd', function() {
-            localStorage.setItem('complaintTableSortOrder', JSON.stringify($(complaintTable)[0].config.sortList));
-        })
-        .trigger('applyWidgetId', ['stickyHeaders']);
+        headers: {
+            0: {
+                sorter: 'ignoreMoment'
+            }
+        },
+        sortList: JSON.parse(localStorage.getItem('complaintTableSortOrder'))
+    }).bind('sortEnd', function() {
+        localStorage.setItem('complaintTableSortOrder', JSON.stringify($(complaintTable)[0].config.sortList));
+    }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('complaintTable-built', '1');
     document.getElementById('scrollToComplaintTable').style.display = '';
 }
@@ -1056,6 +1050,9 @@ function buildUploadTable() {
 // Imports the local storage, builds a table when it will have content and sets the session storage.
 function buildTableWithAlertCheckAndLocalStorage(table) {
     $('#ts3-' + table).empty();
+    if (localStorage.getItem(table + 'SortOrder') === null) {
+        localStorage.setItem(table + 'SortOrder', '[]');
+    }
     if (localStorage.getItem(table) != '0') {
         var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
         if (XML.getElementsByTagName(leadingCapitalLetterTable.substring(0, table.search('Table'))).length) {
