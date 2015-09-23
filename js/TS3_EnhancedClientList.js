@@ -3,7 +3,7 @@
 // GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
 
 // Global Variables
-var ConnectedClientsCount, nanobar, currentDiv, momentInterval, XML, rebuildError = false;
+var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false;
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -26,7 +26,7 @@ function buildNewXML() {
 
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
-    currentDiv = List + '_' + ID + '_1';
+    var currentDiv = List + '_' + ID + '_1';
     if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden')) {
         expandList(List, ID);
     } else {
@@ -42,17 +42,15 @@ function expandList(List, ID) {
         ListUpper = 'IPs';
         i = 1;
     } else {
-        Row = 2;
+        Row = i = 2;
         ListUpper = 'Connections';
-        i = 2;
     }
 
     var x = document.getElementById(ID).childNodes[Row],
         ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i));
-    $('#' + List + 'Button_' + ID).parent().attr('expanded', true);
+    $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i)).parent().attr('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
-        currentDiv = List + '_' + ID + '_' + j;
+        var currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement('div');
             $(newDiv).prop('id', currentDiv);
@@ -81,14 +79,12 @@ function collapseList(List, ID) {
         ListUpper = 'IPs';
         i = 1;
     } else {
-        Row = 2;
+        Row = i = 2;
         ListUpper = 'Connections';
-        i = 2;
     }
 
     var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    $('#' + List + 'Button_' + ID).html('+ ' + (ListContent.length - i));
-    $('#' + List + 'Button_' + ID).parent().attr('expanded', false);
+    $('#' + List + 'Button_' + ID).html('+ ' + (ListContent.length - i)).parent().attr('expanded', false);
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row].childNodes;
@@ -280,46 +276,23 @@ function localStorageAndTableCheckboxListener(table) {
 
 // Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
 function UTCDateStringToDate(dateString) {
-    var year = dateString.substr(0, 4),
-        month = dateString.substr(5, 2),
-        day = dateString.substr(8, 2),
-        hours = dateString.substr(11, 2),
-        minutes = dateString.substr(14, 2),
-        seconds = dateString.substr(17, 2);
-    return new Date(year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds + ' +0000');
+    return new Date(dateString.substr(0, 4) + '/' + dateString.substr(5, 2) + '/' + dateString.substr(8, 2) + ' ' +
+        dateString.substr(11, 2) + ':' + dateString.substr(14, 2) + ':' + dateString.substr(17, 2) + ' +0000');
+}
+
+// Returns the parameter as double digit string.
+function toDoubleDigit(x) {
+    if (x < 10) {
+        x = '0' + x;
+    }
+    return x;
 }
 
 // Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a localtime string with the same format.
 function UTCDateStringToLocaltimeString(dateString) {
-    var dateObject = UTCDateStringToDate(dateString),
-        month = dateObject.getMonth() + 1,
-        day = dateObject.getDate(),
-        hours = dateObject.getHours(),
-        minutes = dateObject.getMinutes(),
-        seconds = dateObject.getSeconds(),
-        dateObject_string = dateObject.getFullYear() + '-';
-
-    if (month < 10) {
-        dateObject_string += '0';
-    }
-    dateObject_string += month + '-';
-    if (day < 10) {
-        dateObject_string += '0';
-    }
-    dateObject_string += day + ' ';
-    if (hours < 10) {
-        dateObject_string += '0';
-    }
-    dateObject_string += hours + ':';
-    if (minutes < 10) {
-        dateObject_string += '0';
-    }
-    dateObject_string += minutes + ':';
-    if (seconds < 10) {
-        dateObject_string += '0';
-    }
-    dateObject_string += seconds;
-    return dateObject_string;
+    var dateObject = UTCDateStringToDate(dateString);
+    return dateObject.getFullYear() + '-' + toDoubleDigit(dateObject.getMonth() + 1) + '-' + toDoubleDigit(dateObject.getDate()) + ' ' +
+        toDoubleDigit(dateObject.getHours()) + ':' + toDoubleDigit(dateObject.getMinutes()) + ':' + toDoubleDigit(dateObject.getSeconds());
 }
 
 // Builds the client table.
@@ -362,17 +335,17 @@ function buildClientTable() {
     clientTableControlSection.appendChild(collapseAllButton);
     document.getElementById('ts3-clientTable').appendChild(clientTableControlSection);
 
-    var Client = XML.getElementsByTagName('Client');
-    var clientTable = document.createElement('table');
-    var clientHead = document.createElement('thead');
-    var clientHeadRow = document.createElement('tr');
-    var clientHeadCell_ID = document.createElement('th');
-    var clientHeadCell_Nicknames = document.createElement('th');
-    var clientHeadCell_Connections = document.createElement('th');
-    var clientHeadCell_IPs = document.createElement('th');
-    var clientHeadCell_ConnectionCount = document.createElement('th');
-    var clientHeadCell_Connected = document.createElement('th');
-    var clientHeadCell_Deleted = document.createElement('th');
+    var Client = XML.getElementsByTagName('Client'),
+        clientTable = document.createElement('table'),
+        clientHead = document.createElement('thead'),
+        clientHeadRow = document.createElement('tr'),
+        clientHeadCell_ID = document.createElement('th'),
+        clientHeadCell_Nicknames = document.createElement('th'),
+        clientHeadCell_Connections = document.createElement('th'),
+        clientHeadCell_IPs = document.createElement('th'),
+        clientHeadCell_ConnectionCount = document.createElement('th'),
+        clientHeadCell_Connected = document.createElement('th'),
+        clientHeadCell_Deleted = document.createElement('th');
 
     $(clientHeadCell_ID).html('ID');
     $(clientHeadCell_Nicknames).html('Nicknames');
@@ -398,21 +371,21 @@ function buildClientTable() {
     for (var i = 0; i < Client.length; i++) {
         var ID = Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
         if (ID !== '-1') {
-            var Nicknames = Client[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N');
-            var Connections = Client[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C');
-            var IPs = Client[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I');
-            var Connection_Count = Client[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue;
-            var Connected = Client[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue;
-            var Deleted = Client[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;
+            var Nicknames = Client[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N'),
+                Connections = Client[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C'),
+                IPs = Client[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I'),
+                Connection_Count = Client[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue,
+                Connected = Client[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue,
+                Deleted = Client[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;
 
-            var clientBodyRow = document.createElement('tr');
-            var clientBodyCell_ID = document.createElement('td');
-            var clientBodyCell_Nicknames = document.createElement('td');
-            var clientBodyCell_Connections = document.createElement('td');
-            var clientBodyCell_IPs = document.createElement('td');
-            var clientBodyCell_ConnectionCount = document.createElement('td');
-            var clientBodyCell_Connected = document.createElement('td');
-            var clientBodyCell_Deleted = document.createElement('td');
+            var clientBodyRow = document.createElement('tr'),
+                clientBodyCell_ID = document.createElement('td'),
+                clientBodyCell_Nicknames = document.createElement('td'),
+                clientBodyCell_Connections = document.createElement('td'),
+                clientBodyCell_IPs = document.createElement('td'),
+                clientBodyCell_ConnectionCount = document.createElement('td'),
+                clientBodyCell_Connected = document.createElement('td'),
+                clientBodyCell_Deleted = document.createElement('td');
 
             $(clientBodyRow).prop('id', ID);
             $(clientBodyCell_ID).attr('data-title', 'ID');
@@ -442,7 +415,6 @@ function buildClientTable() {
                         expandcollapseList('connections', ID);
                     };
                 })(ID);
-
                 clientBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
@@ -467,7 +439,6 @@ function buildClientTable() {
                         expandcollapseList('ips', ID);
                     };
                 })(ID);
-
                 clientBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
@@ -543,18 +514,18 @@ function buildBanTable() {
     banTableControlSection.appendChild(switchBetweenIDandUIDButton);
     document.getElementById('ts3-banTable').appendChild(banTableControlSection);
 
-    var Ban = XML.getElementsByTagName('Ban');
-    var banTable = document.createElement('table');
-    var banHead = document.createElement('thead');
-    var banHeadRow = document.createElement('tr');
-    var banHeadCell_BanDateTime = document.createElement('th');
-    var banHeadCell_BannedID = document.createElement('th');
-    var banHeadCell_BannedNickname = document.createElement('th');
-    var banHeadCell_BannedIP = document.createElement('th');
-    var banHeadCell_BannedByID = document.createElement('th');
-    var banHeadCell_BannedByNickname = document.createElement('th');
-    var banHeadCell_BanReason = document.createElement('th');
-    var banHeadCell_Bantime = document.createElement('th');
+    var Ban = XML.getElementsByTagName('Ban'),
+        banTable = document.createElement('table'),
+        banHead = document.createElement('thead'),
+        banHeadRow = document.createElement('tr'),
+        banHeadCell_BanDateTime = document.createElement('th'),
+        banHeadCell_BannedID = document.createElement('th'),
+        banHeadCell_BannedNickname = document.createElement('th'),
+        banHeadCell_BannedIP = document.createElement('th'),
+        banHeadCell_BannedByID = document.createElement('th'),
+        banHeadCell_BannedByNickname = document.createElement('th'),
+        banHeadCell_BanReason = document.createElement('th'),
+        banHeadCell_Bantime = document.createElement('th');
 
     $(banHeadCell_BanDateTime).html('Date and Time');
     $(banHeadCell_BannedID).html('Banned ID');
@@ -580,18 +551,18 @@ function buildBanTable() {
     var banBody = document.createElement('tbody');
 
     for (var i = 0; i < Ban.length; i++) {
-        var BanDateTime = Ban[i].getElementsByTagName('BanDateTime')[0].firstChild.nodeValue;
-        var BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue;
-        var BannedNickname = Ban[i].getElementsByTagName('BannedNickname')[0].firstChild.nodeValue;
-        var BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue;
-        var BannedByID;
+        var BanDateTime = Ban[i].getElementsByTagName('BanDateTime')[0].firstChild.nodeValue,
+            BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue,
+            BannedNickname = Ban[i].getElementsByTagName('BannedNickname')[0].firstChild.nodeValue,
+            BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue,
+            BannedByID;
         if (BannedIP != 'Unknown') {
             BannedByID = Ban[i].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
         } else {
             BannedByID = 'Unknown';
         }
-        var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue;
-        var BanReason;
+        var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue,
+            BanReason;
         if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
             BanReason = Ban[i].getElementsByTagName('BanReason')[0].firstChild.nodeValue;
         } else {
@@ -602,14 +573,14 @@ function buildBanTable() {
         var banBodyRow = document.createElement('tr');
         $(banBodyRow).prop('id', 'ban_' + i);
 
-        var banBodyCell_BanDateTime = document.createElement('td');
-        var banBodyCell_BannedID = document.createElement('td');
-        var banBodyCell_BannedNickname = document.createElement('td');
-        var banBodyCell_BannedIP = document.createElement('td');
-        var banBodyCell_BannedByID = document.createElement('td');
-        var banBodyCell_BannedByNickname = document.createElement('td');
-        var banBodyCell_BanReason = document.createElement('td');
-        var banBodyCell_Bantime = document.createElement('td');
+        var banBodyCell_BanDateTime = document.createElement('td'),
+            banBodyCell_BannedID = document.createElement('td'),
+            banBodyCell_BannedNickname = document.createElement('td'),
+            banBodyCell_BannedIP = document.createElement('td'),
+            banBodyCell_BannedByID = document.createElement('td'),
+            banBodyCell_BannedByNickname = document.createElement('td'),
+            banBodyCell_BanReason = document.createElement('td'),
+            banBodyCell_Bantime = document.createElement('td');
 
         $(banBodyCell_BanDateTime).attr('data-title', 'Date and Time');
         $(banBodyCell_BannedID).attr('data-title', 'Banned ID');
@@ -620,8 +591,8 @@ function buildBanTable() {
         $(banBodyCell_BanReason).attr('data-title', 'Reason');
         $(banBodyCell_Bantime).attr('data-title', 'Bantime');
 
-        var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime));
-        var banBodyCell_BanDateTime_Div = document.createElement('div');
+        var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime)),
+            banBodyCell_BanDateTime_Div = document.createElement('div');
         $(banBodyCell_BanDateTime_Div).html(UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCBanDateTime.fromNow() + ')');
         banBodyCell_BanDateTime.appendChild(banBodyCell_BanDateTime_Div);
         banBodyRow.appendChild(banBodyCell_BanDateTime);
@@ -695,16 +666,16 @@ function buildKickTable() {
 
     document.getElementById('ts3-kickTable').appendChild(kickTableControlSection);
 
-    var Kick = XML.getElementsByTagName('Kick');
-    var kickTable = document.createElement('table');
-    var kickHead = document.createElement('thead');
-    var kickHeadRow = document.createElement('tr');
-    var kickHeadCell_KickDateTime = document.createElement('th');
-    var kickHeadCell_KickedID = document.createElement('th');
-    var kickHeadCell_KickedNickname = document.createElement('th');
-    var kickHeadCell_KickedByNickname = document.createElement('th');
-    var kickHeadCell_KickedByUID = document.createElement('th');
-    var kickHeadCell_KickReason = document.createElement('th');
+    var Kick = XML.getElementsByTagName('Kick'),
+        kickTable = document.createElement('table'),
+        kickHead = document.createElement('thead'),
+        kickHeadRow = document.createElement('tr'),
+        kickHeadCell_KickDateTime = document.createElement('th'),
+        kickHeadCell_KickedID = document.createElement('th'),
+        kickHeadCell_KickedNickname = document.createElement('th'),
+        kickHeadCell_KickedByNickname = document.createElement('th'),
+        kickHeadCell_KickedByUID = document.createElement('th'),
+        kickHeadCell_KickReason = document.createElement('th');
 
     $(kickHeadCell_KickDateTime).html('Date and Time');
     $(kickHeadCell_KickedID).html('Kicked Client ID');
@@ -726,25 +697,25 @@ function buildKickTable() {
     var kickBody = document.createElement('tbody');
 
     for (var i = 0; i < Kick.length; i++) {
-        var KickDateTime = Kick[i].getElementsByTagName('KickDateTime')[0].firstChild.nodeValue;
-        var KickedID = Kick[i].getElementsByTagName('KickedID')[0].firstChild.nodeValue;
-        var KickedNickname = Kick[i].getElementsByTagName('KickedNickname')[0].firstChild.nodeValue;
-        var KickedByNickname = Kick[i].getElementsByTagName('KickedByNickname')[0].firstChild.nodeValue;
-        var KickedByUID = Kick[i].getElementsByTagName('KickedByUID')[0].firstChild.nodeValue;
-        var KickReason;
+        var KickDateTime = Kick[i].getElementsByTagName('KickDateTime')[0].firstChild.nodeValue,
+            KickedID = Kick[i].getElementsByTagName('KickedID')[0].firstChild.nodeValue,
+            KickedNickname = Kick[i].getElementsByTagName('KickedNickname')[0].firstChild.nodeValue,
+            KickedByNickname = Kick[i].getElementsByTagName('KickedByNickname')[0].firstChild.nodeValue,
+            KickedByUID = Kick[i].getElementsByTagName('KickedByUID')[0].firstChild.nodeValue,
+            KickReason;
         if (Kick[i].getElementsByTagName('KickReason')[0].firstChild !== null) {
             KickReason = Kick[i].getElementsByTagName('KickReason')[0].firstChild.nodeValue;
         } else {
             KickReason = 'No Reason given';
         }
 
-        var kickBodyRow = document.createElement('tr');
-        var kickBodyCell_DateTime = document.createElement('td');
-        var kickBodyCell_KickedID = document.createElement('td');
-        var kickBodyCell_KickedNickname = document.createElement('td');
-        var kickBodyCell_KickedByNickname = document.createElement('td');
-        var kickBodyCell_KickedByUID = document.createElement('td');
-        var kickBodyCell_KickReason = document.createElement('td');
+        var kickBodyRow = document.createElement('tr'),
+            kickBodyCell_DateTime = document.createElement('td'),
+            kickBodyCell_KickedID = document.createElement('td'),
+            kickBodyCell_KickedNickname = document.createElement('td'),
+            kickBodyCell_KickedByNickname = document.createElement('td'),
+            kickBodyCell_KickedByUID = document.createElement('td'),
+            kickBodyCell_KickReason = document.createElement('td');
 
         $(kickBodyCell_DateTime).attr('data-title', 'Date and Time');
         $(kickBodyCell_KickedID).attr('data-title', 'Kicked ID');
@@ -753,8 +724,8 @@ function buildKickTable() {
         $(kickBodyCell_KickedByUID).attr('data-title', 'Kicked by UID');
         $(kickBodyCell_KickReason).attr('data-title', 'Reason');
 
-        var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime));
-        var kickBodyCell_DateTime_Div = document.createElement('div');
+        var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime)),
+            kickBodyCell_DateTime_Div = document.createElement('div');
         $(kickBodyCell_DateTime_Div).html(UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCKickDateTime.fromNow() + ')');
         kickBodyCell_DateTime.appendChild(kickBodyCell_DateTime_Div);
         kickBodyRow.appendChild(kickBodyCell_DateTime);
@@ -815,16 +786,16 @@ function buildComplaintTable() {
 
     document.getElementById('ts3-complaintTable').appendChild(complaintTableControlSection);
 
-    var Complaint = XML.getElementsByTagName('Complaint');
-    var complaintTable = document.createElement('table');
-    var complaintHead = document.createElement('thead');
-    var complaintHeadRow = document.createElement('tr');
-    var complaintHeadCell_ComplaintDateTime = document.createElement('th');
-    var complaintHeadCell_ComplaintAboutID = document.createElement('th');
-    var complaintHeadCell_ComplaintAboutNickname = document.createElement('th');
-    var complaintHeadCell_ComplaintReason = document.createElement('th');
-    var complaintHeadCell_ComplaintByID = document.createElement('th');
-    var complaintHeadCell_ComplaintByNickname = document.createElement('th');
+    var Complaint = XML.getElementsByTagName('Complaint'),
+        complaintTable = document.createElement('table'),
+        complaintHead = document.createElement('thead'),
+        complaintHeadRow = document.createElement('tr'),
+        complaintHeadCell_ComplaintDateTime = document.createElement('th'),
+        complaintHeadCell_ComplaintAboutID = document.createElement('th'),
+        complaintHeadCell_ComplaintAboutNickname = document.createElement('th'),
+        complaintHeadCell_ComplaintReason = document.createElement('th'),
+        complaintHeadCell_ComplaintByID = document.createElement('th'),
+        complaintHeadCell_ComplaintByNickname = document.createElement('th');
 
     $(complaintHeadCell_ComplaintDateTime).html('Date and Time');
     $(complaintHeadCell_ComplaintAboutID).html('About ID');
@@ -846,20 +817,20 @@ function buildComplaintTable() {
     var complaintBody = document.createElement('tbody');
 
     for (var i = 0; i < Complaint.length; i++) {
-        var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue;
-        var ComplaintAboutID = Complaint[i].getElementsByTagName('ComplaintAboutID')[0].firstChild.nodeValue;
-        var ComplaintAboutNickname = Complaint[i].getElementsByTagName('ComplaintAboutNickname')[0].firstChild.nodeValue;
-        var ComplaintReason = Complaint[i].getElementsByTagName('ComplaintReason')[0].firstChild.nodeValue;
-        var ComplaintByID = Complaint[i].getElementsByTagName('ComplaintByID')[0].firstChild.nodeValue;
-        var ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
+        var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue,
+            ComplaintAboutID = Complaint[i].getElementsByTagName('ComplaintAboutID')[0].firstChild.nodeValue,
+            ComplaintAboutNickname = Complaint[i].getElementsByTagName('ComplaintAboutNickname')[0].firstChild.nodeValue,
+            ComplaintReason = Complaint[i].getElementsByTagName('ComplaintReason')[0].firstChild.nodeValue,
+            ComplaintByID = Complaint[i].getElementsByTagName('ComplaintByID')[0].firstChild.nodeValue,
+            ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
 
-        var complaintBodyRow = document.createElement('tr');
-        var complaintBodyCell_ComplaintDateTime = document.createElement('td');
-        var complaintBodyCell_ComplaintAboutID = document.createElement('td');
-        var complaintBodyCell_ComplaintAboutNickname = document.createElement('td');
-        var complaintBodyCell_ComplaintReason = document.createElement('td');
-        var complaintBodyCell_ComplaintByID = document.createElement('td');
-        var complaintBodyCell_ComplaintByNickname = document.createElement('td');
+        var complaintBodyRow = document.createElement('tr'),
+            complaintBodyCell_ComplaintDateTime = document.createElement('td'),
+            complaintBodyCell_ComplaintAboutID = document.createElement('td'),
+            complaintBodyCell_ComplaintAboutNickname = document.createElement('td'),
+            complaintBodyCell_ComplaintReason = document.createElement('td'),
+            complaintBodyCell_ComplaintByID = document.createElement('td'),
+            complaintBodyCell_ComplaintByNickname = document.createElement('td');
 
         $(complaintBodyCell_ComplaintDateTime).attr('data-title', 'Date and Time');
         $(complaintBodyCell_ComplaintAboutID).attr('data-title', 'About ID');
@@ -868,8 +839,8 @@ function buildComplaintTable() {
         $(complaintBodyCell_ComplaintByID).attr('data-title', 'By ID');
         $(complaintBodyCell_ComplaintByNickname).attr('data-title', 'By Nickname');
 
-        var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime));
-        var complaintBodyCell_ComplaintDateTime_Div = document.createElement('div');
+        var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime)),
+            complaintBodyCell_ComplaintDateTime_Div = document.createElement('div');
         $(complaintBodyCell_ComplaintDateTime_Div).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCComplaintDateTime.fromNow() + ')');
         complaintBodyCell_ComplaintDateTime.appendChild(complaintBodyCell_ComplaintDateTime_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
@@ -928,17 +899,17 @@ function buildUploadTable() {
 
     document.getElementById('ts3-uploadTable').appendChild(uploadTableControlSection);
 
-    var Upload = XML.getElementsByTagName('Upload');
-    var uploadTable = document.createElement('table');
-    var uploadHead = document.createElement('thead');
-    var uploadHeadRow = document.createElement('tr');
-    var uploadHeadCell_UploadDateTime = document.createElement('th');
-    var uploadHeadCell_ChannelID = document.createElement('th');
-    var uploadHeadCell_Filename = document.createElement('th');
-    var uploadHeadCell_UploadedByID = document.createElement('th');
-    var uploadHeadCell_UploadedByNickname = document.createElement('th');
-    var uploadHeadCell_DeletedByID = document.createElement('th');
-    var uploadHeadCell_DeletedByNickname = document.createElement('th');
+    var Upload = XML.getElementsByTagName('Upload'),
+        uploadTable = document.createElement('table'),
+        uploadHead = document.createElement('thead'),
+        uploadHeadRow = document.createElement('tr'),
+        uploadHeadCell_UploadDateTime = document.createElement('th'),
+        uploadHeadCell_ChannelID = document.createElement('th'),
+        uploadHeadCell_Filename = document.createElement('th'),
+        uploadHeadCell_UploadedByID = document.createElement('th'),
+        uploadHeadCell_UploadedByNickname = document.createElement('th'),
+        uploadHeadCell_DeletedByID = document.createElement('th'),
+        uploadHeadCell_DeletedByNickname = document.createElement('th');
 
     $(uploadHeadCell_UploadDateTime).html('Date and Time');
     $(uploadHeadCell_ChannelID).html('Channel ID');
@@ -962,22 +933,22 @@ function buildUploadTable() {
     var uploadBody = document.createElement('tbody');
 
     for (var i = 0; i < Upload.length; i++) {
-        var UploadDateTime = Upload[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue;
-        var ChannelID = Upload[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue;
-        var Filename = Upload[i].getElementsByTagName('Filename')[0].firstChild.nodeValue;
-        var UploadedByID = Upload[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue;
-        var UploadedByNickname = Upload[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue;
-        var DeletedByID = Upload[i].getElementsByTagName('DeletedByID')[0].firstChild.nodeValue;
-        var DeletedByNickname = Upload[i].getElementsByTagName('DeletedByNickname')[0].firstChild.nodeValue;
+        var UploadDateTime = Upload[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue,
+            ChannelID = Upload[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue,
+            Filename = Upload[i].getElementsByTagName('Filename')[0].firstChild.nodeValue,
+            UploadedByID = Upload[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue,
+            UploadedByNickname = Upload[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue,
+            DeletedByID = Upload[i].getElementsByTagName('DeletedByID')[0].firstChild.nodeValue,
+            DeletedByNickname = Upload[i].getElementsByTagName('DeletedByNickname')[0].firstChild.nodeValue;
 
-        var uploadBodyRow = document.createElement('tr');
-        var uploadBodyCell_UploadDateTime = document.createElement('td');
-        var uploadBodyCell_ChannelID = document.createElement('td');
-        var uploadBodyCell_Filename = document.createElement('td');
-        var uploadBodyCell_UploadedByID = document.createElement('td');
-        var uploadBodyCell_UploadedByNickname = document.createElement('td');
-        var uploadBodyCell_DeletedByID = document.createElement('td');
-        var uploadBodyCell_DeletedByNickname = document.createElement('td');
+        var uploadBodyRow = document.createElement('tr'),
+            uploadBodyCell_UploadDateTime = document.createElement('td'),
+            uploadBodyCell_ChannelID = document.createElement('td'),
+            uploadBodyCell_Filename = document.createElement('td'),
+            uploadBodyCell_UploadedByID = document.createElement('td'),
+            uploadBodyCell_UploadedByNickname = document.createElement('td'),
+            uploadBodyCell_DeletedByID = document.createElement('td'),
+            uploadBodyCell_DeletedByNickname = document.createElement('td');
 
         $(uploadBodyCell_UploadDateTime).attr('data-title', 'Date and Time');
         $(uploadBodyCell_ChannelID).attr('data-title', 'Channel ID');
@@ -987,8 +958,8 @@ function buildUploadTable() {
         $(uploadBodyCell_DeletedByID).attr('data-title', 'Deleted by ID');
         $(uploadBodyCell_DeletedByNickname).attr('data-title', 'Deleted by Nickname');
 
-        var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime));
-        var uploadBodyCell_UploadDateTime_Div = document.createElement('div');
+        var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime)),
+            uploadBodyCell_UploadDateTime_Div = document.createElement('div');
         $(uploadBodyCell_UploadDateTime_Div).html(UTCUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCUploadDateTime.fromNow() + ')');
         uploadBodyCell_UploadDateTime.appendChild(uploadBodyCell_UploadDateTime_Div);
         uploadBodyRow.appendChild(uploadBodyCell_UploadDateTime);
@@ -1092,9 +1063,9 @@ function buildTables() {
             buildTableWithAlertCheckAndLocalStorage('complaintTable');
             buildTableWithAlertCheckAndLocalStorage('uploadTable');
 
-            var Attributes = XML.getElementsByTagName('Attributes')[0];
-            var CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue;
-            var CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
+            var Attributes = XML.getElementsByTagName('Attributes')[0],
+                CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue,
+                CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
 
             $('#creationTimestamp_localtime').html(CreationTimestampLocaltime);
             $('#creationTimestamp_utc').html(CreationTimestampUTC);
@@ -1130,23 +1101,23 @@ function buildTables() {
 
 // Builds the control section.
 function buildControlSection() {
-    var controlSection = document.createElement('div');
-    var tableSelectionSection = document.createElement('div');
-    var clientTableCheckboxSection = document.createElement('div');
-    var banTableCheckboxSection = document.createElement('div');
-    var kickTableCheckboxSection = document.createElement('div');
-    var complaintTableCheckboxSection = document.createElement('div');
-    var uploadTableCheckboxSection = document.createElement('div');
-    var clientTableCheckbox = document.createElement('input');
-    var banTableCheckbox = document.createElement('input');
-    var kickTableCheckbox = document.createElement('input');
-    var complaintTableCheckbox = document.createElement('input');
-    var uploadTableCheckbox = document.createElement('input');
-    var clientTableCheckboxLabel = document.createElement('label');
-    var banTableCheckboxLabel = document.createElement('label');
-    var kickTableCheckboxLabel = document.createElement('label');
-    var complaintTableCheckboxLabel = document.createElement('label');
-    var uploadTableCheckboxLabel = document.createElement('label');
+    var controlSection = document.createElement('div'),
+        tableSelectionSection = document.createElement('div'),
+        clientTableCheckboxSection = document.createElement('div'),
+        banTableCheckboxSection = document.createElement('div'),
+        kickTableCheckboxSection = document.createElement('div'),
+        complaintTableCheckboxSection = document.createElement('div'),
+        uploadTableCheckboxSection = document.createElement('div'),
+        clientTableCheckbox = document.createElement('input'),
+        banTableCheckbox = document.createElement('input'),
+        kickTableCheckbox = document.createElement('input'),
+        complaintTableCheckbox = document.createElement('input'),
+        uploadTableCheckbox = document.createElement('input'),
+        clientTableCheckboxLabel = document.createElement('label'),
+        banTableCheckboxLabel = document.createElement('label'),
+        kickTableCheckboxLabel = document.createElement('label'),
+        complaintTableCheckboxLabel = document.createElement('label'),
+        uploadTableCheckboxLabel = document.createElement('label');
 
     $(controlSection).prop('id', 'controlSection').prop('class', 'row');
     $(tableSelectionSection).prop('id', 'tableSelectionSection').prop('class', 'columns row');
@@ -1183,19 +1154,19 @@ function buildControlSection() {
     tableSelectionSection.appendChild(complaintTableCheckboxSection);
     tableSelectionSection.appendChild(uploadTableCheckboxSection);
 
-    var creationTimestampSection = document.createElement('div');
-    var creationTimestampTable = document.createElement('table');
-    var ctTHead = document.createElement('thead');
-    var ctTHeadRow = document.createElement('tr');
-    var ctTHead_localtime = document.createElement('th');
-    var ctTHead_utc = document.createElement('th');
-    var ctTHead_moment = document.createElement('th');
-    var ctTBody = document.createElement('tbody');
-    var ctTBodyRow = document.createElement('tr');
-    var ctT_localtime = document.createElement('td');
-    var ctT_utc = document.createElement('td');
-    var ctT_moment = document.createElement('td');
-    var connectedClientsCount = document.createElement('div');
+    var creationTimestampSection = document.createElement('div'),
+        creationTimestampTable = document.createElement('table'),
+        ctTHead = document.createElement('thead'),
+        ctTHeadRow = document.createElement('tr'),
+        ctTHead_localtime = document.createElement('th'),
+        ctTHead_utc = document.createElement('th'),
+        ctTHead_moment = document.createElement('th'),
+        ctTBody = document.createElement('tbody'),
+        ctTBodyRow = document.createElement('tr'),
+        ctT_localtime = document.createElement('td'),
+        ctT_utc = document.createElement('td'),
+        ctT_moment = document.createElement('td'),
+        connectedClientsCount = document.createElement('div');
 
     $(creationTimestampSection).prop('id', 'creationTimestampSection').prop('class', 'small-12 medium-8 large-8 columns').html('Creation DateTime of the current XML');
     $(creationTimestampTable).prop('id', 'creationTimestampTable');
@@ -1221,9 +1192,9 @@ function buildControlSection() {
     creationTimestampSection.appendChild(creationTimestampTable);
     creationTimestampSection.appendChild(connectedClientsCount);
 
-    var rebuildSection = document.createElement('div');
-    var rebuildXMLButton = document.createElement('button');
-    var buildNewXMLButton = document.createElement('button');
+    var rebuildSection = document.createElement('div'),
+        rebuildXMLButton = document.createElement('button'),
+        buildNewXMLButton = document.createElement('button');
 
     $(rebuildSection).prop('id', 'rebuildSection').prop('class', 'small-12 medium-4 large-4 columns');
     $(rebuildXMLButton).prop('id', 'rebuildXMLButton').prop('disabled', 'true').html('Update current XML');
@@ -1239,13 +1210,13 @@ function buildControlSection() {
     rebuildSection.appendChild(rebuildXMLButton);
     rebuildSection.appendChild(buildNewXMLButton);
 
-    var navbar = document.createElement('div');
-    var scrollBackToTopButton = document.createElement('button');
-    var scrollToClientTable = document.createElement('button');
-    var scrollToBanTable = document.createElement('button');
-    var scrollToKickTable = document.createElement('button');
-    var scrollToComplaintTable = document.createElement('button');
-    var scrollToUploadTable = document.createElement('button');
+    var navbar = document.createElement('div'),
+        scrollBackToTopButton = document.createElement('button'),
+        scrollToClientTable = document.createElement('button'),
+        scrollToBanTable = document.createElement('button'),
+        scrollToKickTable = document.createElement('button'),
+        scrollToComplaintTable = document.createElement('button'),
+        scrollToUploadTable = document.createElement('button');
 
     scrollToClientTable.style.display = 'none';
     scrollToBanTable.style.display = 'none';
