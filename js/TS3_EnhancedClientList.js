@@ -8,12 +8,10 @@ var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false;
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
     nanobar.go(35);
-    document.getElementById('rebuildXMLButton').disabled = true;
-    document.getElementById('buildNewXMLButton').disabled = true;
+    document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = true;
     $.get('./rebuildXML.php', function() {
         buildTables();
     });
-    return false;
 }
 
 // Deletes the current XML and builds a new one after.
@@ -21,13 +19,12 @@ function buildNewXML() {
     $.get('./deleteXML.php', function() {
         rebuildXML();
     });
-    return false;
 }
 
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
-    var currentDiv = List + '_' + ID + '_1';
-    if (document.getElementById(currentDiv) === null || $('#' + currentDiv).is(':hidden')) {
+    var currentDiv = document.getElementById(List + '_' + ID + '_1');
+    if (currentDiv === null || $(currentDiv).is(':hidden')) {
         expandList(List, ID);
     } else {
         collapseList(List, ID);
@@ -48,7 +45,7 @@ function expandList(List, ID) {
 
     var x = document.getElementById(ID).childNodes[Row],
         ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    $('#' + List + 'Button_' + ID).html('- ' + (ListContent.length - i)).parent().attr('expanded', true);
+    $(document.getElementById(List + 'Button_' + ID)).html('- ' + (ListContent.length - i)).parent().attr('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
         var currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) === null) {
@@ -84,7 +81,7 @@ function collapseList(List, ID) {
     }
 
     var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    $('#' + List + 'Button_' + ID).html('+ ' + (ListContent.length - i)).parent().attr('expanded', false);
+    $(document.getElementById(List + 'Button_' + ID)).html('+ ' + (ListContent.length - i)).parent().attr('expanded', false);
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row].childNodes;
@@ -169,79 +166,61 @@ function addIPsParser() {
 
 // Switches between ID/UID columns in the ban table.
 function switchBetweenIDAndUID() {
-    var j, rowID, banID, bannedByID, bannedByUID, Ban = XML.getElementsByTagName('Ban'),
+    var rowID, banID, bannedByID, bannedByUID, IDOrUID, Ban = XML.getElementsByTagName('Ban'),
         x = document.getElementById('banTable').lastChild.childNodes,
-        banTableHeadRow = document.getElementById('banTable').firstChild.firstChild;
+        banTableHeadRow = document.getElementById('banTable').firstChild.firstChild,
+        UIDState = Number(localStorage.getItem('UIDState'));
 
-    // ID --> UID
-    if (localStorage.getItem('UIDState') == '0') {
-        for (j = 0; j < x.length; j++) {
-            rowID = x.item(j).getAttribute('id');
-            banID = rowID.substring(4, rowID.length);
-
-            if (Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
-                BannedByUID = Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
-            } else {
-                BannedByUID = 'No UID';
-            }
-
-            $(document.getElementById(rowID).childNodes[1].lastChild).html(Ban[banID].getElementsByTagName('BannedUID')[0].firstChild.nodeValue);
-            $(document.getElementById(rowID).childNodes[4].lastChild).html(BannedByUID);
-
-            $(document.getElementById(rowID).childNodes[1]).attr('data-title', 'Banned UID');
-            $(document.getElementById(rowID).childNodes[4]).attr('data-title', 'Banned by UID');
-        }
-        $(banTableHeadRow.childNodes[1]).html('Banned UID');
-        $(banTableHeadRow.childNodes[4]).html('Banned by UID');
+    if (UIDState) {
+        IDOrUID = 'ID';
+        localStorage.setItem('UIDState', '0');
+    } else {
+        IDOrUID = 'UID';
         localStorage.setItem('UIDState', '1');
     }
 
-    // UID --> ID
-    else if (localStorage.getItem('UIDState') == '1') {
-        for (j = 0; j < x.length; j++) {
-            rowID = x.item(j).getAttribute('id');
-            banID = rowID.substring(4, rowID.length);
+    $(banTableHeadRow.childNodes[1]).html('Banned ' + IDOrUID).next().next().next().html('Banned by ' + IDOrUID);
 
+    for (var j = 0; j < x.length; j++) {
+        rowID = x.item(j).getAttribute('id');
+        banID = rowID.substring(4, rowID.length);
+
+        if (UIDState) {
             if (document.getElementById(rowID).childNodes[3] != 'Unknown') {
                 BannedByID = Ban[banID].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
             } else {
                 BannedByID = 'Unknown';
             }
-
-            $(document.getElementById(rowID).childNodes[1].lastChild).html(Ban[banID].getElementsByTagName('BannedID')[0].firstChild.nodeValue);
-            $(document.getElementById(rowID).childNodes[4].lastChild).html(BannedByID);
-
-            $(document.getElementById(rowID).childNodes[1]).attr('data-title', 'Banned ID');
-            $(document.getElementById(rowID).childNodes[4]).attr('data-title', 'Banned by ID');
+        } else {
+            if (Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
+                BannedByUID = Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
+            } else {
+                BannedByUID = 'No UID';
+            }
         }
-        $(banTableHeadRow.childNodes[1]).html('Banned ID');
-        $(banTableHeadRow.childNodes[4]).html('Banned by ID');
-        localStorage.setItem('UIDState', '0');
+
+        $(document.getElementById(rowID).childNodes[1]).attr('data-title', 'Banned ' + IDOrUID).html(Ban[banID].getElementsByTagName('Banned' + IDOrUID)[0].firstChild.nodeValue);
+        $(document.getElementById(rowID).childNodes[4]).attr('data-title', 'Banned by ' + IDOrUID).children().last().html(window['BannedBy' + IDOrUID]);
     }
 }
 
 // Imports and uses the local storage data for the given table.
 function importLocalStorage(table) {
     if (localStorage.getItem(table)) {
-        var checkState = localStorage.getItem(table);
-        if (localStorage.getItem(table) == '0') {
-            checkState = false;
-        } else {
-            checkState = true;
-        }
-        $('#' + table + 'Checkbox').prop('checked', checkState);
-        if (!$('#' + table + 'Checkbox').is(':checked')) {
+        var checkState = Boolean(Number(localStorage.getItem(table)));
+        $(document.getElementById(table + 'Checkbox')).prop('checked', checkState);
+        if (!checkState) {
             document.getElementById('ts3-' + table).style.display = '';
         }
     } else {
-        $('#' + table + 'Checkbox').prop('checked', true);
+        $(document.getElementById(table + 'Checkbox')).prop('checked', true);
         localStorage.setItem(table, '1');
     }
 }
 
 // Adds a checkbox listener for the given table.
 function addTableCheckboxListener(table) {
-    $('#' + table + 'Checkbox').click(function() {
+    document.getElementById(table + 'Checkbox').addEventListener('click', function() {
         var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
         if (this.checked) {
             localStorage.setItem(table, '1');
@@ -261,7 +240,7 @@ function addTableCheckboxListener(table) {
 }
 
 // Executes importLocalStorage() and addTableCheckboxListener() for every table.
-function localStorageAndTableCheckboxListener(table) {
+function localStorageAndTableCheckboxListener() {
     importLocalStorage('clientTable');
     importLocalStorage('banTable');
     importLocalStorage('kickTable');
@@ -276,8 +255,7 @@ function localStorageAndTableCheckboxListener(table) {
 
 // Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
 function UTCDateStringToDate(dateString) {
-    return new Date(dateString.substr(0, 4) + '/' + dateString.substr(5, 2) + '/' + dateString.substr(8, 2) + ' ' +
-        dateString.substr(11, 2) + ':' + dateString.substr(14, 2) + ':' + dateString.substr(17, 2) + ' +0000');
+    return new Date(Date.UTC(dateString.substr(0, 4), dateString.substr(5, 2), dateString.substr(8, 2), dateString.substr(11, 2), dateString.substr(14, 2), dateString.substr(17, 2)));
 }
 
 // Returns the parameter as double digit string.
@@ -322,7 +300,7 @@ function buildClientTable() {
             localStorage.setItem('connectionsSortType', '1');
         }
         $(clientTable).trigger('updateCache');
-        $.tablesorter.sortOn($(clientTable)[0].config, [JSON.parse(localStorage.getItem('clientTableSortOrder'))]);
+        $.tablesorter.sortOn((clientTable).config, [JSON.parse(localStorage.getItem('clientTableSortOrder'))]);
     };
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
@@ -367,6 +345,7 @@ function buildClientTable() {
     clientTable.appendChild(clientHead);
 
     var clientBody = document.createElement('tbody');
+    var firstRow = true;
 
     for (var i = 0; i < Client.length; i++) {
         var ID = Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
@@ -459,11 +438,7 @@ function buildClientTable() {
             }
             clientBodyRow.appendChild(clientBodyCell_Connected);
 
-            if (Deleted == 1) {
-                $(clientBodyCell_Deleted).html('true');
-            } else {
-                $(clientBodyCell_Deleted).html('false');
-            }
+            $(clientBodyCell_Deleted).html(String(Boolean(Number(Deleted))));
             clientBodyRow.appendChild(clientBodyCell_Deleted);
 
             clientBody.appendChild(clientBodyRow);
@@ -487,7 +462,7 @@ function buildClientTable() {
         },
         sortList: JSON.parse(localStorage.getItem('clientTableSortOrder'))
     }).bind('sortEnd', function() {
-        localStorage.setItem('clientTableSortOrder', JSON.stringify($(clientTable)[0].config.sortList));
+        localStorage.setItem('clientTableSortOrder', JSON.stringify(clientTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('clientTable-built', '1');
     document.getElementById('scrollToClientTable').style.display = '';
@@ -649,7 +624,7 @@ function buildBanTable() {
         },
         sortList: JSON.parse(localStorage.getItem('banTableSortOrder'))
     }).bind('sortEnd', function() {
-        localStorage.setItem('banTableSortOrder', JSON.stringify($(banTable)[0].config.sortList));
+        localStorage.setItem('banTableSortOrder', JSON.stringify(banTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('banTable-built', '1');
     document.getElementById('scrollToBanTable').style.display = '';
@@ -769,7 +744,7 @@ function buildKickTable() {
         },
         sortList: JSON.parse(localStorage.getItem('kickTableSortOrder'))
     }).bind('sortEnd', function() {
-        localStorage.setItem('kickTableSortOrder', JSON.stringify($(kickTable)[0].config.sortList));
+        localStorage.setItem('kickTableSortOrder', JSON.stringify(kickTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('kickTable-built', '1');
     document.getElementById('scrollToKickTable').style.display = '';
@@ -882,7 +857,7 @@ function buildComplaintTable() {
         },
         sortList: JSON.parse(localStorage.getItem('complaintTableSortOrder'))
     }).bind('sortEnd', function() {
-        localStorage.setItem('complaintTableSortOrder', JSON.stringify($(complaintTable)[0].config.sortList));
+        localStorage.setItem('complaintTableSortOrder', JSON.stringify(complaintTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('complaintTable-built', '1');
     document.getElementById('scrollToComplaintTable').style.display = '';
@@ -1012,7 +987,7 @@ function buildUploadTable() {
         },
         sortList: JSON.parse(localStorage.getItem('uploadTableSortOrder'))
     }).bind('sortEnd', function() {
-        localStorage.setItem('uploadTableSortOrder', JSON.stringify($(uploadTable)[0].config.sortList));
+        localStorage.setItem('uploadTableSortOrder', JSON.stringify(uploadTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('uploadTable-built', '1');
     document.getElementById('scrollToUploadTable').style.display = '';
@@ -1020,7 +995,7 @@ function buildUploadTable() {
 
 // Imports the local storage, builds a table when it will have content and sets the session storage.
 function buildTableWithAlertCheckAndLocalStorage(table) {
-    $('#ts3-' + table).empty();
+    $(document.getElementById('ts3-' + table)).empty();
     if (localStorage.getItem(table + 'SortOrder') === null) {
         localStorage.setItem(table + 'SortOrder', '[]');
     }
@@ -1067,16 +1042,16 @@ function buildTables() {
                 CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue,
                 CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
 
-            $('#creationTimestamp_localtime').html(CreationTimestampLocaltime);
-            $('#creationTimestamp_utc').html(CreationTimestampUTC);
-            $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+            $(document.getElementById('creationTimestamp_localtime')).html(CreationTimestampLocaltime)
+                .next().html(CreationTimestampUTC)
+                .next().html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
 
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
-                $('#creationTimestamp_moment').html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+                $(document.getElementById('creationTimestamp_moment')).html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
             }, 1000);
 
-            if (!$('#clientTable').length || document.getElementById('ts3-clientTable').style.display == 'none') {
+            if (document.getElementById('clientTable').length || document.getElementById('ts3-clientTable').style.display == 'none') {
                 var Client = XML.getElementsByTagName('Client');
                 for (var i = 0; i < Client.length; i++) {
                     if (Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
@@ -1086,14 +1061,13 @@ function buildTables() {
                     }
                 }
             }
-            $('#connectedClientsCount').html('Connected clients: ' + ConnectedClientsCount);
+            $(document.getElementById('connectedClientsCount')).html('Connected clients: ' + ConnectedClientsCount);
 
             if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
                 alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
             }
 
-            document.getElementById('rebuildXMLButton').disabled = false;
-            document.getElementById('buildNewXMLButton').disabled = false;
+            document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = false;
             nanobar.go(100);
         }
     });
@@ -1218,11 +1192,7 @@ function buildControlSection() {
         scrollToComplaintTable = document.createElement('button'),
         scrollToUploadTable = document.createElement('button');
 
-    scrollToClientTable.style.display = 'none';
-    scrollToBanTable.style.display = 'none';
-    scrollToKickTable.style.display = 'none';
-    scrollToComplaintTable.style.display = 'none';
-    scrollToUploadTable.style.display = 'none';
+    scrollToClientTable.style.display = scrollToBanTable.style.display = scrollToKickTable.style.display = scrollToComplaintTable.style.display = scrollToUploadTable.style.display = 'none';
 
     $(navbar).prop('id', 'navbar');
     $(scrollBackToTopButton).html('Top');
@@ -1267,7 +1237,7 @@ function buildControlSection() {
 
 $(document).ready(function() {
     $(document).foundation();
-    if ($('#ts3-control').length) {
+    if (document.getElementById('ts3-control') !== null) {
         nanobar = new Nanobar({
             bg: 'white',
             id: 'nanobar'

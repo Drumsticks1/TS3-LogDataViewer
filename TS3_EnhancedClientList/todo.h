@@ -10,7 +10,6 @@ general:
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- limit rebuilds on serverside, maybe add cron.
 	- add query clients to client list or a query client list?
-	- add button for switching between small and big display tables on big displays.
 	- add button for switching between bantime in seconds and bantime in x.
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
