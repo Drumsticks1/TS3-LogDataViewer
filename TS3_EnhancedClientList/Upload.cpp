@@ -49,7 +49,13 @@ void Upload::addDeletedByID(unsigned int deletedByID) { this->deletedByID = dele
 
 // Adds the deletedByNickname and deletedByID data to the matching Upload.
 void addDeletedBy(unsigned int channelID, string filename, string deletedByNickname, unsigned int deletedByID) {
-	string shortFilename = filename.substr(filename.find("//") + 1);
+	string shortFilename;
+	if (filename.find("//") != string::npos) {
+		shortFilename = filename.substr(filename.find("//") + 1);
+	}
+	else {
+		shortFilename = filename.substr(filename.find("\\/") + 1);
+	}
 	for (unsigned int i = 0; i < UploadList.size(); i++) {
 		if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename) {
 			UploadList[i].addDeletedByNickname(deletedByNickname);
