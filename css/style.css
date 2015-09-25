@@ -161,4 +161,7 @@ td, th {
     .ui-table-reflow > tbody > tr > td > button {
         margin: 0 0 5px
     }
+    #clientTable > tbody > tr > td:nth-child(3) > div {
+        text-align: left
+    }
 }

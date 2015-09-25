@@ -11,7 +11,7 @@ TS3_EnhancedClientList creates detailed lists using the information written to t
 - File upload list
 
 ## Example page
-[This example](http://drumsticks1.github.io/TS3_EnhancedClientList/) is set up with gh-pages and shows the design as well as all features of the latest release version.
+[This example](http://drumsticks1.github.io/TS3_EnhancedClientList/) is set up with gh-pages and shows the design as well as all features of the latest release version.<br />As it is set up with gh-pages the rebuild XML options aren't available but you can mess around with all other options.
 
 ## How does it work ?
 The program requires the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
@@ -40,55 +40,6 @@ On displays with a width smaller than 1024px the tables are switching to another
   - Scroll to kick table
   - Scroll to complaint table
   - Scroll to upload table
-
-#### Client table layout and features
-
-Controls for the client table:
-- Switch between sorting by first or last Connections via a button.
-- Collapse all extended lists via a button.
-
-ID  | Nicknames                                                                     | Connections                                                                        | IPs                                             | Connections Count | Connected | Deleted
---- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------- | ----------------- | --------- | -------
-3   | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | ( + 34 ) <br/ >2015-24-06 23:11:02<br />2013-03-11 19:46:07                        | ( + 6 )<br />88.888.888.75                      | 36                | true      | false
-4   | Random User                                                                   | 2015-18-07 15:11:02<br />2015-18-07 13:56:25                                       | 99.999.999.31                                   | 2                 | false     | false
-100 | Teamspeakuser                                                                 | ( - 1 )<br />2015-05-08 16:06:31<br />2015-05-08 10:13:54<br />2015-05-08 09:34:12 | ( - 1 )<br />12.345.678.90<br />217.000.000.000 | 3                 | false     | false
-
-- Chronological nickname history without duplicates.
-- Last and first connection time.
-- Last IP.
-- Expanding and Collapsing the Connections and the IPs list (expanding to a chronological list of all connections / IPs | collapsing back to the last and the first connections / the last IP).
-  - The button shows how many entries will be shown / hidden.
-- Connected flag which shows if a user is currently connected.
-- Deleted flag which shows if the user got deleted (only works if this is logged --> user must be deleted while the server is running).
-
-#### Ban table layout
-
-Controls for the ban table:
-- Switch between the IDs and the UIDs by using the button "Switch between IDs and UIDs".
-
-Date and Time                                | Banned ID | Banned Nickname | Banned IP       | Banned by ID  | Banned by Nickname | Reason  | Bantime
--------------------------------------------- | --------- | --------------- | --------------- | ------------- | ------------------ | ------- | -------
-2015-07-28 13:32:32<br />(about 3 hours ago) | 12        | Drumsticks-Test | 111.222.333.444 | 3             | Drumsticks         | Testban | 1800
-
-#### Kick table layout
-
-Date and Time                                    | Kicked ID | Kicked Nickname   | Kicked by Nickname | Kicked by UID       | Reason
------------------------------------------------- | --------- | ----------------- | ------------------ | ------------------- | --------
-2015-04-23 15:22:39<br/>(about three months ago) | 285       | TrollingTrollUser | Drumsticks         | XXXXXXXXXXXXXXXXXX= | Trolling
-
-#### Complaint table layout
-
-Date and Time                           | About ID | About Nickname | Reason                   | By ID | By Nickname
---------------------------------------- | -------- | -------------- | ------------------------ | ----- | ----------------------
-2015-08-11 18:09:17 (about 12 days ago) | 18       | Obvious Troll  | Massive Spamming         | 14    | Random Communitymember
-2015-08-11 18:15:17 (about 12 days ago) | 18       | Obvious Troll  | Spamming in channel chat | 19    | xXHaXxXorXx
-
-#### Upload table layout
-
-Date and Time                               | Channel ID | Filename                          | Uploaded by ID | Uploaded by Nickname
-------------------------------------------- | ---------- | --------------------------------- | -------------- | --------------------
-2015-07-09 19:17:58<br />(about 4 days ago) | 2          | /file_sample.txt                  | 3              | Drumsticks
-2015-07-09 19:18:18<br />(about 4 days ago) | 2          | /directory_sample/file_sample.txt | 3              | Drumsticks
 
 ### Overall Program Features
 - You can select which tables you want to be built and displayed. This selection is saved to your local storage.

@@ -204,8 +204,8 @@ function switchBetweenIDAndUID() {
 
         document.getElementById(rowID).childNodes[1].setAttribute('data-title', 'Banned ' + IDOrUID);
         document.getElementById(rowID).childNodes[4].setAttribute('data-title', 'Banned by ' + IDOrUID);
-        document.getElementById(rowID).childNodes[1].innerHTML = Ban[banID].getElementsByTagName('Banned' + IDOrUID)[0].firstChild.nodeValue;
-        document.getElementById(rowID).childNodes[4].innerHTML = window['BannedBy' + IDOrUID];
+        document.getElementById(rowID).childNodes[1].lastChild.innerHTML = Ban[banID].getElementsByTagName('Banned' + IDOrUID)[0].firstChild.nodeValue;
+        document.getElementById(rowID).childNodes[4].lastChild.innerHTML = window['BannedBy' + IDOrUID];
     }
 }
 
