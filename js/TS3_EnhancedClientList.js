@@ -8,7 +8,7 @@ var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false;
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
     nanobar.go(35);
-    document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = true;
+    rebuildXMLButton.disabled = buildNewXMLButton.disabled = true;
     $.get('./rebuildXML.php', function() {
         buildTables();
     });
@@ -24,7 +24,7 @@ function buildNewXML() {
 // Expands or collapses the List, depending on its current state.
 function expandcollapseList(List, ID) {
     var currentDiv = document.getElementById(List + '_' + ID + '_1');
-    if (currentDiv === null || $(currentDiv).is(':hidden')) {
+    if (currentDiv === null || currentDiv.style.display == 'none') {
         expandList(List, ID);
     } else {
         collapseList(List, ID);
@@ -45,16 +45,17 @@ function expandList(List, ID) {
 
     var x = document.getElementById(ID).childNodes[Row],
         ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    $(document.getElementById(List + 'Button_' + ID)).html('- ' + (ListContent.length - i)).parent().attr('expanded', true);
+    document.getElementById(List + 'Button_' + ID).innerHTML = '- ' + (ListContent.length - i);
+    document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
         var currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement('div');
-            $(newDiv).prop('id', currentDiv);
+            newDiv.id = currentDiv;
             if (i == 1) {
-                $(newDiv).html(ListContent[j].firstChild.nodeValue);
+                newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
             } else {
-                $(newDiv).html(UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue));
+                newDiv.innerHTML = UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue);
             }
 
             if (Row == 3) {
@@ -81,7 +82,8 @@ function collapseList(List, ID) {
     }
 
     var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    $(document.getElementById(List + 'Button_' + ID)).html('+ ' + (ListContent.length - i)).parent().attr('expanded', false);
+    document.getElementById(List + 'Button_' + ID).innerHTML = '+ ' + (ListContent.length - i);
+    document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', false);
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Row].childNodes;
@@ -96,7 +98,7 @@ function collapseList(List, ID) {
 
 // Collapses all expanded lists.
 function collapseAll() {
-    var j, x = document.getElementById('clientTable').lastChild.childNodes;
+    var j, x = clientTable.lastChild.childNodes;
     for (j = 0; j < x.length; j++) {
         if (x.item(j).childNodes.item(2).getAttribute('expanded') == 'true') {
             collapseList('connections', x.item(j).getAttribute('id'));
@@ -167,8 +169,8 @@ function addIPsParser() {
 // Switches between ID/UID columns in the ban table.
 function switchBetweenIDAndUID() {
     var rowID, banID, bannedByID, bannedByUID, IDOrUID, Ban = XML.getElementsByTagName('Ban'),
-        x = document.getElementById('banTable').lastChild.childNodes,
-        banTableHeadRow = document.getElementById('banTable').firstChild.firstChild,
+        x = banTable.lastChild.childNodes,
+        banTableHeadRow = banTable.firstChild.firstChild,
         UIDState = Number(localStorage.getItem('UIDState'));
 
     if (UIDState) {
@@ -179,7 +181,8 @@ function switchBetweenIDAndUID() {
         localStorage.setItem('UIDState', '1');
     }
 
-    $(banTableHeadRow.childNodes[1]).html('Banned ' + IDOrUID).next().next().next().html('Banned by ' + IDOrUID);
+    banTableHeadRow.childNodes[1].innerHTML = 'Banned ' + IDOrUID;
+    banTableHeadRow.childNodes[4].innerHTML = 'Banned by ' + IDOrUID;
 
     for (var j = 0; j < x.length; j++) {
         rowID = x.item(j).getAttribute('id');
@@ -199,8 +202,10 @@ function switchBetweenIDAndUID() {
             }
         }
 
-        $(document.getElementById(rowID).childNodes[1]).attr('data-title', 'Banned ' + IDOrUID).html(Ban[banID].getElementsByTagName('Banned' + IDOrUID)[0].firstChild.nodeValue);
-        $(document.getElementById(rowID).childNodes[4]).attr('data-title', 'Banned by ' + IDOrUID).children().last().html(window['BannedBy' + IDOrUID]);
+        document.getElementById(rowID).childNodes[1].setAttribute('data-title', 'Banned ' + IDOrUID);
+        document.getElementById(rowID).childNodes[4].setAttribute('data-title', 'Banned by ' + IDOrUID);
+        document.getElementById(rowID).childNodes[1].innerHTML = Ban[banID].getElementsByTagName('Banned' + IDOrUID)[0].firstChild.nodeValue;
+        document.getElementById(rowID).childNodes[4].innerHTML = window['BannedBy' + IDOrUID];
     }
 }
 
@@ -208,12 +213,12 @@ function switchBetweenIDAndUID() {
 function importLocalStorage(table) {
     if (localStorage.getItem(table)) {
         var checkState = Boolean(Number(localStorage.getItem(table)));
-        $(document.getElementById(table + 'Checkbox')).prop('checked', checkState);
+        document.getElementById(table + 'Checkbox').checked = checkState;
         if (!checkState) {
             document.getElementById('ts3-' + table).style.display = '';
         }
     } else {
-        $(document.getElementById(table + 'Checkbox')).prop('checked', true);
+        document.getElementById(table + 'Checkbox').checked = true;
         localStorage.setItem(table, '1');
     }
 }
@@ -254,8 +259,8 @@ function localStorageAndTableCheckboxListener() {
 }
 
 // Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
-function UTCDateStringToDate(dateString) {
-    return new Date(Date.UTC(dateString.substr(0, 4), dateString.substr(5, 2), dateString.substr(8, 2), dateString.substr(11, 2), dateString.substr(14, 2), dateString.substr(17, 2)));
+function UTCDateStringToDate(dateString, moment) {
+    return new Date(Date.UTC(dateString.substr(0, 4), dateString.substr(5, 2) - 1, dateString.substr(8, 2), dateString.substr(11, 2), dateString.substr(14, 2), dateString.substr(17, 2)));
 }
 
 // Returns the parameter as double digit string.
@@ -276,27 +281,30 @@ function UTCDateStringToLocaltimeString(dateString) {
 // Builds the client table.
 function buildClientTable() {
     var clientTableControlSection = document.createElement('div');
-    $(clientTableControlSection).prop('class', 'row');
+    clientTableControlSection.className = 'row';
 
     var clientTableHeading = document.createElement('div');
-    $(clientTableHeading).prop('class', 'tableheading large-12 columns').html('Client table');
+    clientTableHeading.className = 'tableheading large-12 columns';
+    clientTableHeading.innerHTML = 'Client table';
     clientTableControlSection.appendChild(clientTableHeading);
 
     var connectionsSortTypeButton = document.createElement('button');
-    $(connectionsSortTypeButton).prop('id', 'connectionsSortTypeButton').prop('class', 'small-12 medium-8 large-6 columns').html('Currently sorting connections by the last connect');
+    connectionsSortTypeButton.id = 'connectionsSortTypeButton';
+    connectionsSortTypeButton.className = 'small-12 medium-8 large-6 columns';
+    connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the last connect';
 
     if (localStorage.getItem('connectionsSortType') === null) {
         localStorage.setItem('connectionsSortType', '1');
     } else if (localStorage.getItem('connectionsSortType') == '0') {
-        $(connectionsSortTypeButton).html('Currently sorting connections by the first connect');
+        connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the first connect';
     }
 
     connectionsSortTypeButton.onclick = function() {
         if (localStorage.getItem('connectionsSortType') == '1') {
-            $(connectionsSortTypeButton).html('Currently sorting connections by the first connect');
+            connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the first connect';
             localStorage.setItem('connectionsSortType', '0');
         } else {
-            $(connectionsSortTypeButton).html('Currently sorting connections by the last connect');
+            connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the last connect';
             localStorage.setItem('connectionsSortType', '1');
         }
         $(clientTable).trigger('updateCache');
@@ -305,7 +313,9 @@ function buildClientTable() {
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
     var collapseAllButton = document.createElement('button');
-    $(collapseAllButton).prop('id', 'collapseAllButton').prop('class', 'small-12 medium-4 large-6 columns').html('Collapse expanded lists');
+    collapseAllButton.id = 'collapseAllButton';
+    collapseAllButton.className = 'small-12 medium-4 large-6 columns';
+    collapseAllButton.innerHTML = 'Collapse expanded lists';
 
     collapseAllButton.onclick = function() {
         collapseAll();
@@ -325,13 +335,13 @@ function buildClientTable() {
         clientHeadCell_Connected = document.createElement('th'),
         clientHeadCell_Deleted = document.createElement('th');
 
-    $(clientHeadCell_ID).html('ID');
-    $(clientHeadCell_Nicknames).html('Nicknames');
-    $(clientHeadCell_Connections).html('Connections');
-    $(clientHeadCell_IPs).html('IPs');
-    $(clientHeadCell_ConnectionCount).html('Connection Count');
-    $(clientHeadCell_Connected).html('Connected');
-    $(clientHeadCell_Deleted).html('Deleted');
+    clientHeadCell_ID.innerHTML = 'ID';
+    clientHeadCell_Nicknames.innerHTML = 'Nicknames';
+    clientHeadCell_Connections.innerHTML = 'Connections';
+    clientHeadCell_IPs.innerHTML = 'IPs';
+    clientHeadCell_ConnectionCount.innerHTML = 'Connection Count';
+    clientHeadCell_Connected.innerHTML = 'Connected';
+    clientHeadCell_Deleted.innerHTML = 'Deleted';
 
     clientHeadRow.appendChild(clientHeadCell_ID);
     clientHeadRow.appendChild(clientHeadCell_Nicknames);
@@ -345,8 +355,6 @@ function buildClientTable() {
     clientTable.appendChild(clientHead);
 
     var clientBody = document.createElement('tbody');
-    var firstRow = true;
-
     for (var i = 0; i < Client.length; i++) {
         var ID = Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
         if (ID !== '-1') {
@@ -366,28 +374,29 @@ function buildClientTable() {
                 clientBodyCell_Connected = document.createElement('td'),
                 clientBodyCell_Deleted = document.createElement('td');
 
-            $(clientBodyRow).prop('id', ID);
-            $(clientBodyCell_ID).attr('data-title', 'ID');
-            $(clientBodyCell_Nicknames).attr('data-title', 'Nicknames');
-            $(clientBodyCell_Connections).attr('data-title', 'Connections');
-            $(clientBodyCell_IPs).attr('data-title', 'IPs');
-            $(clientBodyCell_ConnectionCount).attr('data-title', 'Connection Count');
-            $(clientBodyCell_Connected).attr('data-title', 'Connected');
-            $(clientBodyCell_Deleted).attr('data-title', 'Deleted');
+            clientBodyRow.id = ID;
+            clientBodyCell_ID.setAttribute('data-title', 'ID');
+            clientBodyCell_Nicknames.setAttribute('data-title', 'Nicknames');
+            clientBodyCell_Connections.setAttribute('data-title', 'Connections');
+            clientBodyCell_IPs.setAttribute('data-title', 'IPs');
+            clientBodyCell_ConnectionCount.setAttribute('data-title', 'Connection Count');
+            clientBodyCell_Connected.setAttribute('data-title', 'Connected');
+            clientBodyCell_Deleted.setAttribute('data-title', 'Deleted');
 
-            $(clientBodyCell_ID).html(ID);
+            clientBodyCell_ID.innerHTML = ID;
             clientBodyRow.appendChild(clientBodyCell_ID);
 
             for (var j = 0; j < Nicknames.length; j++) {
                 var divNicknames = document.createElement('div');
-                $(divNicknames).html(Nicknames[j].firstChild.nodeValue);
+                divNicknames.innerHTML = Nicknames[j].firstChild.nodeValue;
                 clientBodyCell_Nicknames.appendChild(divNicknames);
             }
             clientBodyRow.appendChild(clientBodyCell_Nicknames);
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement('button');
-                $(buttonExpandCollapseConnections).prop('id', 'connectionsButton_' + ID).html('+ ' + (Connections.length - 2));
+                buttonExpandCollapseConnections.id = 'connectionsButton_' + ID;
+                buttonExpandCollapseConnections.innerHTML = '+ ' + (Connections.length - 2);
 
                 (function(ID) {
                     buttonExpandCollapseConnections.onclick = function() {
@@ -398,12 +407,14 @@ function buildClientTable() {
             }
 
             var divLastConnection = document.createElement('div');
-            $(divLastConnection).prop('id', 'connections_' + ID + '_0').html(UTCDateStringToLocaltimeString(Connections[0].firstChild.nodeValue));
+            divLastConnection.id = 'connections_' + ID + '_0';
+            divLastConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[0].firstChild.nodeValue);
             clientBodyCell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement('div');
-                $(divFirstConnection).prop('id', 'connections_' + ID + '_' + (Connections.length - 1)).html(UTCDateStringToLocaltimeString(Connections[Connections.length - 1].firstChild.nodeValue));
+                divFirstConnection.id = 'connections_' + ID + '_' + (Connections.length - 1);
+                divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1].firstChild.nodeValue);
                 clientBodyCell_Connections.appendChild(divFirstConnection);
             }
 
@@ -411,7 +422,8 @@ function buildClientTable() {
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
-                $(buttonExpandCollapseIPs).prop('id', 'ipsButton_' + ID).html('+ ' + (IPs.length - 1));
+                buttonExpandCollapseIPs.id = 'ipsButton_' + ID;
+                buttonExpandCollapseIPs.innerHTML = '+ ' + (IPs.length - 1);
 
                 (function(ID) {
                     buttonExpandCollapseIPs.onclick = function() {
@@ -422,31 +434,32 @@ function buildClientTable() {
             }
 
             var divLastIP = document.createElement('div');
-            $(divLastIP).prop('id', 'ips_' + ID + '_0').html(IPs[0].firstChild.nodeValue);
+            divLastIP.id = 'ips_' + ID + '_0';
+            divLastIP.innerHTML = IPs[0].firstChild.nodeValue;
             clientBodyCell_IPs.appendChild(divLastIP);
 
             clientBodyRow.appendChild(clientBodyCell_IPs);
 
-            $(clientBodyCell_ConnectionCount).html(Connection_Count);
+            clientBodyCell_ConnectionCount.innerHTML = Connection_Count;
             clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
 
             if (Connected == 1) {
-                $(clientBodyCell_Connected).html('true');
+                clientBodyCell_Connected.innerHTML = 'true';
                 ConnectedClientsCount++;
             } else {
-                $(clientBodyCell_Connected).html('false');
+                clientBodyCell_Connected.innerHTML = 'false';
             }
             clientBodyRow.appendChild(clientBodyCell_Connected);
 
-            $(clientBodyCell_Deleted).html(String(Boolean(Number(Deleted))));
+            clientBodyCell_Deleted.innerHTML = String(Boolean(Number(Deleted)));
             clientBodyRow.appendChild(clientBodyCell_Deleted);
 
             clientBody.appendChild(clientBodyRow);
         }
     }
     clientTable.appendChild(clientBody);
-
-    $(clientTable).prop('id', 'clientTable').addClass('ui-table-reflow');
+    clientTable.id = 'clientTable';
+    clientTable.className += 'ui-table-reflow';
     document.getElementById('ts3-clientTable').appendChild(clientTable);
 
     addConnectionsParser();
@@ -465,7 +478,7 @@ function buildClientTable() {
         localStorage.setItem('clientTableSortOrder', JSON.stringify(clientTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('clientTable-built', '1');
-    document.getElementById('scrollToClientTable').style.display = '';
+    scrollToClientTable.style.display = '';
 }
 
 // Builds the ban table.
@@ -475,14 +488,16 @@ function buildBanTable() {
     }
 
     var banTableControlSection = document.createElement('div');
-    $(banTableControlSection).prop('class', 'row');
+    banTableControlSection.className = 'row';
 
     var banTableHeading = document.createElement('div');
-    $(banTableHeading).prop('class', 'tableheading large-12 columns').html('Ban table');
+    banTableHeading.className = 'tableheading large-12 columns';
+    banTableHeading.innerHTML = 'Ban table';
     banTableControlSection.appendChild(banTableHeading);
 
     var switchBetweenIDandUIDButton = document.createElement('button');
-    $(switchBetweenIDandUIDButton).prop('id', 'switchBetweenIDandUIDButton').html('Switch between IDs and UIDs');
+    switchBetweenIDandUIDButton.id = 'switchBetweenIDandUIDButton';
+    switchBetweenIDandUIDButton.innerHTML = 'Switch between IDs and UIDs';
     switchBetweenIDandUIDButton.onclick = function() {
         switchBetweenIDAndUID();
     };
@@ -502,14 +517,14 @@ function buildBanTable() {
         banHeadCell_BanReason = document.createElement('th'),
         banHeadCell_Bantime = document.createElement('th');
 
-    $(banHeadCell_BanDateTime).html('Date and Time');
-    $(banHeadCell_BannedID).html('Banned ID');
-    $(banHeadCell_BannedNickname).html('Banned Nickname');
-    $(banHeadCell_BannedIP).html('Banned IP');
-    $(banHeadCell_BannedByID).html('Banned by ID');
-    $(banHeadCell_BannedByNickname).html('Banned by Nickname');
-    $(banHeadCell_BanReason).html('Reason');
-    $(banHeadCell_Bantime).html('Bantime');
+    banHeadCell_BanDateTime.innerHTML = 'Date and Time';
+    banHeadCell_BannedID.innerHTML = 'Banned ID';
+    banHeadCell_BannedNickname.innerHTML = 'Banned Nickname';
+    banHeadCell_BannedIP.innerHTML = 'Banned IP';
+    banHeadCell_BannedByID.innerHTML = 'Banned by ID';
+    banHeadCell_BannedByNickname.innerHTML = 'Banned by Nickname';
+    banHeadCell_BanReason.innerHTML = 'Reason';
+    banHeadCell_Bantime.innerHTML = 'Bantime';
 
     banHeadRow.appendChild(banHeadCell_BanDateTime);
     banHeadRow.appendChild(banHeadCell_BannedID);
@@ -524,7 +539,6 @@ function buildBanTable() {
     banTable.appendChild(banHead);
 
     var banBody = document.createElement('tbody');
-
     for (var i = 0; i < Ban.length; i++) {
         var BanDateTime = Ban[i].getElementsByTagName('BanDateTime')[0].firstChild.nodeValue,
             BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue,
@@ -546,7 +560,7 @@ function buildBanTable() {
         var Bantime = Ban[i].getElementsByTagName('Bantime')[0].firstChild.nodeValue;
 
         var banBodyRow = document.createElement('tr');
-        $(banBodyRow).prop('id', 'ban_' + i);
+        banBodyRow.id = 'ban_' + i;
 
         var banBodyCell_BanDateTime = document.createElement('td'),
             banBodyCell_BannedID = document.createElement('td'),
@@ -557,57 +571,58 @@ function buildBanTable() {
             banBodyCell_BanReason = document.createElement('td'),
             banBodyCell_Bantime = document.createElement('td');
 
-        $(banBodyCell_BanDateTime).attr('data-title', 'Date and Time');
-        $(banBodyCell_BannedID).attr('data-title', 'Banned ID');
-        $(banBodyCell_BannedNickname).attr('data-title', 'Banned Nickname');
-        $(banBodyCell_BannedIP).attr('data-title', 'Banned IP');
-        $(banBodyCell_BannedByID).attr('data-title', 'Banned by ID');
-        $(banBodyCell_BannedByNickname).attr('data-title', 'Banned by Nickname');
-        $(banBodyCell_BanReason).attr('data-title', 'Reason');
-        $(banBodyCell_Bantime).attr('data-title', 'Bantime');
+        banBodyCell_BanDateTime.setAttribute('data-title', 'Date and Time');
+        banBodyCell_BannedID.setAttribute('data-title', 'Banned ID');
+        banBodyCell_BannedNickname.setAttribute('data-title', 'Banned Nickname');
+        banBodyCell_BannedIP.setAttribute('data-title', 'Banned IP');
+        banBodyCell_BannedByID.setAttribute('data-title', 'Banned by ID');
+        banBodyCell_BannedByNickname.setAttribute('data-title', 'Banned by Nickname');
+        banBodyCell_BanReason.setAttribute('data-title', 'Reason');
+        banBodyCell_Bantime.setAttribute('data-title', 'Bantime');
 
         var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime)),
             banBodyCell_BanDateTime_Div = document.createElement('div');
-        $(banBodyCell_BanDateTime_Div).html(UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCBanDateTime.fromNow() + ')');
+        banBodyCell_BanDateTime_Div.innerHTML = UTCBanDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCBanDateTime.fromNow() + ')';
         banBodyCell_BanDateTime.appendChild(banBodyCell_BanDateTime_Div);
         banBodyRow.appendChild(banBodyCell_BanDateTime);
 
         var banBodyCell_BannedID_Div = document.createElement('div');
-        $(banBodyCell_BannedID_Div).html(BannedID);
+        banBodyCell_BannedID_Div.innerHTML = BannedID;
         banBodyCell_BannedID.appendChild(banBodyCell_BannedID_Div);
         banBodyRow.appendChild(banBodyCell_BannedID);
 
         var banBodyCell_BannedNickname_Div = document.createElement('div');
-        $(banBodyCell_BannedNickname_Div).html(BannedNickname);
+        banBodyCell_BannedNickname_Div.innerHTML = BannedNickname;
         banBodyCell_BannedNickname.appendChild(banBodyCell_BannedNickname_Div);
         banBodyRow.appendChild(banBodyCell_BannedNickname);
 
-        $(banBodyCell_BannedIP).html(BannedIP);
+        banBodyCell_BannedIP.innerHTML = BannedIP;
         banBodyRow.appendChild(banBodyCell_BannedIP);
 
         var banBodyCell_BannedByID_Div = document.createElement('div');
-        $(banBodyCell_BannedByID_Div).html(BannedByID);
+        banBodyCell_BannedByID_Div.innerHTML = BannedByID;
         banBodyCell_BannedByID.appendChild(banBodyCell_BannedByID_Div);
         banBodyRow.appendChild(banBodyCell_BannedByID);
 
         var banBodyCell_BannedByNickname_Div = document.createElement('div');
-        $(banBodyCell_BannedByNickname_Div).html(BannedByNickname);
+        banBodyCell_BannedByNickname_Div.innerHTML = BannedByNickname;
         banBodyCell_BannedByNickname.appendChild(banBodyCell_BannedByNickname_Div);
         banBodyRow.appendChild(banBodyCell_BannedByNickname);
 
         var banBodyCell_BanReason_Div = document.createElement('div');
-        $(banBodyCell_BanReason_Div).html(BanReason);
+        banBodyCell_BanReason_Div.innerHTML = BanReason;
         banBodyCell_BanReason.appendChild(banBodyCell_BanReason_Div);
         banBodyRow.appendChild(banBodyCell_BanReason);
 
-        $(banBodyCell_Bantime).html(Bantime);
+        banBodyCell_Bantime.innerHTML = Bantime;
         banBodyRow.appendChild(banBodyCell_Bantime);
 
         banBody.appendChild(banBodyRow);
     }
     banTable.appendChild(banBody);
 
-    $(banTable).prop('id', 'banTable').addClass('ui-table-reflow');
+    banTable.id = 'banTable';
+    banTable.className += 'ui-table-reflow';
     document.getElementById('ts3-banTable').appendChild(banTable);
 
     if (localStorage.getItem('UIDState') == '1') {
@@ -627,16 +642,17 @@ function buildBanTable() {
         localStorage.setItem('banTableSortOrder', JSON.stringify(banTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('banTable-built', '1');
-    document.getElementById('scrollToBanTable').style.display = '';
+    scrollToBanTable.style.display = '';
 }
 
 // Builds the kick table.
 function buildKickTable() {
     var kickTableControlSection = document.createElement('div');
-    $(kickTableControlSection).prop('class', 'row');
+    kickTableControlSection.className = 'row';
 
     var kickTableHeading = document.createElement('div');
-    $(kickTableHeading).prop('class', 'tableheading large-12 columns').html('Kick table');
+    kickTableHeading.className = 'tableheading large-12 columns';
+    kickTableHeading.innerHTML = 'Kick table';
     kickTableControlSection.appendChild(kickTableHeading);
 
     document.getElementById('ts3-kickTable').appendChild(kickTableControlSection);
@@ -652,12 +668,12 @@ function buildKickTable() {
         kickHeadCell_KickedByUID = document.createElement('th'),
         kickHeadCell_KickReason = document.createElement('th');
 
-    $(kickHeadCell_KickDateTime).html('Date and Time');
-    $(kickHeadCell_KickedID).html('Kicked Client ID');
-    $(kickHeadCell_KickedNickname).html('Kicked Client Nickname');
-    $(kickHeadCell_KickedByNickname).html('Kicked by Nickname');
-    $(kickHeadCell_KickedByUID).html('Kicked by UID');
-    $(kickHeadCell_KickReason).html('Reason');
+    kickHeadCell_KickDateTime.innerHTML = 'Date and Time';
+    kickHeadCell_KickedID.innerHTML = 'Kicked Client ID';
+    kickHeadCell_KickedNickname.innerHTML = 'Kicked Client Nickname';
+    kickHeadCell_KickedByNickname.innerHTML = 'Kicked by Nickname';
+    kickHeadCell_KickedByUID.innerHTML = 'Kicked by UID';
+    kickHeadCell_KickReason.innerHTML = 'Reason';
 
     kickHeadRow.appendChild(kickHeadCell_KickDateTime);
     kickHeadRow.appendChild(kickHeadCell_KickedID);
@@ -670,7 +686,6 @@ function buildKickTable() {
     kickTable.appendChild(kickHead);
 
     var kickBody = document.createElement('tbody');
-
     for (var i = 0; i < Kick.length; i++) {
         var KickDateTime = Kick[i].getElementsByTagName('KickDateTime')[0].firstChild.nodeValue,
             KickedID = Kick[i].getElementsByTagName('KickedID')[0].firstChild.nodeValue,
@@ -692,39 +707,39 @@ function buildKickTable() {
             kickBodyCell_KickedByUID = document.createElement('td'),
             kickBodyCell_KickReason = document.createElement('td');
 
-        $(kickBodyCell_DateTime).attr('data-title', 'Date and Time');
-        $(kickBodyCell_KickedID).attr('data-title', 'Kicked ID');
-        $(kickBodyCell_KickedNickname).attr('data-title', 'Kicked Nickname');
-        $(kickBodyCell_KickedByNickname).attr('data-title', 'Kicked by Nickname');
-        $(kickBodyCell_KickedByUID).attr('data-title', 'Kicked by UID');
-        $(kickBodyCell_KickReason).attr('data-title', 'Reason');
+        kickBodyCell_DateTime.setAttribute('data-title', 'Date and Time');
+        kickBodyCell_KickedID.setAttribute('data-title', 'Kicked ID');
+        kickBodyCell_KickedNickname.setAttribute('data-title', 'Kicked Nickname');
+        kickBodyCell_KickedByNickname.setAttribute('data-title', 'Kicked by Nickname');
+        kickBodyCell_KickedByUID.setAttribute('data-title', 'Kicked by UID');
+        kickBodyCell_KickReason.setAttribute('data-title', 'Reason');
 
         var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime)),
             kickBodyCell_DateTime_Div = document.createElement('div');
-        $(kickBodyCell_DateTime_Div).html(UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCKickDateTime.fromNow() + ')');
+        kickBodyCell_DateTime_Div.innerHTML = UTCKickDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCKickDateTime.fromNow() + ')';
         kickBodyCell_DateTime.appendChild(kickBodyCell_DateTime_Div);
         kickBodyRow.appendChild(kickBodyCell_DateTime);
 
-        $(kickBodyCell_KickedID).html(KickedID);
+        kickBodyCell_KickedID.innerHTML = KickedID;
         kickBodyRow.appendChild(kickBodyCell_KickedID);
 
         var kickBodyCell_KickedNickname_Div = document.createElement('div');
-        $(kickBodyCell_KickedNickname_Div).html(KickedNickname);
+        kickBodyCell_KickedNickname_Div.innerHTML = KickedNickname;
         kickBodyCell_KickedNickname.appendChild(kickBodyCell_KickedNickname_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedNickname);
 
         var kickBodyCell_KickedByNickname_Div = document.createElement('div');
-        $(kickBodyCell_KickedByNickname_Div).html(KickedByNickname);
+        kickBodyCell_KickedByNickname_Div.innerHTML = KickedByNickname;
         kickBodyCell_KickedByNickname.appendChild(kickBodyCell_KickedByNickname_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedByNickname);
 
         var kickBodyCell_KickedByUID_Div = document.createElement('div');
-        $(kickBodyCell_KickedByUID_Div).html(KickedByUID);
+        kickBodyCell_KickedByUID_Div.innerHTML = KickedByUID;
         kickBodyCell_KickedByUID.appendChild(kickBodyCell_KickedByUID_Div);
         kickBodyRow.appendChild(kickBodyCell_KickedByUID);
 
         var kickBodyCell_KickReason_Div = document.createElement('div');
-        $(kickBodyCell_KickReason_Div).html(KickReason);
+        kickBodyCell_KickReason_Div.innerHTML = KickReason;
         kickBodyCell_KickReason.appendChild(kickBodyCell_KickReason_Div);
         kickBodyRow.appendChild(kickBodyCell_KickReason);
 
@@ -732,7 +747,8 @@ function buildKickTable() {
     }
     kickTable.appendChild(kickBody);
 
-    $(kickTable).prop('id', 'kickTable').addClass('ui-table-reflow');
+    kickTable.id = 'kickTable';
+    kickTable.className += 'ui-table-reflow';
     document.getElementById('ts3-kickTable').appendChild(kickTable);
 
     addIgnoreMomentParser();
@@ -747,16 +763,17 @@ function buildKickTable() {
         localStorage.setItem('kickTableSortOrder', JSON.stringify(kickTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('kickTable-built', '1');
-    document.getElementById('scrollToKickTable').style.display = '';
+    scrollToKickTable.style.display = '';
 }
 
 // Builds the complaint table.
 function buildComplaintTable() {
     var complaintTableControlSection = document.createElement('div');
-    $(complaintTableControlSection).prop('class', 'row');
+    complaintTableControlSection.className = 'row';
 
     var complaintTableHeading = document.createElement('div');
-    $(complaintTableHeading).prop('class', 'tableheading large-12 columns').html('Complaint table');
+    complaintTableHeading.className = 'tableheading large-12 columns';
+    complaintTableHeading.innerHTML = 'Complaint table';
     complaintTableControlSection.appendChild(complaintTableHeading);
 
     document.getElementById('ts3-complaintTable').appendChild(complaintTableControlSection);
@@ -772,12 +789,12 @@ function buildComplaintTable() {
         complaintHeadCell_ComplaintByID = document.createElement('th'),
         complaintHeadCell_ComplaintByNickname = document.createElement('th');
 
-    $(complaintHeadCell_ComplaintDateTime).html('Date and Time');
-    $(complaintHeadCell_ComplaintAboutID).html('About ID');
-    $(complaintHeadCell_ComplaintAboutNickname).html('About Nickname');
-    $(complaintHeadCell_ComplaintReason).html('Reason');
-    $(complaintHeadCell_ComplaintByID).html('By ID');
-    $(complaintHeadCell_ComplaintByNickname).html('By Nickname');
+    complaintHeadCell_ComplaintDateTime.innerHTML = 'Date and Time';
+    complaintHeadCell_ComplaintAboutID.innerHTML = 'About ID';
+    complaintHeadCell_ComplaintAboutNickname.innerHTML = 'About Nickname';
+    complaintHeadCell_ComplaintReason.innerHTML = 'Reason';
+    complaintHeadCell_ComplaintByID.innerHTML = 'By ID';
+    complaintHeadCell_ComplaintByNickname.innerHTML = 'By Nickname';
 
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintDateTime);
     complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutID);
@@ -790,7 +807,6 @@ function buildComplaintTable() {
     complaintTable.appendChild(complaintHead);
 
     var complaintBody = document.createElement('tbody');
-
     for (var i = 0; i < Complaint.length; i++) {
         var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue,
             ComplaintAboutID = Complaint[i].getElementsByTagName('ComplaintAboutID')[0].firstChild.nodeValue,
@@ -807,37 +823,37 @@ function buildComplaintTable() {
             complaintBodyCell_ComplaintByID = document.createElement('td'),
             complaintBodyCell_ComplaintByNickname = document.createElement('td');
 
-        $(complaintBodyCell_ComplaintDateTime).attr('data-title', 'Date and Time');
-        $(complaintBodyCell_ComplaintAboutID).attr('data-title', 'About ID');
-        $(complaintBodyCell_ComplaintAboutNickname).attr('data-title', 'About Nickname');
-        $(complaintBodyCell_ComplaintReason).attr('data-title', 'Reason');
-        $(complaintBodyCell_ComplaintByID).attr('data-title', 'By ID');
-        $(complaintBodyCell_ComplaintByNickname).attr('data-title', 'By Nickname');
+        complaintBodyCell_ComplaintDateTime.setAttribute('data-title', 'Date and Time');
+        complaintBodyCell_ComplaintAboutID.setAttribute('data-title', 'About ID');
+        complaintBodyCell_ComplaintAboutNickname.setAttribute('data-title', 'About Nickname');
+        complaintBodyCell_ComplaintReason.setAttribute('data-title', 'Reason');
+        complaintBodyCell_ComplaintByID.setAttribute('data-title', 'By ID');
+        complaintBodyCell_ComplaintByNickname.setAttribute('data-title', 'By Nickname');
 
         var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime)),
             complaintBodyCell_ComplaintDateTime_Div = document.createElement('div');
-        $(complaintBodyCell_ComplaintDateTime_Div).html(UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCComplaintDateTime.fromNow() + ')');
+        complaintBodyCell_ComplaintDateTime_Div.innerHTML = UTCComplaintDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCComplaintDateTime.fromNow() + ')';
         complaintBodyCell_ComplaintDateTime.appendChild(complaintBodyCell_ComplaintDateTime_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
 
-        $(complaintBodyCell_ComplaintAboutID).html(ComplaintAboutID);
+        complaintBodyCell_ComplaintAboutID.innerHTML = ComplaintAboutID;
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutID);
 
         var complaintBodyCell_ComplaintAboutNickname_Div = document.createElement('div');
-        $(complaintBodyCell_ComplaintAboutNickname_Div).html(ComplaintAboutNickname);
+        complaintBodyCell_ComplaintAboutNickname_Div.innerHTML = ComplaintAboutNickname;
         complaintBodyCell_ComplaintAboutNickname.appendChild(complaintBodyCell_ComplaintAboutNickname_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutNickname);
 
         var complaintBodyCell_ComplaintReason_Div = document.createElement('div');
-        $(complaintBodyCell_ComplaintReason_Div).html(ComplaintReason);
+        complaintBodyCell_ComplaintReason_Div.innerHTML = ComplaintReason;
         complaintBodyCell_ComplaintReason.appendChild(complaintBodyCell_ComplaintReason_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintReason);
 
-        $(complaintBodyCell_ComplaintByID).html(ComplaintByID);
+        complaintBodyCell_ComplaintByID.innerHTML = ComplaintByID;
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintByID);
 
         var complaintBodyCell_ComplaintByNickname_Div = document.createElement('div');
-        $(complaintBodyCell_ComplaintByNickname_Div).html(ComplaintByNickname);
+        complaintBodyCell_ComplaintByNickname_Div.innerHTML = ComplaintByNickname;
         complaintBodyCell_ComplaintByNickname.appendChild(complaintBodyCell_ComplaintByNickname_Div);
         complaintBodyRow.appendChild(complaintBodyCell_ComplaintByNickname);
 
@@ -845,7 +861,8 @@ function buildComplaintTable() {
     }
     complaintTable.appendChild(complaintBody);
 
-    $(complaintTable).prop('id', 'complaintTable').addClass('ui-table-reflow');
+    complaintTable.id = 'complaintTable';
+    complaintTable.className += 'ui-table-reflow';
     document.getElementById('ts3-complaintTable').appendChild(complaintTable);
 
     addIgnoreMomentParser();
@@ -860,16 +877,17 @@ function buildComplaintTable() {
         localStorage.setItem('complaintTableSortOrder', JSON.stringify(complaintTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('complaintTable-built', '1');
-    document.getElementById('scrollToComplaintTable').style.display = '';
+    scrollToComplaintTable.style.display = '';
 }
 
 // Builds the upload table.
 function buildUploadTable() {
     var uploadTableControlSection = document.createElement('div');
-    $(uploadTableControlSection).prop('class', 'row');
+    uploadTableControlSection.className = 'row';
 
     var uploadTableHeading = document.createElement('div');
-    $(uploadTableHeading).prop('class', 'tableheading large-12 columns').html('Upload table');
+    uploadTableHeading.className = 'tableheading large-12 columns';
+    uploadTableHeading.innerHTML = 'Upload table';
     uploadTableControlSection.appendChild(uploadTableHeading);
 
     document.getElementById('ts3-uploadTable').appendChild(uploadTableControlSection);
@@ -886,13 +904,13 @@ function buildUploadTable() {
         uploadHeadCell_DeletedByID = document.createElement('th'),
         uploadHeadCell_DeletedByNickname = document.createElement('th');
 
-    $(uploadHeadCell_UploadDateTime).html('Date and Time');
-    $(uploadHeadCell_ChannelID).html('Channel ID');
-    $(uploadHeadCell_Filename).html('Filename');
-    $(uploadHeadCell_UploadedByID).html('Uploaded by ID');
-    $(uploadHeadCell_UploadedByNickname).html('Uploaded by Nickname');
-    $(uploadHeadCell_DeletedByID).html('Deleted by ID');
-    $(uploadHeadCell_DeletedByNickname).html('Deleted by Nickname');
+    uploadHeadCell_UploadDateTime.innerHTML = 'Date and Time';
+    uploadHeadCell_ChannelID.innerHTML = 'Channel ID';
+    uploadHeadCell_Filename.innerHTML = 'Filename';
+    uploadHeadCell_UploadedByID.innerHTML = 'Uploaded by ID';
+    uploadHeadCell_UploadedByNickname.innerHTML = 'Uploaded by Nickname';
+    uploadHeadCell_DeletedByID.innerHTML = 'Deleted by ID';
+    uploadHeadCell_DeletedByNickname.innerHTML = 'Deleted by Nickname';
 
     uploadHeadRow.appendChild(uploadHeadCell_UploadDateTime);
     uploadHeadRow.appendChild(uploadHeadCell_ChannelID);
@@ -906,7 +924,6 @@ function buildUploadTable() {
     uploadTable.appendChild(uploadHead);
 
     var uploadBody = document.createElement('tbody');
-
     for (var i = 0; i < Upload.length; i++) {
         var UploadDateTime = Upload[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue,
             ChannelID = Upload[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue,
@@ -925,33 +942,33 @@ function buildUploadTable() {
             uploadBodyCell_DeletedByID = document.createElement('td'),
             uploadBodyCell_DeletedByNickname = document.createElement('td');
 
-        $(uploadBodyCell_UploadDateTime).attr('data-title', 'Date and Time');
-        $(uploadBodyCell_ChannelID).attr('data-title', 'Channel ID');
-        $(uploadBodyCell_Filename).attr('data-title', 'Filename');
-        $(uploadBodyCell_UploadedByID).attr('data-title', 'Uploaded by ID');
-        $(uploadBodyCell_UploadedByNickname).attr('data-title', 'Uploaded by Nickname');
-        $(uploadBodyCell_DeletedByID).attr('data-title', 'Deleted by ID');
-        $(uploadBodyCell_DeletedByNickname).attr('data-title', 'Deleted by Nickname');
+        uploadBodyCell_UploadDateTime.setAttribute('data-title', 'Date and Time');
+        uploadBodyCell_ChannelID.setAttribute('data-title', 'Channel ID');
+        uploadBodyCell_Filename.setAttribute('data-title', 'Filename');
+        uploadBodyCell_UploadedByID.setAttribute('data-title', 'Uploaded by ID');
+        uploadBodyCell_UploadedByNickname.setAttribute('data-title', 'Uploaded by Nickname');
+        uploadBodyCell_DeletedByID.setAttribute('data-title', 'Deleted by ID');
+        uploadBodyCell_DeletedByNickname.setAttribute('data-title', 'Deleted by Nickname');
 
         var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime)),
             uploadBodyCell_UploadDateTime_Div = document.createElement('div');
-        $(uploadBodyCell_UploadDateTime_Div).html(UTCUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCUploadDateTime.fromNow() + ')');
+        uploadBodyCell_UploadDateTime_Div.innerHTML = UTCUploadDateTime.format('YYYY-MM-DD HH:mm:ss') + '<br />(about ' + UTCUploadDateTime.fromNow() + ')';
         uploadBodyCell_UploadDateTime.appendChild(uploadBodyCell_UploadDateTime_Div);
         uploadBodyRow.appendChild(uploadBodyCell_UploadDateTime);
 
-        $(uploadBodyCell_ChannelID).html(ChannelID);
+        uploadBodyCell_ChannelID.innerHTML = ChannelID;
         uploadBodyRow.appendChild(uploadBodyCell_ChannelID);
 
         var uploadBodyCell_Filename_Div = document.createElement('div');
-        $(uploadBodyCell_Filename_Div).html(Filename);
+        uploadBodyCell_Filename_Div.innerHTML = Filename;
         uploadBodyCell_Filename.appendChild(uploadBodyCell_Filename_Div);
         uploadBodyRow.appendChild(uploadBodyCell_Filename);
 
-        $(uploadBodyCell_UploadedByID).html(UploadedByID);
+        uploadBodyCell_UploadedByID.innerHTML = UploadedByID;
         uploadBodyRow.appendChild(uploadBodyCell_UploadedByID);
 
         var uploadBodyCell_UploadedByNickname_Div = document.createElement('div');
-        $(uploadBodyCell_UploadedByNickname_Div).html(UploadedByNickname);
+        uploadBodyCell_UploadedByNickname_Div.innerHTML = UploadedByNickname;
         uploadBodyCell_UploadedByNickname.appendChild(uploadBodyCell_UploadedByNickname_Div);
         uploadBodyRow.appendChild(uploadBodyCell_UploadedByNickname);
 
@@ -959,7 +976,7 @@ function buildUploadTable() {
             DeletedByID = '/';
         }
 
-        $(uploadBodyCell_DeletedByID).html(DeletedByID);
+        uploadBodyCell_DeletedByID.innerHTML = DeletedByID;
         uploadBodyRow.appendChild(uploadBodyCell_DeletedByID);
 
         if (DeletedByNickname == ' ') {
@@ -967,7 +984,7 @@ function buildUploadTable() {
         }
 
         var uploadBodyCell_DeletedByNickname_Div = document.createElement('div');
-        $(uploadBodyCell_DeletedByNickname_Div).html(DeletedByNickname);
+        uploadBodyCell_DeletedByNickname_Div.innerHTML = DeletedByNickname;
         uploadBodyCell_DeletedByNickname.appendChild(uploadBodyCell_DeletedByNickname_Div);
         uploadBodyRow.appendChild(uploadBodyCell_DeletedByNickname);
 
@@ -975,7 +992,8 @@ function buildUploadTable() {
     }
     uploadTable.appendChild(uploadBody);
 
-    $(uploadTable).prop('id', 'uploadTable').addClass('ui-table-reflow');
+    uploadTable.id = 'uploadTable';
+    uploadTable.className += 'ui-table-reflow';
     document.getElementById('ts3-uploadTable').appendChild(uploadTable);
 
     addIgnoreMomentParser();
@@ -990,12 +1008,12 @@ function buildUploadTable() {
         localStorage.setItem('uploadTableSortOrder', JSON.stringify(uploadTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('uploadTable-built', '1');
-    document.getElementById('scrollToUploadTable').style.display = '';
+    scrollToUploadTable.style.display = '';
 }
 
 // Imports the local storage, builds a table when it will have content and sets the session storage.
 function buildTableWithAlertCheckAndLocalStorage(table) {
-    $(document.getElementById('ts3-' + table)).empty();
+    document.getElementById('ts3-' + table).innerHTML = null;
     if (localStorage.getItem(table + 'SortOrder') === null) {
         localStorage.setItem(table + 'SortOrder', '[]');
     }
@@ -1005,7 +1023,8 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
             window['build' + leadingCapitalLetterTable]();
         } else {
             var alertBox = document.createElement('div');
-            $(alertBox).prop('class', 'alertBox').html('No ' + table.substring(0, table.search('Table')) + 's were found.');
+            alertBox.className = 'alertBox';
+            alertBox.innerHTML = 'No ' + table.substring(0, table.search('Table')) + 's were found.';
             document.getElementById('ts3-' + table).appendChild(alertBox);
         }
     } else {
@@ -1042,32 +1061,32 @@ function buildTables() {
                 CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue,
                 CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
 
-            $(document.getElementById('creationTimestamp_localtime')).html(CreationTimestampLocaltime)
-                .next().html(CreationTimestampUTC)
-                .next().html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+            creationTimestamp_localtime.innerHTML = CreationTimestampLocaltime;
+            creationTimestamp_utc.innerHTML = CreationTimestampUTC;
+            creationTimestamp_moment.innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
 
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
-                $(document.getElementById('creationTimestamp_moment')).html(moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow());
+                creationTimestamp_moment.innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
             }, 1000);
 
-            if (document.getElementById('clientTable').length || document.getElementById('ts3-clientTable').style.display == 'none') {
+            if (!document.getElementById('clientTable')) {
                 var Client = XML.getElementsByTagName('Client');
                 for (var i = 0; i < Client.length; i++) {
-                    if (Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue == i) {
+                    if (Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue != '-1') {
                         if (Client[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1) {
                             ConnectedClientsCount++;
                         }
                     }
                 }
             }
-            $(document.getElementById('connectedClientsCount')).html('Connected clients: ' + ConnectedClientsCount);
+            connectedClientsCount.innerHTML = 'Connected clients: ' + ConnectedClientsCount;
 
             if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
                 alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
             }
 
-            document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = false;
+            rebuildXMLButton.disabled = buildNewXMLButton.disabled = false;
             nanobar.go(100);
         }
     });
@@ -1093,23 +1112,29 @@ function buildControlSection() {
         complaintTableCheckboxLabel = document.createElement('label'),
         uploadTableCheckboxLabel = document.createElement('label');
 
-    $(controlSection).prop('id', 'controlSection').prop('class', 'row');
-    $(tableSelectionSection).prop('id', 'tableSelectionSection').prop('class', 'columns row');
-    $(clientTableCheckboxSection).prop('class', 'small-12 medium-12 large-6 columns');
-    $(banTableCheckboxSection).prop('class', 'small-12 medium-6 large-6 columns');
-    $(kickTableCheckboxSection).prop('class', 'small-12 medium-6 large-4 columns');
-    $(complaintTableCheckboxSection).prop('class', 'small-12 medium-6 large-4 columns');
-    $(uploadTableCheckboxSection).prop('class', 'small-12 medium-6 large-4 columns');
-    $(clientTableCheckbox).prop('id', 'clientTableCheckbox').prop('type', 'checkbox');
-    $(banTableCheckbox).prop('id', 'banTableCheckbox').prop('type', 'checkbox');
-    $(kickTableCheckbox).prop('id', 'kickTableCheckbox').prop('type', 'checkbox');
-    $(complaintTableCheckbox).prop('id', 'complaintTableCheckbox').prop('type', 'checkbox');
-    $(uploadTableCheckbox).prop('id', 'uploadTableCheckbox').prop('type', 'checkbox');
-    $(clientTableCheckboxLabel).prop('for', 'clientTableCheckbox').html('Client table');
-    $(banTableCheckboxLabel).prop('for', 'banTableCheckbox').html('Ban table');
-    $(kickTableCheckboxLabel).prop('for', 'kickTableCheckbox').html('Kick table');
-    $(complaintTableCheckboxLabel).prop('for', 'complaintTableCheckbox').html('Complaint table');
-    $(uploadTableCheckboxLabel).prop('for', 'uploadTableCheckbox').html('Upload table');
+    controlSection.id = 'controlSection';
+    tableSelectionSection.id = 'tableSelectionSection';
+    controlSection.className = 'row';
+    tableSelectionSection.className = 'columns row';
+    clientTableCheckboxSection.className = 'small-12 medium-12 large-6 columns';
+    banTableCheckboxSection.className = 'small-12 medium-6 large-6 columns';
+    kickTableCheckboxSection.className = complaintTableCheckboxSection.className = uploadTableCheckboxSection.className = 'small-12 medium-6 large-4 columns';
+    clientTableCheckbox.type = banTableCheckbox.type = kickTableCheckbox.type = complaintTableCheckbox.type = uploadTableCheckbox.type = 'checkbox';
+    clientTableCheckbox.id = 'clientTableCheckbox';
+    banTableCheckbox.id = 'banTableCheckbox';
+    kickTableCheckbox.id = 'kickTableCheckbox';
+    complaintTableCheckbox.id = 'complaintTableCheckbox';
+    uploadTableCheckbox.id = 'uploadTableCheckbox';
+    clientTableCheckboxLabel.htmlFor = 'clientTableCheckbox';
+    banTableCheckboxLabel.htmlFor = 'banTableCheckbox';
+    kickTableCheckboxLabel.htmlFor = 'kickTableCheckbox';
+    complaintTableCheckboxLabel.htmlFor = 'complaintTableCheckbox';
+    uploadTableCheckboxLabel.htmlFor = 'uploadTableCheckbox';
+    clientTableCheckboxLabel.innerHTML = 'Client table';
+    banTableCheckboxLabel.innerHTML = 'Ban table';
+    kickTableCheckboxLabel.innerHTML = 'Kick table';
+    complaintTableCheckboxLabel.innerHTML = 'Complaint table';
+    uploadTableCheckboxLabel.innerHTML = 'Upload table';
 
     clientTableCheckboxSection.appendChild(clientTableCheckbox);
     clientTableCheckboxSection.appendChild(clientTableCheckboxLabel);
@@ -1142,15 +1167,19 @@ function buildControlSection() {
         ctT_moment = document.createElement('td'),
         connectedClientsCount = document.createElement('div');
 
-    $(creationTimestampSection).prop('id', 'creationTimestampSection').prop('class', 'small-12 medium-8 large-8 columns').html('Creation DateTime of the current XML');
-    $(creationTimestampTable).prop('id', 'creationTimestampTable');
-    $(ctTHead_localtime).html('Server localtime');
-    $(ctTHead_utc).html('UTC');
-    $(ctTHead_moment).html('moment.js');
-    $(ctT_localtime).prop('id', 'creationTimestamp_localtime').html('Analyzing...');
-    $(ctT_utc).prop('id', 'creationTimestamp_utc').html('Analyzing...');
-    $(ctT_moment).prop('id', 'creationTimestamp_moment').html('Analyzing...');
-    $(connectedClientsCount).prop('id', 'connectedClientsCount').html('Analyzing data...');
+    creationTimestampSection.id = 'creationTimestampSection';
+    creationTimestampSection.className = 'small-12 medium-8 large-8 columns';
+    creationTimestampSection.innerHTML = 'Creation DateTime of the current XML';
+    creationTimestampTable.id = 'creationTimestampTable';
+
+    ctT_localtime.id = 'creationTimestamp_localtime';
+    ctT_utc.id = 'creationTimestamp_utc';
+    ctT_moment.id = 'creationTimestamp_moment';
+    connectedClientsCount.id = 'connectedClientsCount';
+    ctTHead_localtime.innerHTML = 'Server localtime';
+    ctTHead_utc.innerHTML = 'UTC';
+    ctTHead_moment.innerHTML = 'moment.js';
+    ctT_localtime.innerHTML = ctT_utc.innerHTML = ctT_moment.innerHTML = connectedClientsCount.innerHTML = 'Analyzing...';
 
     ctTHeadRow.appendChild(ctTHead_localtime);
     ctTHeadRow.appendChild(ctTHead_utc);
@@ -1170,9 +1199,13 @@ function buildControlSection() {
         rebuildXMLButton = document.createElement('button'),
         buildNewXMLButton = document.createElement('button');
 
-    $(rebuildSection).prop('id', 'rebuildSection').prop('class', 'small-12 medium-4 large-4 columns');
-    $(rebuildXMLButton).prop('id', 'rebuildXMLButton').prop('disabled', 'true').html('Update current XML');
-    $(buildNewXMLButton).prop('id', 'buildNewXMLButton').prop('disabled', 'true').html('Generate new XML');
+    rebuildSection.id = 'rebuildSection';
+    rebuildSection.className = 'small-12 medium-4 large-4 columns';
+    rebuildXMLButton.id = 'rebuildXMLButton';
+    buildNewXMLButton.id = 'buildNewXMLButton';
+    rebuildXMLButton.innerHTML = 'Update current XML';
+    buildNewXMLButton.innerHTML = 'Generate new XML';
+    rebuildXMLButton.disabled = buildNewXMLButton.disabled = true;
 
     rebuildXMLButton.onclick = function() {
         rebuildXML();
@@ -1194,13 +1227,18 @@ function buildControlSection() {
 
     scrollToClientTable.style.display = scrollToBanTable.style.display = scrollToKickTable.style.display = scrollToComplaintTable.style.display = scrollToUploadTable.style.display = 'none';
 
-    $(navbar).prop('id', 'navbar');
-    $(scrollBackToTopButton).html('Top');
-    $(scrollToClientTable).prop('id', 'scrollToClientTable').html('Clients');
-    $(scrollToBanTable).prop('id', 'scrollToBanTable').html('Bans');
-    $(scrollToKickTable).prop('id', 'scrollToKickTable').html('Kicks');
-    $(scrollToComplaintTable).prop('id', 'scrollToComplaintTable').html('Complaints');
-    $(scrollToUploadTable).prop('id', 'scrollToUploadTable').html('Uploads');
+    navbar.id = 'navbar';
+    scrollToClientTable.id = 'scrollToClientTable';
+    scrollToBanTable.id = 'scrollToBanTable';
+    scrollToKickTable.id = 'scrollToKickTable';
+    scrollToComplaintTable.id = 'scrollToComplaintTable';
+    scrollToUploadTable.id = 'scrollToUploadTable';
+    scrollBackToTopButton.innerHTML = 'Top';
+    scrollToClientTable.innerHTML = 'Clients';
+    scrollToBanTable.innerHTML = 'Bans';
+    scrollToKickTable.innerHTML = 'Kicks';
+    scrollToComplaintTable.innerHTML = 'Complaints';
+    scrollToUploadTable.innerHTML = 'Uploads';
 
     scrollBackToTopButton.onclick = function() {
         scrollTo(0, 0);
@@ -1235,7 +1273,7 @@ function buildControlSection() {
     document.getElementById('ts3-control').appendChild(controlSection);
 }
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function(event) {
     $(document).foundation();
     if (document.getElementById('ts3-control') !== null) {
         nanobar = new Nanobar({
