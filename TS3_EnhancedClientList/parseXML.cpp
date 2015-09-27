@@ -50,7 +50,7 @@ bool parseXML() {
 				}
 
 				try {
-					for (xml_node AttributesNode = oldXML.child("Data").child("Attributes"); AttributesNode; AttributesNode = AttributesNode.next_sibling("Attributes")) {
+					for (xml_node AttributesNode = oldXML.first_child().child("Attributes"); AttributesNode; AttributesNode = AttributesNode.next_sibling("Attributes")) {
 						if (AttributesNode.child("VirtualServer").first_child().value() != to_string(VIRTUALSERVER)) {
 							outputStream << "The last XML was created for another virtual server - skipping use of XML..." << endl;
 							return false;
@@ -61,21 +61,21 @@ bool parseXML() {
 						}
 					}
 
-					for (xml_node ClientNode = oldXML.child("Data").child("Client"); ClientNode; ClientNode = ClientNode.next_sibling("Client")) {
+					for (xml_node ClientNode = oldXML.first_child().child("Client"); ClientNode; ClientNode = ClientNode.next_sibling("Client")) {
 						if ((string)ClientNode.child("ID").first_child().value() != "-1") {
 							ID = stoul(ClientNode.child("ID").first_child().value());
 							ClientList.resize(ID + 1);
 							ClientList[ID].addID(ID);
 
-							for (xml_node Nicknames = ClientNode.child("Nicknames").child("N"); Nicknames; Nicknames = Nicknames.next_sibling("N")) {
+							for (xml_node Nicknames = ClientNode.child("Nicknames").first_child(); Nicknames; Nicknames = Nicknames.next_sibling()) {
 								ClientList[ID].addNicknameReverse(Nicknames.first_child().value());
 							}
 
-							for (xml_node Connections = ClientNode.child("Connections").child("C"); Connections; Connections = Connections.next_sibling("C")) {
+							for (xml_node Connections = ClientNode.child("Connections").first_child(); Connections; Connections = Connections.next_sibling()) {
 								ClientList[ID].addDateTimeReverse(Connections.first_child().value());
 							}
 
-							for (xml_node IPs = ClientNode.child("IPs").child("I"); IPs; IPs = IPs.next_sibling("I")) {
+							for (xml_node IPs = ClientNode.child("IPs").first_child(); IPs; IPs = IPs.next_sibling()) {
 								ClientList[ID].addIPReverse(IPs.first_child().value());
 							}
 
@@ -85,7 +85,7 @@ bool parseXML() {
 						}
 					}
 
-					for (xml_node BanNode = oldXML.child("Data").child("Ban"); BanNode; BanNode = BanNode.next_sibling("Ban")) {
+					for (xml_node BanNode = oldXML.first_child().child("Ban"); BanNode; BanNode = BanNode.next_sibling("Ban")) {
 						banDateTime = BanNode.child("BanDateTime").first_child().value();
 						bannedID = stoul(BanNode.child("BannedID").first_child().value());
 						bannedNickname = BanNode.child("BannedNickname").first_child().value();
@@ -102,7 +102,7 @@ bool parseXML() {
 						BanListID++;
 					}
 
-					for (xml_node KickNode = oldXML.child("Data").child("Kick"); KickNode; KickNode = KickNode.next_sibling("Kick")) {
+					for (xml_node KickNode = oldXML.first_child().child("Kick"); KickNode; KickNode = KickNode.next_sibling("Kick")) {
 						kickDateTime = KickNode.child("KickDateTime").first_child().value();
 						kickedID = stoul(KickNode.child("KickedID").first_child().value());
 						kickedNickname = KickNode.child("KickedNickname").first_child().value();
@@ -115,7 +115,7 @@ bool parseXML() {
 						KickListID++;
 					}
 
-					for (xml_node ComplaintNode = oldXML.child("Data").child("Complaint"); ComplaintNode; ComplaintNode = ComplaintNode.next_sibling("Complaint")) {
+					for (xml_node ComplaintNode = oldXML.first_child().child("Complaint"); ComplaintNode; ComplaintNode = ComplaintNode.next_sibling("Complaint")) {
 						complaintDateTime = ComplaintNode.child("ComplaintDateTime").first_child().value();
 						complaintAboutNickname = ComplaintNode.child("ComplaintAboutNickname").first_child().value();
 						complaintAboutID = stoul(ComplaintNode.child("ComplaintAboutID").first_child().value());
@@ -128,7 +128,7 @@ bool parseXML() {
 						ComplaintListID++;
 					}
 
-					for (xml_node UploadNode = oldXML.child("Data").child("Upload"); UploadNode; UploadNode = UploadNode.next_sibling("Upload")) {
+					for (xml_node UploadNode = oldXML.first_child().child("Upload"); UploadNode; UploadNode = UploadNode.next_sibling("Upload")) {
 						uploadDateTime = UploadNode.child("UploadDateTime").first_child().value();
 						channelID = stoul(UploadNode.child("ChannelID").first_child().value());
 						filename = UploadNode.child("Filename").first_child().value();

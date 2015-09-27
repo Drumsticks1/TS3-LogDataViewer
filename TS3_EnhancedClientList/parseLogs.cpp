@@ -39,20 +39,23 @@ extern TeeStream outputStream;
 
 // Parses the logs and stores the data in the ClientList.
 void parseLogs(string LOGDIRECTORY) {
-	string buffer_logline, LogFilePath, DateTime, Nickname, ID_string, IP,
+	string buffer_logline, LogFilePath, DateTime, Nickname, IP,
 		lastUIDBanRule, lastIPBanRule, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, bantime,
 		kickedByNickname, kickedByUID, kickReason,
-		complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID,
-		uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID,
+		complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID,
+		channelID, filename, uploadedByNickname, uploadedByID,
 		deletedByNickname, deletedByID;
 	unsigned int BanListID, KickListID, ComplaintListID, UploadListID, ID, virtualServerLength = to_string(VIRTUALSERVER).size(),
-		NicknameLength, IDLength, IPLength,
-		IDStartPos, IDEndPos, NicknameStartPos, IPStartPos,
-		bannedByNicknameStartPos, bannedByNicknameEndPos, bannedByUIDEndPos, banReasonEndPos, bannedIPStartPos, bannedIPEndPos, bannedUIDStartPos, bannedUIDEndPos, bannedByIDStartPos,
-		kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDEndPos,
-		complaintAboutNicknameEndPos, complaintAboutIDEndPos, complaintByNicknameStartPos, complaintByIDStartPos,
-		uploadedByIDStartPos, channelIDEndPos, filenameEndPos,
-		deletedByIDStartPos;
+		IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, IDLength, NicknameLength, IPLength,
+		bannedByNicknameStartPos, bannedByNicknameEndPos, bannedByUIDStartPos, bannedByUIDEndPos, banReasonStartPos, banReasonEndPos, bannedIPStartPos, bannedUIDStartPos, bannedByIDStartPos,
+		bantimeStartPos, bantimeEndPos, bannedByNicknameLength, bannedByUIDLength, banReasonLength, bantimeLength, bannedUIDLength, bannedIPLength, bannedByIDLength,
+		kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDStartPos, kickedByUIDEndPos, kickReasonLength, kickedByNicknameLength, kickedByUIDLength,
+		complaintAboutNicknameStartPos, complaintAboutNicknameEndPos, complaintAboutIDStartPos, complaintReasonStartPos, complaintReasonEndPos, complaintAboutIDEndPos,
+		complaintByNicknameStartPos, complaintByNicknameEndPos, complaintByIDStartPos, complaintByIDEndPos,
+		complaintAboutNicknameLength, complaintAboutIDLength, complaintReasonLength, complaintByNicknameLength, complaintByIDLength,
+		channelIDStartPos, channelIDEndPos, filenameStartPos, filenameEndPos, uploadedByNicknameStartPos, uploadedByNicknameEndPos, uploadedByIDStartPos, uploadedByIDEndPos,
+		channelIDLength, filenameLength, uploadedByNicknameLength, uploadedByIDLength, deletedByNicknameStartPos, deletedByNicknameEndPos, deletedByIDStartPos, deletedByIDEndPos,
+		deletedByNicknameLength, deletedByIDLength;
 	unsigned long logfileLength;
 	bool kickMatch, banMatch;
 
@@ -99,45 +102,22 @@ void parseLogs(string LOGDIRECTORY) {
 			for (unsigned long currentPos = 0; currentPos < logfileLength;) {
 				getline(logfile, buffer_logline);
 
-				ID_string.clear();
-				Nickname.clear();
-				DateTime.clear();
-				IP.clear();
-
 				// Connects
 				if (buffer_logline.find(LOGMATCHCONNECT) != string::npos) {
-					NicknameStartPos = 76 + virtualServerLength;
-
-					IPStartPos = 1 + buffer_logline.rfind(" ");
+					IPStartPos = buffer_logline.rfind(" ") + 1;
+					NicknameStartPos = virtualServerLength + 76;
+					IDStartPos = buffer_logline.rfind("'(id:") + 5;
+					IDLength = IPStartPos - IDStartPos - 7;
+					NicknameLength = IDStartPos - NicknameStartPos - 5;
 					IPLength = buffer_logline.size() - IPStartPos - 6; // - 6 for ignoring the port.
 
-					IDStartPos = 5 + buffer_logline.rfind("'(id:");
-					IDLength = IPStartPos - IDStartPos - 7;
+					DateTime = buffer_logline.substr(0, 19);
+					Nickname = buffer_logline.substr(NicknameStartPos, NicknameLength);
+					ID = stoul(buffer_logline.substr(IDStartPos, IDLength));
+					IP = buffer_logline.substr(IPStartPos, IPLength);
 
-					NicknameLength = IDStartPos - NicknameStartPos - 5;
-
-					for (unsigned int j = 0; j < 19; j++) {
-						DateTime += buffer_logline[j];
-					}
-
-					for (unsigned int j = 0; j < NicknameLength; j++) {
-						Nickname += buffer_logline[NicknameStartPos + j];
-					}
-
-					for (unsigned int j = 0; j < IDLength; j++) {
-						ID_string += buffer_logline[IDStartPos + j];
-					}
-
-					for (unsigned int j = 0; j < IPLength; j++) {
-						IP += buffer_logline[IPStartPos + j];
-					}
-
-					ID = stoul(ID_string);
 					if (ClientList.size() < ID + 1) ClientList.resize(ID + 1);
-
-					if (ClientList[ID].getID() != ID) {
-						ClientList[ID].addID(ID);
-					}
+					if (ClientList[ID].getID() != ID) ClientList[ID].addID(ID);
 
 					ClientList[ID].addNickname(Nickname);
 
@@ -159,8 +139,8 @@ void parseLogs(string LOGDIRECTORY) {
 				else if (buffer_logline.find(LOGMATCHDISCONNECT) != string::npos) {
 					banMatch = kickMatch = false;
 
-					NicknameStartPos = 79 + virtualServerLength;
-					IDStartPos = 5 + buffer_logline.rfind("'(id:");
+					NicknameStartPos = virtualServerLength + 79;
+					IDStartPos = buffer_logline.rfind("'(id:") + 5;
 
 					if (buffer_logline.rfind(") reason 'reasonmsg") == string::npos) {
 						IDEndPos = buffer_logline.rfind(") reason 'invokerid=");
@@ -174,19 +154,10 @@ void parseLogs(string LOGDIRECTORY) {
 					IDLength = IDEndPos - IDStartPos;
 					NicknameLength = IDStartPos - NicknameStartPos - 5;
 
-					for (unsigned int j = 0; j < 19; j++) {
-						DateTime += buffer_logline[j];
-					}
+					DateTime = buffer_logline.substr(0, 19);
+					Nickname = buffer_logline.substr(NicknameStartPos, NicknameLength);
+					ID = stoul(buffer_logline.substr(IDStartPos, IDLength));
 
-					for (unsigned int j = 0; j < NicknameLength; j++) {
-						Nickname += buffer_logline[NicknameStartPos + j];
-					}
-
-					for (unsigned int j = 0; j < IDLength; j++) {
-						ID_string += buffer_logline[IDStartPos + j];
-					}
-
-					ID = stoul(ID_string);
 					if (ClientList.size() < ID + 1) {
 						ClientList.resize(ID + 1);
 						ClientList[ID].addID(ID);
@@ -202,14 +173,6 @@ void parseLogs(string LOGDIRECTORY) {
 
 					// Bans
 					if (banMatch) {
-						bannedUID.clear();
-						bannedIP.clear();
-						bannedByNickname.clear();
-						bannedByID.clear();
-						bannedByUID.clear();
-						banReason.clear();
-						bantime.clear();
-
 						bannedByNicknameStartPos = buffer_logline.find(" invokername=", IDEndPos) + 13;
 
 						if (buffer_logline.find("invokeruid=") != string::npos) {
@@ -217,48 +180,40 @@ void parseLogs(string LOGDIRECTORY) {
 						}
 						else bannedByNicknameEndPos = bannedByUIDEndPos = buffer_logline.find(" reasonmsg");
 
+						bannedByUIDStartPos = bannedByNicknameEndPos + 12;
 						bannedByUIDEndPos = buffer_logline.find(" reasonmsg", bannedByNicknameEndPos);
 
+						banReasonStartPos = bannedByUIDEndPos + 11;
 						if (buffer_logline.find("reasonmsg=") != string::npos) {
 							banReasonEndPos = buffer_logline.find(" bantime=", bannedByUIDEndPos);
 						}
 						else banReasonEndPos = bannedByUIDEndPos + 10;
 
-						for (unsigned j = bannedByNicknameStartPos; j < bannedByNicknameEndPos; j++) {
-							bannedByNickname += buffer_logline[j];
-						}
+						bantimeStartPos = banReasonEndPos + 9;
+						bantimeEndPos = buffer_logline.size() - 1;
 
-						for (unsigned j = bannedByNicknameEndPos + 12; j < bannedByUIDEndPos; j++) {
-							bannedByUID += buffer_logline[j];
-						}
+						bannedByNicknameLength = bannedByNicknameEndPos - bannedByNicknameStartPos;
+						bannedByUIDLength = bannedByUIDEndPos - bannedByUIDStartPos;
+						banReasonLength = banReasonEndPos - banReasonStartPos;
+						bantimeLength = bantimeEndPos - bantimeStartPos;
 
-						for (unsigned j = bannedByUIDEndPos + 11; j < banReasonEndPos; j++) {
-							banReason += buffer_logline[j];
-						}
-
-						for (unsigned j = banReasonEndPos + 9; j < buffer_logline.size() - 1; j++) {
-							bantime += buffer_logline[j];
-						}
+						bannedByNickname = buffer_logline.substr(bannedByNicknameStartPos, bannedByNicknameLength);
+						bannedByUID = buffer_logline.substr(bannedByUIDStartPos, bannedByUIDLength);
+						banReason = buffer_logline.substr(banReasonStartPos, banReasonLength);
+						bantime = buffer_logline.substr(bantimeStartPos, bantimeLength);
 
 						if (lastUIDBanRule.size() != 0 && lastIPBanRule.size() != 0) {
 							if (isMatchingBanRules(bannedByNickname, banReason, bantime, lastUIDBanRule, lastIPBanRule)) {
-								bannedUIDStartPos = 9 + lastUIDBanRule.find("' cluid='");
-								bannedUIDEndPos = lastUIDBanRule.rfind("' bantime=");
-								bannedIPStartPos = 6 + lastIPBanRule.find("' ip='");
-								bannedIPEndPos = lastIPBanRule.rfind("' bantime=");
-								bannedByIDStartPos = 5 + lastIPBanRule.rfind("'(id:");
+								bannedUIDStartPos = lastUIDBanRule.find("' cluid='") + 9;
+								bannedUIDLength = lastUIDBanRule.rfind("' bantime=") - bannedUIDStartPos;
+								bannedIPStartPos = lastIPBanRule.find("' ip='") + 6;
+								bannedIPLength = lastIPBanRule.rfind("' bantime=") - bannedIPStartPos;
+								bannedByIDStartPos = lastIPBanRule.rfind("'(id:") + 5;
+								bannedByIDLength = lastIPBanRule.size() - bannedByIDStartPos - 1;
 
-								for (unsigned j = bannedUIDStartPos; j < bannedUIDEndPos; j++) {
-									bannedUID += lastUIDBanRule[j];
-								}
-
-								for (unsigned j = bannedIPStartPos; j < bannedIPEndPos; j++) {
-									bannedIP += lastIPBanRule[j];
-								}
-
-								for (unsigned int j = bannedByIDStartPos; j < lastIPBanRule.size() - 1; j++) {
-									bannedByID += lastIPBanRule[j];
-								}
+								bannedUID = lastUIDBanRule.substr(bannedUIDStartPos, bannedUIDLength);
+								bannedIP = lastIPBanRule.substr(bannedIPStartPos, bannedIPLength);
+								bannedByID = lastIPBanRule.substr(bannedByIDStartPos, bannedByIDLength);
 							}
 							else {
 								bannedUID = bannedIP = "Unknown";
@@ -275,32 +230,25 @@ void parseLogs(string LOGDIRECTORY) {
 
 					// Kicks
 					else if (kickMatch) {
-						kickedByNickname.clear();
-						kickedByUID.clear();
-						kickReason.clear();
-
 						if (buffer_logline.rfind(" reasonmsg=") != string::npos) {
-							kickReasonStartPos = 11 + buffer_logline.rfind(" reasonmsg=");
-							for (unsigned int j = kickReasonStartPos; j < buffer_logline.size() - 1; j++) {
-								kickReason += buffer_logline[j];
-							}
+							kickReasonStartPos = buffer_logline.rfind(" reasonmsg=") + 11;
+							kickReasonLength = buffer_logline.size() - kickReasonStartPos - 1;
+							kickReason = buffer_logline.substr(kickReasonStartPos, kickReasonLength);
 						}
 						else kickReason = "";
 
-						kickedByNicknameStartPos = 13 + buffer_logline.rfind(" invokername=");
+						kickedByNicknameStartPos = buffer_logline.rfind(" invokername=") + 13;
 						kickedByNicknameEndPos = buffer_logline.rfind(" invokeruid=");
+						kickedByNicknameLength = kickedByNicknameEndPos - kickedByNicknameStartPos;
+						kickedByUIDStartPos = kickedByNicknameEndPos + 12;
 						if (buffer_logline.find("invokeruid=serveradmin") == string::npos) {
-							kickedByUIDEndPos = buffer_logline.find("=", kickedByNicknameEndPos + 12) + 1;
+							kickedByUIDEndPos = buffer_logline.find("=", kickedByUIDStartPos) + 1;
 						}
-						else kickedByUIDEndPos = kickedByNicknameEndPos + 23;
+						else kickedByUIDEndPos = kickedByUIDStartPos + 35;
+						kickedByUIDLength = kickedByUIDEndPos - kickedByUIDStartPos;
 
-						for (unsigned j = kickedByNicknameStartPos; j < kickedByNicknameEndPos; j++) {
-							kickedByNickname += buffer_logline[j];
-						}
-
-						for (unsigned j = kickedByNicknameEndPos + 12; j < kickedByUIDEndPos; j++) {
-							kickedByUID += buffer_logline[j];
-						}
+						kickedByNickname = buffer_logline.substr(kickedByNicknameStartPos, kickedByNicknameLength);
+						kickedByUID = buffer_logline.substr(kickedByUIDStartPos, kickedByUIDLength);
 
 						if (!isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)) {
 							KickList.resize(KickListID + 1);
@@ -323,135 +271,100 @@ void parseLogs(string LOGDIRECTORY) {
 
 				// Complaints
 				else if (buffer_logline.find(LOGMATCHCOMPLAINT) != string::npos) {
-					complaintDateTime.clear();
-					complaintAboutNickname.clear();
-					complaintAboutID.clear();
-					complaintReason.clear();
-					complaintByNickname.clear();
-					complaintByID.clear();
-
+					complaintAboutNicknameStartPos = virtualServerLength + 83;
 					complaintAboutNicknameEndPos = buffer_logline.find("'(id:");
+					complaintAboutIDStartPos = complaintAboutNicknameEndPos + 5;
 					complaintAboutIDEndPos = buffer_logline.find(") reason '");
-					complaintByNicknameStartPos = 13 + buffer_logline.rfind("' by client '");
-					complaintByIDStartPos = 5 + buffer_logline.rfind("'(id:");
+					complaintReasonStartPos = complaintAboutIDEndPos + 10;
+					complaintReasonEndPos = buffer_logline.rfind("' by client '");
+					complaintByNicknameStartPos = complaintReasonEndPos + 13;
+					complaintByNicknameEndPos = buffer_logline.rfind("'(id:");
+					complaintByIDStartPos = complaintByNicknameEndPos + 5;
+					complaintByIDEndPos = buffer_logline.size() - 1;
 
-					for (unsigned int j = 0; j < 19; j++) {
-						complaintDateTime += buffer_logline[j];
-					}
+					complaintAboutNicknameLength = complaintAboutNicknameEndPos - complaintAboutNicknameStartPos;
+					complaintAboutIDLength = complaintAboutIDEndPos - complaintAboutIDStartPos;
+					complaintReasonLength = complaintReasonEndPos - complaintReasonStartPos;
+					complaintByNicknameLength = complaintByNicknameEndPos - complaintByNicknameStartPos;
+					complaintByIDLength = complaintByIDEndPos - complaintByIDStartPos;
 
-					for (unsigned int j = 83 + virtualServerLength; j < complaintAboutNicknameEndPos; j++) {
-						complaintAboutNickname += buffer_logline[j];
-					}
+					DateTime = buffer_logline.substr(0, 19);
+					complaintAboutNickname = buffer_logline.substr(complaintAboutNicknameStartPos, complaintAboutNicknameLength);
+					complaintAboutID = buffer_logline.substr(complaintAboutIDStartPos, complaintAboutIDLength);
+					complaintReason = buffer_logline.substr(complaintReasonStartPos, complaintReasonLength);
+					complaintByNickname = buffer_logline.substr(complaintByNicknameStartPos, complaintByNicknameLength);
+					complaintByID = buffer_logline.substr(complaintByIDStartPos, complaintByIDLength);
 
-					for (unsigned int j = complaintAboutNicknameEndPos + 5; j < complaintAboutIDEndPos; j++) {
-						complaintAboutID += buffer_logline[j];
-					}
-
-					for (unsigned int j = complaintAboutIDEndPos + 10; j < complaintByNicknameStartPos - 13; j++) {
-						complaintReason += buffer_logline[j];
-					}
-
-					for (unsigned int j = complaintByNicknameStartPos; j < complaintByIDStartPos - 5; j++) {
-						complaintByNickname += buffer_logline[j];
-					}
-
-					for (unsigned int j = complaintByIDStartPos; j < buffer_logline.size() - 1; j++) {
-						complaintByID += buffer_logline[j];
-					}
-
-					if (!isDuplicateComplaint(complaintDateTime, complaintAboutNickname, stoul(complaintAboutID), complaintReason, complaintByNickname, stoul(complaintByID))) {
+					if (!isDuplicateComplaint(DateTime, complaintAboutNickname, stoul(complaintAboutID), complaintReason, complaintByNickname, stoul(complaintByID))) {
 						ComplaintList.resize(ComplaintListID + 1);
-						ComplaintList[ComplaintListID].addComplaint(complaintDateTime, complaintAboutNickname, stoul(complaintAboutID), complaintReason, complaintByNickname, stoul(complaintByID));
+						ComplaintList[ComplaintListID].addComplaint(DateTime, complaintAboutNickname, stoul(complaintAboutID), complaintReason, complaintByNickname, stoul(complaintByID));
 						ComplaintListID++;
 					}
 				}
 
 				// Uploads
 				else if (buffer_logline.find(LOGMATCHUPLOAD) != string::npos) {
-					uploadDateTime.clear();
-					channelID.clear();
-					filename.clear();
-					uploadedByNickname.clear();
-					uploadedByID.clear();
-
+					channelIDStartPos = virtualServerLength + 74;
 					channelIDEndPos = buffer_logline.find(")");
+					filenameStartPos = channelIDEndPos + 4;
 					filenameEndPos = buffer_logline.rfind("' by client '");
-					uploadedByIDStartPos = 5 + buffer_logline.rfind("'(id:");
+					uploadedByNicknameStartPos = filenameEndPos + 13;
+					uploadedByNicknameEndPos = buffer_logline.rfind("'(id:");
+					uploadedByIDStartPos = uploadedByNicknameEndPos + 5;
+					uploadedByIDEndPos = buffer_logline.size() - 1;
 
-					for (unsigned int j = 0; j < 19; j++) {
-						uploadDateTime += buffer_logline[j];
-					}
+					channelIDLength = channelIDEndPos - channelIDStartPos;
+					filenameLength = filenameEndPos - filenameStartPos;
+					uploadedByNicknameLength = uploadedByNicknameEndPos - uploadedByNicknameStartPos;
+					uploadedByIDLength = uploadedByIDEndPos - uploadedByIDStartPos;
 
-					for (unsigned int j = 74 + virtualServerLength; j < channelIDEndPos; j++) {
-						channelID += buffer_logline[j];
-					}
+					DateTime = buffer_logline.substr(0, 19);
+					channelID = buffer_logline.substr(channelIDStartPos, channelIDLength);
+					filename = buffer_logline.substr(filenameStartPos, filenameLength);
+					uploadedByNickname = buffer_logline.substr(uploadedByNicknameStartPos, uploadedByNicknameLength);
+					uploadedByID = buffer_logline.substr(uploadedByIDStartPos, uploadedByIDLength);
 
-					for (unsigned int j = channelIDEndPos + 4; j < filenameEndPos; j++) {
-						filename += buffer_logline[j];
-					}
-
-					for (unsigned int j = filenameEndPos + 13; j < uploadedByIDStartPos - 5; j++) {
-						uploadedByNickname += buffer_logline[j];
-					}
-
-					for (unsigned int j = uploadedByIDStartPos; j < buffer_logline.size() - 1; j++) {
-						uploadedByID += buffer_logline[j];
-					}
-
-					if (!isDuplicateUpload(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID))) {
+					if (!isDuplicateUpload(DateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID))) {
 						UploadList.resize(UploadListID + 1);
-						UploadList[UploadListID].addUpload(uploadDateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID));
+						UploadList[UploadListID].addUpload(DateTime, stoul(channelID), filename, uploadedByNickname, stoul(uploadedByID));
 						UploadListID++;
 					}
-				}
-
-				// Upload Deletions
-				else if (buffer_logline.find(LOGMATCHUPLOADDELETION) != string::npos) {
-					channelID.clear();
-					filename.clear();
-					deletedByNickname.clear();
-					deletedByID.clear();
-
-					channelIDEndPos = buffer_logline.find(")");
-					filenameEndPos = buffer_logline.rfind("' by client '");
-					deletedByIDStartPos = 5 + buffer_logline.rfind("'(id:");
-
-					for (unsigned int j = 77 + virtualServerLength; j < channelIDEndPos; j++) {
-						channelID += buffer_logline[j];
-					}
-
-					for (unsigned int j = channelIDEndPos + 4; j < filenameEndPos; j++) {
-						filename += buffer_logline[j];
-					}
-
-					for (unsigned int j = filenameEndPos + 13; j < deletedByIDStartPos - 5; j++) {
-						deletedByNickname += buffer_logline[j];
-					}
-
-					for (unsigned int j = deletedByIDStartPos; j < buffer_logline.size() - 1; j++) {
-						deletedByID += buffer_logline[j];
-					}
-
-					addDeletedBy(stoul(channelID), filename, deletedByNickname, stoul(deletedByID));
 				}
 
 				// Client Deletions
 				else if (buffer_logline.find(LOGMATCHDELETEUSER1) != string::npos) {
 					if (buffer_logline.find(LOGMATCHDELETEUSER2) != string::npos) {
 						IDEndPos = buffer_logline.rfind(") got deleted by client '");
-						IDStartPos = 5 + buffer_logline.rfind("'(id:", IDEndPos);
+						IDStartPos = buffer_logline.rfind("'(id:", IDEndPos) + 5;
 						IDLength = IDEndPos - IDStartPos;
-
-						// ID
-						for (unsigned int j = 0; j < IDLength; j++) {
-							ID_string += buffer_logline[IDStartPos + j];
-						}
-
-						ID = stoul(ID_string);
+						ID = stoul(buffer_logline.substr(IDStartPos, IDLength));
 						ClientList[ID].deleteClient();
 					}
 				}
 
+				// Upload Deletions
+				else if (buffer_logline.find(LOGMATCHUPLOADDELETION) != string::npos) {
+					channelIDStartPos = virtualServerLength + 77;
+					channelIDEndPos = buffer_logline.find(")");
+					filenameStartPos = channelIDEndPos + 4;
+					filenameEndPos = buffer_logline.rfind("' by client '");
+					deletedByNicknameStartPos = filenameEndPos + 13;
+					deletedByNicknameEndPos = buffer_logline.rfind("'(id:");
+					deletedByIDStartPos = deletedByNicknameEndPos + 5;
+					deletedByIDEndPos = buffer_logline.size() - 1;
+
+					channelIDLength = channelIDEndPos - channelIDStartPos;
+					filenameLength = filenameEndPos - filenameStartPos;
+					deletedByNicknameLength = deletedByNicknameEndPos - deletedByNicknameStartPos;
+					deletedByIDLength = deletedByIDEndPos - deletedByIDStartPos;
+
+					channelID = buffer_logline.substr(channelIDStartPos, channelIDLength);
+					filename = buffer_logline.substr(filenameStartPos, filenameLength);
+					deletedByNickname = buffer_logline.substr(deletedByNicknameStartPos, deletedByNicknameLength);
+					deletedByID = buffer_logline.substr(deletedByIDStartPos, deletedByIDLength);
+
+					addDeletedBy(stoul(channelID), filename, deletedByNickname, stoul(deletedByID));
+				}
 				currentPos += buffer_logline.size() + 1;
 				logfile.seekg(currentPos);
 			}

@@ -307,8 +307,8 @@ function buildClientTable() {
             connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the last connect';
             localStorage.setItem('connectionsSortType', '1');
         }
-        $(clientTable).trigger('updateCache');
-        $.tablesorter.sortOn((clientTable).config, [JSON.parse(localStorage.getItem('clientTableSortOrder'))]);
+        $.tablesorter.updateCache(clientTable.config);
+        $.tablesorter.sortOn(clientTable.config, clientTable.config.sortList);
     };
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
@@ -443,7 +443,7 @@ function buildClientTable() {
             clientBodyCell_ConnectionCount.innerHTML = Connection_Count;
             clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
 
-            if (Connected == 1) {
+            if (Connected >= 1) {
                 clientBodyCell_Connected.innerHTML = 'true';
                 ConnectedClientsCount++;
             } else {
