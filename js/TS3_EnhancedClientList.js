@@ -361,9 +361,18 @@ function buildClientTable() {
             var Nicknames = Client[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N'),
                 Connections = Client[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C'),
                 IPs = Client[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I'),
-                Connection_Count = Client[ID].getElementsByTagName('Connection_Count')[0].firstChild.nodeValue,
-                Connected = Client[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue,
-                Deleted = Client[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue;
+                Connection_Count = Connections.length,
+                Connected, Deleted;
+            if (Client[ID].getElementsByTagName('Connected')[0] !== undefined) {
+                Connected = Number(Client[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue);
+            } else {
+                Connected = 0;
+            }
+            if (Client[ID].getElementsByTagName('Deleted')[0] !== undefined) {
+                Deleted = String(Boolean(Number(Client[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue)));
+            } else {
+                Deleted = 'false';
+            }
 
             var clientBodyRow = document.createElement('tr'),
                 clientBodyCell_ID = document.createElement('td'),
@@ -443,7 +452,7 @@ function buildClientTable() {
             clientBodyCell_ConnectionCount.innerHTML = Connection_Count;
             clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
 
-            if (Connected >= 1) {
+            if (Connected == 1) {
                 clientBodyCell_Connected.innerHTML = 'true';
                 ConnectedClientsCount++;
             } else {
@@ -451,7 +460,7 @@ function buildClientTable() {
             }
             clientBodyRow.appendChild(clientBodyCell_Connected);
 
-            clientBodyCell_Deleted.innerHTML = String(Boolean(Number(Deleted)));
+            clientBodyCell_Deleted.innerHTML = Deleted;
             clientBodyRow.appendChild(clientBodyCell_Deleted);
 
             clientBody.appendChild(clientBodyRow);
@@ -540,20 +549,20 @@ function buildBanTable() {
 
     var banBody = document.createElement('tbody');
     for (var i = 0; i < Ban.length; i++) {
-        var BanDateTime = Ban[i].getElementsByTagName('BanDateTime')[0].firstChild.nodeValue,
-            BannedID = Ban[i].getElementsByTagName('BannedID')[0].firstChild.nodeValue,
-            BannedNickname = Ban[i].getElementsByTagName('BannedNickname')[0].firstChild.nodeValue,
-            BannedIP = Ban[i].getElementsByTagName('BannedIP')[0].firstChild.nodeValue,
+        var BanDateTime = Ban[i].getElementsByTagName('DateTime')[0].firstChild.nodeValue,
+            BannedID = Ban[i].getElementsByTagName('ID')[0].firstChild.nodeValue,
+            BannedNickname = Ban[i].getElementsByTagName('Nickname')[0].firstChild.nodeValue,
+            BannedIP = Ban[i].getElementsByTagName('IP')[0].firstChild.nodeValue,
             BannedByID;
         if (BannedIP != 'Unknown') {
-            BannedByID = Ban[i].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
+            BannedByID = Ban[i].getElementsByTagName('ByID')[0].firstChild.nodeValue;
         } else {
             BannedByID = 'Unknown';
         }
-        var BannedByNickname = Ban[i].getElementsByTagName('BannedByNickname')[0].firstChild.nodeValue,
+        var BannedByNickname = Ban[i].getElementsByTagName('ByNickname')[0].firstChild.nodeValue,
             BanReason;
-        if (Ban[i].getElementsByTagName('BanReason')[0].firstChild !== null) {
-            BanReason = Ban[i].getElementsByTagName('BanReason')[0].firstChild.nodeValue;
+        if (Ban[i].getElementsByTagName('Reason')[0].firstChild !== null) {
+            BanReason = Ban[i].getElementsByTagName('Reason')[0].firstChild.nodeValue;
         } else {
             BanReason = 'No Reason given';
         }
@@ -687,14 +696,14 @@ function buildKickTable() {
 
     var kickBody = document.createElement('tbody');
     for (var i = 0; i < Kick.length; i++) {
-        var KickDateTime = Kick[i].getElementsByTagName('KickDateTime')[0].firstChild.nodeValue,
-            KickedID = Kick[i].getElementsByTagName('KickedID')[0].firstChild.nodeValue,
-            KickedNickname = Kick[i].getElementsByTagName('KickedNickname')[0].firstChild.nodeValue,
-            KickedByNickname = Kick[i].getElementsByTagName('KickedByNickname')[0].firstChild.nodeValue,
-            KickedByUID = Kick[i].getElementsByTagName('KickedByUID')[0].firstChild.nodeValue,
+        var KickDateTime = Kick[i].getElementsByTagName('DateTime')[0].firstChild.nodeValue,
+            KickedID = Kick[i].getElementsByTagName('ID')[0].firstChild.nodeValue,
+            KickedNickname = Kick[i].getElementsByTagName('Nickname')[0].firstChild.nodeValue,
+            KickedByNickname = Kick[i].getElementsByTagName('ByNickname')[0].firstChild.nodeValue,
+            KickedByUID = Kick[i].getElementsByTagName('ByUID')[0].firstChild.nodeValue,
             KickReason;
-        if (Kick[i].getElementsByTagName('KickReason')[0].firstChild !== null) {
-            KickReason = Kick[i].getElementsByTagName('KickReason')[0].firstChild.nodeValue;
+        if (Kick[i].getElementsByTagName('Reason')[0].firstChild !== null) {
+            KickReason = Kick[i].getElementsByTagName('Reason')[0].firstChild.nodeValue;
         } else {
             KickReason = 'No Reason given';
         }
@@ -808,12 +817,12 @@ function buildComplaintTable() {
 
     var complaintBody = document.createElement('tbody');
     for (var i = 0; i < Complaint.length; i++) {
-        var ComplaintDateTime = Complaint[i].getElementsByTagName('ComplaintDateTime')[0].firstChild.nodeValue,
-            ComplaintAboutID = Complaint[i].getElementsByTagName('ComplaintAboutID')[0].firstChild.nodeValue,
-            ComplaintAboutNickname = Complaint[i].getElementsByTagName('ComplaintAboutNickname')[0].firstChild.nodeValue,
-            ComplaintReason = Complaint[i].getElementsByTagName('ComplaintReason')[0].firstChild.nodeValue,
-            ComplaintByID = Complaint[i].getElementsByTagName('ComplaintByID')[0].firstChild.nodeValue,
-            ComplaintByNickname = Complaint[i].getElementsByTagName('ComplaintByNickname')[0].firstChild.nodeValue;
+        var ComplaintDateTime = Complaint[i].getElementsByTagName('DateTime')[0].firstChild.nodeValue,
+            ComplaintAboutID = Complaint[i].getElementsByTagName('AboutID')[0].firstChild.nodeValue,
+            ComplaintAboutNickname = Complaint[i].getElementsByTagName('AboutNickname')[0].firstChild.nodeValue,
+            ComplaintReason = Complaint[i].getElementsByTagName('Reason')[0].firstChild.nodeValue,
+            ComplaintByID = Complaint[i].getElementsByTagName('ByID')[0].firstChild.nodeValue,
+            ComplaintByNickname = Complaint[i].getElementsByTagName('ByNickname')[0].firstChild.nodeValue;
 
         var complaintBodyRow = document.createElement('tr'),
             complaintBodyCell_ComplaintDateTime = document.createElement('td'),
@@ -925,13 +934,13 @@ function buildUploadTable() {
 
     var uploadBody = document.createElement('tbody');
     for (var i = 0; i < Upload.length; i++) {
-        var UploadDateTime = Upload[i].getElementsByTagName('UploadDateTime')[0].firstChild.nodeValue,
+        var UploadDateTime = Upload[i].getElementsByTagName('DateTime')[0].firstChild.nodeValue,
             ChannelID = Upload[i].getElementsByTagName('ChannelID')[0].firstChild.nodeValue,
             Filename = Upload[i].getElementsByTagName('Filename')[0].firstChild.nodeValue,
-            UploadedByID = Upload[i].getElementsByTagName('UploadedByID')[0].firstChild.nodeValue,
-            UploadedByNickname = Upload[i].getElementsByTagName('UploadedByNickname')[0].firstChild.nodeValue,
-            DeletedByID = Upload[i].getElementsByTagName('DeletedByID')[0].firstChild.nodeValue,
-            DeletedByNickname = Upload[i].getElementsByTagName('DeletedByNickname')[0].firstChild.nodeValue;
+            UploadedByID = Upload[i].getElementsByTagName('UplByID')[0].firstChild.nodeValue,
+            UploadedByNickname = Upload[i].getElementsByTagName('UplByNickname')[0].firstChild.nodeValue,
+            DeletedByID = Upload[i].getElementsByTagName('DelByID')[0].firstChild.nodeValue,
+            DeletedByNickname = Upload[i].getElementsByTagName('DelByNickname')[0].firstChild.nodeValue;
 
         var uploadBodyRow = document.createElement('tr'),
             uploadBodyCell_UploadDateTime = document.createElement('td'),

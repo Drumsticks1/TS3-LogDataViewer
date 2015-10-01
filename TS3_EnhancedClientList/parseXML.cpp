@@ -86,15 +86,15 @@ bool parseXML() {
 					}
 
 					for (xml_node BanNode = oldXML.first_child().child("Ban"); BanNode; BanNode = BanNode.next_sibling("Ban")) {
-						banDateTime = BanNode.child("BanDateTime").first_child().value();
-						bannedID = stoul(BanNode.child("BannedID").first_child().value());
-						bannedNickname = BanNode.child("BannedNickname").first_child().value();
-						bannedUID = BanNode.child("BannedUID").first_child().value();
-						bannedIP = BanNode.child("BannedIP").first_child().value();
-						bannedByNickname = BanNode.child("BannedByNickname").first_child().value();
-						bannedByID = stoul(BanNode.child("BannedByID").first_child().value());
-						bannedByUID = BanNode.child("BannedByUID").first_child().value();
-						banReason = BanNode.child("BanReason").first_child().value();
+						banDateTime = BanNode.child("DateTime").first_child().value();
+						bannedID = stoul(BanNode.child("ID").first_child().value());
+						bannedNickname = BanNode.child("Nickname").first_child().value();
+						bannedUID = BanNode.child("UID").first_child().value();
+						bannedIP = BanNode.child("IP").first_child().value();
+						bannedByNickname = BanNode.child("ByNickname").first_child().value();
+						bannedByID = stoul(BanNode.child("ByID").first_child().value());
+						bannedByUID = BanNode.child("ByUID").first_child().value();
+						banReason = BanNode.child("Reason").first_child().value();
 						bantime = stoul(BanNode.child("Bantime").first_child().value());
 
 						BanList.resize(BanListID + 1);
@@ -103,12 +103,12 @@ bool parseXML() {
 					}
 
 					for (xml_node KickNode = oldXML.first_child().child("Kick"); KickNode; KickNode = KickNode.next_sibling("Kick")) {
-						kickDateTime = KickNode.child("KickDateTime").first_child().value();
-						kickedID = stoul(KickNode.child("KickedID").first_child().value());
-						kickedNickname = KickNode.child("KickedNickname").first_child().value();
-						kickedByNickname = KickNode.child("KickedByNickname").first_child().value();
-						kickedByUID = KickNode.child("KickedByUID").first_child().value();
-						kickReason = KickNode.child("KickReason").first_child().value();
+						kickDateTime = KickNode.child("DateTime").first_child().value();
+						kickedID = stoul(KickNode.child("ID").first_child().value());
+						kickedNickname = KickNode.child("Nickname").first_child().value();
+						kickedByNickname = KickNode.child("ByNickname").first_child().value();
+						kickedByUID = KickNode.child("ByUID").first_child().value();
+						kickReason = KickNode.child("Reason").first_child().value();
 
 						KickList.resize(KickListID + 1);
 						KickList[KickListID].addKick(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason);
@@ -116,12 +116,12 @@ bool parseXML() {
 					}
 
 					for (xml_node ComplaintNode = oldXML.first_child().child("Complaint"); ComplaintNode; ComplaintNode = ComplaintNode.next_sibling("Complaint")) {
-						complaintDateTime = ComplaintNode.child("ComplaintDateTime").first_child().value();
-						complaintAboutNickname = ComplaintNode.child("ComplaintAboutNickname").first_child().value();
-						complaintAboutID = stoul(ComplaintNode.child("ComplaintAboutID").first_child().value());
-						complaintReason = ComplaintNode.child("ComplaintReason").first_child().value();
-						complaintByNickname = ComplaintNode.child("ComplaintByNickname").first_child().value();
-						complaintByID = stoul(ComplaintNode.child("ComplaintByID").first_child().value());
+						complaintDateTime = ComplaintNode.child("DateTime").first_child().value();
+						complaintAboutNickname = ComplaintNode.child("AboutNickname").first_child().value();
+						complaintAboutID = stoul(ComplaintNode.child("AboutID").first_child().value());
+						complaintReason = ComplaintNode.child("Reason").first_child().value();
+						complaintByNickname = ComplaintNode.child("ByNickname").first_child().value();
+						complaintByID = stoul(ComplaintNode.child("ByID").first_child().value());
 
 						ComplaintList.resize(ComplaintListID + 1);
 						ComplaintList[ComplaintListID].addComplaint(complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID);
@@ -129,13 +129,13 @@ bool parseXML() {
 					}
 
 					for (xml_node UploadNode = oldXML.first_child().child("Upload"); UploadNode; UploadNode = UploadNode.next_sibling("Upload")) {
-						uploadDateTime = UploadNode.child("UploadDateTime").first_child().value();
+						uploadDateTime = UploadNode.child("DateTime").first_child().value();
 						channelID = stoul(UploadNode.child("ChannelID").first_child().value());
 						filename = UploadNode.child("Filename").first_child().value();
-						uploadedByNickname = UploadNode.child("UploadedByNickname").first_child().value();
-						uploadedByID = stoul(UploadNode.child("UploadedByID").first_child().value());
-						deletedByNickname = UploadNode.child("DeletedByNickname").first_child().value();
-						deletedByID = stoul(UploadNode.child("DeletedByID").first_child().value());
+						uploadedByNickname = UploadNode.child("UplByNickname").first_child().value();
+						uploadedByID = stoul(UploadNode.child("UplByID").first_child().value());
+						deletedByNickname = UploadNode.child("DelByNickname").first_child().value();
+						deletedByID = stoul(UploadNode.child("DelByID").first_child().value());
 
 						UploadList.resize(UploadListID + 1);
 						UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID, deletedByNickname, deletedByID);

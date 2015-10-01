@@ -186,10 +186,13 @@ void parseLogs(string LOGDIRECTORY) {
 						banReasonStartPos = bannedByUIDEndPos + 11;
 						if (buffer_logline.find("reasonmsg=") != string::npos) {
 							banReasonEndPos = buffer_logline.find(" bantime=", bannedByUIDEndPos);
+							bantimeStartPos = banReasonEndPos + 9;
 						}
-						else banReasonEndPos = bannedByUIDEndPos + 10;
+						else {
+							banReasonEndPos = banReasonStartPos; 
+							bantimeStartPos = banReasonEndPos + 8;
+						}
 
-						bantimeStartPos = banReasonEndPos + 9;
 						bantimeEndPos = buffer_logline.size() - 1;
 
 						bannedByNicknameLength = bannedByNicknameEndPos - bannedByNicknameStartPos;

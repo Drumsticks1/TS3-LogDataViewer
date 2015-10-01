@@ -67,56 +67,60 @@ void createXML() {
 				IPs.add("I", ClientList[i].getUniqueIP(j));
 			}
 
-			ClientNode.add("Connection_Count", ClientList[i].getDateTimeCount());
-			ClientNode.add("Connected", ClientList[i].getConnectedState());
-			ClientNode.add("Deleted", ClientList[i].isDeleted());
+			if (ClientList[i].getConnectedState()) {
+				ClientNode.add("Connected", 1);
+			}
+
+			if (ClientList[i].isDeleted()) {
+				ClientNode.add("Deleted", 1);
+			}
 		}
 		else ClientNode.add("ID", "-1");
 	}
 
 	for (unsigned int i = 0; i < BanList.size(); i++) {
 		ptree& BanNode = Data.add("Ban", "");
-		BanNode.add("BanDateTime", BanList[i].getBanDateTime());
-		BanNode.add("BannedID", BanList[i].getBannedID());
-		BanNode.add("BannedNickname", BanList[i].getBannedNickname());
-		BanNode.add("BannedUID", BanList[i].getBannedUID());
-		BanNode.add("BannedIP", BanList[i].getBannedIP());
-		BanNode.add("BannedByNickname", BanList[i].getBannedByNickname());
-		BanNode.add("BannedByID", BanList[i].getBannedByID());
-		BanNode.add("BannedByUID", BanList[i].getBannedByUID());
-		BanNode.add("BanReason", BanList[i].getBanReason());
+		BanNode.add("DateTime", BanList[i].getBanDateTime());
+		BanNode.add("ID", BanList[i].getBannedID());
+		BanNode.add("Nickname", BanList[i].getBannedNickname());
+		BanNode.add("UID", BanList[i].getBannedUID());
+		BanNode.add("IP", BanList[i].getBannedIP());
+		BanNode.add("ByNickname", BanList[i].getBannedByNickname());
+		BanNode.add("ByID", BanList[i].getBannedByID());
+		BanNode.add("ByUID", BanList[i].getBannedByUID());
+		BanNode.add("Reason", BanList[i].getBanReason());
 		BanNode.add("Bantime", BanList[i].getBantime());
 	}
 
 	for (unsigned int i = 0; i < KickList.size(); i++) {
 		ptree& KickNode = Data.add("Kick", "");
-		KickNode.add("KickDateTime", KickList[i].getKickDateTime());
-		KickNode.add("KickedID", KickList[i].getKickedID());
-		KickNode.add("KickedNickname", KickList[i].getKickedNickname());
-		KickNode.add("KickedByNickname", KickList[i].getKickedByNickname());
-		KickNode.add("KickedByUID", KickList[i].getKickedByUID());
-		KickNode.add("KickReason", KickList[i].getKickReason());
+		KickNode.add("DateTime", KickList[i].getKickDateTime());
+		KickNode.add("ID", KickList[i].getKickedID());
+		KickNode.add("Nickname", KickList[i].getKickedNickname());
+		KickNode.add("ByNickname", KickList[i].getKickedByNickname());
+		KickNode.add("ByUID", KickList[i].getKickedByUID());
+		KickNode.add("Reason", KickList[i].getKickReason());
 	}
 
 	for (unsigned int i = 0; i < ComplaintList.size(); i++) {
 		ptree& ComplaintNode = Data.add("Complaint", "");
-		ComplaintNode.add("ComplaintDateTime", ComplaintList[i].getComplaintDateTime());
-		ComplaintNode.add("ComplaintAboutNickname", ComplaintList[i].getComplaintAboutNickname());
-		ComplaintNode.add("ComplaintAboutID", ComplaintList[i].getComplaintAboutID());
-		ComplaintNode.add("ComplaintReason", ComplaintList[i].getComplaintReason());
-		ComplaintNode.add("ComplaintByNickname", ComplaintList[i].getComplaintByNickname());
-		ComplaintNode.add("ComplaintByID", ComplaintList[i].getComplaintByID());
+		ComplaintNode.add("DateTime", ComplaintList[i].getComplaintDateTime());
+		ComplaintNode.add("AboutNickname", ComplaintList[i].getComplaintAboutNickname());
+		ComplaintNode.add("AboutID", ComplaintList[i].getComplaintAboutID());
+		ComplaintNode.add("Reason", ComplaintList[i].getComplaintReason());
+		ComplaintNode.add("ByNickname", ComplaintList[i].getComplaintByNickname());
+		ComplaintNode.add("ByID", ComplaintList[i].getComplaintByID());
 	}
 
 	for (unsigned int i = 0; i < UploadList.size(); i++) {
 		ptree& UploadNode = Data.add("Upload", "");
-		UploadNode.add("UploadDateTime", UploadList[i].getUploadDateTime());
+		UploadNode.add("DateTime", UploadList[i].getUploadDateTime());
 		UploadNode.add("ChannelID", UploadList[i].getChannelID());
 		UploadNode.add("Filename", UploadList[i].getFilename());
-		UploadNode.add("UploadedByNickname", UploadList[i].getUploadedByNickname());
-		UploadNode.add("UploadedByID", UploadList[i].getUploadedByID());
-		UploadNode.add("DeletedByNickname", UploadList[i].getDeletedByNickname());
-		UploadNode.add("DeletedByID", UploadList[i].getDeletedByID());
+		UploadNode.add("UplByNickname", UploadList[i].getUploadedByNickname());
+		UploadNode.add("UplByID", UploadList[i].getUploadedByID());
+		UploadNode.add("DelByNickname", UploadList[i].getDeletedByNickname());
+		UploadNode.add("DelByID", UploadList[i].getDeletedByID());
 	}
 
 	outputStream << "Creating XML..." << endl;
