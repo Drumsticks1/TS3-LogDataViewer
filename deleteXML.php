@@ -1,12 +1,12 @@
 // deleteXML.php
 // Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 <?php
-	// Created EnhancedClientList directory - please modify the path according to your system.
-	$ECLDIRECTORY = "/var/www/EnhancedClientList";
+	// Your LogDataViewer directory - please modify the path according to your system.
+	$LDVDIRECTORY = "/var/www/LogDataViewer";
 		
-	if(file_exists("$ECLDIRECTORY/output.xml")){
-	exec("rm $ECLDIRECTORY/output.xml");
+	if(file_exists("$LDVDIRECTORY/output.xml")){
+	exec("rm $LDVDIRECTORY/output.xml");
 	}
  ?>

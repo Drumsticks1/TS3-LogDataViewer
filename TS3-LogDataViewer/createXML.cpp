@@ -1,6 +1,6 @@
 // createXML.cpp : Creation of the XML.
 // Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 #include <iostream>
 #include <string>
@@ -35,7 +35,7 @@ void createXML() {
 	ptree PropertyTree;
 	ptree& Data = PropertyTree.add("Data", "");
 	ptree& AttributesNode = Data.add("Attributes", "");
-	AttributesNode.add("Generated", "by TS3 Enhanced Client List");
+	AttributesNode.add("Generated", "by TS3-LogDataViewer");
 	AttributesNode.add("VirtualServer", VIRTUALSERVER);
 
 	AttributesNode.add("CreationTimestamp_Localtime", getCurrentLocaltime());

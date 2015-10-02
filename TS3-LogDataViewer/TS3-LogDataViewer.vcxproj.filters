@@ -21,9 +21,6 @@
     <ClCompile Include="createXML.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TS3_EnhancedClientList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="parseLogs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,6 +46,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Upload.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TS3-LogDataViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

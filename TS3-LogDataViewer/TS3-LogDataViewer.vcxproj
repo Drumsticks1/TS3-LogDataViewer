@@ -13,7 +13,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{800B9D8E-6D44-4A2A-B111-FBDFB6898D36}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>TS3_EnhancedClientList</RootNamespace>
+    <RootNamespace>TS3-LogDataViewer</RootNamespace>
+    <ProjectName>TS3-LogDataViewer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,7 +91,7 @@
     <ClCompile Include="parseLogs.cpp" />
     <ClCompile Include="parseXML.cpp" />
     <ClCompile Include="timeFunctions.cpp" />
-    <ClCompile Include="TS3_EnhancedClientList.cpp" />
+    <ClCompile Include="TS3-LogDataViewer.cpp" />
     <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>

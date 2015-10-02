@@ -1,6 +1,6 @@
 // checkFunctions.cpp : Control Functions.
 // Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 #include <iostream>
 #include <vector>

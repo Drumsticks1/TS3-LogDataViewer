@@ -1,12 +1,12 @@
 // Constants.h
 // Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 // XML output file.
 #define XMLFILE "output.xml"
 
 // Program log file.
-#define PROGRAMLOGFILE "ECL.log"
+#define PROGRAMLOGFILE "TS3-LDV.log"
 
 // Default logdirectory and virtual server.
 #define DEFAULTLOGDIRECTORY "./logs/"

@@ -1,17 +1,15 @@
-# TS3_EnhancedClientList
-Much more than only an enhanced client list for your Teamspeak 3 server.
+# TS3-LogDataViewer
 
 ## Short description
-TS3_EnhancedClientList creates detailed lists using the information written to the log files of the server. It currently provides a control section and five detailed tables that come with a provided web interface (index.html):
-- Control section
-- Client list
-- Ban list
-- Kick list
-- Complaint list
-- File upload list
+TS3-LogDataViewer creates detailed lists using the data written to the log files of the TeamSpeak3 server. The provided index.html includes a control section and the following tables:
+- Client table
+- Ban table
+- Kick table
+- Complaint table
+- File upload table
 
-## Example page
-[This example](http://drumsticks1.github.io/TS3_EnhancedClientList/) is set up with gh-pages and shows the design as well as all features of the latest release version.<br />As it is set up with gh-pages the rebuild XML options aren't available but you can mess around with all other options.
+## [Example](http://drumsticks1.github.io/TS3-LogDataViewer/index.html)
+This example is set up with gh-pages and shows the design as well as all features of the latest release version.<br />As it is set up with gh-pages the rebuild XML options aren't available but you can mess around with all other options.
 
 ## How does it work ?
 The program requires the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
@@ -58,7 +56,7 @@ See the latest todo.h for planned features.
 Any information that isn't logged.
 
 ## Installation
-As the file name already implies, the install instructions can be found in the file "Install Instructions".<br /> For now there are only installation instructions available for Linux but experienced users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/> NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on GitHub since v1.3.0 (TS3_EnhancedClientList.gz for Linux and TS3_EnhancedClientList.exe.gz for Windows).
+As the file name already implies, the install instructions can be found in the file "Install Instructions".<br /> For now there are only installation instructions available for Linux but experienced users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/> NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on GitHub since v1.3.0 (TS3-LogDataViewer.gz for Linux and TS3-LogDataViewer.exe.gz for Windows).
 
 ### Dependencies
 All dependencies are covered in the install instructions.<br /> You will need to download the following extern files:

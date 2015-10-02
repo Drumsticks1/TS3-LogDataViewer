@@ -1,6 +1,6 @@
 /*
 Author : Drumsticks1
-GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 Feel free to modify this file according to your wishes.
 */
@@ -32,7 +32,7 @@ label:hover {
 :checked + label:hover {
     background-color: #549420
 }
-.alertBox, label, #TS3-ECL, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
+.alertBox, label, #TS3-LDV, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
     color: #fff
 }
 #navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
@@ -41,10 +41,10 @@ label:hover {
 #tableSelectionSection > div, #controlSection {
     padding: 0
 }
-#TS3-ECL, .tableheading {
+#TS3-LDV, .tableheading {
     background-color: #2ba6cb
 }
-.alertBox, #TS3-ECL, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading {
+.alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading {
     font-family: 'Open Sans', Arial, sans-serif;
     font-weight: 400
 }
@@ -57,13 +57,13 @@ label:hover {
 #tableSelectionSection {
     margin-bottom: 15px
 }
-#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-ECL, #controlSection, .tableheading {
+#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-LDV, #controlSection, .tableheading {
     text-align: center
 }
 .alertBox, #creationTimestampSection, #rebuildSection {
     margin-bottom: 20px
 }
-#TS3-ECL, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
+#TS3-LDV, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
     margin: 0
 }
 #tableSelectionSection, #buildNewXMLButton, #creationTimestampTable, #rebuildXMLButton, #switchBetweenIDandUIDButton, .tablesorter {
@@ -90,7 +90,7 @@ label:hover {
 td, th {
     border: 1px solid #cdcdcd
 }
-#TS3-ECL, .tableheading {
+#TS3-LDV, .tableheading {
     padding: .5rem 1rem;
     font-size: 1.75em
 }

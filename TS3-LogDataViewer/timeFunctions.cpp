@@ -1,6 +1,6 @@
 // timeFunctions.cpp: Functions for getting times as strings.
 // Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 #include <iostream>
 #include <boost/date_time.hpp>

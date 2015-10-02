@@ -1,15 +1,15 @@
 // Install Instructions
 // Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3_EnhancedClientList
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 Linux:
 
-1. Create a directory for the EnhancedClientList in your web directory (e.g. "/var/www/html/EnhancedClientList").
+1. Create a directory for the LogDataViewer in your web directory (e.g. "/var/www/html/LogDataViewer").
 	! Skipping the next step may result in serious security vulnerability of your server as anybody would be able to access this directory !
 2. Set up a .htaccess in this directory in order to restrict the access to the directory to you and chosen users or use a similar restriction method if you aren't using apache.
-3. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3_EnhancedClientList/releases).
-4. Download the attached compiled file (TS3_EnhancedClientList.gz for Linux) from the release you are using (-> skip to step 5) or compile the code yourself using the provided makefile (-> follow the 4.x steps).
-	4.1. Downloads the makefile, the .cpp and .h files listed in the subdirectory "TS3_EnhancedClientList" (the todo.h isn't necessary for compiling as it doesn't include any code).
+3. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3-LogDataViewer/releases).
+4. Download the attached compiled file (TS3-LogDataViewer.gz for Linux) from the release you are using (-> skip to step 5) or compile the code yourself using the provided makefile (-> follow the 4.x steps).
+	4.1. Downloads the makefile, the .cpp and .h files listed in the directory "TS3-LogDataViewer" (the todo.h isn't necessary for compiling as it doesn't include any code).
 	4.2. Download the Boost Library package via "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2" and extract it to your "/usr/" folder (--> /usr/boost_1_59_0)(you may need to adjust the version number).
 	4.3. Compile the required libraries (in /usr/boost_1_59_0: "./bootstrap.sh" and then "./b2 --with-program_options --with-filesystem --with-system --with-date_time --runtime-link=static --variant=release").
 	4.4. Install the packages "libboost-iostreams1.55", "libboost-system1.55", "libboost-filesystem1.55" and "libboost-program-options1.55" (you may need to adjust the version numbers).
@@ -25,15 +25,15 @@ Linux:
 9. Download the following files from motties fork of the jquery plugin "tablesorter": https://mottie.github.io/tablesorter/docs/ :
 	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.4/js/jquery.tablesorter.min.js
 	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.4/js/jquery.tablesorter.widgets.min.js
-10. Move the "css", "img" and the "js" folders as well as the "index.html" from the last release into your EnhancedClientList directory.
-11. Unzip the foundation-5.5.2-custom.zip and move the content of the "js" and the "css" folders into the same-named folders in your EnhancedClientList directory.
-12. Move the other javascript files you downloaded into the "js" folder in the EnhancedClientList directory.
-13. Move the downloaded and unzipped or self-compiled "TS3_EnhancedClientList" into the "var/www/EnhancedClientList" directory and make it executable ("chmod +x TS3_EnhancedClientList").
-14. Move the "rebuildXML.php" and the "deleteXML.php" into the EnhancedClientList directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
-15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory").
+10. Move the "css", "img" and the "js" folders as well as the "index.html" from the last release into your LogDataViewer directory.
+11. Unzip the foundation-5.5.2-custom.zip and move the content of the "js" and the "css" folders into the same-named folders in your LogDataViewer directory.
+12. Move the other javascript files you downloaded into the "js" folder in the LogDataViewer directory.
+13. Move the downloaded and unzipped or self-compiled "TS3-LogDataViewer" into the "var/www/LogDataViewer" directory and make it executable ("chmod +x TS3-LogDataViewer").
+14. Move the "rebuildXML.php" and the "deleteXML.php" into the LogDataViewer directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
+15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory/").
 16. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
-17. (If necessary) Adjust the ECLPATH (path to the compiled file) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
-18. Access the web interface (e.g. "https://your-webserver.com/EnhancedClientList/index.html").
+17. (If necessary) Adjust the LDVPATH (path to the LDV directory) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
+18. Access the web interface (e.g. "https://your-webserver.com/LogDataViewer/index.html").
 19. (Optional) Add a file named "logignore" in your log directory and add the names of log files which you want to exclude from the parsing.
 20. (Optional) If you would like to change the appearance of the web interface / your website you can do this by editing the "style.css" according to your wishes.
 
