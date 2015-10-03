@@ -173,15 +173,18 @@ void parseLogs(string LOGDIRECTORY) {
 
 					// Bans
 					if (banMatch) {
+						bool validUID = true;
 						bannedByNicknameStartPos = buffer_logline.find(" invokername=", IDEndPos) + 13;
 
 						if (buffer_logline.find("invokeruid=") != string::npos) {
 							bannedByNicknameEndPos = buffer_logline.find(" invokeruid=", bannedByNicknameStartPos);
+							bannedByUIDStartPos = bannedByNicknameEndPos + 12;
+							bannedByUIDEndPos = buffer_logline.find(" reasonmsg", bannedByNicknameEndPos);
 						}
-						else bannedByNicknameEndPos = bannedByUIDEndPos = buffer_logline.find(" reasonmsg");
-
-						bannedByUIDStartPos = bannedByNicknameEndPos + 12;
-						bannedByUIDEndPos = buffer_logline.find(" reasonmsg", bannedByNicknameEndPos);
+						else {
+							bannedByNicknameEndPos = bannedByUIDEndPos = buffer_logline.find(" reasonmsg");
+							validUID = false;
+						}
 
 						banReasonStartPos = bannedByUIDEndPos + 11;
 						if (buffer_logline.find("reasonmsg=") != string::npos) {
@@ -189,21 +192,25 @@ void parseLogs(string LOGDIRECTORY) {
 							bantimeStartPos = banReasonEndPos + 9;
 						}
 						else {
-							banReasonEndPos = banReasonStartPos; 
+							banReasonEndPos = banReasonStartPos;
 							bantimeStartPos = banReasonEndPos + 8;
 						}
 
 						bantimeEndPos = buffer_logline.size() - 1;
 
 						bannedByNicknameLength = bannedByNicknameEndPos - bannedByNicknameStartPos;
-						bannedByUIDLength = bannedByUIDEndPos - bannedByUIDStartPos;
 						banReasonLength = banReasonEndPos - banReasonStartPos;
 						bantimeLength = bantimeEndPos - bantimeStartPos;
 
 						bannedByNickname = buffer_logline.substr(bannedByNicknameStartPos, bannedByNicknameLength);
-						bannedByUID = buffer_logline.substr(bannedByUIDStartPos, bannedByUIDLength);
 						banReason = buffer_logline.substr(banReasonStartPos, banReasonLength);
 						bantime = buffer_logline.substr(bantimeStartPos, bantimeLength);
+
+						if (validUID) {
+							bannedByUIDLength = bannedByUIDEndPos - bannedByUIDStartPos;
+							bannedByUID = buffer_logline.substr(bannedByUIDStartPos, bannedByUIDLength);
+						}
+						else bannedByUID = "No UID";
 
 						if (lastUIDBanRule.size() != 0 && lastIPBanRule.size() != 0) {
 							if (isMatchingBanRules(bannedByNickname, banReason, bantime, lastUIDBanRule, lastIPBanRule)) {
