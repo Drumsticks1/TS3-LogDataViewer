@@ -247,7 +247,7 @@ void parseLogs(string LOGDIRECTORY) {
 						if (buffer_logline.find("invokeruid=serveradmin") == string::npos) {
 							kickedByUIDEndPos = buffer_logline.find("=", kickedByUIDStartPos) + 1;
 						}
-						else kickedByUIDEndPos = kickedByUIDStartPos + 35;
+						else kickedByUIDEndPos = buffer_logline.find("reasonmsg") - 1;
 						kickedByUIDLength = kickedByUIDEndPos - kickedByUIDStartPos;
 
 						kickedByNickname = buffer_logline.substr(kickedByNicknameStartPos, kickedByNicknameLength);

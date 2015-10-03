@@ -14,4 +14,6 @@ general:
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
 	- Add custom bans.
+
+- maybe create a standalone using electron with access to the server logs or with local logs.
 */

@@ -119,8 +119,10 @@ void createXML() {
 		UploadNode.add("Filename", UploadList[i].getFilename());
 		UploadNode.add("UplByNickname", UploadList[i].getUploadedByNickname());
 		UploadNode.add("UplByID", UploadList[i].getUploadedByID());
-		UploadNode.add("DelByNickname", UploadList[i].getDeletedByNickname());
-		UploadNode.add("DelByID", UploadList[i].getDeletedByID());
+		if (UploadList[i].getDeletedByID() != 0) {
+			UploadNode.add("DelByNickname", UploadList[i].getDeletedByNickname());
+			UploadNode.add("DelByID", UploadList[i].getDeletedByID());
+		}
 	}
 
 	outputStream << "Creating XML..." << endl;

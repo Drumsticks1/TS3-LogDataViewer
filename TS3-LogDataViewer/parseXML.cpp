@@ -134,11 +134,16 @@ bool parseXML() {
 						filename = UploadNode.child("Filename").first_child().value();
 						uploadedByNickname = UploadNode.child("UplByNickname").first_child().value();
 						uploadedByID = stoul(UploadNode.child("UplByID").first_child().value());
-						deletedByNickname = UploadNode.child("DelByNickname").first_child().value();
-						deletedByID = stoul(UploadNode.child("DelByID").first_child().value());
 
 						UploadList.resize(UploadListID + 1);
-						UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID, deletedByNickname, deletedByID);
+
+						if ((string)UploadNode.child("DelByID").first_child().value() != "") {
+							deletedByNickname = UploadNode.child("DelByNickname").first_child().value();
+							deletedByID = stoul(UploadNode.child("DelByID").first_child().value());
+							UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID, deletedByNickname, deletedByID);
+						}
+						else UploadList[UploadListID].addUpload(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID);
+
 						UploadListID++;
 					}
 					return true;

@@ -8,7 +8,7 @@ var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false;
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
     nanobar.go(35);
-    rebuildXMLButton.disabled = buildNewXMLButton.disabled = true;
+    document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = true;
     $.get('./rebuildXML.php', function() {
         buildTables();
     });
@@ -98,7 +98,7 @@ function collapseList(List, ID) {
 
 // Collapses all expanded lists.
 function collapseAll() {
-    var j, x = clientTable.lastChild.childNodes;
+    var j, x = document.getElementById('clientTable').lastChild.childNodes;
     for (j = 0; j < x.length; j++) {
         if (x.item(j).childNodes.item(2).getAttribute('expanded') == 'true') {
             collapseList('connections', x.item(j).getAttribute('id'));
@@ -168,9 +168,9 @@ function addIPsParser() {
 
 // Switches between ID/UID columns in the ban table.
 function switchBetweenIDAndUID() {
-    var rowID, banID, bannedByID, bannedByUID, IDOrUID, Ban = XML.getElementsByTagName('Ban'),
-        x = banTable.lastChild.childNodes,
-        banTableHeadRow = banTable.firstChild.firstChild,
+    var rowID, banID, IDOrUID, bannedByIDOrUD, Ban = XML.getElementsByTagName('Ban'),
+        x = document.getElementById('banTable').lastChild.childNodes,
+        banTableHeadRow = document.getElementById('banTable').firstChild.firstChild,
         UIDState = Number(localStorage.getItem('UIDState'));
 
     if (UIDState) {
@@ -189,23 +189,23 @@ function switchBetweenIDAndUID() {
         banID = rowID.substring(4, rowID.length);
 
         if (UIDState) {
-            if (document.getElementById(rowID).childNodes[3] != 'Unknown') {
-                BannedByID = Ban[banID].getElementsByTagName('BannedByID')[0].firstChild.nodeValue;
+            if (document.getElementById(rowID).childNodes[3].firstChild.nodeValue != 'Unknown') {
+                bannedByIDOrUD = Ban[banID].getElementsByTagName('ByID')[0].firstChild.nodeValue;
             } else {
-                BannedByID = 'Unknown';
+                bannedByIDOrUD = bannedByID = 'Unknown';
             }
         } else {
-            if (Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild !== null) {
-                BannedByUID = Ban[banID].getElementsByTagName('BannedByUID')[0].firstChild.nodeValue;
+            if (Ban[banID].getElementsByTagName('ByUID')[0].firstChild !== null) {
+                bannedByIDOrUD = Ban[banID].getElementsByTagName('ByUID')[0].firstChild.nodeValue;
             } else {
-                BannedByUID = 'No UID';
+                bannedByIDOrUD = 'No UID';
             }
         }
 
         document.getElementById(rowID).childNodes[1].setAttribute('data-title', 'Banned ' + IDOrUID);
         document.getElementById(rowID).childNodes[4].setAttribute('data-title', 'Banned by ' + IDOrUID);
-        document.getElementById(rowID).childNodes[1].lastChild.innerHTML = Ban[banID].getElementsByTagName('Banned' + IDOrUID)[0].firstChild.nodeValue;
-        document.getElementById(rowID).childNodes[4].lastChild.innerHTML = window['BannedBy' + IDOrUID];
+        document.getElementById(rowID).childNodes[1].lastChild.innerHTML = Ban[banID].getElementsByTagName(IDOrUID)[0].firstChild.nodeValue;
+        document.getElementById(rowID).childNodes[4].lastChild.innerHTML = bannedByIDOrUD;
     }
 }
 
@@ -276,6 +276,20 @@ function UTCDateStringToLocaltimeString(dateString) {
     var dateObject = UTCDateStringToDate(dateString);
     return dateObject.getFullYear() + '-' + toDoubleDigit(dateObject.getMonth() + 1) + '-' + toDoubleDigit(dateObject.getDate()) + ' ' +
         toDoubleDigit(dateObject.getHours()) + ':' + toDoubleDigit(dateObject.getMinutes()) + ':' + toDoubleDigit(dateObject.getSeconds());
+}
+
+// Helper function for adding the onclick function to the expandCollapseConnections button.
+function addExpandCollapseConnectionsButton(buttonExpandCollapseConnections, ID) {
+    buttonExpandCollapseConnections.onclick = function() {
+        expandcollapseList('connections', ID);
+    };
+}
+
+// Helper function for adding the onclick function to the expandCollapseIPs button.
+function addExpandCollapseIPsButton(buttonExpandCollapseIPs, ID) {
+    buttonExpandCollapseIPs.onclick = function() {
+        expandcollapseList('ips', ID);
+    };
 }
 
 // Builds the client table.
@@ -406,12 +420,7 @@ function buildClientTable() {
                 var buttonExpandCollapseConnections = document.createElement('button');
                 buttonExpandCollapseConnections.id = 'connectionsButton_' + ID;
                 buttonExpandCollapseConnections.innerHTML = '+ ' + (Connections.length - 2);
-
-                (function(ID) {
-                    buttonExpandCollapseConnections.onclick = function() {
-                        expandcollapseList('connections', ID);
-                    };
-                })(ID);
+                addExpandCollapseConnectionsButton(buttonExpandCollapseConnections, ID);
                 clientBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
@@ -433,12 +442,7 @@ function buildClientTable() {
                 var buttonExpandCollapseIPs = document.createElement('button');
                 buttonExpandCollapseIPs.id = 'ipsButton_' + ID;
                 buttonExpandCollapseIPs.innerHTML = '+ ' + (IPs.length - 1);
-
-                (function(ID) {
-                    buttonExpandCollapseIPs.onclick = function() {
-                        expandcollapseList('ips', ID);
-                    };
-                })(ID);
+                addExpandCollapseIPsButton(buttonExpandCollapseIPs, ID);
                 clientBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
@@ -487,7 +491,7 @@ function buildClientTable() {
         localStorage.setItem('clientTableSortOrder', JSON.stringify(clientTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('clientTable-built', '1');
-    scrollToClientTable.style.display = '';
+    document.getElementById('scrollToClientTable').style.display = '';
 }
 
 // Builds the ban table.
@@ -651,7 +655,7 @@ function buildBanTable() {
         localStorage.setItem('banTableSortOrder', JSON.stringify(banTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('banTable-built', '1');
-    scrollToBanTable.style.display = '';
+    document.getElementById('scrollToBanTable').style.display = '';
 }
 
 // Builds the kick table.
@@ -772,7 +776,7 @@ function buildKickTable() {
         localStorage.setItem('kickTableSortOrder', JSON.stringify(kickTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('kickTable-built', '1');
-    scrollToKickTable.style.display = '';
+    document.getElementById('scrollToKickTable').style.display = '';
 }
 
 // Builds the complaint table.
@@ -886,7 +890,7 @@ function buildComplaintTable() {
         localStorage.setItem('complaintTableSortOrder', JSON.stringify(complaintTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('complaintTable-built', '1');
-    scrollToComplaintTable.style.display = '';
+    document.getElementById('scrollToComplaintTable').style.display = '';
 }
 
 // Builds the upload table.
@@ -910,6 +914,8 @@ function buildUploadTable() {
         uploadHeadCell_Filename = document.createElement('th'),
         uploadHeadCell_UploadedByID = document.createElement('th'),
         uploadHeadCell_UploadedByNickname = document.createElement('th'),
+
+
         uploadHeadCell_DeletedByID = document.createElement('th'),
         uploadHeadCell_DeletedByNickname = document.createElement('th');
 
@@ -939,8 +945,18 @@ function buildUploadTable() {
             Filename = Upload[i].getElementsByTagName('Filename')[0].firstChild.nodeValue,
             UploadedByID = Upload[i].getElementsByTagName('UplByID')[0].firstChild.nodeValue,
             UploadedByNickname = Upload[i].getElementsByTagName('UplByNickname')[0].firstChild.nodeValue,
-            DeletedByID = Upload[i].getElementsByTagName('DelByID')[0].firstChild.nodeValue,
+            DeletedByID, DeletedByNickname;
+
+        if (Upload[i].getElementsByTagName('DelByID')[0] !== undefined) {
+            DeletedByID = Upload[i].getElementsByTagName('DelByID')[0].firstChild.nodeValue;
+        } else {
+            DeletedByID = '/';
+        }
+        if (Upload[i].getElementsByTagName('DelByNickname')[0] !== undefined) {
             DeletedByNickname = Upload[i].getElementsByTagName('DelByNickname')[0].firstChild.nodeValue;
+        } else {
+            DeletedByNickname = '/';
+        }
 
         var uploadBodyRow = document.createElement('tr'),
             uploadBodyCell_UploadDateTime = document.createElement('td'),
@@ -981,16 +997,8 @@ function buildUploadTable() {
         uploadBodyCell_UploadedByNickname.appendChild(uploadBodyCell_UploadedByNickname_Div);
         uploadBodyRow.appendChild(uploadBodyCell_UploadedByNickname);
 
-        if (DeletedByID == '0') {
-            DeletedByID = '/';
-        }
-
         uploadBodyCell_DeletedByID.innerHTML = DeletedByID;
         uploadBodyRow.appendChild(uploadBodyCell_DeletedByID);
-
-        if (DeletedByNickname == ' ') {
-            DeletedByNickname = 'Not Deleted';
-        }
 
         var uploadBodyCell_DeletedByNickname_Div = document.createElement('div');
         uploadBodyCell_DeletedByNickname_Div.innerHTML = DeletedByNickname;
@@ -1017,7 +1025,7 @@ function buildUploadTable() {
         localStorage.setItem('uploadTableSortOrder', JSON.stringify(uploadTable.config.sortList));
     }).trigger('applyWidgetId', ['stickyHeaders']);
     sessionStorage.setItem('uploadTable-built', '1');
-    scrollToUploadTable.style.display = '';
+    document.getElementById('scrollToUploadTable').style.display = '';
 }
 
 // Imports the local storage, builds a table when it will have content and sets the session storage.
@@ -1070,13 +1078,13 @@ function buildTables() {
                 CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue,
                 CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
 
-            creationTimestamp_localtime.innerHTML = CreationTimestampLocaltime;
-            creationTimestamp_utc.innerHTML = CreationTimestampUTC;
-            creationTimestamp_moment.innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
+            document.getElementById('creationTimestamp_localtime').innerHTML = CreationTimestampLocaltime;
+            document.getElementById('creationTimestamp_utc').innerHTML = CreationTimestampUTC;
+            document.getElementById('creationTimestamp_moment').innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
 
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
-                creationTimestamp_moment.innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
+                document.getElementById('creationTimestamp_moment').innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
             }, 1000);
 
             if (!document.getElementById('clientTable')) {
@@ -1087,13 +1095,13 @@ function buildTables() {
                     }
                 }
             }
-            connectedClientsCount.innerHTML = 'Connected clients: ' + ConnectedClientsCount;
+            document.getElementById('connectedClientsCount').innerHTML = 'Connected clients: ' + ConnectedClientsCount;
 
             if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
                 alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
             }
 
-            rebuildXMLButton.disabled = buildNewXMLButton.disabled = false;
+            document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = false;
             nanobar.go(100);
         }
     });
