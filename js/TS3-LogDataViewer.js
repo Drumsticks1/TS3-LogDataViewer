@@ -1082,10 +1082,8 @@ function buildTables() {
             if (!document.getElementById('clientTable')) {
                 var Client = XML.getElementsByTagName('Client');
                 for (var i = 0; i < Client.length; i++) {
-                    if (Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue != '-1') {
-                        if (Client[i].getElementsByTagName('Connected')[0].firstChild.nodeValue == 1) {
-                            ConnectedClientsCount++;
-                        }
+                    if (Client[i].getElementsByTagName('Connected')[0] !== undefined) {
+                        ConnectedClientsCount++;
                     }
                 }
             }
