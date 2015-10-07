@@ -26,9 +26,7 @@ function expandcollapseList(List, ID) {
     var currentDiv = document.getElementById(List + '_' + ID + '_1');
     if (currentDiv === null || currentDiv.style.display == 'none') {
         expandList(List, ID);
-    } else {
-        collapseList(List, ID);
-    }
+    } else collapseList(List, ID);
 }
 
 // Expands the current list.
@@ -52,20 +50,13 @@ function expandList(List, ID) {
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement('div');
             newDiv.id = currentDiv;
-            if (i == 1) {
-                newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
-            } else {
-                newDiv.innerHTML = UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue);
-            }
+            if (i == 1) newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
+            else newDiv.innerHTML = UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue);
 
-            if (Row == 3) {
-                x.appendChild(newDiv);
-            } else {
-                x.insertBefore(newDiv, x.lastChild);
-            }
-        } else {
-            document.getElementById(currentDiv).style.display = '';
-        }
+            if (Row == 3) x.appendChild(newDiv);
+            else x.insertBefore(newDiv, x.lastChild);
+
+        } else document.getElementById(currentDiv).style.display = '';
     }
 }
 
@@ -90,9 +81,7 @@ function collapseList(List, ID) {
         for (var j = 1; j < x.length - 2; j++) {
             document.getElementById(List + '_' + ID + '_' + j).style.display = 'none';
         }
-        if (Row == 3) {
-            document.getElementById(List + '_' + ID + '_' + j).style.display = 'none';
-        }
+        if (Row == 3) document.getElementById(List + '_' + ID + '_' + j).style.display = 'none';
     }
 }
 
@@ -135,12 +124,8 @@ function addConnectionsParser() {
             if (localStorage.getItem('connectionsSortType') == '1') {
                 if (cell.firstChild.localName == 'button') {
                     return cell.childNodes[1].innerHTML;
-                } else {
-                    return cell.firstChild.innerHTML;
-                }
-            } else {
-                return cell.lastChild.innerHTML;
-            }
+                } else return cell.firstChild.innerHTML;
+            } else return cell.lastChild.innerHTML;
         },
         parsed: false,
         type: 'text'
@@ -157,9 +142,7 @@ function addIPsParser() {
         format: function(s, table, cell) {
             if (cell.firstChild.localName == 'button') {
                 return cell.childNodes[1].innerHTML;
-            } else {
-                return cell.firstChild.innerHTML;
-            }
+            } else return cell.firstChild.innerHTML;
         },
         parsed: false,
         type: 'text'
@@ -191,15 +174,11 @@ function switchBetweenIDAndUID() {
         if (UIDState) {
             if (document.getElementById(rowID).childNodes[3].firstChild.nodeValue != 'Unknown') {
                 bannedByIDOrUD = Ban[banID].getElementsByTagName('ByID')[0].firstChild.nodeValue;
-            } else {
-                bannedByIDOrUD = bannedByID = 'Unknown';
-            }
+            } else bannedByIDOrUD = bannedByID = 'Unknown';
         } else {
             if (Ban[banID].getElementsByTagName('ByUID')[0].firstChild !== null) {
                 bannedByIDOrUD = Ban[banID].getElementsByTagName('ByUID')[0].firstChild.nodeValue;
-            } else {
-                bannedByIDOrUD = 'No UID';
-            }
+            } else bannedByIDOrUD = 'No UID';
         }
 
         document.getElementById(rowID).childNodes[1].setAttribute('data-title', 'Banned ' + IDOrUID);
@@ -214,9 +193,7 @@ function importLocalStorage(table) {
     if (localStorage.getItem(table)) {
         var checkState = Boolean(Number(localStorage.getItem(table)));
         document.getElementById(table + 'Checkbox').checked = checkState;
-        if (!checkState) {
-            document.getElementById('ts3-' + table).style.display = '';
-        }
+        if (!checkState) document.getElementById('ts3-' + table).style.display = '';
     } else {
         document.getElementById(table + 'Checkbox').checked = true;
         localStorage.setItem(table, '1');
@@ -265,9 +242,7 @@ function UTCDateStringToDate(dateString, moment) {
 
 // Returns the parameter as double digit string.
 function toDoubleDigit(x) {
-    if (x < 10) {
-        x = '0' + x;
-    }
+    if (x < 10) x = '0' + x;
     return x;
 }
 
@@ -378,15 +353,12 @@ function buildClientTable() {
                 Connection_Count = Connections.length,
                 Connected, Deleted;
             if (Client[ID].getElementsByTagName('Connected')[0] !== undefined) {
-                Connected = Number(Client[ID].getElementsByTagName('Connected')[0].firstChild.nodeValue);
-            } else {
-                Connected = 0;
-            }
+                Connected = 'true';
+                ConnectedClientsCount++;
+            } else Connected = 'false';
             if (Client[ID].getElementsByTagName('Deleted')[0] !== undefined) {
-                Deleted = String(Boolean(Number(Client[ID].getElementsByTagName('Deleted')[0].firstChild.nodeValue)));
-            } else {
-                Deleted = 'false';
-            }
+                Deleted = 'true';
+            } else Deleted = 'false';
 
             var clientBodyRow = document.createElement('tr'),
                 clientBodyCell_ID = document.createElement('td'),
@@ -456,12 +428,7 @@ function buildClientTable() {
             clientBodyCell_ConnectionCount.innerHTML = Connection_Count;
             clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
 
-            if (Connected == 1) {
-                clientBodyCell_Connected.innerHTML = 'true';
-                ConnectedClientsCount++;
-            } else {
-                clientBodyCell_Connected.innerHTML = 'false';
-            }
+            clientBodyCell_Connected.innerHTML = Connected;
             clientBodyRow.appendChild(clientBodyCell_Connected);
 
             clientBodyCell_Deleted.innerHTML = Deleted;
@@ -560,16 +527,14 @@ function buildBanTable() {
             BannedByID;
         if (BannedIP != 'Unknown') {
             BannedByID = Ban[i].getElementsByTagName('ByID')[0].firstChild.nodeValue;
-        } else {
-            BannedByID = 'Unknown';
-        }
+        } else BannedByID = 'Unknown';
+
         var BannedByNickname = Ban[i].getElementsByTagName('ByNickname')[0].firstChild.nodeValue,
             BanReason;
         if (Ban[i].getElementsByTagName('Reason')[0].firstChild !== null) {
             BanReason = Ban[i].getElementsByTagName('Reason')[0].firstChild.nodeValue;
-        } else {
-            BanReason = 'No Reason given';
-        }
+        } else BanReason = 'No Reason given';
+
         var Bantime = Ban[i].getElementsByTagName('Bantime')[0].firstChild.nodeValue;
 
         var banBodyRow = document.createElement('tr');
@@ -708,9 +673,7 @@ function buildKickTable() {
             KickReason;
         if (Kick[i].getElementsByTagName('Reason')[0].firstChild !== null) {
             KickReason = Kick[i].getElementsByTagName('Reason')[0].firstChild.nodeValue;
-        } else {
-            KickReason = 'No Reason given';
-        }
+        } else KickReason = 'No Reason given';
 
         var kickBodyRow = document.createElement('tr'),
             kickBodyCell_DateTime = document.createElement('td'),
@@ -949,14 +912,10 @@ function buildUploadTable() {
 
         if (Upload[i].getElementsByTagName('DelByID')[0] !== undefined) {
             DeletedByID = Upload[i].getElementsByTagName('DelByID')[0].firstChild.nodeValue;
-        } else {
-            DeletedByID = '/';
-        }
+        } else DeletedByID = '/';
         if (Upload[i].getElementsByTagName('DelByNickname')[0] !== undefined) {
             DeletedByNickname = Upload[i].getElementsByTagName('DelByNickname')[0].firstChild.nodeValue;
-        } else {
-            DeletedByNickname = '/';
-        }
+        } else DeletedByNickname = '/';
 
         var uploadBodyRow = document.createElement('tr'),
             uploadBodyCell_UploadDateTime = document.createElement('td'),
@@ -1044,9 +1003,7 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
             alertBox.innerHTML = 'No ' + table.substring(0, table.search('Table')) + 's were found.';
             document.getElementById('ts3-' + table).appendChild(alertBox);
         }
-    } else {
-        sessionStorage.setItem(table + '-built', '0');
-    }
+    } else sessionStorage.setItem(table + '-built', '0');
 }
 
 // Builds the tables using the XML.
@@ -1056,9 +1013,8 @@ function buildTables() {
         url: './output.xml',
         cache: false,
         error: function() {
-            if (rebuildError) {
-                alert('Rebuilding failed!');
-            } else {
+            if (rebuildError) alert('Rebuilding failed!');
+            else {
                 rebuildError = true;
                 rebuildXML();
             }
