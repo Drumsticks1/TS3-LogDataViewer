@@ -63,8 +63,8 @@ All dependencies are covered in the install instructions.<br /> You will need to
 - jQuery:
   - [jquery-2.1.4.min.js](https://code.jquery.com/jquery-2.1.4.min.js)
 - Two files from [this fork](https://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
-  - [jquery.tablesorter.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.4/js/jquery.tablesorter.min.js)
-  - [jquery.tablesorter.widgets.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.4/js/jquery.tablesorter.widgets.min.js)
+  - [jquery.tablesorter.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.5/js/jquery.tablesorter.min.js)
+  - [jquery.tablesorter.widgets.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.5/js/jquery.tablesorter.widgets.min.js)
 - One file for the loading bar:
   - [nanobar.min.js](https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js)
 - One file for moment.js:

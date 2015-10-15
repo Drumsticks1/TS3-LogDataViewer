@@ -4,7 +4,6 @@
 
 /*
 general:
-	- optimize the code for better performance.
 	- add additional optional ignore files for the tables.
 	- make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.

@@ -9,7 +9,7 @@ button, .tableheading {
     border: 1px solid rgba(0, 0, 0, .1)
 }
 .row {
-    max-width: 100%!important
+    max-width: 100%
 }
 input[type='checkbox'] {
     display: none
@@ -63,7 +63,7 @@ label:hover {
 .alertBox, #creationTimestampSection, #rebuildSection {
     margin-bottom: 20px
 }
-#TS3-LDV, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
+#TS3-LDV, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
     margin: 0
 }
 #tableSelectionSection, #buildNewXMLButton, #creationTimestampTable, #rebuildXMLButton, #switchBetweenIDandUIDButton, .tablesorter {
@@ -137,7 +137,7 @@ td, th {
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         float: right;
-        width: 100%!important
+        width: 100%
     }
     .ui-table-reflow > tbody > tr {
         border: 1px solid #CDCDCD
@@ -155,8 +155,7 @@ td, th {
         content: attr(data-title);
         float: left;
         max-width: calc(50vw - 5px);
-        width: 50%;
-        display: inline-block
+        width: 50%
     }
     .ui-table-reflow > tbody > tr > td > button {
         margin: 0 0 5px
