@@ -3,7 +3,8 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 // Global Variables
-var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false;
+var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
+    eventListeners = [];
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -174,7 +175,7 @@ function switchBetweenIDAndUID() {
         if (UIDState) {
             if (document.getElementById(rowID).childNodes[3].firstChild.nodeValue != 'Unknown') {
                 bannedByIDOrUD = Ban[banID].getElementsByTagName('ByID')[0].firstChild.nodeValue;
-            } else bannedByIDOrUD = bannedByID = 'Unknown';
+            } else bannedByIDOrUD = 'Unknown';
         } else {
             if (Ban[banID].getElementsByTagName('ByUID')[0].firstChild !== null) {
                 bannedByIDOrUD = Ban[banID].getElementsByTagName('ByUID')[0].firstChild.nodeValue;
@@ -253,18 +254,18 @@ function UTCDateStringToLocaltimeString(dateString) {
         toDoubleDigit(dateObject.getHours()) + ':' + toDoubleDigit(dateObject.getMinutes()) + ':' + toDoubleDigit(dateObject.getSeconds());
 }
 
-// Helper function for adding the onclick function to the expandCollapseConnections button.
-function addExpandCollapseConnectionsButton(buttonExpandCollapseConnections, ID) {
-    buttonExpandCollapseConnections.onclick = function() {
-        expandcollapseList('connections', ID);
-    };
+// Adds an onclick event to the given object and adds the object to the eventListeners array.
+function addOnclickEvent(object, action) {
+    object.onclick = action;
+    eventListeners.push(object);
 }
 
-// Helper function for adding the onclick function to the expandCollapseIPs button.
-function addExpandCollapseIPsButton(buttonExpandCollapseIPs, ID) {
-    buttonExpandCollapseIPs.onclick = function() {
-        expandcollapseList('ips', ID);
-    };
+// Removes the onclick listeners that are listed in the eventListeners array.
+function removeEventListeners() {
+    for (var i = eventListeners.length - 1; i >= 0; i--) {
+        eventListeners[i].onclick = null;
+        eventListeners.pop();
+    }
 }
 
 // Builds the client table.
@@ -288,7 +289,7 @@ function buildClientTable() {
         connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the first connect';
     }
 
-    connectionsSortTypeButton.onclick = function() {
+    addOnclickEvent(connectionsSortTypeButton, function() {
         if (localStorage.getItem('connectionsSortType') == '1') {
             connectionsSortTypeButton.innerHTML = 'Currently sorting connections by the first connect';
             localStorage.setItem('connectionsSortType', '0');
@@ -298,7 +299,7 @@ function buildClientTable() {
         }
         $.tablesorter.updateCache(clientTable.config);
         $.tablesorter.sortOn(clientTable.config, clientTable.config.sortList);
-    };
+    });
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
     var collapseAllButton = document.createElement('button');
@@ -306,9 +307,9 @@ function buildClientTable() {
     collapseAllButton.className = 'small-12 medium-4 large-6 columns';
     collapseAllButton.innerHTML = 'Collapse expanded lists';
 
-    collapseAllButton.onclick = function() {
+    addOnclickEvent(collapseAllButton, function() {
         collapseAll();
-    };
+    });
     clientTableControlSection.appendChild(collapseAllButton);
     document.getElementById('ts3-clientTable').appendChild(clientTableControlSection);
 
@@ -392,7 +393,11 @@ function buildClientTable() {
                 var buttonExpandCollapseConnections = document.createElement('button');
                 buttonExpandCollapseConnections.id = 'connectionsButton_' + ID;
                 buttonExpandCollapseConnections.innerHTML = '+ ' + (Connections.length - 2);
-                addExpandCollapseConnectionsButton(buttonExpandCollapseConnections, ID);
+                (function(ID) {
+                    addOnclickEvent(buttonExpandCollapseConnections, function() {
+                        expandcollapseList('connections', ID);
+                    });
+                })(ID);
                 clientBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
@@ -407,14 +412,17 @@ function buildClientTable() {
                 divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1].firstChild.nodeValue);
                 clientBodyCell_Connections.appendChild(divFirstConnection);
             }
-
             clientBodyRow.appendChild(clientBodyCell_Connections);
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement('button');
                 buttonExpandCollapseIPs.id = 'ipsButton_' + ID;
                 buttonExpandCollapseIPs.innerHTML = '+ ' + (IPs.length - 1);
-                addExpandCollapseIPsButton(buttonExpandCollapseIPs, ID);
+                (function(ID) {
+                    addOnclickEvent(buttonExpandCollapseIPs, function() {
+                        expandcollapseList('ips', ID);
+                    });
+                })(ID);
                 clientBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
@@ -478,9 +486,9 @@ function buildBanTable() {
     var switchBetweenIDandUIDButton = document.createElement('button');
     switchBetweenIDandUIDButton.id = 'switchBetweenIDandUIDButton';
     switchBetweenIDandUIDButton.innerHTML = 'Switch between IDs and UIDs';
-    switchBetweenIDandUIDButton.onclick = function() {
+    addOnclickEvent(switchBetweenIDandUIDButton, function() {
         switchBetweenIDAndUID();
-    };
+    });
     banTableControlSection.appendChild(switchBetweenIDandUIDButton);
     document.getElementById('ts3-banTable').appendChild(banTableControlSection);
 
@@ -878,7 +886,6 @@ function buildUploadTable() {
         uploadHeadCell_UploadedByID = document.createElement('th'),
         uploadHeadCell_UploadedByNickname = document.createElement('th'),
 
-
         uploadHeadCell_DeletedByID = document.createElement('th'),
         uploadHeadCell_DeletedByNickname = document.createElement('th');
 
@@ -989,7 +996,7 @@ function buildUploadTable() {
 
 // Imports the local storage, builds a table when it will have content and sets the session storage.
 function buildTableWithAlertCheckAndLocalStorage(table) {
-    document.getElementById('ts3-' + table).innerHTML = null;
+    $(document.getElementById('ts3-' + table)).empty();
     if (localStorage.getItem(table + 'SortOrder') === null) {
         localStorage.setItem(table + 'SortOrder', '[]');
     }
@@ -1024,6 +1031,7 @@ function buildTables() {
             XML = tempXML;
             ConnectedClientsCount = 0;
 
+            removeEventListeners();
             buildTableWithAlertCheckAndLocalStorage('clientTable');
             buildTableWithAlertCheckAndLocalStorage('banTable');
             buildTableWithAlertCheckAndLocalStorage('kickTable');
@@ -1244,7 +1252,7 @@ function buildControlSection() {
     document.getElementById('ts3-control').appendChild(controlSection);
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener('DOMContentLoaded', function(event) {
     $(document).foundation();
     if (document.getElementById('ts3-control') !== null) {
         nanobar = new Nanobar({
