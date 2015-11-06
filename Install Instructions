@@ -23,8 +23,8 @@ Linux:
 7. Download the javascript file for the loading bar via the following link: "https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js".
 8. Download the jquery plugin "moment.js" via the following link: "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js".
 9. Download the following files from motties fork of the jquery plugin "tablesorter": https://mottie.github.io/tablesorter/docs/ :
-	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.5/js/jquery.tablesorter.min.js
-	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.23.5/js/jquery.tablesorter.widgets.min.js
+	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.3/js/jquery.tablesorter.min.js
+	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.3/js/jquery.tablesorter.widgets.min.js
 10. Move the "css", "img" and the "js" folders as well as the "index.html" from the last release into your LogDataViewer directory.
 11. Unzip the foundation-5.5.2-custom.zip and move the content of the "js" and the "css" folders into the same-named folders in your LogDataViewer directory.
 12. Move the other javascript files you downloaded into the "js" folder in the LogDataViewer directory.
