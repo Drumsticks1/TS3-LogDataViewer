@@ -22,67 +22,56 @@ function buildNewXML() {
     });
 }
 
-// Expands or collapses the List, depending on its current state.
-function expandcollapseList(List, ID) {
+// Expands or collapses the list, depending on its current state.
+function expandOrCollapseList(List, ID) {
+    var Column, UpperList, numberIfCollapsed;
+    if (List == 'ips') {
+        Column = 3;
+        UpperList = 'IPs';
+        numberIfCollapsed = 1;
+    } else {
+        Column = numberIfCollapsed = 2;
+        UpperList = 'Connections';
+    }
+
     var currentDiv = document.getElementById(List + '_' + ID + '_1');
-    if (currentDiv === null || currentDiv.style.display == 'none') {
-        expandList(List, ID);
-    } else collapseList(List, ID);
+    if (currentDiv === null || currentDiv.style.display == 'none')
+        expandList(List, UpperList, ID, Column, numberIfCollapsed);
+    else collapseList(List, UpperList, ID, Column, numberIfCollapsed);
 }
 
 // Expands the current list.
-function expandList(List, ID) {
-    var Row, ListUpper, i;
-    if (List == 'ips') {
-        Row = 3;
-        ListUpper = 'IPs';
-        i = 1;
-    } else {
-        Row = i = 2;
-        ListUpper = 'Connections';
-    }
-
-    var x = document.getElementById(ID).childNodes[Row],
-        ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    document.getElementById(List + 'Button_' + ID).innerHTML = '- ' + (ListContent.length - i);
+function expandList(List, UpperList, ID, Column, numberIfCollapsed) {
+    var x = document.getElementById(ID).childNodes[Column],
+        ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
+    document.getElementById(List + 'Button_' + ID).innerHTML = '- ' + (ListContent.length - numberIfCollapsed);
     document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', true);
     for (var j = 1; j < ListContent.length; j++) {
         var currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement('div');
             newDiv.id = currentDiv;
-            if (i == 1) newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
+            if (numberIfCollapsed == 1) newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
             else newDiv.innerHTML = UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue);
 
-            if (Row == 3) x.appendChild(newDiv);
+            if (Column == 3) x.appendChild(newDiv);
             else x.insertBefore(newDiv, x.lastChild);
-
         } else document.getElementById(currentDiv).style.display = '';
     }
 }
 
 // Collapses the current list.
-function collapseList(List, ID) {
-    var Row, ListUpper, i;
-    if (List == 'ips') {
-        Row = 3;
-        ListUpper = 'IPs';
-        i = 1;
-    } else {
-        Row = i = 2;
-        ListUpper = 'Connections';
-    }
-
-    var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(ListUpper)[0].getElementsByTagName(ListUpper[0]);
-    document.getElementById(List + 'Button_' + ID).innerHTML = '+ ' + (ListContent.length - i);
+function collapseList(List, UpperList, ID, Column, numberIfCollapsed) {
+    var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
+    document.getElementById(List + 'Button_' + ID).innerHTML = '+ ' + (ListContent.length - numberIfCollapsed);
     document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', false);
 
     if (document.getElementById(ID) !== null) {
-        var x = document.getElementById(ID).childNodes[Row].childNodes;
+        var x = document.getElementById(ID).childNodes[Column].childNodes;
         for (var j = 1; j < x.length - 2; j++) {
             document.getElementById(List + '_' + ID + '_' + j).style.display = 'none';
         }
-        if (Row == 3) document.getElementById(List + '_' + ID + '_' + j).style.display = 'none';
+        if (Column == 3) document.getElementById(List + '_' + ID + '_' + j).style.display = 'none';
     }
 }
 
@@ -90,12 +79,10 @@ function collapseList(List, ID) {
 function collapseAll() {
     var j, x = document.getElementById('clientTable').lastChild.childNodes;
     for (j = 0; j < x.length; j++) {
-        if (x.item(j).childNodes.item(2).getAttribute('expanded') == 'true') {
-            collapseList('connections', x.item(j).getAttribute('id'));
-        }
-        if (x.item(j).childNodes.item(3).getAttribute('expanded') == 'true') {
-            collapseList('ips', x.item(j).getAttribute('id'));
-        }
+        if (x.item(j).childNodes.item(2).getAttribute('expanded') == 'true')
+            collapseList('connections', 'Connections', x.item(j).getAttribute('id'), 2, 2);
+        if (x.item(j).childNodes.item(3).getAttribute('expanded') == 'true')
+            collapseList('ips', 'IPs', x.item(j).getAttribute('id'), 3, 1);
     }
 }
 
@@ -395,7 +382,7 @@ function buildClientTable() {
                 buttonExpandCollapseConnections.innerHTML = '+ ' + (Connections.length - 2);
                 (function(ID) {
                     addOnclickEvent(buttonExpandCollapseConnections, function() {
-                        expandcollapseList('connections', ID);
+                        expandOrCollapseList('connections', ID);
                     });
                 })(ID);
                 clientBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
@@ -420,7 +407,7 @@ function buildClientTable() {
                 buttonExpandCollapseIPs.innerHTML = '+ ' + (IPs.length - 1);
                 (function(ID) {
                     addOnclickEvent(buttonExpandCollapseIPs, function() {
-                        expandcollapseList('ips', ID);
+                        expandOrCollapseList('ips', ID);
                     });
                 })(ID);
                 clientBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
