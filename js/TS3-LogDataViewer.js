@@ -4,7 +4,8 @@
 
 // Global Variables
 var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
-    eventListeners = [];
+    eventListeners = [],
+    tables = ['clientTable', 'banTable', 'kickTable', 'complaintTable', 'uploadTable'];
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -207,20 +208,6 @@ function addTableCheckboxListener(table) {
             document.getElementById('scrollTo' + leadingCapitalLetterTable).style.display = 'none';
         }
     });
-}
-
-// Executes importLocalStorage() and addTableCheckboxListener() for every table.
-function localStorageAndTableCheckboxListener() {
-    importLocalStorage('clientTable');
-    importLocalStorage('banTable');
-    importLocalStorage('kickTable');
-    importLocalStorage('complaintTable');
-    importLocalStorage('uploadTable');
-    addTableCheckboxListener('clientTable');
-    addTableCheckboxListener('banTable');
-    addTableCheckboxListener('kickTable');
-    addTableCheckboxListener('complaintTable');
-    addTableCheckboxListener('uploadTable');
 }
 
 // Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
@@ -983,6 +970,7 @@ function buildUploadTable() {
 
 // Imports the local storage, builds a table when it will have content and sets the session storage.
 function buildTableWithAlertCheckAndLocalStorage(table) {
+    $(document.getElementById(table)).trigger('destroy');
     $(document.getElementById('ts3-' + table)).empty();
     if (localStorage.getItem(table + 'SortOrder') === null) {
         localStorage.setItem(table + 'SortOrder', '[]');
@@ -1013,17 +1001,15 @@ function buildTables() {
                 rebuildXML();
             }
         },
-        success: function(tempXML) {
+        success: function(fetchedXML) {
             rebuildError = false;
-            XML = tempXML;
+            XML = fetchedXML;
             ConnectedClientsCount = 0;
 
             removeEventListeners();
-            buildTableWithAlertCheckAndLocalStorage('clientTable');
-            buildTableWithAlertCheckAndLocalStorage('banTable');
-            buildTableWithAlertCheckAndLocalStorage('kickTable');
-            buildTableWithAlertCheckAndLocalStorage('complaintTable');
-            buildTableWithAlertCheckAndLocalStorage('uploadTable');
+            for (var i = 0; i < tables.length; i++) {
+                buildTableWithAlertCheckAndLocalStorage(tables[i]);
+            }
 
             var Attributes = XML.getElementsByTagName('Attributes')[0],
                 CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue,
@@ -1040,7 +1026,7 @@ function buildTables() {
 
             if (!document.getElementById('clientTable')) {
                 var Client = XML.getElementsByTagName('Client');
-                for (var i = 0; i < Client.length; i++) {
+                for (var j = 0; j < Client.length; j++) {
                     if (Client[i].getElementsByTagName('Connected')[0] !== undefined) {
                         ConnectedClientsCount++;
                     }
@@ -1249,9 +1235,12 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
         buildControlSection();
         nanobar.go(25);
-        localStorageAndTableCheckboxListener();
+
+        for (var i = 0; i < tables.length; i++) {
+            importLocalStorage(tables[i]);
+            addTableCheckboxListener(tables[i]);
+        }
+
         buildTables();
-    } else {
-        alert('The html is missing the control section. Please use the provided index.html.');
-    }
+    } else alert('The html is missing the control section. Please use the provided index.html.');
 });
