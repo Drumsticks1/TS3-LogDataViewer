@@ -5,7 +5,8 @@
 // Global Variables
 var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
     eventListeners = [],
-    tables = ['clientTable', 'banTable', 'kickTable', 'complaintTable', 'uploadTable'];
+    tables = ['clientTable', 'banTable', 'kickTable', 'complaintTable', 'uploadTable'],
+    tableNames = ['Client', 'Ban', 'Kick', 'Complaint', 'Upload'];
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -1048,62 +1049,34 @@ function buildTables() {
 function buildControlSection() {
     var controlSection = document.createElement('div'),
         tableSelectionSection = document.createElement('div'),
-        clientTableCheckboxSection = document.createElement('div'),
-        banTableCheckboxSection = document.createElement('div'),
-        kickTableCheckboxSection = document.createElement('div'),
-        complaintTableCheckboxSection = document.createElement('div'),
-        uploadTableCheckboxSection = document.createElement('div'),
-        clientTableCheckbox = document.createElement('input'),
-        banTableCheckbox = document.createElement('input'),
-        kickTableCheckbox = document.createElement('input'),
-        complaintTableCheckbox = document.createElement('input'),
-        uploadTableCheckbox = document.createElement('input'),
-        clientTableCheckboxLabel = document.createElement('label'),
-        banTableCheckboxLabel = document.createElement('label'),
-        kickTableCheckboxLabel = document.createElement('label'),
-        complaintTableCheckboxLabel = document.createElement('label'),
-        uploadTableCheckboxLabel = document.createElement('label');
+        tableCheckboxSections = new Array(5),
+        tableCheckboxes = new Array(5),
+        tableCheckboxLabels = new Array(5);
+
+        for (var i = 0; i < 5; i++){
+          tableCheckboxSections[i] = document.createElement('div');
+          tableCheckboxes[i] = document.createElement('input');
+          tableCheckboxes[i].type = 'checkbox';
+          tableCheckboxLabels[i] = document.createElement('label');
+        }
 
     controlSection.id = 'controlSection';
     tableSelectionSection.id = 'tableSelectionSection';
     controlSection.className = 'row';
     tableSelectionSection.className = 'columns';
-    clientTableCheckboxSection.className = 'small-12 medium-12 large-6 columns';
-    banTableCheckboxSection.className = 'small-12 medium-6 large-6 columns';
-    kickTableCheckboxSection.className = complaintTableCheckboxSection.className = uploadTableCheckboxSection.className = 'small-12 medium-6 large-4 columns';
-    clientTableCheckbox.type = banTableCheckbox.type = kickTableCheckbox.type = complaintTableCheckbox.type = uploadTableCheckbox.type = 'checkbox';
-    clientTableCheckbox.id = 'clientTableCheckbox';
-    banTableCheckbox.id = 'banTableCheckbox';
-    kickTableCheckbox.id = 'kickTableCheckbox';
-    complaintTableCheckbox.id = 'complaintTableCheckbox';
-    uploadTableCheckbox.id = 'uploadTableCheckbox';
-    clientTableCheckboxLabel.htmlFor = 'clientTableCheckbox';
-    banTableCheckboxLabel.htmlFor = 'banTableCheckbox';
-    kickTableCheckboxLabel.htmlFor = 'kickTableCheckbox';
-    complaintTableCheckboxLabel.htmlFor = 'complaintTableCheckbox';
-    uploadTableCheckboxLabel.htmlFor = 'uploadTableCheckbox';
-    clientTableCheckboxLabel.innerHTML = 'Client table';
-    banTableCheckboxLabel.innerHTML = 'Ban table';
-    kickTableCheckboxLabel.innerHTML = 'Kick table';
-    complaintTableCheckboxLabel.innerHTML = 'Complaint table';
-    uploadTableCheckboxLabel.innerHTML = 'Upload table';
+    tableCheckboxSections[0].className = 'small-12 medium-12 large-6 columns';
+    tableCheckboxSections[1].className = 'small-12 medium-6 large-6 columns';
+    for (i = 2; i < 5; i++){
+      tableCheckboxSections[i].className =  'small-12 medium-6 large-4 columns';
+    }
 
-    clientTableCheckboxSection.appendChild(clientTableCheckbox);
-    clientTableCheckboxSection.appendChild(clientTableCheckboxLabel);
-    banTableCheckboxSection.appendChild(banTableCheckbox);
-    banTableCheckboxSection.appendChild(banTableCheckboxLabel);
-    kickTableCheckboxSection.appendChild(kickTableCheckbox);
-    kickTableCheckboxSection.appendChild(kickTableCheckboxLabel);
-    complaintTableCheckboxSection.appendChild(complaintTableCheckbox);
-    complaintTableCheckboxSection.appendChild(complaintTableCheckboxLabel);
-    uploadTableCheckboxSection.appendChild(uploadTableCheckbox);
-    uploadTableCheckboxSection.appendChild(uploadTableCheckboxLabel);
-
-    tableSelectionSection.appendChild(clientTableCheckboxSection);
-    tableSelectionSection.appendChild(banTableCheckboxSection);
-    tableSelectionSection.appendChild(kickTableCheckboxSection);
-    tableSelectionSection.appendChild(complaintTableCheckboxSection);
-    tableSelectionSection.appendChild(uploadTableCheckboxSection);
+    for (i = 0; i < 5; i++){
+      tableCheckboxLabels[i].htmlFor = tableCheckboxes[i].id = tableNames[i].toLowerCase() + 'TableCheckbox';
+      tableCheckboxLabels[i].innerHTML = tableNames[i] + ' table';
+      tableCheckboxSections[i].appendChild(tableCheckboxes[i]);
+      tableCheckboxSections[i].appendChild(tableCheckboxLabels[i]);
+      tableSelectionSection.appendChild(tableCheckboxSections[i]);
+    }
 
     var creationTimestampSection = document.createElement('div'),
         creationTimestampTable = document.createElement('table'),
