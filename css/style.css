@@ -32,7 +32,7 @@ label:hover {
 :checked + label:hover {
     background-color: #549420
 }
-.alertBox, label, #TS3-LDV, #navbar button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
+.alertBox, label, #TS3-LDV, button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
     color: #fff
 }
 #navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
@@ -41,18 +41,27 @@ label:hover {
 #tableSelectionSection > div, #controlSection {
     padding: 0
 }
-#TS3-LDV, .tableheading {
+#TS3-LDV, .tableheading, button {
     background-color: #2ba6cb
 }
 .alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading {
     font-family: 'Open Sans', Arial, sans-serif;
     font-weight: 400
 }
+button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    transition: background-color 300ms ease-out;
+    border-radius: 0;
+    line-height: normal
+}
 #controlSection {
     margin-top: 20px
 }
 #creationTimestampTable {
-    margin: .75rem 0
+    margin: .75rem 0;
+    padding: 0.5625rem 0.625rem;
+    text-align: left
 }
 #tableSelectionSection {
     margin-bottom: 15px
@@ -88,15 +97,20 @@ label:hover {
     margin-bottom: 44px
 }
 td, th {
-    border: 1px solid #cdcdcd
+    border: 1px solid #cdcdcd;
+    line-height: 1.125rem
 }
 #TS3-LDV, .tableheading {
     padding: .5rem 1rem;
     font-size: 1.75em
 }
-#creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td {
+#creationTimestampTable > thead > tr > th, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td {
     padding: 4px;
-    vertical-align: top
+    vertical-align: top;
+    font-size: 0.875rem
+}
+#creationTimestampTable > thead > tr > th {
+    padding: 0.5rem 0.625rem 0.625rem;
 }
 .tablesorter > thead > tr > th {
     font-size: 14pt;

@@ -1067,7 +1067,7 @@ function buildControlSection() {
     controlSection.id = 'controlSection';
     tableSelectionSection.id = 'tableSelectionSection';
     controlSection.className = 'row';
-    tableSelectionSection.className = 'columns row';
+    tableSelectionSection.className = 'columns';
     clientTableCheckboxSection.className = 'small-12 medium-12 large-6 columns';
     banTableCheckboxSection.className = 'small-12 medium-6 large-6 columns';
     kickTableCheckboxSection.className = complaintTableCheckboxSection.className = uploadTableCheckboxSection.className = 'small-12 medium-6 large-4 columns';

@@ -69,8 +69,8 @@ All dependencies are covered in the install instructions.<br /> You will need to
   - [nanobar.min.js](https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js)
 - One file for moment.js:
   - [moment.min.js](https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js)
-- The front-end framework Foundation (Please only select "Grid", "Buttons" and "Tables" for the custom download):
-  - [Foundation custom download](http://foundation.zurb.com/develop/download.html#customizeFoundation)
+- The front-end framework Foundation (Please only select "Grid" and "Tables" for the custom download):
+  - [Foundation custom download](http://foundation.zurb.com/sites/download.html/#customizeFoundation)
 
 #### Teamspeak 3 server settings
 It is recommended to enable all logging options in the server options.<br />

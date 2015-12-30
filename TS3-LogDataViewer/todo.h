@@ -4,6 +4,7 @@
 
 /*
 general:
+	- check compatibility with boost 1.60.0 and update makefile
 	- add additional optional ignore files for the tables.
 	- make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
