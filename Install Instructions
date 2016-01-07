@@ -10,11 +10,11 @@ Linux:
 3. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3-LogDataViewer/releases).
 4. Download the attached compiled file (TS3-LogDataViewer.gz for Linux) from the release you are using (-> skip to step 5) or compile the code yourself using the provided makefile (-> follow the 4.x steps).
 	4.1. Downloads the makefile, the .cpp and .h files listed in the directory "TS3-LogDataViewer" (the todo.h isn't necessary for compiling as it doesn't include any code).
-	4.2. Download the Boost Library package via "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2" and extract it to your "/usr/" folder (--> /usr/boost_1_59_0)(you may need to adjust the version number).
-	4.3. Compile the required libraries (in /usr/boost_1_59_0: "./bootstrap.sh" and then "./b2 --with-program_options --with-filesystem --with-system --with-date_time --runtime-link=static --variant=release").
+	4.2. Download the Boost Library package via "https://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" and extract it to your "/usr/" folder (--> /usr/boost_1_60_0)(you may need to adjust the version number).
+	4.3. Compile the required libraries (in /usr/boost_1_60_0: "./bootstrap.sh" and then "./b2 --with-program_options --with-filesystem --with-system --with-date_time --runtime-link=static --variant=release").
 	4.4. Install the packages "libboost-iostreams1.55", "libboost-system1.55", "libboost-filesystem1.55" and "libboost-program-options1.55" (you may need to adjust the version numbers).
-	4.5. Download the pugixml library from it's github page ("https://github.com/zeux/pugixml") and uncompress it.
-	4.6. Move the uncompressed folder into the directory you wish (default location set in the makefile: /usr/pugixml-1.6/) (you may need to adjust the version numbers).
+	4.5. Download the pugixml library from it's github page ("https://github.com/zeux/pugixml/releases/tag/v1.7") and uncompress it.
+	4.6. Move the uncompressed folder into the directory you wish (default location set in the makefile: /usr/pugixml-1.7/) (you may need to adjust the version numbers).
 	4.7. Install the packages "make" and "g++" in order to compile using the makefile.
 	4.8. Check the include paths in the makefile and adjust them if necessary.
 	4.9. Compile with the makefile ("make -f makefile").

@@ -2,22 +2,21 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
-using namespace std;
+#include <string>
 
 // Class for the kick data.
 class Kick {
 private:
 	unsigned int kickedID;
-	string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason;
+	std::string kickDateTime, kickedNickname, kickedByNickname, kickedByUID, kickReason;
 
 public:
-	void addKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason);
+	void addKick(std::string kickDateTime, unsigned int kickedID, std::string kickedNickname, std::string kickedByNickname, std::string kickedByUID, std::string kickReason);
 
-	string getKickDateTime();
+	std::string getKickDateTime();
 	unsigned int getKickedID();
-	string getKickedNickname();
-	string getKickedByNickname();
-	string getKickedByUID();
-	string getKickReason();
+	std::string getKickedNickname();
+	std::string getKickedByNickname();
+	std::string getKickedByUID();
+	std::string getKickReason();
 };

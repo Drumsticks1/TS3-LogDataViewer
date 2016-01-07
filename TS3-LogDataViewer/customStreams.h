@@ -6,8 +6,5 @@
 #include <boost/iostreams/tee.hpp>
 #include <boost/iostreams/stream.hpp>
 
-using namespace std;
-using namespace boost::iostreams;
-
-typedef tee_device<ostream, ofstream> TeeDevice;
-typedef stream<TeeDevice> TeeStream;
+typedef boost::iostreams::tee_device<std::ostream, std::ofstream> TeeDevice;
+typedef boost::iostreams::stream<TeeDevice> TeeStream;

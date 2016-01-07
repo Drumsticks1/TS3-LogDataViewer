@@ -2,22 +2,21 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
-using namespace std;
+#include <string>
 
 // Class for the complaint data.
 class Complaint {
 private:
-	string complaintDateTime, complaintAboutNickname, complaintReason, complaintByNickname;
+	std::string complaintDateTime, complaintAboutNickname, complaintReason, complaintByNickname;
 	unsigned int complaintAboutID, complaintByID;
 
 public:
-	void addComplaint(string complaintDateTime, string complaintAboutNickname, unsigned int complaintAboutID, string complaintReason, string complaintByNickname, unsigned int complaintByID);
+	void addComplaint(std::string complaintDateTime, std::string complaintAboutNickname, unsigned int complaintAboutID, std::string complaintReason, std::string complaintByNickname, unsigned int complaintByID);
 
-	string getComplaintDateTime();
-	string getComplaintAboutNickname();
+	std::string getComplaintDateTime();
+	std::string getComplaintAboutNickname();
 	unsigned int getComplaintAboutID();
-	string getComplaintReason();
-	string getComplaintByNickname();
+	std::string getComplaintReason();
+	std::string getComplaintByNickname();
 	unsigned int getComplaintByID();
 };

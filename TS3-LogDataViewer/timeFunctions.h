@@ -2,17 +2,13 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
 #include <boost/date_time.hpp>
 
-using namespace std;
-using namespace boost::posix_time;
+// Returns the given ptime structure as std::string in the format "dd.mm.yyyy hh:mm:ss".
+std::string ptimeToString(boost::posix_time::ptime t);
 
-// Returns the given ptime structure as string in the format "dd.mm.yyyy hh:mm:ss".
-string ptimeToString(ptime t);
+// Returns the current UTC time as std::string in the format "dd.mm.yyyy hh:mm:ss".
+std::string getCurrentUTC();
 
-// Returns the current UTC time as string in the format "dd.mm.yyyy hh:mm:ss".
-string getCurrentUTC();
-
-// Returns the current local time as string in the format "dd.mm.yyyy hh:mm:ss".
-string getCurrentLocaltime();
+// Returns the current local time as std::string in the format "dd.mm.yyyy hh:mm:ss".
+std::string getCurrentLocaltime();

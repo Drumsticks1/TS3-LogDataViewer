@@ -2,26 +2,25 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
-using namespace std;
+#include <string>
 
 // Class for the ban data.
 class Ban {
 private:
 	unsigned int bannedID, bannedByID, bantime;
-	string banDateTime, bannedIP, bannedUID, bannedNickname, bannedByNickname, bannedByUID, banReason;
+	std::string banDateTime, bannedIP, bannedUID, bannedNickname, bannedByNickname, bannedByUID, banReason;
 
 public:
-	void addBan(string banDateTime, unsigned int bannedID, string bannedNickname, string bannedUID, string bannedIP, string bannedByNickname, unsigned int bannedByID, string bannedByUID, string banReason, unsigned int bantime);
+	void addBan(std::string banDateTime, unsigned int bannedID, std::string bannedNickname, std::string bannedUID, std::string bannedIP, std::string bannedByNickname, unsigned int bannedByID, std::string bannedByUID, std::string banReason, unsigned int bantime);
 
-	string getBanDateTime();
+	std::string getBanDateTime();
 	unsigned int getBannedID();
-	string getBannedNickname();
-	string getBannedUID();
-	string getBannedIP();
-	string getBannedByNickname();
+	std::string getBannedNickname();
+	std::string getBannedUID();
+	std::string getBannedIP();
+	std::string getBannedByNickname();
 	unsigned int getBannedByID();
-	string getBannedByUID();
-	string getBanReason();
+	std::string getBannedByUID();
+	std::string getBanReason();
 	unsigned int getBantime();
 };

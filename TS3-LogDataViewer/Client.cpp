@@ -2,14 +2,11 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
 #include <vector>
 #include <string>
 #include "Client.h"
 
-using namespace std;
-
-vector <Client> ClientList;
+std::vector <Client> ClientList;
 
 // Returns the ID of the current client.
 unsigned int Client::getID() { return ID; }
@@ -20,9 +17,9 @@ unsigned int Client::getNicknameCount() { return Nickname.size(); }
 unsigned int Client::getIPCount() { return IP.size(); }
 
 // Returns the information stored in the given ID slot.
-string Client::getUniqueDateTime(unsigned int DateTimeNumber) { return DateTime.at(DateTimeNumber); }
-string Client::getUniqueNickname(unsigned int NicknameNumber) { return Nickname.at(NicknameNumber); }
-string Client::getUniqueIP(unsigned int IPNumber) { return IP.at(IPNumber); }
+std::string Client::getUniqueDateTime(unsigned int DateTimeNumber) { return DateTime.at(DateTimeNumber); }
+std::string Client::getUniqueNickname(unsigned int NicknameNumber) { return Nickname.at(NicknameNumber); }
+std::string Client::getUniqueIP(unsigned int IPNumber) { return IP.at(IPNumber); }
 
 // Sets the given ID as client ID.
 void Client::addID(unsigned int ID) {
@@ -30,7 +27,7 @@ void Client::addID(unsigned int ID) {
 }
 
 // Adds the new Nickname at the beginning of the Nickname list.
-void Client::addNickname(string Nickname) {
+void Client::addNickname(std::string Nickname) {
 	for (unsigned int i = 0; i < this->Nickname.size(); i++) {
 		if (this->Nickname.at(i) == Nickname) {
 			this->Nickname.erase(this->Nickname.begin() + i);
@@ -40,12 +37,12 @@ void Client::addNickname(string Nickname) {
 }
 
 // Adds the new DateTime at the beginning of the DateTime list.
-void Client::addDateTime(string DateTime) {
+void Client::addDateTime(std::string DateTime) {
 	this->DateTime.insert(this->DateTime.begin(), DateTime);
 }
 
 // Adds the new IP at the beginning of the IP list.
-void Client::addIP(string IP) {
+void Client::addIP(std::string IP) {
 	for (unsigned int i = 0; i < this->IP.size(); i++) {
 		if (this->IP.at(i) == IP) {
 			this->IP.erase(this->IP.begin() + i);
@@ -55,17 +52,17 @@ void Client::addIP(string IP) {
 }
 
 // Adds the new Nickname at the end of the IP list.
-void Client::addNicknameReverse(string Nickname) {
+void Client::addNicknameReverse(std::string Nickname) {
 	this->Nickname.push_back(Nickname);
 }
 
 // Adds the new DateTime at the end of the DateTime list.
-void Client::addDateTimeReverse(string DateTime) {
+void Client::addDateTimeReverse(std::string DateTime) {
 	this->DateTime.push_back(DateTime);
 }
 
 // Adds the new IP at the end of the IP list.
-void Client::addIPReverse(string IP) {
+void Client::addIPReverse(std::string IP) {
 	this->IP.push_back(IP);
 }
 

@@ -2,27 +2,25 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
 #include <vector>
+#include <string>
 #include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
 #include "Upload.h"
 
-using namespace std;
-
-extern vector <string> Logs;
-extern vector <string> parsedLogs;
-extern vector <string> ignoreLogs;
-extern vector <Client> ClientList;
-extern vector <Ban> BanList;
-extern vector <Kick> KickList;
-extern vector <Complaint> ComplaintList;
-extern vector <Upload> UploadList;
+extern std::vector <std::string> Logs;
+extern std::vector <std::string> parsedLogs;
+extern std::vector <std::string> ignoreLogs;
+extern std::vector <Client> ClientList;
+extern std::vector <Ban> BanList;
+extern std::vector <Kick> KickList;
+extern std::vector <Complaint> ComplaintList;
+extern std::vector <Upload> UploadList;
 
 // Checks if a DateTime is already existing for the current client.
-bool isDuplicateDateTime(unsigned int ID, string DateTime) {
+bool isDuplicateDateTime(unsigned int ID, std::string DateTime) {
 	for (unsigned int i = 0; i < ClientList[ID].getDateTimeCount(); i++) {
 		if (ClientList[ID].getUniqueDateTime(i) == DateTime) {
 			return true;
@@ -32,7 +30,7 @@ bool isDuplicateDateTime(unsigned int ID, string DateTime) {
 }
 
 // Checks if a log is already existing in the parsedLogs list.
-bool isDuplicateLog(string log) {
+bool isDuplicateLog(std::string log) {
 	for (unsigned int i = 0; i < parsedLogs.size(); i++) {
 		if (log == parsedLogs[i]) return true;
 	}
@@ -40,7 +38,7 @@ bool isDuplicateLog(string log) {
 }
 
 // Checks if a log is existing in the ignoreLogs list.
-bool isIgnoredLog(string log) {
+bool isIgnoredLog(std::string log) {
 	for (unsigned int i = 0; i < ignoreLogs.size(); i++) {
 		if (log == ignoreLogs[i]) return true;
 	}
@@ -61,15 +59,15 @@ bool isMatchingLogOrder() {
 }
 
 // Checks if the two ban rules are matching with a ban disconnect.
-bool isMatchingBanRules(string bannedByNickname, string banReason, string bantime, string lastUIDBanRule, string lastIPBanRule) {
-	string UID = lastUIDBanRule, IP = lastIPBanRule;
+bool isMatchingBanRules(std::string bannedByNickname, std::string banReason, std::string bantime, std::string lastUIDBanRule, std::string lastIPBanRule) {
+	std::string UID = lastUIDBanRule, IP = lastIPBanRule;
 	if (bannedByNickname == "Server") {
 		bannedByNickname = "server";
 	}
 
-	if (UID.find(" by client '" + bannedByNickname + "'(") != string::npos && IP.find(" by client '" + bannedByNickname + "'(") != string::npos) {
-		if (UID.find("| ban added reason='" + banReason + "' cluid='") != string::npos && IP.find("| ban added reason='" + banReason + "' ip='") != string::npos) {
-			if (UID.find("bantime=" + bantime + " ") != string::npos && IP.find("bantime=" + bantime + " ") != string::npos) {
+	if (UID.find(" by client '" + bannedByNickname + "'(") != std::string::npos && IP.find(" by client '" + bannedByNickname + "'(") != std::string::npos) {
+		if (UID.find("| ban added reason='" + banReason + "' cluid='") != std::string::npos && IP.find("| ban added reason='" + banReason + "' ip='") != std::string::npos) {
+			if (UID.find("bantime=" + bantime + " ") != std::string::npos && IP.find("bantime=" + bantime + " ") != std::string::npos) {
 				return true;
 			}
 		}
@@ -78,7 +76,7 @@ bool isMatchingBanRules(string bannedByNickname, string banReason, string bantim
 }
 
 // Checks if a ban is already existing in the BanList.
-bool isDuplicateBan(string banDateTime, unsigned int bannedID, string bannedNickname, string bannedUID, string bannedIP, string bannedByNickname, unsigned int bannedByID, string bannedByUID, string banReason, unsigned int bantime) {
+bool isDuplicateBan(std::string banDateTime, unsigned int bannedID, std::string bannedNickname, std::string bannedUID, std::string bannedIP, std::string bannedByNickname, unsigned int bannedByID, std::string bannedByUID, std::string banReason, unsigned int bantime) {
 	for (unsigned int i = 0; i < BanList.size(); i++) {
 		if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedID() == bannedID && BanList[i].getBannedNickname() == bannedNickname &&
 			BanList[i].getBannedUID() == bannedUID && BanList[i].getBannedIP() == bannedIP && BanList[i].getBannedByID() == bannedByID &&
@@ -89,7 +87,7 @@ bool isDuplicateBan(string banDateTime, unsigned int bannedID, string bannedNick
 }
 
 // Checks if a kick is already existing in the KickList.
-bool isDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason) {
+bool isDuplicateKick(std::string kickDateTime, unsigned int kickedID, std::string kickedNickname, std::string kickedByNickname, std::string kickedByUID, std::string kickReason) {
 	for (unsigned int i = 0; i < KickList.size(); i++) {
 		if (KickList[i].getKickDateTime() == kickDateTime && KickList[i].getKickedID() == kickedID && KickList[i].getKickedNickname() == kickedNickname &&
 			KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason) return true;
@@ -98,7 +96,7 @@ bool isDuplicateKick(string kickDateTime, unsigned int kickedID, string kickedNi
 }
 
 // Checks if a complaint is already existing in the ComplaintList
-bool isDuplicateComplaint(string complaintDateTime, string complaintAboutNickname, unsigned int complaintAboutID, string complaintReason, string complaintByNickname, unsigned int complaintByID) {
+bool isDuplicateComplaint(std::string complaintDateTime, std::string complaintAboutNickname, unsigned int complaintAboutID, std::string complaintReason, std::string complaintByNickname, unsigned int complaintByID) {
 	for (unsigned int i = 0; i < ComplaintList.size(); i++) {
 		if (ComplaintList[i].getComplaintDateTime() == complaintDateTime && ComplaintList[i].getComplaintAboutNickname() == complaintAboutNickname &&
 			ComplaintList[i].getComplaintAboutID() == complaintAboutID && ComplaintList[i].getComplaintReason() == complaintReason &&
@@ -108,7 +106,7 @@ bool isDuplicateComplaint(string complaintDateTime, string complaintAboutNicknam
 }
 
 // Checks if an upload is already existing in the UploadList.
-bool isDuplicateUpload(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
+bool isDuplicateUpload(std::string uploadDateTime, unsigned int channelID, std::string filename, std::string uploadedByNickname, unsigned int uploadedByID) {
 	for (unsigned int i = 0; i < UploadList.size(); i++) {
 		if (UploadList[i].getUploadDateTime() == uploadDateTime && UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename &&
 			UploadList[i].getUploadedByNickname() == uploadedByNickname && UploadList[i].getUploadedByID() == uploadedByID) return true;

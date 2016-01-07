@@ -51,12 +51,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>c:\boost\boost_1_59_0;c:\pugixml-1.6</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>c:\boost\boost_1_60_0;c:\pugixml-1.7</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>c:\boost\boost_1_59_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>c:\boost\boost_1_60_0\stage\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,7 +68,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>c:\boost\boost_1_59_0;c:\pugixml-1.6</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>c:\boost\boost_1_60_0;c:\pugixml-1.7</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -76,7 +76,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>c:\boost\boost_1_59_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>c:\boost\boost_1_60_0\stage\lib</AdditionalLibraryDirectories>
       <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
@@ -86,7 +86,10 @@
     <ClCompile Include="fetchLogs.cpp" />
     <ClCompile Include="checkFunctions.cpp" />
     <ClCompile Include="createXML.cpp" />
-    <ClCompile Include="Upload.cpp" />
+    <ClCompile Include="Upload.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\boost\boost_1_60_0;c:\pugixml-1.6</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">c:\boost\boost_1_60_0;c:\pugixml-1.6</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="Kick.cpp" />
     <ClCompile Include="parseLogs.cpp" />
     <ClCompile Include="parseXML.cpp" />

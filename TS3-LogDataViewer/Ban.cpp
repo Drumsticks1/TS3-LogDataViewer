@@ -2,15 +2,14 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
 #include <vector>
 #include <string>
 #include "Ban.h"
 
-vector <Ban> BanList;
+std::vector <Ban> BanList;
 
 // Sets the data of the current Ban object according to the given data.
-void Ban::addBan(string banDateTime, unsigned int bannedID, string bannedNickname, string bannedUID, string bannedIP, string bannedByNickname, unsigned int bannedByID, string bannedByUID, string banReason, unsigned int bantime) {
+void Ban::addBan(std::string banDateTime, unsigned int bannedID, std::string bannedNickname, std::string bannedUID, std::string bannedIP, std::string bannedByNickname, unsigned int bannedByID, std::string bannedByUID, std::string banReason, unsigned int bantime) {
 	this->banDateTime = banDateTime;
 	this->bannedID = bannedID;
 	this->bannedNickname = bannedNickname;
@@ -24,13 +23,13 @@ void Ban::addBan(string banDateTime, unsigned int bannedID, string bannedNicknam
 }
 
 // Returns the requested information.
-string Ban::getBanDateTime() { return banDateTime; }
+std::string Ban::getBanDateTime() { return banDateTime; }
 unsigned int Ban::getBannedID() { return bannedID; }
-string Ban::getBannedNickname() { return bannedNickname; }
-string Ban::getBannedUID() { return bannedUID; }
-string Ban::getBannedIP() { return bannedIP; }
-string Ban::getBannedByNickname() { return bannedByNickname; }
+std::string Ban::getBannedNickname() { return bannedNickname; }
+std::string Ban::getBannedUID() { return bannedUID; }
+std::string Ban::getBannedIP() { return bannedIP; }
+std::string Ban::getBannedByNickname() { return bannedByNickname; }
 unsigned int Ban::getBannedByID() { return bannedByID; }
-string Ban::getBannedByUID() { return bannedByUID; }
-string Ban::getBanReason() { return banReason; }
+std::string Ban::getBannedByUID() { return bannedByUID; }
+std::string Ban::getBanReason() { return banReason; }
 unsigned int Ban::getBantime() { return bantime; }

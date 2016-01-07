@@ -2,17 +2,14 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
 #include <vector>
 #include <string>
 #include "Kick.h"
 
-using namespace std;
-
-vector <Kick> KickList;
+std::vector <Kick> KickList;
 
 // Sets the data of the current Kick object according to the given data.
-void Kick::addKick(string kickDateTime, unsigned int kickedID, string kickedNickname, string kickedByNickname, string kickedByUID, string kickReason) {
+void Kick::addKick(std::string kickDateTime, unsigned int kickedID, std::string kickedNickname, std::string kickedByNickname, std::string kickedByUID, std::string kickReason) {
 	this->kickDateTime = kickDateTime;
 	this->kickedID = kickedID;
 	this->kickedNickname = kickedNickname;
@@ -22,9 +19,9 @@ void Kick::addKick(string kickDateTime, unsigned int kickedID, string kickedNick
 }
 
 // Returns the requested information.
-string Kick::getKickDateTime() { return kickDateTime; }
+std::string Kick::getKickDateTime() { return kickDateTime; }
 unsigned int Kick::getKickedID() { return kickedID; }
-string Kick::getKickedNickname() { return kickedNickname; }
-string Kick::getKickedByNickname() { return kickedByNickname; }
-string Kick::getKickedByUID() { return kickedByUID; }
-string Kick::getKickReason() { return kickReason; }
+std::string Kick::getKickedNickname() { return kickedNickname; }
+std::string Kick::getKickedByNickname() { return kickedByNickname; }
+std::string Kick::getKickedByUID() { return kickedByUID; }
+std::string Kick::getKickReason() { return kickReason; }

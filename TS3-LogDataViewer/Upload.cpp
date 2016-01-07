@@ -2,17 +2,14 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-#include <iostream>
 #include <vector>
 #include <string>
 #include "Upload.h"
 
-using namespace std;
-
-vector <Upload> UploadList;
+std::vector <Upload> UploadList;
 
 // Sets the data of the current Upload object according to the given data.
-void Upload::addUpload(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID) {
+void Upload::addUpload(std::string uploadDateTime, unsigned int channelID, std::string filename, std::string uploadedByNickname, unsigned int uploadedByID) {
 	this->uploadDateTime = uploadDateTime;
 	this->channelID = channelID;
 	this->filename = filename;
@@ -21,7 +18,7 @@ void Upload::addUpload(string uploadDateTime, unsigned int channelID, string fil
 }
 
 // Overloaded version of the previous function for the parseXML data.
-void Upload::addUpload(string uploadDateTime, unsigned int channelID, string filename, string uploadedByNickname, unsigned int uploadedByID, string deletedByNickname, unsigned int deletedByID) {
+void Upload::addUpload(std::string uploadDateTime, unsigned int channelID, std::string filename, std::string uploadedByNickname, unsigned int uploadedByID, std::string deletedByNickname, unsigned int deletedByID) {
 	this->uploadDateTime = uploadDateTime;
 	this->channelID = channelID;
 	this->filename = filename;
@@ -32,25 +29,25 @@ void Upload::addUpload(string uploadDateTime, unsigned int channelID, string fil
 }
 
 // Returns the requested information.
-string Upload::getUploadDateTime() { return uploadDateTime; }
+std::string Upload::getUploadDateTime() { return uploadDateTime; }
 unsigned int Upload::getChannelID() { return channelID; }
-string Upload::getFilename() { return filename; }
-string Upload::getUploadedByNickname() { return uploadedByNickname; }
+std::string Upload::getFilename() { return filename; }
+std::string Upload::getUploadedByNickname() { return uploadedByNickname; }
 unsigned int Upload::getUploadedByID() { return uploadedByID; }
-string Upload::getDeletedByNickname() { return deletedByNickname; }
+std::string Upload::getDeletedByNickname() { return deletedByNickname; }
 unsigned int Upload::getDeletedByID() { return deletedByID; }
 
 // Sets the deleted flag to true
 void Upload::deleteUpload() { deleted = true; }
 
 // Adds the deletedByNickname / deletedByID to the object.
-void Upload::addDeletedByNickname(string deletedByNickname) { this->deletedByNickname = deletedByNickname; }
+void Upload::addDeletedByNickname(std::string deletedByNickname) { this->deletedByNickname = deletedByNickname; }
 void Upload::addDeletedByID(unsigned int deletedByID) { this->deletedByID = deletedByID; }
 
 // Adds the deletedByNickname and deletedByID data to the matching Upload.
-void addDeletedBy(unsigned int channelID, string filename, string deletedByNickname, unsigned int deletedByID) {
-	string shortFilename;
-	if (filename.find("//") != string::npos) {
+void addDeletedBy(unsigned int channelID, std::string filename, std::string deletedByNickname, unsigned int deletedByID) {
+	std::string shortFilename;
+	if (filename.find("//") != std::string::npos) {
 		shortFilename = filename.substr(filename.find("//") + 1);
 	}
 	else {

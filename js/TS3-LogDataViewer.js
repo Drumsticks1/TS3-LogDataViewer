@@ -201,12 +201,12 @@ function addTableCheckboxListener(table) {
                 window['build' + leadingCapitalLetterTable]();
                 nanobar.go(100);
             }
-            document.getElementById('ts3-' + table).style.display = '';
-            document.getElementById('scrollTo' + leadingCapitalLetterTable).style.display = '';
+            document.getElementById('ts3-' + table).style.display =
+                document.getElementById('scrollTo' + leadingCapitalLetterTable).style.display = '';
         } else {
             localStorage.setItem(table, '0');
-            document.getElementById('ts3-' + table).style.display = 'none';
-            document.getElementById('scrollTo' + leadingCapitalLetterTable).style.display = 'none';
+            document.getElementById('ts3-' + table).style.display =
+                document.getElementById('scrollTo' + leadingCapitalLetterTable).style.display = 'none';
         }
     });
 }
@@ -216,7 +216,7 @@ function UTCDateStringToDate(dateString, moment) {
     return new Date(Date.UTC(dateString.substr(0, 4), dateString.substr(5, 2) - 1, dateString.substr(8, 2), dateString.substr(11, 2), dateString.substr(14, 2), dateString.substr(17, 2)));
 }
 
-// Returns the parameter as double digit string.
+// Returns the given number as double digit string.
 function toDoubleDigit(x) {
     if (x < 10) x = '0' + x;
     return x;
@@ -1053,12 +1053,12 @@ function buildControlSection() {
         tableCheckboxes = new Array(5),
         tableCheckboxLabels = new Array(5);
 
-        for (var i = 0; i < 5; i++){
-          tableCheckboxSections[i] = document.createElement('div');
-          tableCheckboxes[i] = document.createElement('input');
-          tableCheckboxes[i].type = 'checkbox';
-          tableCheckboxLabels[i] = document.createElement('label');
-        }
+    for (var i = 0; i < 5; i++) {
+        tableCheckboxSections[i] = document.createElement('div');
+        tableCheckboxes[i] = document.createElement('input');
+        tableCheckboxes[i].type = 'checkbox';
+        tableCheckboxLabels[i] = document.createElement('label');
+    }
 
     controlSection.id = 'controlSection';
     tableSelectionSection.id = 'tableSelectionSection';
@@ -1066,16 +1066,16 @@ function buildControlSection() {
     tableSelectionSection.className = 'columns';
     tableCheckboxSections[0].className = 'small-12 medium-12 large-6 columns';
     tableCheckboxSections[1].className = 'small-12 medium-6 large-6 columns';
-    for (i = 2; i < 5; i++){
-      tableCheckboxSections[i].className =  'small-12 medium-6 large-4 columns';
+    for (i = 2; i < 5; i++) {
+        tableCheckboxSections[i].className = 'small-12 medium-6 large-4 columns';
     }
 
-    for (i = 0; i < 5; i++){
-      tableCheckboxLabels[i].htmlFor = tableCheckboxes[i].id = tableNames[i].toLowerCase() + 'TableCheckbox';
-      tableCheckboxLabels[i].innerHTML = tableNames[i] + ' table';
-      tableCheckboxSections[i].appendChild(tableCheckboxes[i]);
-      tableCheckboxSections[i].appendChild(tableCheckboxLabels[i]);
-      tableSelectionSection.appendChild(tableCheckboxSections[i]);
+    for (i = 0; i < 5; i++) {
+        tableCheckboxLabels[i].htmlFor = tableCheckboxes[i].id = tableNames[i].toLowerCase() + 'TableCheckbox';
+        tableCheckboxLabels[i].innerHTML = tableNames[i] + ' table';
+        tableCheckboxSections[i].appendChild(tableCheckboxes[i]);
+        tableCheckboxSections[i].appendChild(tableCheckboxLabels[i]);
+        tableSelectionSection.appendChild(tableCheckboxSections[i]);
     }
 
     var creationTimestampSection = document.createElement('div'),
