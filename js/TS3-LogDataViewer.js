@@ -306,7 +306,7 @@ function buildClientTable() {
     clientHeadCell_IPs.innerHTML = 'IPs';
     clientHeadCell_ConnectionCount.innerHTML = 'Connection Count';
     clientHeadCell_Connected.innerHTML = 'Connected';
-    clientHeadCell_Deleted.innerHTML = 'Deleted';
+    clientHeadCell_Deleted.innerHTML = 'Placeholder';
 
     clientHeadRow.appendChild(clientHeadCell_ID);
     clientHeadRow.appendChild(clientHeadCell_Nicknames);
@@ -326,15 +326,7 @@ function buildClientTable() {
             var Nicknames = Client[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N'),
                 Connections = Client[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C'),
                 IPs = Client[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I'),
-                Connection_Count = Connections.length,
-                Connected, Deleted;
-            if (Client[ID].getElementsByTagName('Connected')[0] !== undefined) {
-                Connected = 'true';
-                ConnectedClientsCount++;
-            } else Connected = 'false';
-            if (Client[ID].getElementsByTagName('Deleted')[0] !== undefined) {
-                Deleted = 'true';
-            } else Deleted = 'false';
+                Connection_Count = Connections.length;
 
             var clientBodyRow = document.createElement('tr'),
                 clientBodyCell_ID = document.createElement('td'),
@@ -352,7 +344,7 @@ function buildClientTable() {
             clientBodyCell_IPs.setAttribute('data-title', 'IPs');
             clientBodyCell_ConnectionCount.setAttribute('data-title', 'Connection Count');
             clientBodyCell_Connected.setAttribute('data-title', 'Connected');
-            clientBodyCell_Deleted.setAttribute('data-title', 'Deleted');
+            clientBodyCell_Deleted.setAttribute('data-title', 'Placeholder');
 
             clientBodyCell_ID.innerHTML = ID;
             clientBodyRow.appendChild(clientBodyCell_ID);
@@ -410,11 +402,15 @@ function buildClientTable() {
 
             clientBodyCell_ConnectionCount.innerHTML = Connection_Count;
             clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
-
-            clientBodyCell_Connected.innerHTML = Connected;
+            if (Client[ID].getElementsByTagName('Deleted')[0] !== undefined) {
+                clientBodyRow.className += "deleted";
+                clientBodyCell_Connected.innerHTML = "false";
+            } else if (Client[ID].getElementsByTagName('Connected')[0] !== undefined) {
+                clientBodyRow.className += "connected";
+                ConnectedClientsCount++;
+                clientBodyCell_Connected.innerHTML = "true";
+            } else clientBodyCell_Connected.innerHTML = "false";
             clientBodyRow.appendChild(clientBodyCell_Connected);
-
-            clientBodyCell_Deleted.innerHTML = Deleted;
             clientBodyRow.appendChild(clientBodyCell_Deleted);
 
             clientBody.appendChild(clientBodyRow);

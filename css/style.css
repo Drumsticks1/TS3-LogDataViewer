@@ -35,7 +35,7 @@ label:hover {
 .alertBox, label, #TS3-LDV, button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
     color: #fff
 }
-#navbar, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td, .tablesorter button {
+#navbar, td, .tablesorter button {
     background-color: #fff
 }
 #tableSelectionSection > div, #controlSection {
@@ -141,6 +141,20 @@ td, th {
     padding: .6rem;
     background-color: #9f9f9f
 }
+.connected > td, .connected > td > button {
+    background-color: #5da423;
+    color: #fff
+}
+.connected > td > button:active, .connected > td > button:hover, .connected > td > button:focus {
+    background-color: #fff;
+    color: #5da423
+}
+.deleted > td, .deleted > td > button {
+    background-color: #fefefe
+}
+.deleted > td {
+    color: #999
+}
 @media (max-width: 1024px) {
     .tablesorter-sticky-visible {
         display: none
@@ -170,6 +184,9 @@ td, th {
         float: left;
         max-width: calc(50vw - 5px);
         width: 50%
+    }
+    .ui-table-reflow > tbody > .connected > td[data-title]:before {
+        color: #fff
     }
     .ui-table-reflow > tbody > tr > td > button {
         margin: 0 0 5px
