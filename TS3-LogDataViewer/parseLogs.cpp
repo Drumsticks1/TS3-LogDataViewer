@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <boost/filesystem.hpp>
+#include "ServerGroup.h"
 #include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
@@ -16,6 +17,7 @@
 
 extern std::vector <std::string> Logs;
 extern std::vector <std::string> parsedLogs;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Client> ClientList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
@@ -25,34 +27,41 @@ extern bool validXML;
 extern unsigned int VIRTUALSERVER;
 extern TeeStream outputStream;
 
-#define LOGMATCHBANRULE			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| ban added reason='"
-#define LOGMATCHCOMPLAINT		"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| complaint added for client '"
-#define LOGMATCHCONNECT			"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client connected '"
-#define LOGMATCHDISCONNECT		"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client disconnected '"
-#define LOGMATCHDELETEUSER1		"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| client '"
-#define LOGMATCHDELETEUSER2		") got deleted by client '"
-#define LOGMATCHUPLOAD			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file upload to"
-#define LOGMATCHUPLOADDELETION	"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file deleted from"
+#define LOGMATCH_BANRULE				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| ban added reason='"
+#define LOGMATCH_COMPLAINT				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| complaint added for client '"
+#define LOGMATCH_CONNECT				"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client connected '"
+#define LOGMATCH_DISCONNECT				"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client disconnected '"
+#define LOGMATCH_SERVERGROUPEVENT		"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| servergroup '"
+#define LOGMATCH_SERVERGROUPASSIGNMENT	") was added to servergroup '"
+#define LOGMATCH_SERVERGROUPREMOVAL		") was removed from servergroup '"
+#define LOGMATCH_DELETEUSER1			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| client '"
+#define LOGMATCH_DELETEUSER2			") got deleted by client '"
+#define LOGMATCH_UPLOAD					"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file upload to"
+#define LOGMATCH_UPLOADDELETION			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file deleted from"
+#define LOGMATCH_UPLOAD					"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file upload to"
+#define LOGMATCH_UPLOADDELETION			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file deleted from"
 
 // Parses the logs and stores the data in the ClientList.
 void parseLogs(std::string LOGDIRECTORY) {
 	std::string buffer_logline, LogFilePath, DateTime, Nickname, IP,
+		ServerGroupName,
 		lastUIDBanRule, lastIPBanRule, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, bantime,
 		kickedByNickname, kickedByUID, kickReason,
 		complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID,
 		channelID, filename, uploadedByNickname, uploadedByID,
 		deletedByNickname, deletedByID;
 	unsigned int BanListID, KickListID, ComplaintListID, UploadListID, ID, virtualServerLength = std::to_string(VIRTUALSERVER).size(),
-		IDStartPos, IDEndPos, NicknameStartPos, IPStartPos, IDLength, NicknameLength, IPLength,
-		bannedByNicknameStartPos, bannedByNicknameEndPos, bannedByUIDStartPos, bannedByUIDEndPos, banReasonStartPos, banReasonEndPos, bannedIPStartPos, bannedUIDStartPos, bannedByIDStartPos,
-		bantimeStartPos, bantimeEndPos, bannedByNicknameLength, bannedByUIDLength, banReasonLength, bantimeLength, bannedUIDLength, bannedIPLength, bannedByIDLength,
-		kickReasonStartPos, kickedByNicknameStartPos, kickedByNicknameEndPos, kickedByUIDStartPos, kickedByUIDEndPos, kickReasonLength, kickedByNicknameLength, kickedByUIDLength,
-		complaintAboutNicknameStartPos, complaintAboutNicknameEndPos, complaintAboutIDStartPos, complaintReasonStartPos, complaintReasonEndPos, complaintAboutIDEndPos,
-		complaintByNicknameStartPos, complaintByNicknameEndPos, complaintByIDStartPos, complaintByIDEndPos,
-		complaintAboutNicknameLength, complaintAboutIDLength, complaintReasonLength, complaintByNicknameLength, complaintByIDLength,
-		channelIDStartPos, channelIDEndPos, filenameStartPos, filenameEndPos, uploadedByNicknameStartPos, uploadedByNicknameEndPos, uploadedByIDStartPos, uploadedByIDEndPos,
-		channelIDLength, filenameLength, uploadedByNicknameLength, uploadedByIDLength, deletedByNicknameStartPos, deletedByNicknameEndPos, deletedByIDStartPos, deletedByIDEndPos,
-		deletedByNicknameLength, deletedByIDLength;
+		ID_StartPos, ID_EndPos, Nickname_StartPos, IP_StartPos, ID_Length, Nickname_Length, IP_Length,
+		ServerGroupName_StartPos, ServerGroupName_EndPos, ServerGroupName_Length,
+		bannedByNickname_StartPos, bannedByNickname_EndPos, bannedByUID_StartPos, bannedByUID_EndPos, banReason_StartPos, banReason_EndPos, bannedIP_StartPos, bannedUID_StartPos, bannedByID_StartPos,
+		bantime_StartPos, bantime_EndPos, bannedByNickname_Length, bannedByUID_Length, banReason_Length, bantime_Length, bannedUID_Length, bannedIP_Length, bannedByID_Length,
+		kickReason_StartPos, kickedByNickname_StartPos, kickedByNickname_EndPos, kickedByUID_StartPos, kickedByUID_EndPos, kickReason_Length, kickedByNickname_Length, kickedByUID_Length,
+		complaintAboutNickname_StartPos, complaintAboutNickname_EndPos, complaintAboutID_StartPos, complaintReason_StartPos, complaintReason_EndPos, complaintAboutID_EndPos,
+		complaintByNickname_StartPos, complaintByNickname_EndPos, complaintByID_StartPos, complaintByID_EndPos,
+		complaintAboutNickname_Length, complaintAboutID_Length, complaintReason_Length, complaintByNickname_Length, complaintByID_Length,
+		channelID_StartPos, channelID_EndPos, filename_StartPos, filename_EndPos, uploadedByNickname_StartPos, uploadedByNickname_EndPos, uploadedByID_StartPos, uploadedByID_EndPos,
+		channelID_Length, filename_Length, uploadedByNickname_Length, uploadedByID_Length, deletedByNickname_StartPos, deletedByNickname_EndPos, deletedByID_StartPos, deletedByID_EndPos,
+		deletedByNickname_Length, deletedByID_Length;
 	unsigned long logfileLength;
 	bool kickMatch, banMatch;
 
@@ -100,18 +109,18 @@ void parseLogs(std::string LOGDIRECTORY) {
 				getline(logfile, buffer_logline);
 
 				// Connects
-				if (buffer_logline.find(LOGMATCHCONNECT) != std::string::npos) {
-					IPStartPos = buffer_logline.rfind(" ") + 1;
-					NicknameStartPos = virtualServerLength + 76;
-					IDStartPos = buffer_logline.rfind("'(id:") + 5;
-					IDLength = IPStartPos - IDStartPos - 7;
-					NicknameLength = IDStartPos - NicknameStartPos - 5;
-					IPLength = buffer_logline.size() - IPStartPos - 6; // - 6 for ignoring the port.
+				if (buffer_logline.find(LOGMATCH_CONNECT) != std::string::npos) {
+					IP_StartPos = buffer_logline.rfind(" ") + 1;
+					Nickname_StartPos = virtualServerLength + 76;
+					ID_StartPos = buffer_logline.rfind("'(id:") + 5;
+					ID_Length = IP_StartPos - ID_StartPos - 7;
+					Nickname_Length = ID_StartPos - Nickname_StartPos - 5;
+					IP_Length = buffer_logline.size() - IP_StartPos - 6; // - 6 for ignoring the port.
 
 					DateTime = buffer_logline.substr(0, 19);
-					Nickname = buffer_logline.substr(NicknameStartPos, NicknameLength);
-					ID = std::stoul(buffer_logline.substr(IDStartPos, IDLength));
-					IP = buffer_logline.substr(IPStartPos, IPLength);
+					Nickname = buffer_logline.substr(Nickname_StartPos, Nickname_Length);
+					ID = std::stoul(buffer_logline.substr(ID_StartPos, ID_Length));
+					IP = buffer_logline.substr(IP_StartPos, IP_Length);
 
 					if (ClientList.size() < ID + 1) ClientList.resize(ID + 1);
 					if (ClientList[ID].getID() != ID) ClientList[ID].addID(ID);
@@ -133,27 +142,27 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Disconnects (including kicks and bans)
-				else if (buffer_logline.find(LOGMATCHDISCONNECT) != std::string::npos) {
+				else if (buffer_logline.find(LOGMATCH_DISCONNECT) != std::string::npos) {
 					banMatch = kickMatch = false;
 
-					NicknameStartPos = virtualServerLength + 79;
-					IDStartPos = buffer_logline.rfind("'(id:") + 5;
+					Nickname_StartPos = virtualServerLength + 79;
+					ID_StartPos = buffer_logline.rfind("'(id:") + 5;
 
 					if (buffer_logline.rfind(") reason 'reasonmsg") == std::string::npos) {
-						IDEndPos = buffer_logline.rfind(") reason 'invokerid=");
+						ID_EndPos = buffer_logline.rfind(") reason 'invokerid=");
 						if (buffer_logline.rfind(" bantime=") == std::string::npos) {
 							kickMatch = true;
 						}
 						else banMatch = true;
 					}
-					else IDEndPos = buffer_logline.rfind(") reason 'reasonmsg");
+					else ID_EndPos = buffer_logline.rfind(") reason 'reasonmsg");
 
-					IDLength = IDEndPos - IDStartPos;
-					NicknameLength = IDStartPos - NicknameStartPos - 5;
+					ID_Length = ID_EndPos - ID_StartPos;
+					Nickname_Length = ID_StartPos - Nickname_StartPos - 5;
 
 					DateTime = buffer_logline.substr(0, 19);
-					Nickname = buffer_logline.substr(NicknameStartPos, NicknameLength);
-					ID = std::stoul(buffer_logline.substr(IDStartPos, IDLength));
+					Nickname = buffer_logline.substr(Nickname_StartPos, Nickname_Length);
+					ID = std::stoul(buffer_logline.substr(ID_StartPos, ID_Length));
 
 					if (ClientList.size() < ID + 1) {
 						ClientList.resize(ID + 1);
@@ -171,56 +180,56 @@ void parseLogs(std::string LOGDIRECTORY) {
 					// Bans
 					if (banMatch) {
 						bool validUID = true;
-						bannedByNicknameStartPos = buffer_logline.find(" invokername=", IDEndPos) + 13;
+						bannedByNickname_StartPos = buffer_logline.find(" invokername=", ID_EndPos) + 13;
 
 						if (buffer_logline.find("invokeruid=") != std::string::npos) {
-							bannedByNicknameEndPos = buffer_logline.find(" invokeruid=", bannedByNicknameStartPos);
-							bannedByUIDStartPos = bannedByNicknameEndPos + 12;
-							bannedByUIDEndPos = buffer_logline.find(" reasonmsg", bannedByNicknameEndPos);
+							bannedByNickname_EndPos = buffer_logline.find(" invokeruid=", bannedByNickname_StartPos);
+							bannedByUID_StartPos = bannedByNickname_EndPos + 12;
+							bannedByUID_EndPos = buffer_logline.find(" reasonmsg", bannedByNickname_EndPos);
 						}
 						else {
-							bannedByNicknameEndPos = bannedByUIDEndPos = buffer_logline.find(" reasonmsg");
+							bannedByNickname_EndPos = bannedByUID_EndPos = buffer_logline.find(" reasonmsg");
 							validUID = false;
 						}
 
-						banReasonStartPos = bannedByUIDEndPos + 11;
+						banReason_StartPos = bannedByUID_EndPos + 11;
 						if (buffer_logline.find("reasonmsg=") != std::string::npos) {
-							banReasonEndPos = buffer_logline.find(" bantime=", bannedByUIDEndPos);
-							bantimeStartPos = banReasonEndPos + 9;
+							banReason_EndPos = buffer_logline.find(" bantime=", bannedByUID_EndPos);
+							bantime_StartPos = banReason_EndPos + 9;
 						}
 						else {
-							banReasonEndPos = banReasonStartPos;
-							bantimeStartPos = banReasonEndPos + 8;
+							banReason_EndPos = banReason_StartPos;
+							bantime_StartPos = banReason_EndPos + 8;
 						}
 
-						bantimeEndPos = buffer_logline.size() - 1;
+						bantime_EndPos = buffer_logline.size() - 1;
 
-						bannedByNicknameLength = bannedByNicknameEndPos - bannedByNicknameStartPos;
-						banReasonLength = banReasonEndPos - banReasonStartPos;
-						bantimeLength = bantimeEndPos - bantimeStartPos;
+						bannedByNickname_Length = bannedByNickname_EndPos - bannedByNickname_StartPos;
+						banReason_Length = banReason_EndPos - banReason_StartPos;
+						bantime_Length = bantime_EndPos - bantime_StartPos;
 
-						bannedByNickname = buffer_logline.substr(bannedByNicknameStartPos, bannedByNicknameLength);
-						banReason = buffer_logline.substr(banReasonStartPos, banReasonLength);
-						bantime = buffer_logline.substr(bantimeStartPos, bantimeLength);
+						bannedByNickname = buffer_logline.substr(bannedByNickname_StartPos, bannedByNickname_Length);
+						banReason = buffer_logline.substr(banReason_StartPos, banReason_Length);
+						bantime = buffer_logline.substr(bantime_StartPos, bantime_Length);
 
 						if (validUID) {
-							bannedByUIDLength = bannedByUIDEndPos - bannedByUIDStartPos;
-							bannedByUID = buffer_logline.substr(bannedByUIDStartPos, bannedByUIDLength);
+							bannedByUID_Length = bannedByUID_EndPos - bannedByUID_StartPos;
+							bannedByUID = buffer_logline.substr(bannedByUID_StartPos, bannedByUID_Length);
 						}
 						else bannedByUID = "No UID";
 
 						if (lastUIDBanRule.size() != 0 && lastIPBanRule.size() != 0) {
 							if (isMatchingBanRules(bannedByNickname, banReason, bantime, lastUIDBanRule, lastIPBanRule)) {
-								bannedUIDStartPos = lastUIDBanRule.find("' cluid='") + 9;
-								bannedUIDLength = lastUIDBanRule.rfind("' bantime=") - bannedUIDStartPos;
-								bannedIPStartPos = lastIPBanRule.find("' ip='") + 6;
-								bannedIPLength = lastIPBanRule.rfind("' bantime=") - bannedIPStartPos;
-								bannedByIDStartPos = lastIPBanRule.rfind("'(id:") + 5;
-								bannedByIDLength = lastIPBanRule.size() - bannedByIDStartPos - 1;
+								bannedUID_StartPos = lastUIDBanRule.find("' cluid='") + 9;
+								bannedUID_Length = lastUIDBanRule.rfind("' bantime=") - bannedUID_StartPos;
+								bannedIP_StartPos = lastIPBanRule.find("' ip='") + 6;
+								bannedIP_Length = lastIPBanRule.rfind("' bantime=") - bannedIP_StartPos;
+								bannedByID_StartPos = lastIPBanRule.rfind("'(id:") + 5;
+								bannedByID_Length = lastIPBanRule.size() - bannedByID_StartPos - 1;
 
-								bannedUID = lastUIDBanRule.substr(bannedUIDStartPos, bannedUIDLength);
-								bannedIP = lastIPBanRule.substr(bannedIPStartPos, bannedIPLength);
-								bannedByID = lastIPBanRule.substr(bannedByIDStartPos, bannedByIDLength);
+								bannedUID = lastUIDBanRule.substr(bannedUID_StartPos, bannedUID_Length);
+								bannedIP = lastIPBanRule.substr(bannedIP_StartPos, bannedIP_Length);
+								bannedByID = lastIPBanRule.substr(bannedByID_StartPos, bannedByID_Length);
 							}
 							else {
 								bannedUID = bannedIP = "Unknown";
@@ -238,24 +247,24 @@ void parseLogs(std::string LOGDIRECTORY) {
 					// Kicks
 					else if (kickMatch) {
 						if (buffer_logline.rfind(" reasonmsg=") != std::string::npos) {
-							kickReasonStartPos = buffer_logline.rfind(" reasonmsg=") + 11;
-							kickReasonLength = buffer_logline.size() - kickReasonStartPos - 1;
-							kickReason = buffer_logline.substr(kickReasonStartPos, kickReasonLength);
+							kickReason_StartPos = buffer_logline.rfind(" reasonmsg=") + 11;
+							kickReason_Length = buffer_logline.size() - kickReason_StartPos - 1;
+							kickReason = buffer_logline.substr(kickReason_StartPos, kickReason_Length);
 						}
 						else kickReason = "";
 
-						kickedByNicknameStartPos = buffer_logline.rfind(" invokername=") + 13;
-						kickedByNicknameEndPos = buffer_logline.rfind(" invokeruid=");
-						kickedByNicknameLength = kickedByNicknameEndPos - kickedByNicknameStartPos;
-						kickedByUIDStartPos = kickedByNicknameEndPos + 12;
+						kickedByNickname_StartPos = buffer_logline.rfind(" invokername=") + 13;
+						kickedByNickname_EndPos = buffer_logline.rfind(" invokeruid=");
+						kickedByNickname_Length = kickedByNickname_EndPos - kickedByNickname_StartPos;
+						kickedByUID_StartPos = kickedByNickname_EndPos + 12;
 						if (buffer_logline.find("invokeruid=serveradmin") == std::string::npos) {
-							kickedByUIDEndPos = buffer_logline.find("=", kickedByUIDStartPos) + 1;
+							kickedByUID_EndPos = buffer_logline.find("=", kickedByUID_StartPos) + 1;
 						}
-						else kickedByUIDEndPos = buffer_logline.find("reasonmsg") - 1;
-						kickedByUIDLength = kickedByUIDEndPos - kickedByUIDStartPos;
+						else kickedByUID_EndPos = buffer_logline.find("reasonmsg") - 1;
+						kickedByUID_Length = kickedByUID_EndPos - kickedByUID_StartPos;
 
-						kickedByNickname = buffer_logline.substr(kickedByNicknameStartPos, kickedByNicknameLength);
-						kickedByUID = buffer_logline.substr(kickedByUIDStartPos, kickedByUIDLength);
+						kickedByNickname = buffer_logline.substr(kickedByNickname_StartPos, kickedByNickname_Length);
+						kickedByUID = buffer_logline.substr(kickedByUID_StartPos, kickedByUID_Length);
 
 						if (!isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)) {
 							KickList.resize(KickListID + 1);
@@ -265,9 +274,32 @@ void parseLogs(std::string LOGDIRECTORY) {
 					}
 				}
 
+				// DEV: Currently not used
+				// Client assignments to and client removals from a server group
+				else if (buffer_logline.find(LOGMATCH_SERVERGROUPASSIGNMENT) != std::string::npos || buffer_logline.find(LOGMATCH_SERVERGROUPREMOVAL) != std::string::npos) {
+					ID_StartPos = buffer_logline.find("'(id:") + 5;
+					ID_EndPos = buffer_logline.find(") was added to servergroup '") - 1;
+
+					// Removal
+					if (ID_EndPos > buffer_logline.length()) {
+						ID_EndPos = buffer_logline.find(") was removed from servergroup '") - 1;
+						ServerGroupName_StartPos = ID_EndPos + 33;
+					}
+					else ServerGroupName_StartPos = ID_EndPos + 29;
+
+					ServerGroupName_EndPos = buffer_logline.rfind("'(id:", buffer_logline.rfind(") by client '"));
+					ServerGroupName_Length = ServerGroupName_EndPos - ServerGroupName_StartPos;
+
+					ID_Length = ID_EndPos - ID_StartPos;
+
+					DateTime = buffer_logline.substr(0, 19);
+					ID = std::stoul(buffer_logline.substr(ID_StartPos, ID_Length));
+					ServerGroupName = buffer_logline.substr(ServerGroupName_StartPos, ServerGroupName_Length);
+				}
+
 				// Ban Rules
 				// Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
-				else if (buffer_logline.find(LOGMATCHBANRULE) != std::string::npos) {
+				else if (buffer_logline.find(LOGMATCH_BANRULE) != std::string::npos) {
 					if (buffer_logline.find("' cluid='") != std::string::npos && buffer_logline.find("' ip='") == std::string::npos) {
 						lastUIDBanRule = buffer_logline;
 					}
@@ -277,30 +309,30 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Complaints
-				else if (buffer_logline.find(LOGMATCHCOMPLAINT) != std::string::npos) {
-					complaintAboutNicknameStartPos = virtualServerLength + 83;
-					complaintAboutNicknameEndPos = buffer_logline.find("'(id:");
-					complaintAboutIDStartPos = complaintAboutNicknameEndPos + 5;
-					complaintAboutIDEndPos = buffer_logline.find(") reason '");
-					complaintReasonStartPos = complaintAboutIDEndPos + 10;
-					complaintReasonEndPos = buffer_logline.rfind("' by client '");
-					complaintByNicknameStartPos = complaintReasonEndPos + 13;
-					complaintByNicknameEndPos = buffer_logline.rfind("'(id:");
-					complaintByIDStartPos = complaintByNicknameEndPos + 5;
-					complaintByIDEndPos = buffer_logline.size() - 1;
+				else if (buffer_logline.find(LOGMATCH_COMPLAINT) != std::string::npos) {
+					complaintAboutNickname_StartPos = virtualServerLength + 83;
+					complaintAboutNickname_EndPos = buffer_logline.find("'(id:");
+					complaintAboutID_StartPos = complaintAboutNickname_EndPos + 5;
+					complaintAboutID_EndPos = buffer_logline.find(") reason '");
+					complaintReason_StartPos = complaintAboutID_EndPos + 10;
+					complaintReason_EndPos = buffer_logline.rfind("' by client '");
+					complaintByNickname_StartPos = complaintReason_EndPos + 13;
+					complaintByNickname_EndPos = buffer_logline.rfind("'(id:");
+					complaintByID_StartPos = complaintByNickname_EndPos + 5;
+					complaintByID_EndPos = buffer_logline.size() - 1;
 
-					complaintAboutNicknameLength = complaintAboutNicknameEndPos - complaintAboutNicknameStartPos;
-					complaintAboutIDLength = complaintAboutIDEndPos - complaintAboutIDStartPos;
-					complaintReasonLength = complaintReasonEndPos - complaintReasonStartPos;
-					complaintByNicknameLength = complaintByNicknameEndPos - complaintByNicknameStartPos;
-					complaintByIDLength = complaintByIDEndPos - complaintByIDStartPos;
+					complaintAboutNickname_Length = complaintAboutNickname_EndPos - complaintAboutNickname_StartPos;
+					complaintAboutID_Length = complaintAboutID_EndPos - complaintAboutID_StartPos;
+					complaintReason_Length = complaintReason_EndPos - complaintReason_StartPos;
+					complaintByNickname_Length = complaintByNickname_EndPos - complaintByNickname_StartPos;
+					complaintByID_Length = complaintByID_EndPos - complaintByID_StartPos;
 
 					DateTime = buffer_logline.substr(0, 19);
-					complaintAboutNickname = buffer_logline.substr(complaintAboutNicknameStartPos, complaintAboutNicknameLength);
-					complaintAboutID = buffer_logline.substr(complaintAboutIDStartPos, complaintAboutIDLength);
-					complaintReason = buffer_logline.substr(complaintReasonStartPos, complaintReasonLength);
-					complaintByNickname = buffer_logline.substr(complaintByNicknameStartPos, complaintByNicknameLength);
-					complaintByID = buffer_logline.substr(complaintByIDStartPos, complaintByIDLength);
+					complaintAboutNickname = buffer_logline.substr(complaintAboutNickname_StartPos, complaintAboutNickname_Length);
+					complaintAboutID = buffer_logline.substr(complaintAboutID_StartPos, complaintAboutID_Length);
+					complaintReason = buffer_logline.substr(complaintReason_StartPos, complaintReason_Length);
+					complaintByNickname = buffer_logline.substr(complaintByNickname_StartPos, complaintByNickname_Length);
+					complaintByID = buffer_logline.substr(complaintByID_StartPos, complaintByID_Length);
 
 					if (!isDuplicateComplaint(DateTime, complaintAboutNickname, std::stoul(complaintAboutID), complaintReason, complaintByNickname, std::stoul(complaintByID))) {
 						ComplaintList.resize(ComplaintListID + 1);
@@ -310,26 +342,26 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Uploads
-				else if (buffer_logline.find(LOGMATCHUPLOAD) != std::string::npos) {
-					channelIDStartPos = virtualServerLength + 74;
-					channelIDEndPos = buffer_logline.find(")");
-					filenameStartPos = channelIDEndPos + 4;
-					filenameEndPos = buffer_logline.rfind("' by client '");
-					uploadedByNicknameStartPos = filenameEndPos + 13;
-					uploadedByNicknameEndPos = buffer_logline.rfind("'(id:");
-					uploadedByIDStartPos = uploadedByNicknameEndPos + 5;
-					uploadedByIDEndPos = buffer_logline.size() - 1;
+				else if (buffer_logline.find(LOGMATCH_UPLOAD) != std::string::npos) {
+					channelID_StartPos = virtualServerLength + 74;
+					channelID_EndPos = buffer_logline.find(")");
+					filename_StartPos = channelID_EndPos + 4;
+					filename_EndPos = buffer_logline.rfind("' by client '");
+					uploadedByNickname_StartPos = filename_EndPos + 13;
+					uploadedByNickname_EndPos = buffer_logline.rfind("'(id:");
+					uploadedByID_StartPos = uploadedByNickname_EndPos + 5;
+					uploadedByID_EndPos = buffer_logline.size() - 1;
 
-					channelIDLength = channelIDEndPos - channelIDStartPos;
-					filenameLength = filenameEndPos - filenameStartPos;
-					uploadedByNicknameLength = uploadedByNicknameEndPos - uploadedByNicknameStartPos;
-					uploadedByIDLength = uploadedByIDEndPos - uploadedByIDStartPos;
+					channelID_Length = channelID_EndPos - channelID_StartPos;
+					filename_Length = filename_EndPos - filename_StartPos;
+					uploadedByNickname_Length = uploadedByNickname_EndPos - uploadedByNickname_StartPos;
+					uploadedByID_Length = uploadedByID_EndPos - uploadedByID_StartPos;
 
 					DateTime = buffer_logline.substr(0, 19);
-					channelID = buffer_logline.substr(channelIDStartPos, channelIDLength);
-					filename = buffer_logline.substr(filenameStartPos, filenameLength);
-					uploadedByNickname = buffer_logline.substr(uploadedByNicknameStartPos, uploadedByNicknameLength);
-					uploadedByID = buffer_logline.substr(uploadedByIDStartPos, uploadedByIDLength);
+					channelID = buffer_logline.substr(channelID_StartPos, channelID_Length);
+					filename = buffer_logline.substr(filename_StartPos, filename_Length);
+					uploadedByNickname = buffer_logline.substr(uploadedByNickname_StartPos, uploadedByNickname_Length);
+					uploadedByID = buffer_logline.substr(uploadedByID_StartPos, uploadedByID_Length);
 
 					if (!isDuplicateUpload(DateTime, std::stoul(channelID), filename, uploadedByNickname, std::stoul(uploadedByID))) {
 						UploadList.resize(UploadListID + 1);
@@ -339,39 +371,108 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Client Deletions
-				else if (buffer_logline.find(LOGMATCHDELETEUSER1) != std::string::npos) {
-					if (buffer_logline.find(LOGMATCHDELETEUSER2) != std::string::npos) {
-						IDEndPos = buffer_logline.rfind(") got deleted by client '");
-						IDStartPos = buffer_logline.rfind("'(id:", IDEndPos) + 5;
-						IDLength = IDEndPos - IDStartPos;
-						ID = std::stoul(buffer_logline.substr(IDStartPos, IDLength));
+				else if (buffer_logline.find(LOGMATCH_DELETEUSER1) != std::string::npos) {
+					if (buffer_logline.find(LOGMATCH_DELETEUSER2) != std::string::npos) {
+						ID_EndPos = buffer_logline.rfind(") got deleted by client '");
+						ID_StartPos = buffer_logline.rfind("'(id:", ID_EndPos) + 5;
+						ID_Length = ID_EndPos - ID_StartPos;
+						ID = std::stoul(buffer_logline.substr(ID_StartPos, ID_Length));
 						ClientList[ID].deleteClient();
 					}
 				}
 
 				// Upload Deletions
-				else if (buffer_logline.find(LOGMATCHUPLOADDELETION) != std::string::npos) {
-					channelIDStartPos = virtualServerLength + 77;
-					channelIDEndPos = buffer_logline.find(")");
-					filenameStartPos = channelIDEndPos + 4;
-					filenameEndPos = buffer_logline.rfind("' by client '");
-					deletedByNicknameStartPos = filenameEndPos + 13;
-					deletedByNicknameEndPos = buffer_logline.rfind("'(id:");
-					deletedByIDStartPos = deletedByNicknameEndPos + 5;
-					deletedByIDEndPos = buffer_logline.size() - 1;
+				else if (buffer_logline.find(LOGMATCH_UPLOADDELETION) != std::string::npos) {
+					channelID_StartPos = virtualServerLength + 77;
+					channelID_EndPos = buffer_logline.find(")");
+					filename_StartPos = channelID_EndPos + 4;
+					filename_EndPos = buffer_logline.rfind("' by client '");
+					deletedByNickname_StartPos = filename_EndPos + 13;
+					deletedByNickname_EndPos = buffer_logline.rfind("'(id:");
+					deletedByID_StartPos = deletedByNickname_EndPos + 5;
+					deletedByID_EndPos = buffer_logline.size() - 1;
 
-					channelIDLength = channelIDEndPos - channelIDStartPos;
-					filenameLength = filenameEndPos - filenameStartPos;
-					deletedByNicknameLength = deletedByNicknameEndPos - deletedByNicknameStartPos;
-					deletedByIDLength = deletedByIDEndPos - deletedByIDStartPos;
+					channelID_Length = channelID_EndPos - channelID_StartPos;
+					filename_Length = filename_EndPos - filename_StartPos;
+					deletedByNickname_Length = deletedByNickname_EndPos - deletedByNickname_StartPos;
+					deletedByID_Length = deletedByID_EndPos - deletedByID_StartPos;
 
-					channelID = buffer_logline.substr(channelIDStartPos, channelIDLength);
-					filename = buffer_logline.substr(filenameStartPos, filenameLength);
-					deletedByNickname = buffer_logline.substr(deletedByNicknameStartPos, deletedByNicknameLength);
-					deletedByID = buffer_logline.substr(deletedByIDStartPos, deletedByIDLength);
+					channelID = buffer_logline.substr(channelID_StartPos, channelID_Length);
+					filename = buffer_logline.substr(filename_StartPos, filename_Length);
+					deletedByNickname = buffer_logline.substr(deletedByNickname_StartPos, deletedByNickname_Length);
+					deletedByID = buffer_logline.substr(deletedByID_StartPos, deletedByID_Length);
 
 					addDeletedBy(std::stoul(channelID), filename, deletedByNickname, std::stoul(deletedByID));
 				}
+
+				// Servergroup additions, deletions, renamings and copying
+				else if (buffer_logline.find(LOGMATCH_SERVERGROUPEVENT) != std::string::npos) {
+					// 0 --> added
+					// 1 --> deleted
+					// 2 --> renamed
+					// 3 --> copied
+					int eventType = -1;
+
+					ID_StartPos = buffer_logline.find("'(id:") + 5;
+
+					if (buffer_logline.find(") was added by '") != std::string::npos) {
+						ID_EndPos = buffer_logline.find(") was added by '");
+						eventType = 0;
+					}
+					else if (buffer_logline.find(") was deleted by '") != std::string::npos) {
+						ID_EndPos = buffer_logline.find(") was deleted by '");
+						eventType = 1;
+					}
+					else if (buffer_logline.find(") was renamed to '") != std::string::npos) {
+						ID_EndPos = buffer_logline.find(") was renamed to '");
+						ServerGroupName_StartPos = buffer_logline.find(") was renamed to '") + 18;
+						ServerGroupName_EndPos = buffer_logline.rfind("' by '", buffer_logline.length() - 1);
+						ServerGroupName_Length = ServerGroupName_EndPos - ServerGroupName_StartPos;
+						eventType = 2;
+					}
+					else if (buffer_logline.find(") was copied by '") != std::string::npos) {
+						ID_StartPos = buffer_logline.rfind("'(id:") + 5;
+						ID_EndPos = buffer_logline.length() - 1;
+						ServerGroupName_StartPos = buffer_logline.find(") to '") + 6;
+						ServerGroupName_Length = ID_StartPos - 5 - ServerGroupName_StartPos;
+						eventType = 3;
+					}
+					else outputStream << "this shouldn't happen (servergroup parsing)" << std::endl;
+
+					if (eventType != -1) {
+						if (eventType == 0 || eventType == 1) {
+							ServerGroupName_StartPos = buffer_logline.find("| servergroup '") + 15;
+							ServerGroupName_Length = ID_StartPos - 5 - ServerGroupName_StartPos;
+						}
+
+						ID_Length = ID_EndPos - ID_StartPos;
+
+						DateTime = buffer_logline.substr(0, 19);
+						ID = std::stoul(buffer_logline.substr(ID_StartPos, ID_Length));
+						ServerGroupName = buffer_logline.substr(ServerGroupName_StartPos, ServerGroupName_Length);
+
+						switch (eventType) {
+						case 0:
+							ServerGroupList.resize(ID + 1);
+							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, DateTime);
+							break;
+
+						case 1:
+							ServerGroupList[ID].deleteServerGroup();
+							break;
+
+						case 2:
+							ServerGroupList[ID].renameServerGroup(ServerGroupName);
+							break;
+
+						case 3:
+							ServerGroupList.resize(ID + 1);
+							ServerGroupList[ID].copyFromServerGroup(ID);
+							break;
+						}
+					}
+				}
+
 				currentPos += buffer_logline.size() + 1;
 				logfile.seekg(currentPos);
 			}

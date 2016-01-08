@@ -1,6 +1,7 @@
 // Client.h
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
+#pragma once
 
 #include <vector>
 #include <string>
@@ -28,6 +29,13 @@ public:
 	void addNickname(std::string Nickname);
 	void addDateTime(std::string DateTime);
 	void addIP(std::string IP);
+
+	/*
+	void addServerGroup(std::string ServerGroup, std::string DateTime);
+	void removeServerGroup(std::string ServerGroup);
+	std::string getServerGroup();
+	std::string getServerGroupTimestamp();
+	*/
 
 	void addNicknameReverse(std::string Nickname);
 	void addDateTimeReverse(std::string DateTime);

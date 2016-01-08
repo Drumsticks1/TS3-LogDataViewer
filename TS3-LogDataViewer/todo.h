@@ -4,6 +4,7 @@
 
 /*
 general (sorted by priority):
+	- finish the ServerGroup implementation.
 	- add information about the greyed out and green rows.
 	- add a button for sorting after the connected state and remove the "connected" column afterwards.
 	- add server groups to the client table (with the date of the assignment).
@@ -20,5 +21,4 @@ maybe:
 	- make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
 	- create a standalone using electron with access to the server logs or with local logs.
-
 */

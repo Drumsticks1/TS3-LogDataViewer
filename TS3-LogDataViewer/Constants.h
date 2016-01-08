@@ -1,6 +1,7 @@
 // Constants.h
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
+#pragma once
 
 // XML output file.
 #define XMLFILE "output.xml"

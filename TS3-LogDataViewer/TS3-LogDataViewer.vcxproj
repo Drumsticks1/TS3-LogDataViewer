@@ -86,6 +86,7 @@
     <ClCompile Include="fetchLogs.cpp" />
     <ClCompile Include="checkFunctions.cpp" />
     <ClCompile Include="createXML.cpp" />
+    <ClCompile Include="ServerGroup.cpp" />
     <ClCompile Include="Upload.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">c:\boost\boost_1_60_0;c:\pugixml-1.6</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">c:\boost\boost_1_60_0;c:\pugixml-1.6</AdditionalIncludeDirectories>
@@ -104,6 +105,7 @@
     <ClInclude Include="checkFunctions.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="createXML.h" />
+    <ClInclude Include="ServerGroup.h" />
     <ClInclude Include="Upload.h" />
     <ClInclude Include="customStreams.h" />
     <ClInclude Include="timeFunctions.h" />
