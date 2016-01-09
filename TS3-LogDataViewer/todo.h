@@ -17,7 +17,6 @@ Bans: Currently only includes the bans that kicked the banned client (= the bann
 	- add custom bans.
 
 maybe:
-	- remove deleted clients from the server group matchID list.
 	- add ServerGroupName history like for the nicknames in the client list.
 	- add additional optional ignore files for the tables.
 	- limit rebuilds on serverside, maybe add cron.

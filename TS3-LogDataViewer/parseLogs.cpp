@@ -299,17 +299,22 @@ void parseLogs(std::string LOGDIRECTORY) {
 
 					// Todo: Add server groups if not existing in list.
 					// Temporary solution:
-					if (ServerGroupList.size() < ID + 1) {
+					if (ServerGroupList.size() < ID + 1)
 						ServerGroupList.resize(ID + 1);
-					}
+
+					// Todo: Add client to list if not already existing?
+					// Currently only reserving the vector buffer to prevent out of bounds exception.
+
+					if (ClientList.size() < clientID + 1)
+						ClientList.resize(ID + 1);
 
 					if (buffer_logline.find(LOGMATCH_SERVERGROUPASSIGNMENT) != std::string::npos) {
-						if (!isDuplicateMemberID(ID, clientID))
-							ServerGroupList[ID].addMemberID(clientID);
+						if (!isDuplicateServerGroup(clientID, ID))
+							ClientList[clientID].addServerGroup(ID, DateTime);
 					}
 					else {
-						if (isDuplicateMemberID(ID, clientID))
-							ServerGroupList[ID].removeMemberID(clientID);
+						if (!isDuplicateServerGroup(clientID, ID))
+							ClientList[clientID].removeServerGroupByID(ID);
 					}
 				}
 
@@ -469,6 +474,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 
 						switch (eventType) {
 						case 0:
+						case 3:
 							ServerGroupList.resize(ID + 1);
 							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, DateTime);
 							break;
@@ -479,11 +485,6 @@ void parseLogs(std::string LOGDIRECTORY) {
 
 						case 2:
 							ServerGroupList[ID].renameServerGroup(ServerGroupName);
-							break;
-
-						case 3:
-							ServerGroupList.resize(ID + 1);
-							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, DateTime);
 							break;
 						}
 					}

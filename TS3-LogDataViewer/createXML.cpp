@@ -47,19 +47,12 @@ void createXML() {
 	for (unsigned i = 0; i < parsedLogs.size(); i++) {
 		ParsedLogs.add("P", parsedLogs[i]);
 	}
-
 	for (unsigned int i = 0; i < ServerGroupList.size(); i++) {
 		bpt::ptree& ServerGroupNode = Data.add("ServerGroup", "");
 		if (ServerGroupList[i].getID() != 0) {
 			ServerGroupNode.add("ID", ServerGroupList[i].getID());
 			ServerGroupNode.add("ServerGroupName", ServerGroupList[i].getServerGroupName());
 			ServerGroupNode.add("CreationDateTime", ServerGroupList[i].getCreationDateTime());
-
-			bpt::ptree& MemberID = ServerGroupNode.add("MemberID", "");
-			for (unsigned int j = 0; j < ServerGroupList[i].getMemberIDCount(); j++) {
-				MemberID.add("M", ServerGroupList[i].getUniqueMemberID(j));
-			}
-
 			if (ServerGroupList[i].isDeleted()) {
 				ServerGroupNode.add("Deleted", 1);
 			}
@@ -93,6 +86,16 @@ void createXML() {
 
 			if (ClientList[i].isDeleted()) {
 				ClientNode.add("Deleted", 1);
+			}
+
+			bpt::ptree& ServerGroupIDs = ClientNode.add("ServerGroupIDs", "");
+			for (unsigned int j = 0; j < ClientList[i].getServerGroupIDCount(); j++) {
+				ServerGroupIDs.add("S", ClientList[i].getUniqueServerGroupID(j));
+			}
+
+			bpt::ptree& ServerGroupAssignmentDateTimes = ClientNode.add("ServerGroupAssignmentDateTimes", "");
+			for (unsigned int j = 0; j < ClientList[i].getServerGroupAssignmentDateTimeCount(); j++) {
+				ServerGroupAssignmentDateTimes.add("A", ClientList[i].getUniqueServerGroupAssignmentDateTime(j));
 			}
 		}
 		else ClientNode.add("ID", "-1");

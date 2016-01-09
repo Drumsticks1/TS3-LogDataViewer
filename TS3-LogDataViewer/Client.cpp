@@ -90,3 +90,39 @@ int Client::isDeleted() {
 	}
 	else return 0;
 }
+
+//
+void Client::addServerGroup(unsigned int ServerGroupID, std::string ServerGroupAssignmentDateTime) {
+	this->ServerGroupID.push_back(ServerGroupID);
+	this->ServerGroupAssignmentDateTime.push_back(ServerGroupAssignmentDateTime);
+}
+
+//
+void Client::removeServerGroupByID(unsigned int ServerGroupID) {
+	bool done = false;
+	for (unsigned int i = 0; i < this->ServerGroupID.size() && !done; i++) {
+		if (this->getUniqueServerGroupID(i) == ServerGroupID) {
+			this->ServerGroupID.erase(this->ServerGroupID.begin() + i);
+			this->ServerGroupAssignmentDateTime.erase(this->ServerGroupAssignmentDateTime.begin() + i);
+			done = true;
+		}
+	}
+}
+
+//
+unsigned int Client::getServerGroupIDCount() { return ServerGroupID.size(); }
+
+//
+unsigned int Client::getUniqueServerGroupID(unsigned int ServerGroupIDPos) {
+	return ServerGroupID.at(ServerGroupIDPos);
+}
+
+//
+unsigned int Client::getServerGroupAssignmentDateTimeCount() {
+	return ServerGroupAssignmentDateTime.size();
+}
+
+//
+std::string Client::getUniqueServerGroupAssignmentDateTime(unsigned int ServerGroupAssignmentDateTimePos) {
+	return ServerGroupAssignmentDateTime.at(ServerGroupAssignmentDateTimePos);
+}

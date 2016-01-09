@@ -63,11 +63,8 @@ bool parseXML() {
 						if ((std::string)ServerGroupNode.child("ID").first_child().value() != "-1") {
 							ID = std::stoul(ServerGroupNode.child("ID").first_child().value());
 							ServerGroupList.resize(ID + 1);
-							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupNode.child("ServerGroupName").first_child().value(), ServerGroupNode.child("CreationDateTime").first_child().value());
-
-							for (pugi::xml_node MemberID = ServerGroupNode.child("MemberID").first_child(); MemberID; MemberID = MemberID.next_sibling()) {
-								ServerGroupList[ID].addMemberID(std::stoul(MemberID.first_child().value()));
-							}
+							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupNode.child("ServerGroupName").first_child().value(),
+								ServerGroupNode.child("CreationDateTime").first_child().value());
 
 							if ((std::string)ServerGroupNode.child("Deleted").first_child().value() == "1") {
 								ServerGroupList[ID].deleteServerGroup();
@@ -96,6 +93,21 @@ bool parseXML() {
 							if ((std::string)ClientNode.child("Deleted").first_child().value() == "1") {
 								ClientList[ID].deleteClient();
 							}
+
+							std::vector <unsigned int> bufferServerGroupIDs;
+							std::vector <std::string> bufferServerGroupAssignmentDateTimes;
+
+							for (pugi::xml_node ServerGroupIDs = ClientNode.child("ServerGroupIDs").first_child(); ServerGroupIDs; ServerGroupIDs = ServerGroupIDs.next_sibling()) {
+								bufferServerGroupIDs.push_back(std::stoul(ServerGroupIDs.first_child().value()));
+							}
+
+							for (pugi::xml_node ServerGroupAssignmentDateTimes = ClientNode.child("ServerGroupAssignmentDateTimes").first_child();
+							ServerGroupAssignmentDateTimes; ServerGroupAssignmentDateTimes = ServerGroupAssignmentDateTimes.next_sibling()) {
+								bufferServerGroupAssignmentDateTimes.push_back(ServerGroupAssignmentDateTimes.first_child().value());
+							}
+
+							for (unsigned int i = 0; i < bufferServerGroupIDs.size(); i++)
+								ClientList[ID].addServerGroup(bufferServerGroupIDs[i], bufferServerGroupAssignmentDateTimes[i]);
 						}
 					}
 
@@ -164,6 +176,7 @@ bool parseXML() {
 				}
 				catch (std::exception& ex) {
 					outputStream << "An error occured while parsing the XML:" << std::endl << ex.what() << std::endl;
+					ServerGroupList.clear();
 					ClientList.clear();
 					BanList.clear();
 					KickList.clear();

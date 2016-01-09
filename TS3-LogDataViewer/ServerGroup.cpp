@@ -18,28 +18,6 @@ void ServerGroup::addServerGroupInformation(unsigned int ID, std::string ServerG
 //
 void ServerGroup::renameServerGroup(std::string newServerGroupName) { this->ServerGroupName = newServerGroupName; }
 
-// Returns the count of the MemberIDs of the current ServerGroup.
-unsigned int ServerGroup::getMemberIDCount() { return MemberID.size(); };
-
-// Returns the MemberId stored in the given ID slot.
-unsigned int ServerGroup::getUniqueMemberID(unsigned int MemberIDNumber) { return MemberID.at(MemberIDNumber); };
-
-// Adds the new MemberID at the end of the MemberID list.
-void ServerGroup::addMemberID(unsigned int MemberID) {
-	this->MemberID.push_back(MemberID);
-}
-
-//
-void ServerGroup::removeMemberID(unsigned int MemberID) {
-	bool done = false;
-	for (unsigned int i = 0; i < this->getMemberIDCount() && !done; i++) {
-		if (this->getUniqueMemberID(i) == MemberID) {
-			this->MemberID.erase(this->MemberID.begin() + i);
-			done = true;
-		}
-	}
-};
-
 //
 unsigned int ServerGroup::getID() { return ID; };
 std::string ServerGroup::getServerGroupName() { return ServerGroupName; };

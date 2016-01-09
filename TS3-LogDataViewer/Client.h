@@ -10,7 +10,8 @@
 class Client {
 private:
 	unsigned int ID = 0;
-	std::vector <std::string> DateTime, Nickname, IP;
+	std::vector <unsigned int> ServerGroupID;
+	std::vector <std::string> DateTime, Nickname, IP, ServerGroupAssignmentDateTime;
 	int ConnectedState = 0;
 	bool deleted = false;
 
@@ -40,4 +41,13 @@ public:
 
 	void deleteClient();
 	int isDeleted();
+
+	void addServerGroup(unsigned int ServerGroupID, std::string ServerGroupAssignmentDateTime);
+	void removeServerGroupByID(unsigned int ServerGroupID);
+
+	unsigned int getServerGroupIDCount();
+	unsigned int getUniqueServerGroupID(unsigned int ServerGroupIDPos);
+
+	unsigned int getServerGroupAssignmentDateTimeCount();
+	std::string getUniqueServerGroupAssignmentDateTime(unsigned int ServerGroupAssignmentDateTimePos);
 };

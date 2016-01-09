@@ -5,8 +5,8 @@
 
 #include <string>
 
-// Checks if a MemberID is already existing in the current ServerGroup.
-bool isDuplicateMemberID(unsigned int ID, unsigned int MemberID);
+// Checks if a ServerGroup is already existing in the Client ServerListID vector.
+bool isDuplicateServerGroup(unsigned int clientID, unsigned int serverID);
 
 // Checks if a DateTime is already existing for the current client.
 bool isDuplicateDateTime(unsigned int ID, std::string DateTime);

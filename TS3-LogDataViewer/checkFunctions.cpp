@@ -21,10 +21,10 @@ extern std::vector <Kick> KickList;
 extern std::vector <Complaint> ComplaintList;
 extern std::vector <Upload> UploadList;
 
-// Checks if a MemberID is already existing in the current ServerGroup.
-bool isDuplicateMemberID(unsigned int ID, unsigned int MemberID) {
-	for (unsigned int i = 0; i < ServerGroupList[ID].getMemberIDCount(); i++) {
-		if (ServerGroupList[ID].getUniqueMemberID(i) == MemberID) {
+// Checks if a ServerGroup is already existing in the Client ServerListID vector.
+bool isDuplicateServerGroup(unsigned int clientID, unsigned int serverID) {
+	for (unsigned int i = 0; i < ClientList[clientID].getServerGroupIDCount(); i++) {
+		if (ClientList[clientID].getUniqueServerGroupID(i) == serverID) {
 			return true;
 		}
 	}
