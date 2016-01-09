@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 #include "Constants.h"
-#include "ServerGroup.h"
 #include "Client.h"
+#include "ServerGroup.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -19,8 +19,8 @@
 namespace bpt = boost::property_tree;
 
 extern std::vector <std::string> parsedLogs;
-extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Client> ClientList;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
 extern std::vector <Complaint> ComplaintList;
@@ -46,18 +46,6 @@ void createXML() {
 	bpt::ptree& ParsedLogs = AttributesNode.add("ParsedLogs", "");
 	for (unsigned i = 0; i < parsedLogs.size(); i++) {
 		ParsedLogs.add("P", parsedLogs[i]);
-	}
-	for (unsigned int i = 0; i < ServerGroupList.size(); i++) {
-		bpt::ptree& ServerGroupNode = Data.add("ServerGroup", "");
-		if (ServerGroupList[i].getID() != 0) {
-			ServerGroupNode.add("ID", ServerGroupList[i].getID());
-			ServerGroupNode.add("ServerGroupName", ServerGroupList[i].getServerGroupName());
-			ServerGroupNode.add("CreationDateTime", ServerGroupList[i].getCreationDateTime());
-			if (ServerGroupList[i].isDeleted()) {
-				ServerGroupNode.add("Deleted", 1);
-			}
-		}
-		else ServerGroupNode.add("ID", "-1");
 	}
 
 	for (unsigned int i = 0; i < ClientList.size(); i++) {
@@ -99,6 +87,19 @@ void createXML() {
 			}
 		}
 		else ClientNode.add("ID", "-1");
+	}
+
+	for (unsigned int i = 0; i < ServerGroupList.size(); i++) {
+		bpt::ptree& ServerGroupNode = Data.add("ServerGroup", "");
+		if (ServerGroupList[i].getID() != 0) {
+			ServerGroupNode.add("ID", ServerGroupList[i].getID());
+			ServerGroupNode.add("ServerGroupName", ServerGroupList[i].getServerGroupName());
+			ServerGroupNode.add("CreationDateTime", ServerGroupList[i].getCreationDateTime());
+			if (ServerGroupList[i].isDeleted()) {
+				ServerGroupNode.add("Deleted", 1);
+			}
+		}
+		else ServerGroupNode.add("ID", "-1");
 	}
 
 	for (unsigned int i = 0; i < BanList.size(); i++) {

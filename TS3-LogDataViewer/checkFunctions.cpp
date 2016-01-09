@@ -4,18 +4,16 @@
 
 #include <vector>
 #include <string>
-#include "ServerGroup.h"
 #include "Client.h"
+#include "ServerGroup.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
 #include "Upload.h"
 
-extern std::vector <std::string> Logs;
-extern std::vector <std::string> parsedLogs;
-extern std::vector <std::string> ignoreLogs;
-extern std::vector <ServerGroup> ServerGroupList;
+extern std::vector <std::string> Logs, parsedLogs, ignoreLogs;
 extern std::vector <Client> ClientList;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
 extern std::vector <Complaint> ComplaintList;

@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 #include "Constants.h"
-#include "ServerGroup.h"
 #include "Client.h"
+#include "ServerGroup.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -18,8 +18,8 @@
 #include "src/pugixml.cpp"
 
 std::vector <std::string> parsedLogs;
-extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Client> ClientList;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
 extern std::vector <Complaint> ComplaintList;
@@ -59,19 +59,6 @@ bool parseXML() {
 						}
 					}
 
-					for (pugi::xml_node ServerGroupNode = oldXML.first_child().child("ServerGroup"); ServerGroupNode; ServerGroupNode = ServerGroupNode.next_sibling("ServerGroup")) {
-						if ((std::string)ServerGroupNode.child("ID").first_child().value() != "-1") {
-							ID = std::stoul(ServerGroupNode.child("ID").first_child().value());
-							ServerGroupList.resize(ID + 1);
-							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupNode.child("ServerGroupName").first_child().value(),
-								ServerGroupNode.child("CreationDateTime").first_child().value());
-
-							if ((std::string)ServerGroupNode.child("Deleted").first_child().value() == "1") {
-								ServerGroupList[ID].deleteServerGroup();
-							}
-						}
-					}
-
 					for (pugi::xml_node ClientNode = oldXML.first_child().child("Client"); ClientNode; ClientNode = ClientNode.next_sibling("Client")) {
 						if ((std::string)ClientNode.child("ID").first_child().value() != "-1") {
 							ID = std::stoul(ClientNode.child("ID").first_child().value());
@@ -108,6 +95,19 @@ bool parseXML() {
 
 							for (unsigned int i = 0; i < bufferServerGroupIDs.size(); i++)
 								ClientList[ID].addServerGroup(bufferServerGroupIDs[i], bufferServerGroupAssignmentDateTimes[i]);
+						}
+					}
+
+					for (pugi::xml_node ServerGroupNode = oldXML.first_child().child("ServerGroup"); ServerGroupNode; ServerGroupNode = ServerGroupNode.next_sibling("ServerGroup")) {
+						if ((std::string)ServerGroupNode.child("ID").first_child().value() != "-1") {
+							ID = std::stoul(ServerGroupNode.child("ID").first_child().value());
+							ServerGroupList.resize(ID + 1);
+							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupNode.child("ServerGroupName").first_child().value(),
+								ServerGroupNode.child("CreationDateTime").first_child().value());
+
+							if ((std::string)ServerGroupNode.child("Deleted").first_child().value() == "1") {
+								ServerGroupList[ID].deleteServerGroup();
+							}
 						}
 					}
 
@@ -176,8 +176,8 @@ bool parseXML() {
 				}
 				catch (std::exception& ex) {
 					outputStream << "An error occured while parsing the XML:" << std::endl << ex.what() << std::endl;
-					ServerGroupList.clear();
 					ClientList.clear();
+					ServerGroupList.clear();
 					BanList.clear();
 					KickList.clear();
 					ComplaintList.clear();

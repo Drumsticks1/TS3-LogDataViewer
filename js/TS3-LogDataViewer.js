@@ -286,6 +286,18 @@ function buildClientTable() {
         collapseAll();
     });
     clientTableControlSection.appendChild(collapseAllButton);
+
+    var coloredRowsDescription_green = document.createElement('div'),
+        coloredRowsDescription_grey = document.createElement('div');
+    coloredRowsDescription_green.id = 'description_connected';
+    coloredRowsDescription_grey.id = 'description_deleted';
+    coloredRowsDescription_green.className = coloredRowsDescription_grey.className = 'small-6 columns';
+    coloredRowsDescription_green.innerHTML = 'Connected clients';
+    coloredRowsDescription_grey.innerHTML = 'Deleted clients';
+
+    clientTableControlSection.appendChild(coloredRowsDescription_green);
+    clientTableControlSection.appendChild(coloredRowsDescription_grey);
+
     document.getElementById('ts3-clientTable').appendChild(clientTableControlSection);
 
     var Client = XML.getElementsByTagName('Client'),
@@ -296,7 +308,7 @@ function buildClientTable() {
         clientHeadCell_Nicknames = document.createElement('th'),
         clientHeadCell_Connections = document.createElement('th'),
         clientHeadCell_IPs = document.createElement('th'),
-        clientHeadCell_ConnectionCount = document.createElement('th'),
+        clientHeadCell_Connects = document.createElement('th'),
         clientHeadCell_Connected = document.createElement('th'),
         clientHeadCell_Deleted = document.createElement('th');
 
@@ -304,7 +316,7 @@ function buildClientTable() {
     clientHeadCell_Nicknames.innerHTML = 'Nicknames';
     clientHeadCell_Connections.innerHTML = 'Connections';
     clientHeadCell_IPs.innerHTML = 'IPs';
-    clientHeadCell_ConnectionCount.innerHTML = 'Connection Count';
+    clientHeadCell_Connects.innerHTML = 'Connects';
     clientHeadCell_Connected.innerHTML = 'Connected';
     clientHeadCell_Deleted.innerHTML = 'Placeholder';
 
@@ -312,7 +324,7 @@ function buildClientTable() {
     clientHeadRow.appendChild(clientHeadCell_Nicknames);
     clientHeadRow.appendChild(clientHeadCell_Connections);
     clientHeadRow.appendChild(clientHeadCell_IPs);
-    clientHeadRow.appendChild(clientHeadCell_ConnectionCount);
+    clientHeadRow.appendChild(clientHeadCell_Connects);
     clientHeadRow.appendChild(clientHeadCell_Connected);
     clientHeadRow.appendChild(clientHeadCell_Deleted);
 
@@ -333,7 +345,7 @@ function buildClientTable() {
                 clientBodyCell_Nicknames = document.createElement('td'),
                 clientBodyCell_Connections = document.createElement('td'),
                 clientBodyCell_IPs = document.createElement('td'),
-                clientBodyCell_ConnectionCount = document.createElement('td'),
+                clientBodyCell_Connects = document.createElement('td'),
                 clientBodyCell_Connected = document.createElement('td'),
                 clientBodyCell_Deleted = document.createElement('td');
 
@@ -342,7 +354,7 @@ function buildClientTable() {
             clientBodyCell_Nicknames.setAttribute('data-title', 'Nicknames');
             clientBodyCell_Connections.setAttribute('data-title', 'Connections');
             clientBodyCell_IPs.setAttribute('data-title', 'IPs');
-            clientBodyCell_ConnectionCount.setAttribute('data-title', 'Connection Count');
+            clientBodyCell_Connects.setAttribute('data-title', 'Connects');
             clientBodyCell_Connected.setAttribute('data-title', 'Connected');
             clientBodyCell_Deleted.setAttribute('data-title', 'Placeholder');
 
@@ -400,8 +412,8 @@ function buildClientTable() {
 
             clientBodyRow.appendChild(clientBodyCell_IPs);
 
-            clientBodyCell_ConnectionCount.innerHTML = Connection_Count;
-            clientBodyRow.appendChild(clientBodyCell_ConnectionCount);
+            clientBodyCell_Connects.innerHTML = Connection_Count;
+            clientBodyRow.appendChild(clientBodyCell_Connects);
             if (Client[ID].getElementsByTagName('Deleted')[0] !== undefined) {
                 clientBodyRow.className += "deleted";
                 clientBodyCell_Connected.innerHTML = "false";
@@ -1031,8 +1043,10 @@ function buildTables() {
             }
             document.getElementById('connectedClientsCount').innerHTML = 'Connected clients: ' + ConnectedClientsCount;
 
+            // To be added when the new binary runs on the server:
+            // || Attributes.getElementsByTagName('DEBUGGINGXML')[0].firstChild.nodeValue == 'true'
             if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
-                alert('Alert: The debug variable SKIPLOCKFILE was set to true on the last XML creation. Please recompile the program with this variable set to false and rebuild the XML afterwards to prevent this alert to show up again.');
+                alert('At least one debug variable has been set to true before compiling the code. Please recompile the program with the debug variables set to false.');
             }
 
             document.getElementById('rebuildXMLButton').disabled = document.getElementById('buildNewXMLButton').disabled = false;

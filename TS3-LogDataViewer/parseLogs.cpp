@@ -6,8 +6,8 @@
 #include <vector>
 #include <string>
 #include <boost/filesystem.hpp>
-#include "ServerGroup.h"
 #include "Client.h"
+#include "ServerGroup.h"
 #include "Ban.h"
 #include "Kick.h"
 #include "Complaint.h"
@@ -15,10 +15,9 @@
 #include "checkFunctions.h"
 #include "customStreams.h"
 
-extern std::vector <std::string> Logs;
-extern std::vector <std::string> parsedLogs;
-extern std::vector <ServerGroup> ServerGroupList;
+extern std::vector <std::string> Logs, parsedLogs;
 extern std::vector <Client> ClientList;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
 extern std::vector <Complaint> ComplaintList;
@@ -27,19 +26,17 @@ extern bool validXML;
 extern unsigned int VIRTUALSERVER;
 extern TeeStream outputStream;
 
-#define LOGMATCH_BANRULE				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| ban added reason='"
-#define LOGMATCH_COMPLAINT				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| complaint added for client '"
-#define LOGMATCH_CONNECT				"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client connected '"
-#define LOGMATCH_DISCONNECT				"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client disconnected '"
-#define LOGMATCH_SERVERGROUPEVENT		"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| servergroup '"
-#define LOGMATCH_SERVERGROUPASSIGNMENT	") was added to servergroup '"
-#define LOGMATCH_SERVERGROUPREMOVAL		") was removed from servergroup '"
-#define LOGMATCH_DELETEUSER1			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| client '"
-#define LOGMATCH_DELETEUSER2			") got deleted by client '"
-#define LOGMATCH_UPLOAD					"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file upload to"
-#define LOGMATCH_UPLOADDELETION			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file deleted from"
-#define LOGMATCH_UPLOAD					"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file upload to"
-#define LOGMATCH_UPLOADDELETION			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file deleted from"
+#define match_banRule				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| ban added reason='"
+#define match_complaint				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| complaint added for client '"
+#define match_connect				"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client connected '"
+#define match_disconnect			"|INFO    |VirtualServerBase|  " + std::to_string(VIRTUALSERVER) + "| client disconnected '"
+#define match_serverGroupEvent		"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| servergroup '"
+#define match_serverGroupAssignment	") was added to servergroup '"
+#define match_serverGroupRemoval	") was removed from servergroup '"
+#define match_deleteUser1			"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| client '"
+#define match_deleteUser2			") got deleted by client '"
+#define match_upload				"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file upload to"
+#define match_uploadDeletion		"|INFO    |VirtualServer |  " + std::to_string(VIRTUALSERVER) + "| file deleted from"
 
 // Parses the logs and stores the data in the ClientList.
 void parseLogs(std::string LOGDIRECTORY) {
@@ -109,7 +106,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				getline(logfile, buffer_logline);
 
 				// Connects
-				if (buffer_logline.find(LOGMATCH_CONNECT) != std::string::npos) {
+				if (buffer_logline.find(match_connect) != std::string::npos) {
 					IP_StartPos = buffer_logline.rfind(" ") + 1;
 					Nickname_StartPos = virtualServerLength + 76;
 					ID_StartPos = buffer_logline.rfind("'(id:") + 5;
@@ -142,7 +139,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Disconnects (including kicks and bans)
-				else if (buffer_logline.find(LOGMATCH_DISCONNECT) != std::string::npos) {
+				else if (buffer_logline.find(match_disconnect) != std::string::npos) {
 					banMatch = kickMatch = false;
 
 					Nickname_StartPos = virtualServerLength + 79;
@@ -275,7 +272,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Client assignments to and client removals from a server group
-				else if (buffer_logline.find(LOGMATCH_SERVERGROUPASSIGNMENT) != std::string::npos || buffer_logline.find(LOGMATCH_SERVERGROUPREMOVAL) != std::string::npos) {
+				else if (buffer_logline.find(match_serverGroupAssignment) != std::string::npos || buffer_logline.find(match_serverGroupRemoval) != std::string::npos) {
 					ID_StartPos = buffer_logline.find("'(id:") + 5;
 					ID_EndPos = buffer_logline.find(") was added to servergroup '") - 1;
 
@@ -308,7 +305,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 					if (ClientList.size() < clientID + 1)
 						ClientList.resize(ID + 1);
 
-					if (buffer_logline.find(LOGMATCH_SERVERGROUPASSIGNMENT) != std::string::npos) {
+					if (buffer_logline.find(match_serverGroupAssignment) != std::string::npos) {
 						if (!isDuplicateServerGroup(clientID, ID))
 							ClientList[clientID].addServerGroup(ID, DateTime);
 					}
@@ -320,7 +317,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 
 				// Ban Rules
 				// Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
-				else if (buffer_logline.find(LOGMATCH_BANRULE) != std::string::npos) {
+				else if (buffer_logline.find(match_banRule) != std::string::npos) {
 					if (buffer_logline.find("' cluid='") != std::string::npos && buffer_logline.find("' ip='") == std::string::npos) {
 						lastUIDBanRule = buffer_logline;
 					}
@@ -330,7 +327,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Complaints
-				else if (buffer_logline.find(LOGMATCH_COMPLAINT) != std::string::npos) {
+				else if (buffer_logline.find(match_complaint) != std::string::npos) {
 					complaintAboutNickname_StartPos = virtualServerLength + 83;
 					complaintAboutNickname_EndPos = buffer_logline.find("'(id:");
 					complaintAboutID_StartPos = complaintAboutNickname_EndPos + 5;
@@ -363,7 +360,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Uploads
-				else if (buffer_logline.find(LOGMATCH_UPLOAD) != std::string::npos) {
+				else if (buffer_logline.find(match_upload) != std::string::npos) {
 					channelID_StartPos = virtualServerLength + 74;
 					channelID_EndPos = buffer_logline.find(")");
 					filename_StartPos = channelID_EndPos + 4;
@@ -392,8 +389,8 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Client Deletions
-				else if (buffer_logline.find(LOGMATCH_DELETEUSER1) != std::string::npos) {
-					if (buffer_logline.find(LOGMATCH_DELETEUSER2) != std::string::npos) {
+				else if (buffer_logline.find(match_deleteUser1) != std::string::npos) {
+					if (buffer_logline.find(match_deleteUser2) != std::string::npos) {
 						ID_EndPos = buffer_logline.rfind(") got deleted by client '");
 						ID_StartPos = buffer_logline.rfind("'(id:", ID_EndPos) + 5;
 						ID_Length = ID_EndPos - ID_StartPos;
@@ -403,7 +400,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Upload Deletions
-				else if (buffer_logline.find(LOGMATCH_UPLOADDELETION) != std::string::npos) {
+				else if (buffer_logline.find(match_uploadDeletion) != std::string::npos) {
 					channelID_StartPos = virtualServerLength + 77;
 					channelID_EndPos = buffer_logline.find(")");
 					filename_StartPos = channelID_EndPos + 4;
@@ -427,7 +424,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 				}
 
 				// Servergroup additions, deletions, renamings and copying
-				else if (buffer_logline.find(LOGMATCH_SERVERGROUPEVENT) != std::string::npos) {
+				else if (buffer_logline.find(match_serverGroupEvent) != std::string::npos) {
 					// 0 --> added
 					// 1 --> deleted
 					// 2 --> renamed

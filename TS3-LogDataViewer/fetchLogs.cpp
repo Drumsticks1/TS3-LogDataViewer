@@ -12,8 +12,7 @@
 
 namespace bf = boost::filesystem;
 
-std::vector <std::string> Logs;
-std::vector <std::string> ignoreLogs;
+std::vector <std::string> Logs, ignoreLogs;
 extern unsigned int VIRTUALSERVER;
 extern TeeStream outputStream;
 

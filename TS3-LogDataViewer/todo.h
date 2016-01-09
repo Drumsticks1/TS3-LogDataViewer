@@ -4,14 +4,13 @@
 
 /*
 general (sorted by priority):
-	- finish the ServerGroup implementation.
-	- add information about the greyed out and green rows.
-	- add a button for sorting after the connected state and remove the "connected" column afterwards.
-	- add warning for true DEBUGGINGXML constant to the js.
-	- move (at least the duplicate) checkFunctions into the checked classes.
+	- finish the ServerGroup implementation for the client side.
+	- replace the desciption divs with buttons for sorting after the connected and deleted state and remove the "connected" column afterwards.
+		- also include a resetSort option.
 	- add server groups to the client table (with the date of the assignment).
 	- add button for resetting the sort orders. (for mobile devices without CTRL).
 	- add button for switching between bantime in seconds and bantime in x.
+	- move (at least the duplicate) checkFunctions into the checked classes.
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
 	- add custom bans.
@@ -23,5 +22,6 @@ maybe:
 	- add query clients to client list or a query client list?
 	- make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
+	- C++ --> nodejs (if, than very very long-term)
 	- create a standalone using electron with access to the server logs or with local logs.
 */
