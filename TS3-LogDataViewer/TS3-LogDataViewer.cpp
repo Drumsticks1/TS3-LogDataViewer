@@ -35,7 +35,10 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	if (!boost::filesystem::exists("lockfile") || SKIPLOCKFILE == true) {
+	if (!boost::filesystem::exists("lockfile") || SKIPLOCKFILE) {
+		if (SKIPLOCKFILE)
+			outputStream << "SKIPLOCKFILE is set to true --> lockfile will be ignored" << std::endl;
+
 		std::fstream lockfile("lockfile", std::fstream::out);
 		std::string LOGDIRECTORY;
 		bpo::variables_map vm;

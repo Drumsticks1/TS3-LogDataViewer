@@ -274,7 +274,6 @@ void parseLogs(std::string LOGDIRECTORY) {
 					}
 				}
 
-				// DEV: Currently not used
 				// Client assignments to and client removals from a server group
 				else if (buffer_logline.find(LOGMATCH_SERVERGROUPASSIGNMENT) != std::string::npos || buffer_logline.find(LOGMATCH_SERVERGROUPREMOVAL) != std::string::npos) {
 					ID_StartPos = buffer_logline.find("'(id:") + 5;
@@ -295,6 +294,23 @@ void parseLogs(std::string LOGDIRECTORY) {
 					DateTime = buffer_logline.substr(0, 19);
 					ID = std::stoul(buffer_logline.substr(ID_StartPos, ID_Length));
 					ServerGroupName = buffer_logline.substr(ServerGroupName_StartPos, ServerGroupName_Length);
+
+					unsigned int clientID = std::stoul(buffer_logline.substr(67, buffer_logline.find(") was ") - 67));
+
+					// Todo: Add server groups if not existing in list.
+					// Temporary solution:
+					if (ServerGroupList.size() < ID + 1) {
+						ServerGroupList.resize(ID + 1);
+					}
+
+					if (buffer_logline.find(LOGMATCH_SERVERGROUPASSIGNMENT) != std::string::npos) {
+						if (!isDuplicateMemberID(ID, clientID))
+							ServerGroupList[ID].addMemberID(clientID);
+					}
+					else {
+						if (isDuplicateMemberID(ID, clientID))
+							ServerGroupList[ID].removeMemberID(clientID);
+					}
 				}
 
 				// Ban Rules
@@ -410,7 +426,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 					// 0 --> added
 					// 1 --> deleted
 					// 2 --> renamed
-					// 3 --> copied
+					// 3 --> copied // just like "added"
 					int eventType = -1;
 
 					ID_StartPos = buffer_logline.find("'(id:") + 5;
@@ -467,7 +483,7 @@ void parseLogs(std::string LOGDIRECTORY) {
 
 						case 3:
 							ServerGroupList.resize(ID + 1);
-							ServerGroupList[ID].copyFromServerGroup(ID);
+							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, DateTime);
 							break;
 						}
 					}

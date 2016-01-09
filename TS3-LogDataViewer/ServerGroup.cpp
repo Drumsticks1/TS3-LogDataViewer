@@ -18,17 +18,36 @@ void ServerGroup::addServerGroupInformation(unsigned int ID, std::string ServerG
 //
 void ServerGroup::renameServerGroup(std::string newServerGroupName) { this->ServerGroupName = newServerGroupName; }
 
-// Copy the data from the ServerGroup item with the given ID from the ServerGroupList to the current object.
-void ServerGroup::copyFromServerGroup(unsigned int ID) {
-	this->ServerGroupName = ServerGroupList[ID].getServerGroupName();
-	this->CreationDateTime = ServerGroupList[ID].getCreationDateTime();;
+// Returns the count of the MemberIDs of the current ServerGroup.
+unsigned int ServerGroup::getMemberIDCount() { return MemberID.size(); };
+
+// Returns the MemberId stored in the given ID slot.
+unsigned int ServerGroup::getUniqueMemberID(unsigned int MemberIDNumber) { return MemberID.at(MemberIDNumber); };
+
+// Adds the new MemberID at the end of the MemberID list.
+void ServerGroup::addMemberID(unsigned int MemberID) {
+	this->MemberID.push_back(MemberID);
 }
 
-// Sets the deleted flag to true.
-void ServerGroup::deleteServerGroup() { deleted = true; }
+//
+void ServerGroup::removeMemberID(unsigned int MemberID) {
+	bool done = false;
+	for (unsigned int i = 0; i < this->getMemberIDCount() && !done; i++) {
+		if (this->getUniqueMemberID(i) == MemberID) {
+			this->MemberID.erase(this->MemberID.begin() + i);
+			done = true;
+		}
+	}
+};
 
+//
 unsigned int ServerGroup::getID() { return ID; };
 std::string ServerGroup::getServerGroupName() { return ServerGroupName; };
 std::string ServerGroup::getCreationDateTime() { return CreationDateTime; };
 
+
+// Sets the deleted flag to true.
+void ServerGroup::deleteServerGroup() { deleted = true; }
+
+//
 bool ServerGroup::isDeleted() { return deleted; };

@@ -11,18 +11,25 @@ class ServerGroup {
 private:
 	unsigned int ID = 0;
 	std::string ServerGroupName, CreationDateTime;
-	std::vector <std::string> MemberID, AssignmentDateTime;
+	std::vector <unsigned int> MemberID;
+	std::vector <std::string> AssignmentDateTime;
 	bool deleted = false;
 
 public:
 	void addServerGroupInformation(unsigned int ID, std::string ServerGroupName, std::string CreationDateTime);
 	void renameServerGroup(std::string newServerGroupName);
-	void copyFromServerGroup(unsigned int ID);
 
-	void deleteServerGroup();
+	unsigned int getMemberIDCount();
 
+	unsigned int getUniqueMemberID(unsigned int MemberIDNumber);
+
+	void addMemberID(unsigned int MemberID);
+	void removeMemberID(unsigned int MemberID);
+	
 	unsigned int getID();
 	std::string getServerGroupName();
 	std::string getCreationDateTime();
+
+	void deleteServerGroup();
 	bool isDeleted();
 };

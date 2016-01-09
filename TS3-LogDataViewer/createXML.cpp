@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "Constants.h"
+#include "ServerGroup.h"
 #include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
@@ -18,6 +19,7 @@
 namespace bpt = boost::property_tree;
 
 extern std::vector <std::string> parsedLogs;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Client> ClientList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
@@ -39,10 +41,30 @@ void createXML() {
 	AttributesNode.add("CreationTimestamp_Localtime", getCurrentLocaltime());
 	AttributesNode.add("CreationTimestamp_UTC", getCurrentUTC());
 	AttributesNode.add("SKIPLOCKFILE", SKIPLOCKFILE);
+	AttributesNode.add("DEBUGGINGXML", DEBUGGINGXML);
 
 	bpt::ptree& ParsedLogs = AttributesNode.add("ParsedLogs", "");
 	for (unsigned i = 0; i < parsedLogs.size(); i++) {
 		ParsedLogs.add("P", parsedLogs[i]);
+	}
+
+	for (unsigned int i = 0; i < ServerGroupList.size(); i++) {
+		bpt::ptree& ServerGroupNode = Data.add("ServerGroup", "");
+		if (ServerGroupList[i].getID() != 0) {
+			ServerGroupNode.add("ID", ServerGroupList[i].getID());
+			ServerGroupNode.add("ServerGroupName", ServerGroupList[i].getServerGroupName());
+			ServerGroupNode.add("CreationDateTime", ServerGroupList[i].getCreationDateTime());
+
+			bpt::ptree& MemberID = ServerGroupNode.add("MemberID", "");
+			for (unsigned int j = 0; j < ServerGroupList[i].getMemberIDCount(); j++) {
+				MemberID.add("M", ServerGroupList[i].getUniqueMemberID(j));
+			}
+
+			if (ServerGroupList[i].isDeleted()) {
+				ServerGroupNode.add("Deleted", 1);
+			}
+		}
+		else ServerGroupNode.add("ID", "-1");
 	}
 
 	for (unsigned int i = 0; i < ClientList.size(); i++) {
@@ -126,7 +148,12 @@ void createXML() {
 	outputStream << "Creating XML..." << std::endl;
 
 	try {
-		bpt::write_xml(XMLFILE, PropertyTree);
+		if (DEBUGGINGXML) {
+			outputStream << "DEBUGGINXML is set to true --> larger XML for debugging" << std::endl;
+			write_xml(XMLFILE, PropertyTree, std::locale(), boost::property_tree::xml_writer_make_settings<std::string>('\t', 1));
+		}
+		else write_xml(XMLFILE, PropertyTree);
+
 		outputStream << "XML Creation completed." << std::endl;
 	}
 	catch (bpt::xml_parser_error error) {

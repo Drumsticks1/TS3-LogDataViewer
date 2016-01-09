@@ -16,5 +16,8 @@
 // Lockfile expiration time (in seconds).
 #define LOCKFILEEXPIRATION 300
 
-// DEBUGGING: Option for skipping the lockfile check (default option for release versions should always be false).
-#define SKIPLOCKFILE false
+// Debugging options, default option for release versions should always be false:
+// Option for skipping the lockfile check 
+#define SKIPLOCKFILE true
+// Option for building a bigger xml which can be used for easier debugging than the release one-liner xml.
+#define DEBUGGINGXML true

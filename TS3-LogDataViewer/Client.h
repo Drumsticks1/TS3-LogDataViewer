@@ -30,13 +30,6 @@ public:
 	void addDateTime(std::string DateTime);
 	void addIP(std::string IP);
 
-	/*
-	void addServerGroup(std::string ServerGroup, std::string DateTime);
-	void removeServerGroup(std::string ServerGroup);
-	std::string getServerGroup();
-	std::string getServerGroupTimestamp();
-	*/
-
 	void addNicknameReverse(std::string Nickname);
 	void addDateTimeReverse(std::string DateTime);
 	void addIPReverse(std::string IP);

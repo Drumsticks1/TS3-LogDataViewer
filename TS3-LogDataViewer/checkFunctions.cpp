@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include "ServerGroup.h"
 #include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
@@ -13,11 +14,22 @@
 extern std::vector <std::string> Logs;
 extern std::vector <std::string> parsedLogs;
 extern std::vector <std::string> ignoreLogs;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Client> ClientList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
 extern std::vector <Complaint> ComplaintList;
 extern std::vector <Upload> UploadList;
+
+// Checks if a MemberID is already existing in the current ServerGroup.
+bool isDuplicateMemberID(unsigned int ID, unsigned int MemberID) {
+	for (unsigned int i = 0; i < ServerGroupList[ID].getMemberIDCount(); i++) {
+		if (ServerGroupList[ID].getUniqueMemberID(i) == MemberID) {
+			return true;
+		}
+	}
+	return false;
+}
 
 // Checks if a DateTime is already existing for the current client.
 bool isDuplicateDateTime(unsigned int ID, std::string DateTime) {

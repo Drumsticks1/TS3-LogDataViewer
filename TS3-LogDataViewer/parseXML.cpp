@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "Constants.h"
+#include "ServerGroup.h"
 #include "Client.h"
 #include "Ban.h"
 #include "Kick.h"
@@ -17,6 +18,7 @@
 #include "src/pugixml.cpp"
 
 std::vector <std::string> parsedLogs;
+extern std::vector <ServerGroup> ServerGroupList;
 extern std::vector <Client> ClientList;
 extern std::vector <Ban> BanList;
 extern std::vector <Kick> KickList;
@@ -54,6 +56,22 @@ bool parseXML() {
 
 						for (pugi::xml_node ParsedLogs = AttributesNode.child("ParsedLogs").child("P"); ParsedLogs; ParsedLogs = ParsedLogs.next_sibling("P")) {
 							parsedLogs.emplace_back(ParsedLogs.first_child().value());
+						}
+					}
+
+					for (pugi::xml_node ServerGroupNode = oldXML.first_child().child("ServerGroup"); ServerGroupNode; ServerGroupNode = ServerGroupNode.next_sibling("ServerGroup")) {
+						if ((std::string)ServerGroupNode.child("ID").first_child().value() != "-1") {
+							ID = std::stoul(ServerGroupNode.child("ID").first_child().value());
+							ServerGroupList.resize(ID + 1);
+							ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupNode.child("ServerGroupName").first_child().value(), ServerGroupNode.child("CreationDateTime").first_child().value());
+
+							for (pugi::xml_node MemberID = ServerGroupNode.child("MemberID").first_child(); MemberID; MemberID = MemberID.next_sibling()) {
+								ServerGroupList[ID].addMemberID(std::stoul(MemberID.first_child().value()));
+							}
+
+							if ((std::string)ServerGroupNode.child("Deleted").first_child().value() == "1") {
+								ServerGroupList[ID].deleteServerGroup();
+							}
 						}
 					}
 
