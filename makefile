@@ -8,7 +8,7 @@ CFLAGS = -Wall -g -std=c++11 -DNDEBUG
 IDIR = -I/usr/boost_1_60_0 -I/usr/pugixml-1.7
 LDFLAGS = -L/usr/boost_1_60_0/stage/lib -lboost_system -lboost_filesystem -lboost_program_options -static
 
-FILES = Ban.cpp Ban.h checkFunctions.cpp checkFunctions.h Client.cpp Client.h Complaint.cpp Complaint.h Constants.h createXML.cpp createXML.h customStreams.h fetchLogs.cpp fetchLogs.h Kick.cpp Kick.h parseLogs.cpp parseLogs.h parseXML.cpp parseXML.h timeFunctions.cpp timeFunctions.h TS3-LogDataViewer.cpp Upload.cpp Upload.h
+FILES = Ban.cpp Ban.h checkFunctions.cpp checkFunctions.h Client.cpp Client.h Complaint.cpp Complaint.h Constants.h createXML.cpp createXML.h customStreams.h fetchLogs.cpp fetchLogs.h Kick.cpp Kick.h parseLogs.cpp parseLogs.h parseXML.cpp parseXML.h ServerGroup.cpp ServerGroup.h timeFunctions.cpp timeFunctions.h TS3-LogDataViewer.cpp Upload.cpp Upload.h
 
 TS3-LogDataViewer: $(FILES)
 		$(CC) $(CFLAGS) $(IDIR) -o TS3-LogDataViewer $(FILES) $(LDFLAGS)

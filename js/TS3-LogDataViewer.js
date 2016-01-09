@@ -6,7 +6,8 @@
 var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
     eventListeners = [],
     tables = ['clientTable', 'banTable', 'kickTable', 'complaintTable', 'uploadTable'],
-    tableNames = ['Client', 'Ban', 'Kick', 'Complaint', 'Upload'];
+    tableNames = ['Client', 'Ban', 'Kick', 'Complaint', 'Upload'],
+    serverGroupNamesBuffer = [];
 
 // Rebuilds the XML and calls buildTable() when the XML creation has finished.
 function rebuildXML() {
@@ -243,6 +244,13 @@ function removeEventListeners() {
     }
 }
 
+//
+function getServerGroupByID(ID, j) {
+    // Todo: Buffering the results in an array for faster handling.
+    var buffer = XML.getElementsByTagName('ServerGroup')[ID];
+    return buffer.getElementsByTagName('ServerGroupName')[0].firstChild.nodeValue;
+}
+
 // Builds the client table.
 function buildClientTable() {
     var clientTableControlSection = document.createElement('div');
@@ -310,7 +318,7 @@ function buildClientTable() {
         clientHeadCell_IPs = document.createElement('th'),
         clientHeadCell_Connects = document.createElement('th'),
         clientHeadCell_Connected = document.createElement('th'),
-        clientHeadCell_Deleted = document.createElement('th');
+        clientHeadCell_ServerGroupInfo = document.createElement('th');
 
     clientHeadCell_ID.innerHTML = 'ID';
     clientHeadCell_Nicknames.innerHTML = 'Nicknames';
@@ -318,7 +326,7 @@ function buildClientTable() {
     clientHeadCell_IPs.innerHTML = 'IPs';
     clientHeadCell_Connects.innerHTML = 'Connects';
     clientHeadCell_Connected.innerHTML = 'Connected';
-    clientHeadCell_Deleted.innerHTML = 'Placeholder';
+    clientHeadCell_ServerGroupInfo.innerHTML = 'Server groups';
 
     clientHeadRow.appendChild(clientHeadCell_ID);
     clientHeadRow.appendChild(clientHeadCell_Nicknames);
@@ -326,7 +334,7 @@ function buildClientTable() {
     clientHeadRow.appendChild(clientHeadCell_IPs);
     clientHeadRow.appendChild(clientHeadCell_Connects);
     clientHeadRow.appendChild(clientHeadCell_Connected);
-    clientHeadRow.appendChild(clientHeadCell_Deleted);
+    clientHeadRow.appendChild(clientHeadCell_ServerGroupInfo);
 
     clientHead.appendChild(clientHeadRow);
     clientTable.appendChild(clientHead);
@@ -334,11 +342,13 @@ function buildClientTable() {
     var clientBody = document.createElement('tbody');
     for (var i = 0; i < Client.length; i++) {
         var ID = Client[i].getElementsByTagName('ID')[0].firstChild.nodeValue;
-        if (ID !== '-1') {
+        if (ID != '-1') {
             var Nicknames = Client[ID].getElementsByTagName('Nicknames')[0].getElementsByTagName('N'),
                 Connections = Client[ID].getElementsByTagName('Connections')[0].getElementsByTagName('C'),
                 IPs = Client[ID].getElementsByTagName('IPs')[0].getElementsByTagName('I'),
-                Connection_Count = Connections.length;
+                Connection_Count = Connections.length,
+                ServerGroupIDs = Client[ID].getElementsByTagName('ServerGroupIDs')[0].getElementsByTagName('S'),
+                ServerGroupAssignmentDateTimes = Client[ID].getElementsByTagName('ServerGroupAssignmentDateTimes')[0].getElementsByTagName('A');
 
             var clientBodyRow = document.createElement('tr'),
                 clientBodyCell_ID = document.createElement('td'),
@@ -347,7 +357,7 @@ function buildClientTable() {
                 clientBodyCell_IPs = document.createElement('td'),
                 clientBodyCell_Connects = document.createElement('td'),
                 clientBodyCell_Connected = document.createElement('td'),
-                clientBodyCell_Deleted = document.createElement('td');
+                clientBodyCell_ServerGroupInfo = document.createElement('td');
 
             clientBodyRow.id = ID;
             clientBodyCell_ID.setAttribute('data-title', 'ID');
@@ -356,7 +366,7 @@ function buildClientTable() {
             clientBodyCell_IPs.setAttribute('data-title', 'IPs');
             clientBodyCell_Connects.setAttribute('data-title', 'Connects');
             clientBodyCell_Connected.setAttribute('data-title', 'Connected');
-            clientBodyCell_Deleted.setAttribute('data-title', 'Placeholder');
+            clientBodyCell_ServerGroupInfo.setAttribute('data-title', 'Server groups');
 
             clientBodyCell_ID.innerHTML = ID;
             clientBodyRow.appendChild(clientBodyCell_ID);
@@ -423,7 +433,17 @@ function buildClientTable() {
                 clientBodyCell_Connected.innerHTML = "true";
             } else clientBodyCell_Connected.innerHTML = "false";
             clientBodyRow.appendChild(clientBodyCell_Connected);
-            clientBodyRow.appendChild(clientBodyCell_Deleted);
+
+            for (var j = 0; j < ServerGroupIDs.length; j++) {
+                var divName = document.createElement('div'),
+                    divDateTime = document.createElement('div');
+                divName.innerHTML = getServerGroupByID(ServerGroupIDs[j].firstChild.nodeValue, j);
+                divDateTime.innerHTML = ServerGroupAssignmentDateTimes[j].firstChild.nodeValue;
+
+                clientBodyCell_ServerGroupInfo.appendChild(divName);
+                clientBodyCell_ServerGroupInfo.appendChild(divDateTime);
+            }
+            clientBodyRow.appendChild(clientBodyCell_ServerGroupInfo);
 
             clientBody.appendChild(clientBodyRow);
         }
@@ -1043,9 +1063,7 @@ function buildTables() {
             }
             document.getElementById('connectedClientsCount').innerHTML = 'Connected clients: ' + ConnectedClientsCount;
 
-            // To be added when the new binary runs on the server:
-            // || Attributes.getElementsByTagName('DEBUGGINGXML')[0].firstChild.nodeValue == 'true'
-            if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true') {
+            if (Attributes.getElementsByTagName('SKIPLOCKFILE')[0].firstChild.nodeValue == 'true' || Attributes.getElementsByTagName('DEBUGGINGXML')[0].firstChild.nodeValue == 'true') {
                 alert('At least one debug variable has been set to true before compiling the code. Please recompile the program with the debug variables set to false.');
             }
 

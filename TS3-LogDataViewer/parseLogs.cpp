@@ -294,24 +294,26 @@ void parseLogs(std::string LOGDIRECTORY) {
 
 					unsigned int clientID = std::stoul(buffer_logline.substr(67, buffer_logline.find(") was ") - 67));
 
-					// Todo: Add server groups if not existing in list.
-					// Temporary solution:
-					if (ServerGroupList.size() < ID + 1)
+					if (ServerGroupList.size() < ID + 1) {
 						ServerGroupList.resize(ID + 1);
+					}
+
+					if (ServerGroupList[ID].getID() == 0) {
+						ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, "Unknown");
+					}
 
 					// Todo: Add client to list if not already existing?
 					// Currently only reserving the vector buffer to prevent out of bounds exception.
-
 					if (ClientList.size() < clientID + 1)
-						ClientList.resize(ID + 1);
+						ClientList.resize(clientID + 1);
 
 					if (buffer_logline.find(match_serverGroupAssignment) != std::string::npos) {
 						if (!isDuplicateServerGroup(clientID, ID))
 							ClientList[clientID].addServerGroup(ID, DateTime);
 					}
-					else {
-						if (!isDuplicateServerGroup(clientID, ID))
-							ClientList[clientID].removeServerGroupByID(ID);
+					// extra check, may be removed later
+					else if (isDuplicateServerGroup(clientID, ID)) {
+						ClientList[clientID].removeServerGroupByID(ID);
 					}
 				}
 

@@ -1,7 +1,6 @@
 // Constants.h
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
-#pragma once
 
 // XML output file.
 #define XMLFILE "output.xml"
@@ -18,6 +17,6 @@
 
 // Debugging options, default option for release versions should always be false:
 // Option for skipping the lockfile check 
-#define SKIPLOCKFILE true
+#define SKIPLOCKFILE false
 // Option for building a bigger xml which can be used for easier debugging than the release one-liner xml.
-#define DEBUGGINGXML true
+#define DEBUGGINGXML false
