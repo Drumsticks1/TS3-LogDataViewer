@@ -4,13 +4,14 @@
 
 /*
 general (sorted by priority):
-	- finish the ServerGroup implementation for the client side.
 	- replace the desciption divs with buttons for sorting after the connected and deleted state and remove the "connected" column afterwards.
 		- also include a resetSort option.
-	- add button for resetting the sort orders. (for mobile devices without CTRL).
 	- add button for switching between bantime in seconds and bantime in x.
 	- move (at least the duplicate) checkFunctions into the checked classes.
 	- make the server group data in the client table sortable.
+	- outsource the parsing in parseLogs to extra functions.
+	- add a ServerGroup table (maybe with rights and so on - would be long-term).
+	- expand documentation of the functions.
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
 	- add custom bans.

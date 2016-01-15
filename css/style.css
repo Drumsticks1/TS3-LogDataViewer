@@ -56,7 +56,7 @@ button {
     line-height: normal
 }
 #controlSection {
-    margin-top: 20px
+    margin: 20px 0
 }
 #creationTimestampTable {
     margin: .75rem 0;
