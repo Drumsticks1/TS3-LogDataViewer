@@ -8,12 +8,15 @@ Feel free to modify this file according to your wishes.
 button, .tableheading {
     border: 1px solid rgba(0, 0, 0, .1)
 }
+
 .row {
     max-width: 100%
 }
+
 input[type='checkbox'] {
     display: none
 }
+
 label {
     display: block;
     padding: .6rem;
@@ -22,32 +25,41 @@ label {
     border: 1px solid #898989;
     transition: background-color 300ms ease-out
 }
+
 label:hover {
     background-color: #898989
 }
+
 :checked + label {
     background-color: #5da423;
     border: 1px solid #549420
 }
+
 :checked + label:hover {
     background-color: #549420
 }
+
 .alertBox, label, #TS3-LDV, button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading {
     color: #fff
 }
+
 #navbar, td, .tablesorter button {
     background-color: #fff
 }
+
 #tableSelectionSection > div, #controlSection {
     padding: 0
 }
+
 #TS3-LDV, .tableheading, button {
     background-color: #2ba6cb
 }
+
 .alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading, #description_connected, #description_deleted {
     font-family: 'Open Sans', Arial, sans-serif;
     font-weight: 400
 }
+
 button {
     padding: 1rem 2rem;
     font-size: 1rem;
@@ -55,29 +67,37 @@ button {
     border-radius: 0;
     line-height: normal
 }
+
 #controlSection {
     margin: 20px 0
 }
+
 #creationTimestampTable {
     margin: .75rem 0;
     padding: 0.5625rem 0.625rem;
     text-align: left
 }
+
 #tableSelectionSection {
     margin-bottom: 15px
 }
+
 #clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-LDV, #controlSection, .tableheading, #description_connected, #description_deleted {
     text-align: center
 }
+
 .alertBox, #creationTimestampSection, #rebuildSection {
     margin-bottom: 20px
 }
+
 #TS3-LDV, #buildNewXMLButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #rebuildXMLButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
     margin: 0
 }
+
 #tableSelectionSection, #buildNewXMLButton, #creationTimestampTable, #rebuildXMLButton, #switchBetweenIDandUIDButton, .tablesorter {
     width: 100%
 }
+
 #navbar {
     display: flex;
     position: fixed;
@@ -88,46 +108,58 @@ button {
     bottom: 0;
     z-index: 100
 }
+
 #navbar button {
     flex-grow: 1;
     font-size: .8rem;
     padding: .75em .5em
 }
+
 #ts3-uploadTable {
     margin-bottom: 44px
 }
+
 td, th {
     border: 1px solid #cdcdcd;
     line-height: 1.125rem
 }
+
 #TS3-LDV, .tableheading, #description_connected, #description_deleted {
     padding: .5rem 1rem
 }
+
 #TS3-LDV, .tableheading {
     font-size: 1.75em
 }
+
 #creationTimestampTable > thead > tr > th, #creationTimestampTable > tbody > tr > td, .tablesorter > tbody > tr > td {
     padding: 4px;
     vertical-align: top;
     font-size: 0.875rem
 }
+
 #creationTimestampTable > thead > tr > th {
     padding: 0.5rem 0.625rem 0.625rem;
 }
+
 .tablesorter > thead > tr > th {
     font-size: 14pt;
     font-weight: 400;
     padding: 5px 15px 5px 5px
 }
+
 .tablesorter-header {
     background: url(../img/bg.png) center right no-repeat #E6E6E6
 }
+
 .tablesorter-headerAsc {
     background-image: url(../img/asc.png)
 }
+
 .tablesorter-headerDesc {
     background-image: url(../img/desc.png)
 }
+
 .tablesorter button {
     color: #008CBA;
     position: static;
@@ -136,31 +168,39 @@ td, th {
     padding: 5px 0;
     font-size: .8rem
 }
+
 .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
     background-color: #007095
 }
+
 .alertBox {
     padding: .6rem;
     background-color: #9f9f9f
 }
+
 .connected > td, .connected > td > button, #description_connected {
     background-color: #5da423;
     color: #fff
 }
+
 .connected > td > button:active, .connected > td > button:hover, .connected > td > button:focus {
     background-color: #fff;
     color: #5da423
 }
+
 .deleted > td, .deleted > td > button, #description_deleted {
     background-color: #fefefe
 }
+
 .deleted > td, #description_deleted {
     color: #999
 }
+
 @media (max-width: 1024px) {
     .tablesorter-sticky-visible {
         display: none
     }
+
     .ui-table-reflow > tbody > tr > td, .ui-table-reflow thead > tr > th {
         border-color: rgba(222, 222, 222, .25);
         -webkit-box-sizing: border-box;
@@ -169,9 +209,11 @@ td, th {
         float: right;
         width: 100%
     }
+
     .ui-table-reflow > tbody > tr {
         border: 1px solid #CDCDCD
     }
+
     .ui-table-reflow tbody > tr > td > div {
         clear: right;
         float: right;
@@ -179,6 +221,7 @@ td, th {
         width: 50%;
         overflow: auto
     }
+
     .ui-table-reflow > tbody > tr > td[data-title]:before {
         color: #469;
         font-size: .9em;
@@ -187,12 +230,15 @@ td, th {
         max-width: calc(50vw - 5px);
         width: 50%
     }
+
     .ui-table-reflow > tbody > .connected > td[data-title]:before {
         color: #fff
     }
+
     .ui-table-reflow > tbody > tr > td > button {
         margin: 0 0 5px
     }
+
     #clientTable > tbody > tr > td:nth-child(3) > div {
         text-align: left
     }

@@ -47,7 +47,7 @@ function expandList(List, UpperList, ID, Column, numberIfCollapsed) {
     var x = document.getElementById(ID).childNodes[Column],
         ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
     document.getElementById(List + 'Button_' + ID).innerHTML = '- ' + (ListContent.length - numberIfCollapsed);
-    document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', true);
+    document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', "false");
     for (var j = 1; j < ListContent.length; j++) {
         var currentDiv = List + '_' + ID + '_' + j;
         if (document.getElementById(currentDiv) === null) {
@@ -66,7 +66,7 @@ function expandList(List, UpperList, ID, Column, numberIfCollapsed) {
 function collapseList(List, UpperList, ID, Column, numberIfCollapsed) {
     var ListContent = XML.getElementsByTagName('Client')[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
     document.getElementById(List + 'Button_' + ID).innerHTML = '+ ' + (ListContent.length - numberIfCollapsed);
-    document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', false);
+    document.getElementById(List + 'Button_' + ID).parentNode.setAttribute('expanded', "true");
 
     if (document.getElementById(ID) !== null) {
         var x = document.getElementById(ID).childNodes[Column].childNodes;
@@ -81,9 +81,9 @@ function collapseList(List, UpperList, ID, Column, numberIfCollapsed) {
 function collapseAll() {
     var j, x = document.getElementById('clientTable').lastChild.childNodes;
     for (j = 0; j < x.length; j++) {
-        if (x.item(j).childNodes.item(2).getAttribute('expanded') == 'true')
+        if (x.item(j).childNodes.item(2).getAttribute('expanded') == "false")
             collapseList('connections', 'Connections', x.item(j).getAttribute('id'), 2, 2);
-        if (x.item(j).childNodes.item(3).getAttribute('expanded') == 'true')
+        if (x.item(j).childNodes.item(3).getAttribute('expanded') == "true")
             collapseList('ips', 'IPs', x.item(j).getAttribute('id'), 3, 1);
     }
 }
@@ -212,8 +212,14 @@ function addTableCheckboxListener(table) {
 }
 
 // Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
-function UTCDateStringToDate(dateString, moment) {
-    return new Date(Date.UTC(dateString.substr(0, 4), dateString.substr(5, 2) - 1, dateString.substr(8, 2), dateString.substr(11, 2), dateString.substr(14, 2), dateString.substr(17, 2)));
+function UTCDateStringToDate(dateString) {
+    return new Date(Date.UTC(
+        Number(dateString.substr(0, 4)),
+        Number(dateString.substr(5, 2)) - 1,
+        Number(dateString.substr(8, 2)),
+        Number(dateString.substr(11, 2)),
+        Number(dateString.substr(14, 2)),
+        Number(dateString.substr(17, 2))));
 }
 
 // Returns the given number as double digit string.
@@ -445,7 +451,7 @@ function buildClientTable() {
                 clientBodyCell_ServerGroupInfo.innerHTML = '/';
 
 
-            for (var j = 0; j < ServerGroupIDs.length; j++) {
+            for (j = 0; j < ServerGroupIDs.length; j++) {
                 var divName = document.createElement('div'),
                     divDateTime = document.createElement('div');
                 divName.innerHTML = getServerGroupByID(ServerGroupIDs[j].firstChild.nodeValue);
@@ -1052,10 +1058,9 @@ function buildTables() {
             }
 
             var Attributes = XML.getElementsByTagName('Attributes')[0],
-                CreationTimestampLocaltime = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue,
                 CreationTimestampUTC = Attributes.getElementsByTagName('CreationTimestamp_UTC')[0].firstChild.nodeValue;
 
-            document.getElementById('creationTimestamp_localtime').innerHTML = CreationTimestampLocaltime;
+            document.getElementById('creationTimestamp_localtime').innerHTML = Attributes.getElementsByTagName('CreationTimestamp_Localtime')[0].firstChild.nodeValue;
             document.getElementById('creationTimestamp_utc').innerHTML = CreationTimestampUTC;
             document.getElementById('creationTimestamp_moment').innerHTML = moment(CreationTimestampUTC + ' +0000', 'DD.MM.YYYY HH:mm:ss Z').fromNow();
 
@@ -1188,7 +1193,7 @@ function buildControlSection() {
         resetSortingButton = document.createElement('button');
 
     miscControlSection.className = 'columns';
-    resetSortingButton.className = 'large-12';
+    resetSortingButton.className = 'small-12';
     resetSortingButton.innerHTML = 'Reset table sorting';
     resetSortingButton.onclick = function() {
         resetSorting();
@@ -1209,7 +1214,7 @@ function buildControlSection() {
 
     navbar.appendChild(scrollBackToTopButton);
 
-    scrollToTablesButtons = new Array(5);
+    var scrollToTablesButtons = new Array(5);
     for (var j = 0; j < 5; j++) {
         scrollToTablesButtons[j] = document.createElement('button');
         scrollToTablesButtons[j].style.display = 'none';
