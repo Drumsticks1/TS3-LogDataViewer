@@ -2,13 +2,17 @@
 // Author: Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-// Global Variables
+/**
+ * Global Variables
+ */
 var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
     eventListeners = [],
     tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
     tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
 
-// Rebuilds the XML and calls buildTable() when the XML creation has finished.
+/**
+ * Rebuilds the XML and calls buildTables() when the XML creation has finished.
+ */
 function rebuildXML() {
     nanobar.go(35);
     document.getElementById("rebuildXMLButton").disabled = document.getElementById("buildNewXMLButton").disabled = true;
@@ -17,43 +21,58 @@ function rebuildXML() {
     });
 }
 
-// Deletes the current XML and builds a new one after.
+/**
+ * Deletes the current XML and builds a new one after the deletion.
+ */
 function buildNewXML() {
     $.get("./deleteXML.php", function() {
         rebuildXML();
     });
 }
 
-// Expands or collapses the list, depending on its current state.
+/**
+ * Expands or collapses the list, depending on its current state.
+ *
+ * @param {string} List - name of the list ("connections" or "ips").
+ * @param {number} ID - ID of the client.
+ */
 function expandOrCollapseList(List, ID) {
-    var Column, UpperList, numberIfCollapsed;
+    var Column, UpperList, collapsedCellCount;
     if (List == "ips") {
         Column = 3;
         UpperList = "IPs";
-        numberIfCollapsed = 1;
+        collapsedCellCount = 1;
     } else {
-        Column = numberIfCollapsed = 2;
+        Column = collapsedCellCount = 2;
         UpperList = "Connections";
     }
 
     var currentDiv = document.getElementById(List + "_" + ID + "_1");
     if (currentDiv === null || currentDiv.style.display == "none")
-        expandList(List, UpperList, ID, Column, numberIfCollapsed);
-    else collapseList(List, UpperList, ID, Column, numberIfCollapsed);
+        expandList(List, UpperList, ID, Column, collapsedCellCount);
+    else collapseList(List, UpperList, ID, Column, collapsedCellCount);
 }
 
-// Expands the current list.
-function expandList(List, UpperList, ID, Column, numberIfCollapsed) {
-    var x = document.getElementById(ID).childNodes[Column],
+/**
+ * Expands the list with the given parameters.
+ *
+ * @param {string} List - name of the list ("connections" or "ips").
+ * @param {string} UpperList - name of the list with upper characters ("Connections" or "IPs").
+ * @param {number} ID - ID of the client.
+ * @param {number} Column - the column ID.
+ * @param {number} collapsedCellCount - count of the cells if collapsed.
+ */
+function expandList(List, UpperList, ID, Column, collapsedCellCount) {
+    var x = document.getElementById(String(ID)).childNodes[Column],
         ListContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
-    document.getElementById(List + "Button_" + ID).innerHTML = "- " + (ListContent.length - numberIfCollapsed);
+    document.getElementById(List + "Button_" + ID).innerHTML = "- " + (ListContent.length - collapsedCellCount);
     document.getElementById(List + "Button_" + ID).parentNode.setAttribute("expanded", "false");
     for (var j = 1; j < ListContent.length; j++) {
         var currentDiv = List + "_" + ID + "_" + j;
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement("div");
             newDiv.id = currentDiv;
-            if (numberIfCollapsed == 1) newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
+            if (collapsedCellCount == 1) newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
             else newDiv.innerHTML = UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue);
 
             if (Column == 3) x.appendChild(newDiv);
@@ -62,14 +81,23 @@ function expandList(List, UpperList, ID, Column, numberIfCollapsed) {
     }
 }
 
-// Collapses the current list.
-function collapseList(List, UpperList, ID, Column, numberIfCollapsed) {
+//
+/**
+ * Collapses the list with the given parameters.
+ *
+ * @param {string} List - name of the list ("connections" or "ips").
+ * @param {string} UpperList - name of the list with upper characters ("Connections" or "IPs").
+ * @param {number} ID - ID of the client.
+ * @param {number} Column - the column ID.
+ * @param {number} collapsedCellCount - count of the cells if collapsed.
+ */
+function collapseList(List, UpperList, ID, Column, collapsedCellCount) {
     var ListContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
-    document.getElementById(List + "Button_" + ID).innerHTML = "+ " + (ListContent.length - numberIfCollapsed);
+    document.getElementById(List + "Button_" + ID).innerHTML = "+ " + (ListContent.length - collapsedCellCount);
     document.getElementById(List + "Button_" + ID).parentNode.setAttribute("expanded", "true");
 
-    if (document.getElementById(ID) !== null) {
-        var x = document.getElementById(ID).childNodes[Column].childNodes;
+    if (document.getElementById(String(ID)) !== null) {
+        var x = document.getElementById(String(ID)).childNodes[Column].childNodes;
         for (var j = 1; j < x.length - 2; j++) {
             document.getElementById(List + "_" + ID + "_" + j).style.display = "none";
         }
@@ -77,18 +105,22 @@ function collapseList(List, UpperList, ID, Column, numberIfCollapsed) {
     }
 }
 
-// Collapses all expanded lists.
+/**
+ * Collapses all expanded lists.
+ */
 function collapseAll() {
-    var j, x = document.getElementById("clientTable").lastChild.childNodes;
-    for (j = 0; j < x.length; j++) {
+    var x = document.getElementById("clientTable").lastChild.childNodes;
+    for (var j = 0; j < x.length; j++) {
         if (x.item(j).childNodes.item(2).getAttribute("expanded") == "false")
-            collapseList("connections", "Connections", x.item(j).getAttribute("id"), 2, 2);
+            collapseList("connections", "Connections", Number(x.item(j).getAttribute("id")), 2, 2);
         if (x.item(j).childNodes.item(3).getAttribute("expanded") == "true")
-            collapseList("ips", "IPs", x.item(j).getAttribute("id"), 3, 1);
+            collapseList("ips", "IPs", Number(x.item(j).getAttribute("id")), 3, 1);
     }
 }
 
-// Adds a custom parser which ignores the moment.js timestamps.
+/**
+ * Adds a custom parser which ignores the moment.js timestamps.
+ */
 function addIgnoreMomentParser() {
     $.tablesorter.addParser({
         id: "ignoreMoment",
@@ -102,8 +134,9 @@ function addIgnoreMomentParser() {
         type: "text"
     });
 }
-
-// Adds a custom parser which ignores the expand/collapse button in the Connections list.
+/**
+ * Adds a custom parser which ignores the expand/collapse button in the Connections list.
+ */
 function addConnectionsParser() {
     $.tablesorter.addParser({
         id: "Connections",
@@ -122,7 +155,9 @@ function addConnectionsParser() {
     });
 }
 
-// Adds a custom parser which ignores the expand/collapse button in the IPs list.
+/**
+ * Adds a custom parser which ignores the expand/collapse button in the IPs list.
+ */
 function addIPsParser() {
     $.tablesorter.addParser({
         id: "IPs",
@@ -139,7 +174,9 @@ function addIPsParser() {
     });
 }
 
-// Switches between ID/UID columns in the ban table.
+/**
+ * Switches between ID/UID columns in the ban table.
+ */
 function switchBetweenIDAndUID() {
     var rowID, banID, IDOrUID, bannedByIDOrUD, Ban = XML.getElementsByTagName("Ban"),
         x = document.getElementById("banTable").lastChild.childNodes,
@@ -178,7 +215,11 @@ function switchBetweenIDAndUID() {
     }
 }
 
-// Imports and uses the local storage data for the given table.
+/**
+ * Imports and uses the local storage data for the table.
+ *
+ * @param {string} table - name of the table (e.g. "clientTable").
+ */
 function importLocalStorage(table) {
     if (localStorage.getItem(table)) {
         var checkState = Boolean(Number(localStorage.getItem(table)));
@@ -190,7 +231,11 @@ function importLocalStorage(table) {
     }
 }
 
-// Adds a checkbox listener for the given table.
+/**
+ * Adds a checkbox listener for the table.
+ *
+ * @param {string} table - name of the table (e.g. "clientTable").
+ */
 function addTableCheckboxListener(table) {
     document.getElementById(table + "Checkbox").addEventListener("click", function() {
         var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
@@ -211,7 +256,13 @@ function addTableCheckboxListener(table) {
     });
 }
 
-// Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a Date object.
+/**
+ * Converts a UTC dateTime string into a Date object which can be handled by moment.js functions.
+ *
+ * @param {string} dateString - UTC dateTime string with the format YYYY-MM-DD HH:mm:ss.
+ * @returns {Date} - UTC Date object that can be handeled by moment.js functions.
+ * @constructor
+ */
 function UTCDateStringToDate(dateString) {
     return new Date(Date.UTC(
         Number(dateString.substr(0, 4)),
@@ -222,26 +273,46 @@ function UTCDateStringToDate(dateString) {
         Number(dateString.substr(17, 2))));
 }
 
-// Returns the given number as double digit string.
+/**
+ * Returns the number x as double digit string.
+ *
+ * @param {number} x - given number.
+ * @returns {string} - double digit string.
+ */
 function toDoubleDigit(x) {
-    if (x < 10) x = "0" + x;
-    return x;
+    var y = String(x);
+    if (x < 10) y = "0" + String(x);
+    return y;
 }
 
-// Converts a UTC dateTime string with the format YYYY-MM-DD HH:mm:ss into a localtime string with the same format.
+/**
+ * Calls UTCDateStringToDate and converts the returned UTC Date object to a Localtime string.
+ *
+ * @param {string} dateString - UTC dateTime string with the format YYYY-MM-DD HH:mm:ss.
+ * @returns {string} - Localtime string.
+ * @constructor
+ */
 function UTCDateStringToLocaltimeString(dateString) {
-    var dateObject = UTCDateStringToDate(dateString);
+    var dateObject = new UTCDateStringToDate(dateString);
     return dateObject.getFullYear() + "-" + toDoubleDigit(dateObject.getMonth() + 1) + "-" + toDoubleDigit(dateObject.getDate()) + " " +
         toDoubleDigit(dateObject.getHours()) + ":" + toDoubleDigit(dateObject.getMinutes()) + ":" + toDoubleDigit(dateObject.getSeconds());
 }
 
-// Adds an onclick event to the given object and adds the object to the eventListeners array.
-function addOnClickEvent(object, action) {
-    object.onclick = action;
+
+/**
+ * Adds the onclick event to the object and adds the object to the eventListeners array.
+ *
+ * @param {object} object
+ * @param {function} onclickEvent
+ */
+function addOnClickEvent(object, onclickEvent) {
+    object.onclick = onclickEvent;
     eventListeners.push(object);
 }
 
-// Removes the onclick listeners that are listed in the eventListeners array.
+/**
+ * Destroys all onclick listeners that are listed in the eventListeners array.
+ */
 function removeEventListeners() {
     for (var i = eventListeners.length - 1; i >= 0; i--) {
         eventListeners[i].onclick = null;
@@ -249,14 +320,21 @@ function removeEventListeners() {
     }
 }
 
-// Returns the server group name for the given ID and the given
+/**
+ * Returns the server group name for the given ID.
+ *
+ * @param {number} ID - ID of the server group.
+ * @returns {string} - name of the server group.
+ */
 function getServerGroupByID(ID) {
     // Todo: Buffering the results in an array for faster handling.
     var buffer = XML.getElementsByTagName("ServerGroup")[ID];
     return buffer.getElementsByTagName("ServerGroupName")[0].firstChild.nodeValue;
 }
 
-// Resets the sorting of all tables.
+/**
+ * Resets the sorting of all tables.
+ */
 function resetSorting() {
     for (var i = 0; i < tables.length; i++) {
         $(document.getElementById(tables[i])).trigger("sortReset");
@@ -264,7 +342,9 @@ function resetSorting() {
     }
 }
 
-// Builds the client table.
+/**
+ * Builds the client table.
+ */
 function buildClientTable() {
     var clientTableControlSection = document.createElement("div");
     clientTableControlSection.className = "row";
@@ -489,7 +569,9 @@ function buildClientTable() {
     document.getElementById("scrollToClientTable").style.display = "";
 }
 
-// Builds the ban table.
+/**
+ * Builds the ban table.
+ */
 function buildBanTable() {
     if (localStorage.getItem("UIDState") === null) {
         localStorage.setItem("UIDState", "0");
@@ -651,7 +733,9 @@ function buildBanTable() {
     document.getElementById("scrollToBanTable").style.display = "";
 }
 
-// Builds the kick table.
+/**
+ * Builds the kick table.
+ */
 function buildKickTable() {
     var kickTableControlSection = document.createElement("div");
     kickTableControlSection.className = "row";
@@ -770,7 +854,9 @@ function buildKickTable() {
     document.getElementById("scrollToKickTable").style.display = "";
 }
 
-// Builds the complaint table.
+/**
+ * Builds the complaint table.
+ */
 function buildComplaintTable() {
     var complaintTableControlSection = document.createElement("div");
     complaintTableControlSection.className = "row";
@@ -884,7 +970,9 @@ function buildComplaintTable() {
     document.getElementById("scrollToComplaintTable").style.display = "";
 }
 
-// Builds the upload table.
+/**
+ * Builds the upload table.
+ */
 function buildUploadTable() {
     var uploadTableControlSection = document.createElement("div");
     uploadTableControlSection.className = "row";
@@ -1014,7 +1102,11 @@ function buildUploadTable() {
     document.getElementById("scrollToUploadTable").style.display = "";
 }
 
-// Imports the local storage, builds a table when it will have content and sets the session storage.
+/**
+ * Imports the local storage, builds the table if it would not be empty and sets the session storage.
+ *
+ * @param {string} table - name of the table (e.g. "clientTable").
+ */
 function buildTableWithAlertCheckAndLocalStorage(table) {
     $(document.getElementById(table)).trigger("destroy");
     $(document.getElementById("ts3-" + table)).empty();
@@ -1034,7 +1126,9 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
     } else sessionStorage.setItem(table + "-built", "0");
 }
 
-// Builds the tables using the XML.
+/**
+ * Builds all tables using the data from the XML.
+ */
 function buildTables() {
     nanobar.go(50);
     $.ajax({
@@ -1089,7 +1183,9 @@ function buildTables() {
     });
 }
 
-// Builds the control section.
+/**
+ * Builds the control section.
+ */
 function buildControlSection() {
     var controlSection = document.createElement("div"),
         tableSelectionSection = document.createElement("div"),
@@ -1238,22 +1334,21 @@ function buildControlSection() {
     document.getElementById("ts3-control").appendChild(controlSection);
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function() {
     $(document).foundation();
-    if (document.getElementById("ts3-control") !== null) {
-        nanobar = new Nanobar({
-            bg: "white",
-            id: "nanobar"
-        });
 
-        buildControlSection();
-        nanobar.go(25);
+    nanobar = new Nanobar({
+        bg: "white",
+        id: "nanobar"
+    });
 
-        for (var i = 0; i < tables.length; i++) {
-            importLocalStorage(tables[i]);
-            addTableCheckboxListener(tables[i]);
-        }
+    buildControlSection();
+    nanobar.go(25);
 
-        buildTables();
-    } else alert("The html is missing the control section. Please use the provided index.html.");
+    for (var i = 0; i < tables.length; i++) {
+        importLocalStorage(tables[i]);
+        addTableCheckboxListener(tables[i]);
+    }
+
+    buildTables();
 });
