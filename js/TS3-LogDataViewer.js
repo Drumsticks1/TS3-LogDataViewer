@@ -5,7 +5,7 @@
 /**
  * Global Variables
  */
-var ConnectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
+var connectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
     eventListeners = [],
     tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
     tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
@@ -33,49 +33,49 @@ function buildNewXML() {
 /**
  * Expands or collapses the list, depending on its current state.
  *
- * @param {string} List - name of the list ("connections" or "ips").
+ * @param {string} list - name of the list ("connections" or "ips").
  * @param {number} ID - ID of the client.
  */
-function expandOrCollapseList(List, ID) {
-    var Column, UpperList, collapsedCellCount;
-    if (List == "ips") {
-        Column = 3;
-        UpperList = "IPs";
+function expandOrCollapseList(list, ID) {
+    var column, upperList, collapsedCellCount;
+    if (list == "ips") {
+        column = 3;
+        upperList = "IPs";
         collapsedCellCount = 1;
     } else {
-        Column = collapsedCellCount = 2;
-        UpperList = "Connections";
+        column = collapsedCellCount = 2;
+        upperList = "Connections";
     }
 
-    var currentDiv = document.getElementById(List + "_" + ID + "_1");
+    var currentDiv = document.getElementById(list + "_" + ID + "_1");
     if (currentDiv === null || currentDiv.style.display == "none")
-        expandList(List, UpperList, ID, Column, collapsedCellCount);
-    else collapseList(List, UpperList, ID, Column, collapsedCellCount);
+        expandList(list, upperList, ID, column, collapsedCellCount);
+    else collapseList(list, upperList, ID, column, collapsedCellCount);
 }
 
 /**
  * Expands the list with the given parameters.
  *
- * @param {string} List - name of the list ("connections" or "ips").
- * @param {string} UpperList - name of the list with upper characters ("Connections" or "IPs").
+ * @param {string} list - name of the list ("connections" or "ips").
+ * @param {string} upperList - name of the list with upper characters ("Connections" or "IPs").
  * @param {number} ID - ID of the client.
- * @param {number} Column - the column ID.
+ * @param {number} column - the column ID.
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
-function expandList(List, UpperList, ID, Column, collapsedCellCount) {
-    var x = document.getElementById(String(ID)).childNodes[Column],
-        ListContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
-    document.getElementById(List + "Button_" + ID).innerHTML = "- " + (ListContent.length - collapsedCellCount);
-    document.getElementById(List + "Button_" + ID).parentNode.setAttribute("expanded", "false");
-    for (var j = 1; j < ListContent.length; j++) {
-        var currentDiv = List + "_" + ID + "_" + j;
+function expandList(list, upperList, ID, column, collapsedCellCount) {
+    var x = document.getElementById(String(ID)).childNodes[column],
+        listContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
+    document.getElementById(list + "Button_" + ID).innerHTML = "- " + (listContent.length - collapsedCellCount);
+    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
+    for (var j = 1; j < listContent.length; j++) {
+        var currentDiv = list + "_" + ID + "_" + j;
         if (document.getElementById(currentDiv) === null) {
             var newDiv = document.createElement("div");
             newDiv.id = currentDiv;
-            if (collapsedCellCount == 1) newDiv.innerHTML = ListContent[j].firstChild.nodeValue;
-            else newDiv.innerHTML = UTCDateStringToLocaltimeString(ListContent[j].firstChild.nodeValue);
+            if (collapsedCellCount == 1) newDiv.innerHTML = listContent[j].firstChild.nodeValue;
+            else newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j].firstChild.nodeValue);
 
-            if (Column == 3) x.appendChild(newDiv);
+            if (column == 3) x.appendChild(newDiv);
             else x.insertBefore(newDiv, x.lastChild);
         } else document.getElementById(currentDiv).style.display = "";
     }
@@ -85,23 +85,23 @@ function expandList(List, UpperList, ID, Column, collapsedCellCount) {
 /**
  * Collapses the list with the given parameters.
  *
- * @param {string} List - name of the list ("connections" or "ips").
- * @param {string} UpperList - name of the list with upper characters ("Connections" or "IPs").
+ * @param {string} list - name of the list ("connections" or "ips").
+ * @param {string} upperList - name of the list with upper characters ("Connections" or "IPs").
  * @param {number} ID - ID of the client.
- * @param {number} Column - the column ID.
+ * @param {number} column - the column ID.
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
-function collapseList(List, UpperList, ID, Column, collapsedCellCount) {
-    var ListContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(UpperList)[0].getElementsByTagName(UpperList[0]);
-    document.getElementById(List + "Button_" + ID).innerHTML = "+ " + (ListContent.length - collapsedCellCount);
-    document.getElementById(List + "Button_" + ID).parentNode.setAttribute("expanded", "true");
+function collapseList(list, upperList, ID, column, collapsedCellCount) {
+    var listContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
+    document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
+    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "true");
 
     if (document.getElementById(String(ID)) !== null) {
-        var x = document.getElementById(String(ID)).childNodes[Column].childNodes;
+        var x = document.getElementById(String(ID)).childNodes[column].childNodes;
         for (var j = 1; j < x.length - 2; j++) {
-            document.getElementById(List + "_" + ID + "_" + j).style.display = "none";
+            document.getElementById(list + "_" + ID + "_" + j).style.display = "none";
         }
-        if (Column == 3) document.getElementById(List + "_" + ID + "_" + j).style.display = "none";
+        if (column == 3) document.getElementById(list + "_" + ID + "_" + j).style.display = "none";
     }
 }
 
@@ -178,40 +178,40 @@ function addIPsParser() {
  * Switches between ID/UID columns in the ban table.
  */
 function switchBetweenIDAndUID() {
-    var rowID, banID, IDOrUID, bannedByIDOrUD, Ban = XML.getElementsByTagName("Ban"),
+    var rowId, banId, idOrUid, bannedByIDOrUD, Ban = XML.getElementsByTagName("Ban"),
         x = document.getElementById("banTable").lastChild.childNodes,
-        banTableHeadRow = document.getElementById("banTable").firstChild.firstChild,
-        UIDState = Number(localStorage.getItem("UIDState"));
+        headRow = document.getElementById("banTable").firstChild.firstChild,
+        uidState = Number(localStorage.getItem("uidState"));
 
-    if (UIDState) {
-        IDOrUID = "ID";
-        localStorage.setItem("UIDState", "0");
+    if (uidState) {
+        idOrUid = "ID";
+        localStorage.setItem("uidState", "0");
     } else {
-        IDOrUID = "UID";
-        localStorage.setItem("UIDState", "1");
+        idOrUid = "UID";
+        localStorage.setItem("uidState", "1");
     }
 
-    banTableHeadRow.childNodes[1].innerHTML = "Banned " + IDOrUID;
-    banTableHeadRow.childNodes[4].innerHTML = "Banned by " + IDOrUID;
+    headRow.childNodes[1].innerHTML = "Banned " + idOrUid;
+    headRow.childNodes[4].innerHTML = "Banned by " + idOrUid;
 
     for (var j = 0; j < x.length; j++) {
-        rowID = x.item(j).getAttribute("id");
-        banID = rowID.substring(4, rowID.length);
+        rowId = x.item(j).getAttribute("id");
+        banId = rowId.substring(4, rowId.length);
 
-        if (UIDState) {
-            if (document.getElementById(rowID).childNodes[3].firstChild.nodeValue != "Unknown") {
-                bannedByIDOrUD = Ban[banID].getElementsByTagName("ByID")[0].firstChild.nodeValue;
+        if (uidState) {
+            if (document.getElementById(rowId).childNodes[3].firstChild.nodeValue != "Unknown") {
+                bannedByIDOrUD = Ban[banId].getElementsByTagName("ByID")[0].firstChild.nodeValue;
             } else bannedByIDOrUD = "Unknown";
         } else {
-            if (Ban[banID].getElementsByTagName("ByUID")[0].firstChild !== null) {
-                bannedByIDOrUD = Ban[banID].getElementsByTagName("ByUID")[0].firstChild.nodeValue;
+            if (Ban[banId].getElementsByTagName("ByUID")[0].firstChild !== null) {
+                bannedByIDOrUD = Ban[banId].getElementsByTagName("ByUID")[0].firstChild.nodeValue;
             } else bannedByIDOrUD = "No UID";
         }
 
-        document.getElementById(rowID).childNodes[1].setAttribute("data-title", "Banned " + IDOrUID);
-        document.getElementById(rowID).childNodes[4].setAttribute("data-title", "Banned by " + IDOrUID);
-        document.getElementById(rowID).childNodes[1].lastChild.innerHTML = Ban[banID].getElementsByTagName(IDOrUID)[0].firstChild.nodeValue;
-        document.getElementById(rowID).childNodes[4].lastChild.innerHTML = bannedByIDOrUD;
+        document.getElementById(rowId).childNodes[1].setAttribute("data-title", "Banned " + idOrUid);
+        document.getElementById(rowId).childNodes[4].setAttribute("data-title", "Banned by " + idOrUid);
+        document.getElementById(rowId).childNodes[1].lastChild.innerHTML = Ban[banId].getElementsByTagName(idOrUid)[0].firstChild.nodeValue;
+        document.getElementById(rowId).childNodes[4].lastChild.innerHTML = bannedByIDOrUD;
     }
 }
 
@@ -405,37 +405,37 @@ function buildClientTable() {
         clientTable = document.createElement("table"),
         clientHead = document.createElement("thead"),
         clientHeadRow = document.createElement("tr"),
-        clientHeadCell_ID = document.createElement("th"),
-        clientHeadCell_Nicknames = document.createElement("th"),
-        clientHeadCell_Connections = document.createElement("th"),
-        clientHeadCell_IPs = document.createElement("th"),
-        clientHeadCell_Connects = document.createElement("th"),
-        clientHeadCell_Connected = document.createElement("th"),
-        clientHeadCell_ServerGroupInfo = document.createElement("th");
+        headCell_ID = document.createElement("th"),
+        headCell_Nicknames = document.createElement("th"),
+        headCell_Connections = document.createElement("th"),
+        headCell_IPs = document.createElement("th"),
+        headCell_Connects = document.createElement("th"),
+        headCell_Connected = document.createElement("th"),
+        headCell_ServerGroupInfo = document.createElement("th");
 
-    clientHeadCell_ID.innerHTML = "ID";
-    clientHeadCell_Nicknames.innerHTML = "Nicknames";
-    clientHeadCell_Connections.innerHTML = "Connections";
-    clientHeadCell_IPs.innerHTML = "IPs";
-    clientHeadCell_Connects.innerHTML = "Connects";
-    clientHeadCell_Connected.innerHTML = "Connected";
-    clientHeadCell_ServerGroupInfo.innerHTML = "Server groups";
+    headCell_ID.innerHTML = "ID";
+    headCell_Nicknames.innerHTML = "Nicknames";
+    headCell_Connections.innerHTML = "Connections";
+    headCell_IPs.innerHTML = "IPs";
+    headCell_Connects.innerHTML = "Connects";
+    headCell_Connected.innerHTML = "Connected";
+    headCell_ServerGroupInfo.innerHTML = "Server groups";
 
-    clientHeadRow.appendChild(clientHeadCell_ID);
-    clientHeadRow.appendChild(clientHeadCell_Nicknames);
-    clientHeadRow.appendChild(clientHeadCell_Connections);
-    clientHeadRow.appendChild(clientHeadCell_IPs);
-    clientHeadRow.appendChild(clientHeadCell_Connects);
-    clientHeadRow.appendChild(clientHeadCell_Connected);
-    clientHeadRow.appendChild(clientHeadCell_ServerGroupInfo);
+    clientHeadRow.appendChild(headCell_ID);
+    clientHeadRow.appendChild(headCell_Nicknames);
+    clientHeadRow.appendChild(headCell_Connections);
+    clientHeadRow.appendChild(headCell_IPs);
+    clientHeadRow.appendChild(headCell_Connects);
+    clientHeadRow.appendChild(headCell_Connected);
+    clientHeadRow.appendChild(headCell_ServerGroupInfo);
 
     clientHead.appendChild(clientHeadRow);
     clientTable.appendChild(clientHead);
 
     var clientBody = document.createElement("tbody");
     for (var i = 0; i < Client.length; i++) {
-        var ID = Client[i].getElementsByTagName("ID")[0].firstChild.nodeValue;
-        if (ID != "-1") {
+        var ID = Number(Client[i].getElementsByTagName("ID")[0].firstChild.nodeValue);
+        if (ID != -1) {
             var Nicknames = Client[ID].getElementsByTagName("Nicknames")[0].getElementsByTagName("N"),
                 Connections = Client[ID].getElementsByTagName("Connections")[0].getElementsByTagName("C"),
                 IPs = Client[ID].getElementsByTagName("IPs")[0].getElementsByTagName("I"),
@@ -444,32 +444,32 @@ function buildClientTable() {
                 ServerGroupAssignmentDateTimes = Client[ID].getElementsByTagName("ServerGroupAssignmentDateTimes")[0].getElementsByTagName("A");
 
             var clientBodyRow = document.createElement("tr"),
-                clientBodyCell_ID = document.createElement("td"),
-                clientBodyCell_Nicknames = document.createElement("td"),
-                clientBodyCell_Connections = document.createElement("td"),
-                clientBodyCell_IPs = document.createElement("td"),
-                clientBodyCell_Connects = document.createElement("td"),
-                clientBodyCell_Connected = document.createElement("td"),
-                clientBodyCell_ServerGroupInfo = document.createElement("td");
+                cell_ID = document.createElement("td"),
+                cell_Nicknames = document.createElement("td"),
+                cell_Connections = document.createElement("td"),
+                cell_IPs = document.createElement("td"),
+                cell_Connects = document.createElement("td"),
+                cell_Connected = document.createElement("td"),
+                cell_ServerGroupInfo = document.createElement("td");
 
             clientBodyRow.id = ID;
-            clientBodyCell_ID.setAttribute("data-title", "ID");
-            clientBodyCell_Nicknames.setAttribute("data-title", "Nicknames");
-            clientBodyCell_Connections.setAttribute("data-title", "Connections");
-            clientBodyCell_IPs.setAttribute("data-title", "IPs");
-            clientBodyCell_Connects.setAttribute("data-title", "Connects");
-            clientBodyCell_Connected.setAttribute("data-title", "Connected");
-            clientBodyCell_ServerGroupInfo.setAttribute("data-title", "Server groups");
+            cell_ID.setAttribute("data-title", "ID");
+            cell_Nicknames.setAttribute("data-title", "Nicknames");
+            cell_Connections.setAttribute("data-title", "Connections");
+            cell_IPs.setAttribute("data-title", "IPs");
+            cell_Connects.setAttribute("data-title", "Connects");
+            cell_Connected.setAttribute("data-title", "Connected");
+            cell_ServerGroupInfo.setAttribute("data-title", "Server groups");
 
-            clientBodyCell_ID.innerHTML = ID;
-            clientBodyRow.appendChild(clientBodyCell_ID);
+            cell_ID.innerHTML = ID;
+            clientBodyRow.appendChild(cell_ID);
 
             for (var j = 0; j < Nicknames.length; j++) {
                 var divNicknames = document.createElement("div");
                 divNicknames.innerHTML = Nicknames[j].firstChild.nodeValue;
-                clientBodyCell_Nicknames.appendChild(divNicknames);
+                cell_Nicknames.appendChild(divNicknames);
             }
-            clientBodyRow.appendChild(clientBodyCell_Nicknames);
+            clientBodyRow.appendChild(cell_Nicknames);
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = document.createElement("button");
@@ -480,21 +480,21 @@ function buildClientTable() {
                         expandOrCollapseList("connections", ID);
                     });
                 })(ID);
-                clientBodyCell_Connections.appendChild(buttonExpandCollapseConnections);
+                cell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
             var divLastConnection = document.createElement("div");
             divLastConnection.id = "connections_" + ID + "_0";
             divLastConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[0].firstChild.nodeValue);
-            clientBodyCell_Connections.appendChild(divLastConnection);
+            cell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement("div");
                 divFirstConnection.id = "connections_" + ID + "_" + (Connections.length - 1);
                 divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1].firstChild.nodeValue);
-                clientBodyCell_Connections.appendChild(divFirstConnection);
+                cell_Connections.appendChild(divFirstConnection);
             }
-            clientBodyRow.appendChild(clientBodyCell_Connections);
+            clientBodyRow.appendChild(cell_Connections);
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = document.createElement("button");
@@ -505,42 +505,42 @@ function buildClientTable() {
                         expandOrCollapseList("ips", ID);
                     });
                 })(ID);
-                clientBodyCell_IPs.appendChild(buttonExpandCollapseIPs);
+                cell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
             var divLastIP = document.createElement("div");
             divLastIP.id = "ips_" + ID + "_0";
             divLastIP.innerHTML = IPs[0].firstChild.nodeValue;
-            clientBodyCell_IPs.appendChild(divLastIP);
+            cell_IPs.appendChild(divLastIP);
 
-            clientBodyRow.appendChild(clientBodyCell_IPs);
+            clientBodyRow.appendChild(cell_IPs);
 
-            clientBodyCell_Connects.innerHTML = Connection_Count;
-            clientBodyRow.appendChild(clientBodyCell_Connects);
+            cell_Connects.innerHTML = Connection_Count;
+            clientBodyRow.appendChild(cell_Connects);
             if (Client[ID].getElementsByTagName("Deleted")[0] !== undefined) {
                 clientBodyRow.className += "deleted";
-                clientBodyCell_Connected.innerHTML = "false";
+                cell_Connected.innerHTML = "false";
             } else if (Client[ID].getElementsByTagName("Connected")[0] !== undefined) {
                 clientBodyRow.className += "connected";
-                ConnectedClientsCount++;
-                clientBodyCell_Connected.innerHTML = "true";
-            } else clientBodyCell_Connected.innerHTML = "false";
-            clientBodyRow.appendChild(clientBodyCell_Connected);
+                connectedClientsCount++;
+                cell_Connected.innerHTML = "true";
+            } else cell_Connected.innerHTML = "false";
+            clientBodyRow.appendChild(cell_Connected);
 
             if (ServerGroupIDs.length === 0)
-                clientBodyCell_ServerGroupInfo.innerHTML = "/";
+                cell_ServerGroupInfo.innerHTML = "/";
 
 
             for (j = 0; j < ServerGroupIDs.length; j++) {
                 var divName = document.createElement("div"),
                     divDateTime = document.createElement("div");
-                divName.innerHTML = getServerGroupByID(ServerGroupIDs[j].firstChild.nodeValue);
+                divName.innerHTML = getServerGroupByID(Number(ServerGroupIDs[j].firstChild.nodeValue));
                 divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j].firstChild.nodeValue)).format("YYYY-MM-DD HH:mm:ss");
 
-                clientBodyCell_ServerGroupInfo.appendChild(divName);
-                clientBodyCell_ServerGroupInfo.appendChild(divDateTime);
+                cell_ServerGroupInfo.appendChild(divName);
+                cell_ServerGroupInfo.appendChild(divDateTime);
             }
-            clientBodyRow.appendChild(clientBodyCell_ServerGroupInfo);
+            clientBodyRow.appendChild(cell_ServerGroupInfo);
 
             clientBody.appendChild(clientBodyRow);
         }
@@ -565,16 +565,14 @@ function buildClientTable() {
     }).bind("sortEnd", function() {
         localStorage.setItem("clientTableSortOrder", JSON.stringify(clientTable.config.sortList));
     }).trigger("applyWidgetId", ["stickyHeaders"]);
-    sessionStorage.setItem("clientTable-built", "1");
-    document.getElementById("scrollToClientTable").style.display = "";
 }
 
 /**
  * Builds the ban table.
  */
 function buildBanTable() {
-    if (localStorage.getItem("UIDState") === null) {
-        localStorage.setItem("UIDState", "0");
+    if (localStorage.getItem("uidState") === null) {
+        localStorage.setItem("uidState", "0");
     }
 
     var banTableControlSection = document.createElement("div");
@@ -598,32 +596,32 @@ function buildBanTable() {
         banTable = document.createElement("table"),
         banHead = document.createElement("thead"),
         banHeadRow = document.createElement("tr"),
-        banHeadCell_BanDateTime = document.createElement("th"),
-        banHeadCell_BannedID = document.createElement("th"),
-        banHeadCell_BannedNickname = document.createElement("th"),
-        banHeadCell_BannedIP = document.createElement("th"),
-        banHeadCell_BannedByID = document.createElement("th"),
-        banHeadCell_BannedByNickname = document.createElement("th"),
-        banHeadCell_BanReason = document.createElement("th"),
-        banHeadCell_Bantime = document.createElement("th");
+        headCell_BanDateTime = document.createElement("th"),
+        headCell_BannedID = document.createElement("th"),
+        headCell_BannedNickname = document.createElement("th"),
+        headCell_BannedIP = document.createElement("th"),
+        headCell_BannedByID = document.createElement("th"),
+        headCell_BannedByNickname = document.createElement("th"),
+        headCell_BanReason = document.createElement("th"),
+        headCell_Bantime = document.createElement("th");
 
-    banHeadCell_BanDateTime.innerHTML = "Date and Time";
-    banHeadCell_BannedID.innerHTML = "Banned ID";
-    banHeadCell_BannedNickname.innerHTML = "Banned Nickname";
-    banHeadCell_BannedIP.innerHTML = "Banned IP";
-    banHeadCell_BannedByID.innerHTML = "Banned by ID";
-    banHeadCell_BannedByNickname.innerHTML = "Banned by Nickname";
-    banHeadCell_BanReason.innerHTML = "Reason";
-    banHeadCell_Bantime.innerHTML = "Bantime";
+    headCell_BanDateTime.innerHTML = "Date and Time";
+    headCell_BannedID.innerHTML = "Banned ID";
+    headCell_BannedNickname.innerHTML = "Banned Nickname";
+    headCell_BannedIP.innerHTML = "Banned IP";
+    headCell_BannedByID.innerHTML = "Banned by ID";
+    headCell_BannedByNickname.innerHTML = "Banned by Nickname";
+    headCell_BanReason.innerHTML = "Reason";
+    headCell_Bantime.innerHTML = "Bantime";
 
-    banHeadRow.appendChild(banHeadCell_BanDateTime);
-    banHeadRow.appendChild(banHeadCell_BannedID);
-    banHeadRow.appendChild(banHeadCell_BannedNickname);
-    banHeadRow.appendChild(banHeadCell_BannedIP);
-    banHeadRow.appendChild(banHeadCell_BannedByID);
-    banHeadRow.appendChild(banHeadCell_BannedByNickname);
-    banHeadRow.appendChild(banHeadCell_BanReason);
-    banHeadRow.appendChild(banHeadCell_Bantime);
+    banHeadRow.appendChild(headCell_BanDateTime);
+    banHeadRow.appendChild(headCell_BannedID);
+    banHeadRow.appendChild(headCell_BannedNickname);
+    banHeadRow.appendChild(headCell_BannedIP);
+    banHeadRow.appendChild(headCell_BannedByID);
+    banHeadRow.appendChild(headCell_BannedByNickname);
+    banHeadRow.appendChild(headCell_BanReason);
+    banHeadRow.appendChild(headCell_Bantime);
 
     banHead.appendChild(banHeadRow);
     banTable.appendChild(banHead);
@@ -650,60 +648,60 @@ function buildBanTable() {
         var banBodyRow = document.createElement("tr");
         banBodyRow.id = "ban_" + i;
 
-        var banBodyCell_BanDateTime = document.createElement("td"),
-            banBodyCell_BannedID = document.createElement("td"),
-            banBodyCell_BannedNickname = document.createElement("td"),
-            banBodyCell_BannedIP = document.createElement("td"),
-            banBodyCell_BannedByID = document.createElement("td"),
-            banBodyCell_BannedByNickname = document.createElement("td"),
-            banBodyCell_BanReason = document.createElement("td"),
-            banBodyCell_Bantime = document.createElement("td");
+        var cell_BanDateTime = document.createElement("td"),
+            cell_BannedID = document.createElement("td"),
+            cell_BannedNickname = document.createElement("td"),
+            cell_BannedIP = document.createElement("td"),
+            cell_BannedByID = document.createElement("td"),
+            cell_BannedByNickname = document.createElement("td"),
+            cell_BanReason = document.createElement("td"),
+            cell_Bantime = document.createElement("td");
 
-        banBodyCell_BanDateTime.setAttribute("data-title", "Date and Time");
-        banBodyCell_BannedID.setAttribute("data-title", "Banned ID");
-        banBodyCell_BannedNickname.setAttribute("data-title", "Banned Nickname");
-        banBodyCell_BannedIP.setAttribute("data-title", "Banned IP");
-        banBodyCell_BannedByID.setAttribute("data-title", "Banned by ID");
-        banBodyCell_BannedByNickname.setAttribute("data-title", "Banned by Nickname");
-        banBodyCell_BanReason.setAttribute("data-title", "Reason");
-        banBodyCell_Bantime.setAttribute("data-title", "Bantime");
+        cell_BanDateTime.setAttribute("data-title", "Date and Time");
+        cell_BannedID.setAttribute("data-title", "Banned ID");
+        cell_BannedNickname.setAttribute("data-title", "Banned Nickname");
+        cell_BannedIP.setAttribute("data-title", "Banned IP");
+        cell_BannedByID.setAttribute("data-title", "Banned by ID");
+        cell_BannedByNickname.setAttribute("data-title", "Banned by Nickname");
+        cell_BanReason.setAttribute("data-title", "Reason");
+        cell_Bantime.setAttribute("data-title", "Bantime");
 
         var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime)),
-            banBodyCell_BanDateTime_Div = document.createElement("div");
-        banBodyCell_BanDateTime_Div.innerHTML = UTCBanDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCBanDateTime.fromNow() + ")";
-        banBodyCell_BanDateTime.appendChild(banBodyCell_BanDateTime_Div);
-        banBodyRow.appendChild(banBodyCell_BanDateTime);
+            cell_BanDateTime_Div = document.createElement("div");
+        cell_BanDateTime_Div.innerHTML = UTCBanDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCBanDateTime.fromNow() + ")";
+        cell_BanDateTime.appendChild(cell_BanDateTime_Div);
+        banBodyRow.appendChild(cell_BanDateTime);
 
-        var banBodyCell_BannedID_Div = document.createElement("div");
-        banBodyCell_BannedID_Div.innerHTML = BannedID;
-        banBodyCell_BannedID.appendChild(banBodyCell_BannedID_Div);
-        banBodyRow.appendChild(banBodyCell_BannedID);
+        var cell_BannedID_Div = document.createElement("div");
+        cell_BannedID_Div.innerHTML = BannedID;
+        cell_BannedID.appendChild(cell_BannedID_Div);
+        banBodyRow.appendChild(cell_BannedID);
 
-        var banBodyCell_BannedNickname_Div = document.createElement("div");
-        banBodyCell_BannedNickname_Div.innerHTML = BannedNickname;
-        banBodyCell_BannedNickname.appendChild(banBodyCell_BannedNickname_Div);
-        banBodyRow.appendChild(banBodyCell_BannedNickname);
+        var cell_BannedNickname_Div = document.createElement("div");
+        cell_BannedNickname_Div.innerHTML = BannedNickname;
+        cell_BannedNickname.appendChild(cell_BannedNickname_Div);
+        banBodyRow.appendChild(cell_BannedNickname);
 
-        banBodyCell_BannedIP.innerHTML = BannedIP;
-        banBodyRow.appendChild(banBodyCell_BannedIP);
+        cell_BannedIP.innerHTML = BannedIP;
+        banBodyRow.appendChild(cell_BannedIP);
 
-        var banBodyCell_BannedByID_Div = document.createElement("div");
-        banBodyCell_BannedByID_Div.innerHTML = BannedByID;
-        banBodyCell_BannedByID.appendChild(banBodyCell_BannedByID_Div);
-        banBodyRow.appendChild(banBodyCell_BannedByID);
+        var cell_BannedByID_Div = document.createElement("div");
+        cell_BannedByID_Div.innerHTML = BannedByID;
+        cell_BannedByID.appendChild(cell_BannedByID_Div);
+        banBodyRow.appendChild(cell_BannedByID);
 
-        var banBodyCell_BannedByNickname_Div = document.createElement("div");
-        banBodyCell_BannedByNickname_Div.innerHTML = BannedByNickname;
-        banBodyCell_BannedByNickname.appendChild(banBodyCell_BannedByNickname_Div);
-        banBodyRow.appendChild(banBodyCell_BannedByNickname);
+        var cell_BannedByNickname_Div = document.createElement("div");
+        cell_BannedByNickname_Div.innerHTML = BannedByNickname;
+        cell_BannedByNickname.appendChild(cell_BannedByNickname_Div);
+        banBodyRow.appendChild(cell_BannedByNickname);
 
-        var banBodyCell_BanReason_Div = document.createElement("div");
-        banBodyCell_BanReason_Div.innerHTML = BanReason;
-        banBodyCell_BanReason.appendChild(banBodyCell_BanReason_Div);
-        banBodyRow.appendChild(banBodyCell_BanReason);
+        var cell_BanReason_Div = document.createElement("div");
+        cell_BanReason_Div.innerHTML = BanReason;
+        cell_BanReason.appendChild(cell_BanReason_Div);
+        banBodyRow.appendChild(cell_BanReason);
 
-        banBodyCell_Bantime.innerHTML = Bantime;
-        banBodyRow.appendChild(banBodyCell_Bantime);
+        cell_Bantime.innerHTML = Bantime;
+        banBodyRow.appendChild(cell_Bantime);
 
         banBody.appendChild(banBodyRow);
     }
@@ -713,8 +711,8 @@ function buildBanTable() {
     banTable.className += "ui-table-reflow";
     document.getElementById("ts3-banTable").appendChild(banTable);
 
-    if (localStorage.getItem("UIDState") == "1") {
-        localStorage.setItem("UIDState", "0");
+    if (localStorage.getItem("uidState") == "1") {
+        localStorage.setItem("uidState", "0");
         switchBetweenIDAndUID();
     }
 
@@ -729,8 +727,6 @@ function buildBanTable() {
     }).bind("sortEnd", function() {
         localStorage.setItem("banTableSortOrder", JSON.stringify(banTable.config.sortList));
     }).trigger("applyWidgetId", ["stickyHeaders"]);
-    sessionStorage.setItem("banTable-built", "1");
-    document.getElementById("scrollToBanTable").style.display = "";
 }
 
 /**
@@ -751,26 +747,26 @@ function buildKickTable() {
         kickTable = document.createElement("table"),
         kickHead = document.createElement("thead"),
         kickHeadRow = document.createElement("tr"),
-        kickHeadCell_KickDateTime = document.createElement("th"),
-        kickHeadCell_KickedID = document.createElement("th"),
-        kickHeadCell_KickedNickname = document.createElement("th"),
-        kickHeadCell_KickedByNickname = document.createElement("th"),
-        kickHeadCell_KickedByUID = document.createElement("th"),
-        kickHeadCell_KickReason = document.createElement("th");
+        headCell_KickDateTime = document.createElement("th"),
+        headCell_KickedID = document.createElement("th"),
+        headCell_KickedNickname = document.createElement("th"),
+        headCell_KickedByNickname = document.createElement("th"),
+        headCell_KickedByUID = document.createElement("th"),
+        headCell_KickReason = document.createElement("th");
 
-    kickHeadCell_KickDateTime.innerHTML = "Date and Time";
-    kickHeadCell_KickedID.innerHTML = "Kicked Client ID";
-    kickHeadCell_KickedNickname.innerHTML = "Kicked Client Nickname";
-    kickHeadCell_KickedByNickname.innerHTML = "Kicked by Nickname";
-    kickHeadCell_KickedByUID.innerHTML = "Kicked by UID";
-    kickHeadCell_KickReason.innerHTML = "Reason";
+    headCell_KickDateTime.innerHTML = "Date and Time";
+    headCell_KickedID.innerHTML = "Kicked Client ID";
+    headCell_KickedNickname.innerHTML = "Kicked Client Nickname";
+    headCell_KickedByNickname.innerHTML = "Kicked by Nickname";
+    headCell_KickedByUID.innerHTML = "Kicked by UID";
+    headCell_KickReason.innerHTML = "Reason";
 
-    kickHeadRow.appendChild(kickHeadCell_KickDateTime);
-    kickHeadRow.appendChild(kickHeadCell_KickedID);
-    kickHeadRow.appendChild(kickHeadCell_KickedNickname);
-    kickHeadRow.appendChild(kickHeadCell_KickedByNickname);
-    kickHeadRow.appendChild(kickHeadCell_KickedByUID);
-    kickHeadRow.appendChild(kickHeadCell_KickReason);
+    kickHeadRow.appendChild(headCell_KickDateTime);
+    kickHeadRow.appendChild(headCell_KickedID);
+    kickHeadRow.appendChild(headCell_KickedNickname);
+    kickHeadRow.appendChild(headCell_KickedByNickname);
+    kickHeadRow.appendChild(headCell_KickedByUID);
+    kickHeadRow.appendChild(headCell_KickReason);
 
     kickHead.appendChild(kickHeadRow);
     kickTable.appendChild(kickHead);
@@ -788,48 +784,48 @@ function buildKickTable() {
         } else KickReason = "No Reason given";
 
         var kickBodyRow = document.createElement("tr"),
-            kickBodyCell_DateTime = document.createElement("td"),
-            kickBodyCell_KickedID = document.createElement("td"),
-            kickBodyCell_KickedNickname = document.createElement("td"),
-            kickBodyCell_KickedByNickname = document.createElement("td"),
-            kickBodyCell_KickedByUID = document.createElement("td"),
-            kickBodyCell_KickReason = document.createElement("td");
+            cell_DateTime = document.createElement("td"),
+            cell_KickedID = document.createElement("td"),
+            cell_KickedNickname = document.createElement("td"),
+            cell_KickedByNickname = document.createElement("td"),
+            cell_KickedByUID = document.createElement("td"),
+            cell_KickReason = document.createElement("td");
 
-        kickBodyCell_DateTime.setAttribute("data-title", "Date and Time");
-        kickBodyCell_KickedID.setAttribute("data-title", "Kicked ID");
-        kickBodyCell_KickedNickname.setAttribute("data-title", "Kicked Nickname");
-        kickBodyCell_KickedByNickname.setAttribute("data-title", "Kicked by Nickname");
-        kickBodyCell_KickedByUID.setAttribute("data-title", "Kicked by UID");
-        kickBodyCell_KickReason.setAttribute("data-title", "Reason");
+        cell_DateTime.setAttribute("data-title", "Date and Time");
+        cell_KickedID.setAttribute("data-title", "Kicked ID");
+        cell_KickedNickname.setAttribute("data-title", "Kicked Nickname");
+        cell_KickedByNickname.setAttribute("data-title", "Kicked by Nickname");
+        cell_KickedByUID.setAttribute("data-title", "Kicked by UID");
+        cell_KickReason.setAttribute("data-title", "Reason");
 
         var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime)),
-            kickBodyCell_DateTime_Div = document.createElement("div");
-        kickBodyCell_DateTime_Div.innerHTML = UTCKickDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCKickDateTime.fromNow() + ")";
-        kickBodyCell_DateTime.appendChild(kickBodyCell_DateTime_Div);
-        kickBodyRow.appendChild(kickBodyCell_DateTime);
+            cell_DateTime_Div = document.createElement("div");
+        cell_DateTime_Div.innerHTML = UTCKickDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCKickDateTime.fromNow() + ")";
+        cell_DateTime.appendChild(cell_DateTime_Div);
+        kickBodyRow.appendChild(cell_DateTime);
 
-        kickBodyCell_KickedID.innerHTML = KickedID;
-        kickBodyRow.appendChild(kickBodyCell_KickedID);
+        cell_KickedID.innerHTML = KickedID;
+        kickBodyRow.appendChild(cell_KickedID);
 
-        var kickBodyCell_KickedNickname_Div = document.createElement("div");
-        kickBodyCell_KickedNickname_Div.innerHTML = KickedNickname;
-        kickBodyCell_KickedNickname.appendChild(kickBodyCell_KickedNickname_Div);
-        kickBodyRow.appendChild(kickBodyCell_KickedNickname);
+        var cell_KickedNickname_Div = document.createElement("div");
+        cell_KickedNickname_Div.innerHTML = KickedNickname;
+        cell_KickedNickname.appendChild(cell_KickedNickname_Div);
+        kickBodyRow.appendChild(cell_KickedNickname);
 
-        var kickBodyCell_KickedByNickname_Div = document.createElement("div");
-        kickBodyCell_KickedByNickname_Div.innerHTML = KickedByNickname;
-        kickBodyCell_KickedByNickname.appendChild(kickBodyCell_KickedByNickname_Div);
-        kickBodyRow.appendChild(kickBodyCell_KickedByNickname);
+        var cell_KickedByNickname_Div = document.createElement("div");
+        cell_KickedByNickname_Div.innerHTML = KickedByNickname;
+        cell_KickedByNickname.appendChild(cell_KickedByNickname_Div);
+        kickBodyRow.appendChild(cell_KickedByNickname);
 
-        var kickBodyCell_KickedByUID_Div = document.createElement("div");
-        kickBodyCell_KickedByUID_Div.innerHTML = KickedByUID;
-        kickBodyCell_KickedByUID.appendChild(kickBodyCell_KickedByUID_Div);
-        kickBodyRow.appendChild(kickBodyCell_KickedByUID);
+        var cell_KickedByUID_Div = document.createElement("div");
+        cell_KickedByUID_Div.innerHTML = KickedByUID;
+        cell_KickedByUID.appendChild(cell_KickedByUID_Div);
+        kickBodyRow.appendChild(cell_KickedByUID);
 
-        var kickBodyCell_KickReason_Div = document.createElement("div");
-        kickBodyCell_KickReason_Div.innerHTML = KickReason;
-        kickBodyCell_KickReason.appendChild(kickBodyCell_KickReason_Div);
-        kickBodyRow.appendChild(kickBodyCell_KickReason);
+        var cell_KickReason_Div = document.createElement("div");
+        cell_KickReason_Div.innerHTML = KickReason;
+        cell_KickReason.appendChild(cell_KickReason_Div);
+        kickBodyRow.appendChild(cell_KickReason);
 
         kickBody.appendChild(kickBodyRow);
     }
@@ -850,8 +846,6 @@ function buildKickTable() {
     }).bind("sortEnd", function() {
         localStorage.setItem("kickTableSortOrder", JSON.stringify(kickTable.config.sortList));
     }).trigger("applyWidgetId", ["stickyHeaders"]);
-    sessionStorage.setItem("kickTable-built", "1");
-    document.getElementById("scrollToKickTable").style.display = "";
 }
 
 /**
@@ -872,26 +866,26 @@ function buildComplaintTable() {
         complaintTable = document.createElement("table"),
         complaintHead = document.createElement("thead"),
         complaintHeadRow = document.createElement("tr"),
-        complaintHeadCell_ComplaintDateTime = document.createElement("th"),
-        complaintHeadCell_ComplaintAboutID = document.createElement("th"),
-        complaintHeadCell_ComplaintAboutNickname = document.createElement("th"),
-        complaintHeadCell_ComplaintReason = document.createElement("th"),
-        complaintHeadCell_ComplaintByID = document.createElement("th"),
-        complaintHeadCell_ComplaintByNickname = document.createElement("th");
+        headCell_ComplaintDateTime = document.createElement("th"),
+        headCell_ComplaintAboutID = document.createElement("th"),
+        headCell_ComplaintAboutNickname = document.createElement("th"),
+        headCell_ComplaintReason = document.createElement("th"),
+        headCell_ComplaintByID = document.createElement("th"),
+        headCell_ComplaintByNickname = document.createElement("th");
 
-    complaintHeadCell_ComplaintDateTime.innerHTML = "Date and Time";
-    complaintHeadCell_ComplaintAboutID.innerHTML = "About ID";
-    complaintHeadCell_ComplaintAboutNickname.innerHTML = "About Nickname";
-    complaintHeadCell_ComplaintReason.innerHTML = "Reason";
-    complaintHeadCell_ComplaintByID.innerHTML = "By ID";
-    complaintHeadCell_ComplaintByNickname.innerHTML = "By Nickname";
+    headCell_ComplaintDateTime.innerHTML = "Date and Time";
+    headCell_ComplaintAboutID.innerHTML = "About ID";
+    headCell_ComplaintAboutNickname.innerHTML = "About Nickname";
+    headCell_ComplaintReason.innerHTML = "Reason";
+    headCell_ComplaintByID.innerHTML = "By ID";
+    headCell_ComplaintByNickname.innerHTML = "By Nickname";
 
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintDateTime);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutID);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintAboutNickname);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintReason);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintByID);
-    complaintHeadRow.appendChild(complaintHeadCell_ComplaintByNickname);
+    complaintHeadRow.appendChild(headCell_ComplaintDateTime);
+    complaintHeadRow.appendChild(headCell_ComplaintAboutID);
+    complaintHeadRow.appendChild(headCell_ComplaintAboutNickname);
+    complaintHeadRow.appendChild(headCell_ComplaintReason);
+    complaintHeadRow.appendChild(headCell_ComplaintByID);
+    complaintHeadRow.appendChild(headCell_ComplaintByNickname);
 
     complaintHead.appendChild(complaintHeadRow);
     complaintTable.appendChild(complaintHead);
@@ -906,46 +900,46 @@ function buildComplaintTable() {
             ComplaintByNickname = Complaint[i].getElementsByTagName("ByNickname")[0].firstChild.nodeValue;
 
         var complaintBodyRow = document.createElement("tr"),
-            complaintBodyCell_ComplaintDateTime = document.createElement("td"),
-            complaintBodyCell_ComplaintAboutID = document.createElement("td"),
-            complaintBodyCell_ComplaintAboutNickname = document.createElement("td"),
-            complaintBodyCell_ComplaintReason = document.createElement("td"),
-            complaintBodyCell_ComplaintByID = document.createElement("td"),
-            complaintBodyCell_ComplaintByNickname = document.createElement("td");
+            cell_ComplaintDateTime = document.createElement("td"),
+            cell_ComplaintAboutID = document.createElement("td"),
+            cell_ComplaintAboutNickname = document.createElement("td"),
+            cell_ComplaintReason = document.createElement("td"),
+            cell_ComplaintByID = document.createElement("td"),
+            cell_ComplaintByNickname = document.createElement("td");
 
-        complaintBodyCell_ComplaintDateTime.setAttribute("data-title", "Date and Time");
-        complaintBodyCell_ComplaintAboutID.setAttribute("data-title", "About ID");
-        complaintBodyCell_ComplaintAboutNickname.setAttribute("data-title", "About Nickname");
-        complaintBodyCell_ComplaintReason.setAttribute("data-title", "Reason");
-        complaintBodyCell_ComplaintByID.setAttribute("data-title", "By ID");
-        complaintBodyCell_ComplaintByNickname.setAttribute("data-title", "By Nickname");
+        cell_ComplaintDateTime.setAttribute("data-title", "Date and Time");
+        cell_ComplaintAboutID.setAttribute("data-title", "About ID");
+        cell_ComplaintAboutNickname.setAttribute("data-title", "About Nickname");
+        cell_ComplaintReason.setAttribute("data-title", "Reason");
+        cell_ComplaintByID.setAttribute("data-title", "By ID");
+        cell_ComplaintByNickname.setAttribute("data-title", "By Nickname");
 
         var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime)),
-            complaintBodyCell_ComplaintDateTime_Div = document.createElement("div");
-        complaintBodyCell_ComplaintDateTime_Div.innerHTML = UTCComplaintDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCComplaintDateTime.fromNow() + ")";
-        complaintBodyCell_ComplaintDateTime.appendChild(complaintBodyCell_ComplaintDateTime_Div);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintDateTime);
+            cell_ComplaintDateTime_Div = document.createElement("div");
+        cell_ComplaintDateTime_Div.innerHTML = UTCComplaintDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCComplaintDateTime.fromNow() + ")";
+        cell_ComplaintDateTime.appendChild(cell_ComplaintDateTime_Div);
+        complaintBodyRow.appendChild(cell_ComplaintDateTime);
 
-        complaintBodyCell_ComplaintAboutID.innerHTML = ComplaintAboutID;
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutID);
+        cell_ComplaintAboutID.innerHTML = ComplaintAboutID;
+        complaintBodyRow.appendChild(cell_ComplaintAboutID);
 
-        var complaintBodyCell_ComplaintAboutNickname_Div = document.createElement("div");
-        complaintBodyCell_ComplaintAboutNickname_Div.innerHTML = ComplaintAboutNickname;
-        complaintBodyCell_ComplaintAboutNickname.appendChild(complaintBodyCell_ComplaintAboutNickname_Div);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintAboutNickname);
+        var cell_ComplaintAboutNickname_Div = document.createElement("div");
+        cell_ComplaintAboutNickname_Div.innerHTML = ComplaintAboutNickname;
+        cell_ComplaintAboutNickname.appendChild(cell_ComplaintAboutNickname_Div);
+        complaintBodyRow.appendChild(cell_ComplaintAboutNickname);
 
-        var complaintBodyCell_ComplaintReason_Div = document.createElement("div");
-        complaintBodyCell_ComplaintReason_Div.innerHTML = ComplaintReason;
-        complaintBodyCell_ComplaintReason.appendChild(complaintBodyCell_ComplaintReason_Div);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintReason);
+        var cell_ComplaintReason_Div = document.createElement("div");
+        cell_ComplaintReason_Div.innerHTML = ComplaintReason;
+        cell_ComplaintReason.appendChild(cell_ComplaintReason_Div);
+        complaintBodyRow.appendChild(cell_ComplaintReason);
 
-        complaintBodyCell_ComplaintByID.innerHTML = ComplaintByID;
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintByID);
+        cell_ComplaintByID.innerHTML = ComplaintByID;
+        complaintBodyRow.appendChild(cell_ComplaintByID);
 
-        var complaintBodyCell_ComplaintByNickname_Div = document.createElement("div");
-        complaintBodyCell_ComplaintByNickname_Div.innerHTML = ComplaintByNickname;
-        complaintBodyCell_ComplaintByNickname.appendChild(complaintBodyCell_ComplaintByNickname_Div);
-        complaintBodyRow.appendChild(complaintBodyCell_ComplaintByNickname);
+        var cell_ComplaintByNickname_Div = document.createElement("div");
+        cell_ComplaintByNickname_Div.innerHTML = ComplaintByNickname;
+        cell_ComplaintByNickname.appendChild(cell_ComplaintByNickname_Div);
+        complaintBodyRow.appendChild(cell_ComplaintByNickname);
 
         complaintBody.appendChild(complaintBodyRow);
     }
@@ -966,8 +960,6 @@ function buildComplaintTable() {
     }).bind("sortEnd", function() {
         localStorage.setItem("complaintTableSortOrder", JSON.stringify(complaintTable.config.sortList));
     }).trigger("applyWidgetId", ["stickyHeaders"]);
-    sessionStorage.setItem("complaintTable-built", "1");
-    document.getElementById("scrollToComplaintTable").style.display = "";
 }
 
 /**
@@ -988,30 +980,30 @@ function buildUploadTable() {
         uploadTable = document.createElement("table"),
         uploadHead = document.createElement("thead"),
         uploadHeadRow = document.createElement("tr"),
-        uploadHeadCell_UploadDateTime = document.createElement("th"),
-        uploadHeadCell_ChannelID = document.createElement("th"),
-        uploadHeadCell_Filename = document.createElement("th"),
-        uploadHeadCell_UploadedByID = document.createElement("th"),
-        uploadHeadCell_UploadedByNickname = document.createElement("th"),
+        headCell_UploadDateTime = document.createElement("th"),
+        headCell_ChannelID = document.createElement("th"),
+        headCell_Filename = document.createElement("th"),
+        headCell_UploadedByID = document.createElement("th"),
+        headCell_UploadedByNickname = document.createElement("th"),
 
-        uploadHeadCell_DeletedByID = document.createElement("th"),
-        uploadHeadCell_DeletedByNickname = document.createElement("th");
+        headCell_DeletedByID = document.createElement("th"),
+        headCell_DeletedByNickname = document.createElement("th");
 
-    uploadHeadCell_UploadDateTime.innerHTML = "Date and Time";
-    uploadHeadCell_ChannelID.innerHTML = "Channel ID";
-    uploadHeadCell_Filename.innerHTML = "Filename";
-    uploadHeadCell_UploadedByID.innerHTML = "Uploaded by ID";
-    uploadHeadCell_UploadedByNickname.innerHTML = "Uploaded by Nickname";
-    uploadHeadCell_DeletedByID.innerHTML = "Deleted by ID";
-    uploadHeadCell_DeletedByNickname.innerHTML = "Deleted by Nickname";
+    headCell_UploadDateTime.innerHTML = "Date and Time";
+    headCell_ChannelID.innerHTML = "Channel ID";
+    headCell_Filename.innerHTML = "Filename";
+    headCell_UploadedByID.innerHTML = "Uploaded by ID";
+    headCell_UploadedByNickname.innerHTML = "Uploaded by Nickname";
+    headCell_DeletedByID.innerHTML = "Deleted by ID";
+    headCell_DeletedByNickname.innerHTML = "Deleted by Nickname";
 
-    uploadHeadRow.appendChild(uploadHeadCell_UploadDateTime);
-    uploadHeadRow.appendChild(uploadHeadCell_ChannelID);
-    uploadHeadRow.appendChild(uploadHeadCell_Filename);
-    uploadHeadRow.appendChild(uploadHeadCell_UploadedByID);
-    uploadHeadRow.appendChild(uploadHeadCell_UploadedByNickname);
-    uploadHeadRow.appendChild(uploadHeadCell_DeletedByID);
-    uploadHeadRow.appendChild(uploadHeadCell_DeletedByNickname);
+    uploadHeadRow.appendChild(headCell_UploadDateTime);
+    uploadHeadRow.appendChild(headCell_ChannelID);
+    uploadHeadRow.appendChild(headCell_Filename);
+    uploadHeadRow.appendChild(headCell_UploadedByID);
+    uploadHeadRow.appendChild(headCell_UploadedByNickname);
+    uploadHeadRow.appendChild(headCell_DeletedByID);
+    uploadHeadRow.appendChild(headCell_DeletedByNickname);
 
     uploadHead.appendChild(uploadHeadRow);
     uploadTable.appendChild(uploadHead);
@@ -1033,51 +1025,51 @@ function buildUploadTable() {
         } else DeletedByNickname = "/";
 
         var uploadBodyRow = document.createElement("tr"),
-            uploadBodyCell_UploadDateTime = document.createElement("td"),
-            uploadBodyCell_ChannelID = document.createElement("td"),
-            uploadBodyCell_Filename = document.createElement("td"),
-            uploadBodyCell_UploadedByID = document.createElement("td"),
-            uploadBodyCell_UploadedByNickname = document.createElement("td"),
-            uploadBodyCell_DeletedByID = document.createElement("td"),
-            uploadBodyCell_DeletedByNickname = document.createElement("td");
+            cell_UploadDateTime = document.createElement("td"),
+            cell_ChannelID = document.createElement("td"),
+            cell_Filename = document.createElement("td"),
+            cell_UploadedByID = document.createElement("td"),
+            cell_UploadedByNickname = document.createElement("td"),
+            cell_DeletedByID = document.createElement("td"),
+            cell_DeletedByNickname = document.createElement("td");
 
-        uploadBodyCell_UploadDateTime.setAttribute("data-title", "Date and Time");
-        uploadBodyCell_ChannelID.setAttribute("data-title", "Channel ID");
-        uploadBodyCell_Filename.setAttribute("data-title", "Filename");
-        uploadBodyCell_UploadedByID.setAttribute("data-title", "Uploaded by ID");
-        uploadBodyCell_UploadedByNickname.setAttribute("data-title", "Uploaded by Nickname");
-        uploadBodyCell_DeletedByID.setAttribute("data-title", "Deleted by ID");
-        uploadBodyCell_DeletedByNickname.setAttribute("data-title", "Deleted by Nickname");
+        cell_UploadDateTime.setAttribute("data-title", "Date and Time");
+        cell_ChannelID.setAttribute("data-title", "Channel ID");
+        cell_Filename.setAttribute("data-title", "Filename");
+        cell_UploadedByID.setAttribute("data-title", "Uploaded by ID");
+        cell_UploadedByNickname.setAttribute("data-title", "Uploaded by Nickname");
+        cell_DeletedByID.setAttribute("data-title", "Deleted by ID");
+        cell_DeletedByNickname.setAttribute("data-title", "Deleted by Nickname");
 
         var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime)),
-            uploadBodyCell_UploadDateTime_Div = document.createElement("div");
-        uploadBodyCell_UploadDateTime_Div.innerHTML = UTCUploadDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCUploadDateTime.fromNow() + ")";
-        uploadBodyCell_UploadDateTime.appendChild(uploadBodyCell_UploadDateTime_Div);
-        uploadBodyRow.appendChild(uploadBodyCell_UploadDateTime);
+            cell_UploadDateTime_Div = document.createElement("div");
+        cell_UploadDateTime_Div.innerHTML = UTCUploadDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCUploadDateTime.fromNow() + ")";
+        cell_UploadDateTime.appendChild(cell_UploadDateTime_Div);
+        uploadBodyRow.appendChild(cell_UploadDateTime);
 
-        uploadBodyCell_ChannelID.innerHTML = ChannelID;
-        uploadBodyRow.appendChild(uploadBodyCell_ChannelID);
+        cell_ChannelID.innerHTML = ChannelID;
+        uploadBodyRow.appendChild(cell_ChannelID);
 
-        var uploadBodyCell_Filename_Div = document.createElement("div");
-        uploadBodyCell_Filename_Div.innerHTML = Filename;
-        uploadBodyCell_Filename.appendChild(uploadBodyCell_Filename_Div);
-        uploadBodyRow.appendChild(uploadBodyCell_Filename);
+        var cell_Filename_Div = document.createElement("div");
+        cell_Filename_Div.innerHTML = Filename;
+        cell_Filename.appendChild(cell_Filename_Div);
+        uploadBodyRow.appendChild(cell_Filename);
 
-        uploadBodyCell_UploadedByID.innerHTML = UploadedByID;
-        uploadBodyRow.appendChild(uploadBodyCell_UploadedByID);
+        cell_UploadedByID.innerHTML = UploadedByID;
+        uploadBodyRow.appendChild(cell_UploadedByID);
 
-        var uploadBodyCell_UploadedByNickname_Div = document.createElement("div");
-        uploadBodyCell_UploadedByNickname_Div.innerHTML = UploadedByNickname;
-        uploadBodyCell_UploadedByNickname.appendChild(uploadBodyCell_UploadedByNickname_Div);
-        uploadBodyRow.appendChild(uploadBodyCell_UploadedByNickname);
+        var cell_UploadedByNickname_Div = document.createElement("div");
+        cell_UploadedByNickname_Div.innerHTML = UploadedByNickname;
+        cell_UploadedByNickname.appendChild(cell_UploadedByNickname_Div);
+        uploadBodyRow.appendChild(cell_UploadedByNickname);
 
-        uploadBodyCell_DeletedByID.innerHTML = DeletedByID;
-        uploadBodyRow.appendChild(uploadBodyCell_DeletedByID);
+        cell_DeletedByID.innerHTML = DeletedByID;
+        uploadBodyRow.appendChild(cell_DeletedByID);
 
-        var uploadBodyCell_DeletedByNickname_Div = document.createElement("div");
-        uploadBodyCell_DeletedByNickname_Div.innerHTML = DeletedByNickname;
-        uploadBodyCell_DeletedByNickname.appendChild(uploadBodyCell_DeletedByNickname_Div);
-        uploadBodyRow.appendChild(uploadBodyCell_DeletedByNickname);
+        var cell_DeletedByNickname_Div = document.createElement("div");
+        cell_DeletedByNickname_Div.innerHTML = DeletedByNickname;
+        cell_DeletedByNickname.appendChild(cell_DeletedByNickname_Div);
+        uploadBodyRow.appendChild(cell_DeletedByNickname);
 
         uploadBody.appendChild(uploadBodyRow);
     }
@@ -1098,8 +1090,6 @@ function buildUploadTable() {
     }).bind("sortEnd", function() {
         localStorage.setItem("uploadTableSortOrder", JSON.stringify(uploadTable.config.sortList));
     }).trigger("applyWidgetId", ["stickyHeaders"]);
-    sessionStorage.setItem("uploadTable-built", "1");
-    document.getElementById("scrollToUploadTable").style.display = "";
 }
 
 /**
@@ -1110,11 +1100,18 @@ function buildUploadTable() {
 function buildTableWithAlertCheckAndLocalStorage(table) {
     $(document.getElementById(table)).trigger("destroy");
     $(document.getElementById("ts3-" + table)).empty();
+
     if (localStorage.getItem(table + "SortOrder") === null) {
         localStorage.setItem(table + "SortOrder", "[]");
     }
+
     if (localStorage.getItem(table) != "0") {
+        sessionStorage.setItem(table + "-built", "1");
+
         var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
+
+        document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "";
+
         if (XML.getElementsByTagName(leadingCapitalLetterTable.substring(0, table.search("Table"))).length) {
             window["build" + leadingCapitalLetterTable]();
         } else {
@@ -1144,7 +1141,7 @@ function buildTables() {
         success: function(fetchedXML) {
             rebuildError = false;
             XML = fetchedXML;
-            ConnectedClientsCount = 0;
+            connectedClientsCount = 0;
 
             removeEventListeners();
             for (var i = 0; i < tables.length; i++) {
@@ -1152,26 +1149,26 @@ function buildTables() {
             }
 
             var Attributes = XML.getElementsByTagName("Attributes")[0],
-                CreationTimestampUTC = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue;
+                creationTimestampUTC = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue;
 
             document.getElementById("creationTimestamp_localtime").innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue;
-            document.getElementById("creationTimestamp_utc").innerHTML = CreationTimestampUTC;
-            document.getElementById("creationTimestamp_moment").innerHTML = moment(CreationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+            document.getElementById("creationTimestamp_utc").innerHTML = creationTimestampUTC;
+            document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
-                document.getElementById("creationTimestamp_moment").innerHTML = moment(CreationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+                document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
             }, 1000);
 
             if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
                 var Client = XML.getElementsByTagName("Client");
                 for (var j = 0; j < Client.length; j++) {
                     if (Client[j].getElementsByTagName("Connected")[0] !== undefined) {
-                        ConnectedClientsCount++;
+                        connectedClientsCount++;
                     }
                 }
             }
-            document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + ConnectedClientsCount;
+            document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
 
             if (Attributes.getElementsByTagName("SKIPLOCKFILE")[0].firstChild.nodeValue == "true" || Attributes.getElementsByTagName("DEBUGGINGXML")[0].firstChild.nodeValue == "true") {
                 alert("At least one debug variable has been set to true before compiling the code. Please recompile the program with the debug variables set to false.");
