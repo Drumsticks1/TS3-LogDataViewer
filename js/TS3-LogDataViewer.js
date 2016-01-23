@@ -2,6 +2,8 @@
 // Author: Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Global Variables
  */
@@ -232,6 +234,7 @@ function importLocalStorage(table) {
 }
 
 /**
+ * Todo: Better description.
  * Adds a checkbox listener for the table.
  *
  * @param {string} table - name of the table (e.g. "clientTable").
@@ -243,7 +246,7 @@ function addTableCheckboxListener(table) {
             localStorage.setItem(table, "1");
             if (sessionStorage.getItem(table + "-built") == "0") {
                 nanobar.go(50);
-                window["build" + leadingCapitalLetterTable]();
+                buildTable(table);
                 nanobar.go(100);
             }
             document.getElementById("ts3-" + table).style.display =
@@ -1093,6 +1096,30 @@ function buildUploadTable() {
 }
 
 /**
+ * Calls the build function for the table.
+ *
+ * @param tableName - name of the table (e.g. "clientTable").
+ */
+function buildTable(tableName) {
+    switch (tableName) {
+        case tables[0]:
+            buildClientTable();
+            break;
+        case tables[1]:
+            buildBanTable();
+            break;
+        case tables[2]:
+            buildKickTable();
+            break;
+        case tables[3]:
+            buildComplaintTable();
+            break;
+        case tables[4]:
+            buildUploadTable();
+    }
+}
+
+/**
  * Imports the local storage, builds the table if it would not be empty and sets the session storage.
  *
  * @param {string} table - name of the table (e.g. "clientTable").
@@ -1113,7 +1140,7 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
         document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "";
 
         if (XML.getElementsByTagName(leadingCapitalLetterTable.substring(0, table.search("Table"))).length) {
-            window["build" + leadingCapitalLetterTable]();
+            buildTable(table);
         } else {
             var alertBox = document.createElement("div");
             alertBox.className = "alertBox";
