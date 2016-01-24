@@ -3,19 +3,16 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
+const globalArrays = require("./globalArrays.js");
 
-const fetchLogs = require('./fetchLogs.js');
-const Client = require("./Client.js");
-const Ban = require("./Ban.js");
-const Kick = require("./Kick.js");
-const Complaint = require("./Complaint.js");
-const Upload = require("./Upload.js");
-
-var ClientList = Client.ClientList;
-var BanList = Ban.BanList;
-var KickList = Kick.KickList;
-var ComplaintList = Complaint.ComplaintList;
-var UploadList = Upload.UploadList;
+var ClientList = globalArrays.ClientList,
+    BanList = globalArrays.BanList,
+    KickList = globalArrays.KickList,
+    ComplaintList = globalArrays.ComplaintList,
+    UploadList = globalArrays.UploadList,
+    Logs = globalArrays.Logs,
+    ignoredLogs = globalArrays.ignoredLogs,
+    parsedLogs = globalArrays.parsedLogs;
 
 module.exports = {
     /**
@@ -49,13 +46,13 @@ module.exports = {
     },
 
     /**
-     * Checks if the log is existing in the ignoreLogs array.
+     * Checks if the log is existing in the ignoredLogs array.
      * @param {string} log
      * @returns {boolean}
      */
-    isIgnoredLog: function isIgnoredLog(log) {
-        for (var i = 0; i < fetchLogs.ignoreLogs.length; i++) {
-            if (log == fetchLogs.ignoreLogs[i])
+    isIgnoredLog: function(log) {
+        for (var i = 0; i < ignoredLogs.length; i++) {
+            if (log == ignoredLogs[i])
                 return true;
         }
         return false;
@@ -66,24 +63,21 @@ module.exports = {
      * @param {string} log
      * @returns {boolean}
      */
-    /* Todo: Uncomment, when parseXML is implemented.
     isDuplicateLog: function(log) {
-        for (var i = 0; i < parseXML.parsedLogs.length; i++) {
-            if (log == parseXML.parsedLogs[i]) return true;
+        for (var i = 0; i < parsedLogs.length; i++) {
+            if (log == parsedLogs[i]) return true;
         }
         return false;
     },
-    */
 
     /**
      * Checks if the order of Logs and ParsedLogs is matching.
      * @returns {boolean}
      */
-    /* Todo: Uncomment, when parseXML is implemented.
     isMatchingLogOrder: function() {
-        for (var i = 0; i < parseXML.parsedLogs.length; i++) {
-            if (i < fetchLogs.Logs.length) {
-                if (parseXML.parsedLogs[i] != fetchLogs.Logs[i]) {
+        for (var i = 0; i < parsedLogs.length; i++) {
+            if (i < Logs.length) {
+                if (parsedLogs[i] != Logs[i]) {
                     return false;
                 }
             }
@@ -91,7 +85,6 @@ module.exports = {
         }
         return true;
     },
-    */
 
     /**
      * Checks if the two ban rules are matching with a ban disconnect.

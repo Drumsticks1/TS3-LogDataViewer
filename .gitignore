@@ -7,6 +7,9 @@
 # WebStorm directory-based project format:
 .idea/
 
+# node_modules folder:
+node_modules
+
 ###################
 ## Visual Studio ##
 ###################

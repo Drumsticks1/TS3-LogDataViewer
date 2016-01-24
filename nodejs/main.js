@@ -4,25 +4,30 @@
 
 "use strict";
 
-const fs = require("fs");
-const Constants = require("./Constants.js");
-const outputHandler = require("./outputHandler.js");
-const fetchLogs = require("./fetchLogs.js");
-const parseLogs = require("./parseLogs.js");
-const miscFunctions = require("./miscFunctions.js");
+const fs = require("fs"),
+    Constants = require("./Constants.js"),
+    outputHandler = require("./outputHandler.js"),
+    fetchLogs = require("./fetchLogs.js"),
+    parseXML = require('./parseXML.js'),
+    parseLogs = require("./parseLogs.js"),
+    createXML = require("./createXML.js"),
+    miscFunctions = require("./miscFunctions.js");
 
 var validXML = false,
     VIRTUALSERVER = Constants.DEFAULTVIRTUALSERVER;
 
-exports.validXML = validXML;
 exports.VIRTUALSERVER = VIRTUALSERVER;
 
 /**
  * Main function
  */
 function main() {
+    var programStart = new Date();
+
     miscFunctions.updateCurrentDate();
+
     outputHandler.output("Last program run\n\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
+    //exchange async functions with sync functions.
     fs.stat("./lockfile", function(err, stats) {
         if (!err) {
             var currentTime = Date.now().valueOf(),
@@ -74,19 +79,21 @@ function main() {
                 return 0;
             }
 
+
+            outputHandler.output("XML parsing is currently skipped as regular parsing is faster.");
             /*
-             if (!parseXML()) {
-             outputHandler.output("XML isn't valid - skipping XML parsing...\n");
-             }
-             else validXML = true;
-             */
-            parseLogs.parseLogs(LOGDIRECTORY);
-            /*
-             createXML();
-             */
+            if (!parseXML.parseXML()) {
+                outputHandler.output("XML isn't valid - skipping XML parsing...");
+            }
+            else validXML = true;*/
+
+            parseLogs.parseLogs(LOGDIRECTORY, validXML);
+
+            createXML.createXML();
 
             fs.unlink("lockfile");
 
+            outputHandler.output("Program runtime: " + miscFunctions.getProgramRuntime(programStart) + " ms.");
             return 0;
         });
     });

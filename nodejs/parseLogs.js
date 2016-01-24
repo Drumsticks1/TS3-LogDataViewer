@@ -4,29 +4,24 @@
 
 "use strict";
 
-const fs = require("fs");
-const main = require("./main.js");
-const Client = require("./Client.js");
-const ServerGroup = require("./ServerGroup.js");
-const Ban = require("./Ban.js");
-const Kick = require("./Kick.js");
-const Complaint = require("./Complaint.js");
-const Upload = require("./Upload.js");
-const checkFunctions = require("./checkFunctions");
-const miscFunctions = require("./miscFunctions.js");
-const outputHandler = require("./outputHandler.js");
-const fetchLogs = require("./fetchLogs.js");
+const fs = require("fs"),
+    main = require("./main.js"),
+    Upload = require("./Upload.js"),
+    checkFunctions = require("./checkFunctions.js"),
+    globalArrays = require("./globalArrays.js"),
+    miscFunctions = require("./miscFunctions.js"),
+    outputHandler = require("./outputHandler.js");
 
-var ClientList = Client.ClientList;
-var ServerGroupList = ServerGroup.ServerGroupList;
-var BanList = Ban.BanList;
-var KickList = Kick.KickList;
-var ComplaintList = Complaint.ComplaintList;
-var UploadList = Upload.UploadList;
+var Logs = globalArrays.Logs,
+    parsedLogs = globalArrays.parsedLogs,
+    ClientList = globalArrays.ClientList,
+    ServerGroupList = globalArrays.ServerGroupList,
+    BanList = globalArrays.BanList,
+    KickList = globalArrays.KickList,
+    ComplaintList = globalArrays.ComplaintList,
+    UploadList = globalArrays.UploadList;
 
-exports.parseLogs = parseLogs;
-
-function parseLogs(LOGDIRECTORY) {
+exports.parseLogs = function(LOGDIRECTORY, validXML) {
     const match_banRule = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| ban added reason='",
         match_complaint = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| complaint added for client '",
         match_connect = "|INFO    |VirtualServerBase|  " + main.VIRTUALSERVER + "| client connected '",
@@ -76,29 +71,27 @@ function parseLogs(LOGDIRECTORY) {
     if (UploadList.length > 0) UploadListID = UploadList.length;
     else UploadListID = 0;
 
-    /* Todo: Add when xml parsing is implemented.
-    if (main.validXML) {
+    if (validXML) {
         if (checkFunctions.isMatchingLogOrder()) {
             outputHandler.output("Comparing new and old logs...");
-            for (var i = 0; i < parseXML.parsedLogs.size; i++) {
-                for (var j = 0; j < fetchLogs.Logs.size - 1; j++) {
-                    if (fetchLogs.Logs[j] == parseXML.parsedLogs[i]) {
-                        fetchLogs.Logs.slice(j, 1);
+            for (var i = 0; i < parsedLogs.length; i++) {
+                for (var j = 0; j < Logs.length - 1; j++) {
+                    if (Logs[j] == parsedLogs[i]) {
+                        Logs.splice(j, 1);
                     }
                 }
             }
         }
         else {
             outputHandler.output("Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML...");
-            parseXML.parsedLogs = [];
+            parsedLogs = [];
         }
-    }*/
-
+    }
 
     outputHandler.output("Parsing new logs...");
-    for (var i = 0; i < fetchLogs.Logs.length; i++) {
-        if (!fetchLogs.Logs[i].empty) {
-            var LogFilePath = LOGDIRECTORY + fetchLogs.Logs[i];
+    for (i = 0; i < Logs.length; i++) {
+        if (!Logs[i].empty) {
+            var LogFilePath = LOGDIRECTORY + Logs[i];
 
             var logfileData = fs.readFileSync(LogFilePath, "utf8");
 
@@ -126,12 +119,12 @@ function parseLogs(LOGDIRECTORY) {
                     IP = buffer_logline.substr(IP_StartPos, IP_Length);
 
                     if (ClientList.length < ID + 1)
-                        ClientList.resizeFill(ID + 1, new Client.Client());
+                        ClientList.resizeFill(ID + 1, "Client");
                     if (ClientList[ID].getID() != ID) ClientList[ID].addID(ID);
 
                     ClientList[ID].addNickname(Nickname);
 
-                    if (main.validXML) {
+                    if (validXML) {
                         if (!checkFunctions.isDuplicateDateTime(ID, DateTime)) {
                             ClientList[ID].addDateTime(DateTime);
                         }
@@ -140,7 +133,7 @@ function parseLogs(LOGDIRECTORY) {
 
                     ClientList[ID].addIP(IP);
 
-                    if (i + 1 == fetchLogs.Logs.size) {
+                    if (i + 1 == Logs.length) {
                         ClientList[ID].connect();
                     }
                 }
@@ -169,7 +162,7 @@ function parseLogs(LOGDIRECTORY) {
                     ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
 
                     if (ClientList.length < ID + 1) {
-                        ClientList.resizeFill(ID + 1, new Client.Client());
+                        ClientList.resizeFill(ID + 1, "Client");
                         ClientList[ID].addID(ID);
                     }
 
@@ -177,7 +170,7 @@ function parseLogs(LOGDIRECTORY) {
                         ClientList[ID].addNickname(Nickname);
                     }
 
-                    if (i + 1 == fetchLogs.Logs.length) {
+                    if (i + 1 == Logs.length) {
                         ClientList[ID].disconnect();
                     }
 
@@ -242,7 +235,7 @@ function parseLogs(LOGDIRECTORY) {
                         }
 
                         if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(bantime))) {
-                            BanList.resizeFill(BanListID + 1, new Ban.Ban());
+                            BanList.resizeFill(BanListID + 1, "Ban");
                             BanList[BanListID].addBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(bantime));
                             BanListID++;
                         }
@@ -271,7 +264,7 @@ function parseLogs(LOGDIRECTORY) {
                         kickedByUID = buffer_logline.substr(kickedByUID_StartPos, kickedByUID_Length);
 
                         if (!checkFunctions.isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)) {
-                            KickList.resizeFill(KickListID + 1, new Kick.Kick());
+                            KickList.resizeFill(KickListID + 1, "Kick");
                             KickList[KickListID].addKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason);
                             KickListID++;
                         }
@@ -280,18 +273,18 @@ function parseLogs(LOGDIRECTORY) {
 
                 // Client assignments to and client removals from a server group
                 else if (buffer_logline.indexOf(match_serverGroupAssignment) != -1 || buffer_logline.indexOf(match_serverGroupRemoval) != -1) {
-                    ID_StartPos = buffer_logline.indexOf("'(id:") + 5;
-                    ID_EndPos = buffer_logline.indexOf(") was added to servergroup '") - 1;
+                    ServerGroupName_StartPos = buffer_logline.indexOf(") was added to servergroup '") + 28;
 
-                    // Removal
-                    if (ID_EndPos > buffer_logline.length) {
-                        ID_EndPos = buffer_logline.indexOf(") was removed from servergroup '") - 1;
-                        ServerGroupName_StartPos = ID_EndPos + 33;
+                    // Todo: Check if fixed.
+                    if (ServerGroupName_StartPos == 27) {
+                        ServerGroupName_StartPos = buffer_logline.indexOf(") was removed from servergroup '") + 32;
                     }
-                    else ServerGroupName_StartPos = ID_EndPos + 29;
 
                     ServerGroupName_EndPos = buffer_logline.lastIndexOf("'(id:", buffer_logline.lastIndexOf(") by client '"));
                     ServerGroupName_Length = ServerGroupName_EndPos - ServerGroupName_StartPos;
+
+                    ID_StartPos = ServerGroupName_EndPos + 5;
+                    ID_EndPos = buffer_logline.indexOf(")", ID_StartPos);
 
                     ID_Length = ID_EndPos - ID_StartPos;
 
@@ -299,11 +292,10 @@ function parseLogs(LOGDIRECTORY) {
                     ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
                     ServerGroupName = buffer_logline.substr(ServerGroupName_StartPos, ServerGroupName_Length);
 
-
                     var clientID = Number(buffer_logline.substr(67, buffer_logline.indexOf(") was ") - 67));
 
                     if (ServerGroupList.length < ID + 1) {
-                        ServerGroupList.resizeFill(ID + 1, new ServerGroup.ServerGroup());
+                        ServerGroupList.resizeFill(ID + 1, "ServerGroup");
                     }
 
                     if (ServerGroupList[ID].getID() == 0) {
@@ -313,7 +305,7 @@ function parseLogs(LOGDIRECTORY) {
                     // Todo: Add client to list if not already existing?
                     // Currently only reserving the vector buffer to prevent out of bounds exception.
                     if (ClientList.length < clientID + 1)
-                        ClientList.resizeFill(clientID + 1, new Client.Client());
+                        ClientList.resizeFill(clientID + 1, "Client");
 
                     if (buffer_logline.indexOf(match_serverGroupAssignment) != -1) {
                         if (!checkFunctions.isDuplicateServerGroup(clientID, ID))
@@ -363,7 +355,7 @@ function parseLogs(LOGDIRECTORY) {
                     complaintByID = buffer_logline.substr(complaintByID_StartPos, complaintByID_Length);
 
                     if (!checkFunctions.isDuplicateComplaint(DateTime, complaintAboutNickname, Number(complaintAboutID), complaintReason, complaintByNickname, Number(complaintByID))) {
-                        ComplaintList.resizeFill(ComplaintListID + 1, new Complaint.Complaint());
+                        ComplaintList.resizeFill(ComplaintListID + 1, "Complaint");
                         ComplaintList[ComplaintListID].addComplaint(DateTime, complaintAboutNickname, Number(complaintAboutID), complaintReason, complaintByNickname, Number(complaintByID));
                         ComplaintListID++;
                     }
@@ -392,7 +384,7 @@ function parseLogs(LOGDIRECTORY) {
                     uploadedByID = buffer_logline.substr(uploadedByID_StartPos, uploadedByID_Length);
 
                     if (!checkFunctions.isDuplicateUpload(DateTime, Number(channelID), filename, uploadedByNickname, Number(uploadedByID))) {
-                        UploadList.resizeFill(UploadListID + 1, new Upload.Upload());
+                        UploadList.resizeFill(UploadListID + 1, "Upload");
                         UploadList[UploadListID].addUpload(DateTime, Number(channelID), filename, uploadedByNickname, Number(uploadedByID));
                         UploadListID++;
                     }
@@ -482,7 +474,7 @@ function parseLogs(LOGDIRECTORY) {
                         switch (eventType) {
                             case 0:
                             case 3:
-                                ServerGroupList.resizeFill(ID + 1, new ServerGroup.ServerGroup());
+                                ServerGroupList.resizeFill(ID + 1, "ServerGroup");
                                 ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, DateTime);
                                 break;
 
@@ -497,14 +489,12 @@ function parseLogs(LOGDIRECTORY) {
                     }
 
                 }
-
                 currentPos += buffer_logline.length + 1;
             }
-            /* Todo: Add when parseXML is implemented.
-             if (!checkFunctions.isDuplicateLog(Logs[i])) {
-                parseXML.parsedLogs.emplace_back(Logs[i]);
-             }
-             */
+
+            if (!checkFunctions.isDuplicateLog(Logs[i])) {
+                parsedLogs.push(Logs[i]);
+            }
         }
     }
-}
+};

@@ -55,7 +55,4 @@ Complaint.prototype.getComplaintByID = function() {
     return this.complaintByID;
 };
 
-var ComplaintList = [];
-
 exports.Complaint = Complaint;
-exports.ComplaintList = ComplaintList;

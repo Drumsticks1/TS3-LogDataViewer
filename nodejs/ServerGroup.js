@@ -15,7 +15,6 @@ var ServerGroup = function() {
     this.deleted = false;
 };
 
-
 // Adds the given information to the ServerGroup
 ServerGroup.prototype.addServerGroupInformation = function(ID, ServerGroupName, CreationDateTime) {
     this.ID = ID;
@@ -39,7 +38,6 @@ ServerGroup.prototype.getCreationDateTime = function() {
     return this.CreationDateTime;
 };
 
-
 // Sets the deleted flag to true.
 ServerGroup.prototype.deleteServerGroup = function() {
     this.deleted = true;
@@ -50,7 +48,4 @@ ServerGroup.prototype.isDeleted = function() {
     return this.deleted;
 };
 
-var ServerGroupList = [];
-
 exports.ServerGroup = ServerGroup;
-exports.ServerGroupList = ServerGroupList;

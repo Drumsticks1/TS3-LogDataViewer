@@ -8,10 +8,11 @@ const fs = require("fs");
 const util = require("util");
 const main = require('./main.js');
 const Constants = require("./Constants.js");
+const globalArrays = require("./globalArrays.js");
 const outputHandler = require("./outputHandler.js");
 const checkFunctions = require("./checkFunctions.js");
 
-var Logs = [], ignoreLogs = [];
+exports.fetchLogs = fetchLogs;
 
 /**
  *
@@ -47,7 +48,7 @@ function fetchLogs(LOGDIRECTORY) {
                                 prevLineEnd = currentLineEnd;
                                 currentLineEnd = LogignoreData.indexOf("\n", prevLineEnd + 1);
 
-                                ignoreLogs.push(buffer_logignore);
+                               globalArrays.ignoredLogs.push(buffer_logignore);
                             }
                         } else {
                             outputHandler.output("The logignore seems to be empty - skipping...");
@@ -63,7 +64,7 @@ function fetchLogs(LOGDIRECTORY) {
                             // Todo: Add check if log is ignored!
                             if (!checkFunctions.isIgnoredLog(logFiles[i])) {
                                 if (logFiles[i].substring(38, logFiles[i].length - 4) == String(main.VIRTUALSERVER)) {
-                                    Logs.push(logFiles[i]);
+                                    globalArrays.Logs.push(logFiles[i]);
                                 }
                             }
                         }
@@ -74,7 +75,7 @@ function fetchLogs(LOGDIRECTORY) {
                 }
 
             } catch (error) {
-                outputHandler.output(error.message);
+                outputHandler.output("An error occurred while reading the director:\n" + error.message);
             }
 
         } else {
@@ -88,16 +89,12 @@ function fetchLogs(LOGDIRECTORY) {
         return false;
     }
 
-    if (Logs.length == 0) {
+    if (globalArrays.Logs.length == 0) {
         outputHandler.output("The log directory contains no valid logs.");
         return false;
     }
 
     outputHandler.output("Sorting logs...");
-    Logs.sort();
+    globalArrays.Logs.sort();
     return true;
 }
-
-exports.fetchLogs = fetchLogs;
-exports.Logs = Logs;
-exports.ignoreLogs = ignoreLogs;

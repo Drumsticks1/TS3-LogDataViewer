@@ -13,11 +13,10 @@ exports.output = output;
 
 /**
  * Writes the text to the console and the logfile.
- * Adds \n after the text.
+ * Adds \n after the text when writing to the logfile.
  * @param {string} text
  */
 function output(text) {
-    text += "\n";
     console.log(text);
-    programLogfile.write(text);
+    programLogfile.write(text + "\n");
 }

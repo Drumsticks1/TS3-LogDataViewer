@@ -4,29 +4,62 @@
 
 "use strict";
 
+const Client = require("./Client.js"),
+    ServerGroup = require("./ServerGroup.js"),
+    Ban = require("./Ban.js"),
+    Kick = require("./Kick.js"),
+    Complaint = require("./Complaint.js"),
+    Upload = require("./Upload.js");
+
 var currentDate;
 
 /**
  * Resizes the array to the request length by appending the filling objects to the array.
  * @param length - requested length
- * @param object - filling objects.
+ * @param objectName - name of the filling object class:
+ *        "Client", "ServerGroup", "Ban", "Kick", "Complaint", "Upload"
  */
-Array.prototype.resizeFill = function(length, object) {
+Array.prototype.resizeFill = function(length, objectName) {
     for (var i = this.length; i < length; i++) {
-        this.push(object);
+        var pushObject;
+        switch (objectName) {
+            case "Client":
+                pushObject = new Client.Client();
+                break;
+            case "ServerGroup":
+                pushObject = new ServerGroup.ServerGroup();
+                break;
+            case "Ban":
+                pushObject = new Ban.Ban();
+                break;
+            case "Kick":
+                pushObject = new Kick.Kick();
+                break;
+            case "Complaint":
+                pushObject = new Complaint.Complaint();
+                break;
+            case "Upload":
+                pushObject = new Upload.Upload();
+        }
+        this.push(pushObject);
     }
 };
 
 module.exports = {
-    updateCurrentDate: function(){
+    updateCurrentDate: function() {
         currentDate = new Date;
+    },
+
+    getProgramRuntime: function(programStart){
+        this.updateCurrentDate();
+        return currentDate.getTime() - programStart.getTime();
     },
 
     // Returns the current UTC time as string with the format "dd.mm.yyyy hh:mm:ss".
     getCurrentUTC: function() {
         var t = currentDate;
         return dateToString(new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(),
-            t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds()));
+            t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds(), t.getMilliseconds()));
     },
 
     // Returns the current local time as string with the format "dd.mm.yyyy hh:mm:ss".
@@ -35,30 +68,23 @@ module.exports = {
     }
 };
 
-// Returns the given date object as string with the format "dd.mm.yyyy hh:mm:ss".
-    function dateToString(t) {
-    var year = t.getFullYear(), month = t.getMonth() + 1, day = t.getDate(), hours = t.getHours(), minutes = t.getMinutes(), seconds = t.getSeconds();
+/**
+ * Returns x as double digit string.
+ * @param {number} x - given number.
+ * @returns {string} double digit string.
+ */
+function toDoubleDigit(x) {
+    var y = String(x);
+    if (x < 10) y = "0" + String(x);
+    return y;
+}
 
-    var t_string = "";
-    if (day < 10) {
-        t_string += "0";
-    }
-    t_string += day + ".";
-    if (month < 10) {
-        t_string += "0";
-    }
-    t_string += month + "." + year + " ";
-    if (hours < 10) {
-        t_string += "0";
-    }
-    t_string += hours + ":";
-    if (minutes < 10) {
-        t_string += "0";
-    }
-    t_string += minutes + ":";
-    if (seconds < 10) {
-        t_string += "0";
-    }
-    t_string += seconds;
-    return t_string;
+/**
+ * Returns the t as string with the format "dd.mm.yyyy hh:mm:ss".
+ * @param {Date} t
+ * @returns {string}
+ */
+function dateToString(t) {
+    return toDoubleDigit(t.getDate()) + "." + toDoubleDigit(t.getMonth()) + "." + t.getFullYear() + " " +
+        toDoubleDigit(t.getHours()) + ":" + toDoubleDigit(t.getMinutes()) + ":" + toDoubleDigit(t.getSeconds());
 }

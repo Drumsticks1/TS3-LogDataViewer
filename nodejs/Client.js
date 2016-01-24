@@ -26,13 +26,13 @@ Client.prototype.getID = function() {
 
 // Returns the count of the DateTime-/Nickname-/IP-entries of the current client.
 Client.prototype.getDateTimeCount = function() {
-    return this.DateTime.size;
+    return this.DateTime.length;
 };
 Client.prototype.getNicknameCount = function() {
-    return this.Nickname.size;
+    return this.Nickname.length;
 };
 Client.prototype.getIPCount = function() {
-    return this.IP.size;
+    return this.IP.length;
 };
 
 // Returns the information stored in the given ID slot.
@@ -55,7 +55,7 @@ Client.prototype.addID = function(ID) {
 
 // Adds the new Nickname at the beginning of the Nickname list.
 Client.prototype.addNickname = function(Nickname) {
-    for (var i = 0; i < this.Nickname.size; i++) {
+    for (var i = 0; i < this.Nickname.length; i++) {
         if (this.Nickname[i] == Nickname) {
             this.Nickname.splice(i, 1);
         }
@@ -70,7 +70,7 @@ Client.prototype.addDateTime = function(DateTime) {
 
 // Adds the new IP at the beginning of the IP list.
 Client.prototype.addIP = function(IP) {
-    for (var i = 0; i < this.IP.size; i++) {
+    for (var i = 0; i < this.IP.length; i++) {
         if (this.IP[i] == IP) {
             this.IP.splice(i, 1);
         }
@@ -131,7 +131,7 @@ Client.prototype.addServerGroup = function(ServerGroupID, ServerGroupAssignmentD
 //
 Client.prototype.removeServerGroupByID = function(ServerGroupID) {
     var done = false;
-    for (var i = 0; i < this.ServerGroupID.size && !done; i++) {
+    for (var i = 0; i < this.ServerGroupID.length && !done; i++) {
         if (this.getUniqueServerGroupID(i) == ServerGroupID) {
             this.ServerGroupID.splice(i, 1);
             this.ServerGroupAssignmentDateTime.splice(i, 1);
@@ -142,7 +142,7 @@ Client.prototype.removeServerGroupByID = function(ServerGroupID) {
 
 //
 Client.prototype.getServerGroupIDCount = function() {
-    return this.ServerGroupID.size;
+    return this.ServerGroupID.length;
 };
 
 //
@@ -152,7 +152,7 @@ Client.prototype.getUniqueServerGroupID = function(ServerGroupIDPos) {
 
 //
 Client.prototype.getServerGroupAssignmentDateTimeCount = function() {
-    return this.ServerGroupAssignmentDateTime.size;
+    return this.ServerGroupAssignmentDateTime.length;
 };
 
 //
@@ -160,7 +160,4 @@ Client.prototype.getUniqueServerGroupAssignmentDateTime = function(ServerGroupAs
     return this.ServerGroupAssignmentDateTime[ServerGroupAssignmentDateTimePos];
 };
 
-var ClientList = [];
-
 exports.Client = Client;
-exports.ClientList = ClientList;

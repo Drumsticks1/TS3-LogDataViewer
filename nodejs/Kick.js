@@ -47,7 +47,4 @@ Kick.prototype.getKickReason = function() {
     return this.kickReason;
 };
 
-var KickList = [];
-
 exports.Kick = Kick;
-exports.KickList = KickList;

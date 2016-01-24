@@ -20,6 +20,7 @@ var Ban = function() {
     this.bannedByUID = "";
     this.banReason = "";
 };
+
 /**
  * Sets the data of the current Ban object according to the given data.
  * @param {string} banDateTime
@@ -78,7 +79,4 @@ Ban.prototype.getBantime = function() {
     return this.bantime;
 };
 
-var BanList = [];
-
 exports.Ban = Ban;
-exports.BanList = BanList;
