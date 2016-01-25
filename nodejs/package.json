@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "latest",
     "xmlbuilder": "latest",
-    "compression": "latest"
+    "compression": "latest",
+    "helmet": "latest"
   },
   "devDependencies": {},
   "scripts": {

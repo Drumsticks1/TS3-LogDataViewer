@@ -9,7 +9,8 @@
 const fs = require('fs'),
     Constants = require('./Constants.js');
 
-var programLogfile = fs.createWriteStream(Constants.PROGRAMLOGFILE);
+// Todo: Don't overwrite previous log but append the new output to the old file.
+var programLogfile = fs.createWriteStream(Constants.programLogfile);
 
 /**
  * Writes the text to the console and the logfile.

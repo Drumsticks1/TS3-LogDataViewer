@@ -19,7 +19,9 @@ var parsedLogs =  globalVariables.parsedLogs,
  ComplaintList = globalVariables.ComplaintList,
  UploadList = globalVariables.UploadList;
 
-// Creates a XML for storing the data extracted from the logs.
+/**
+ * Creates a XML containing the data extracted from the logs.
+ */
 exports.createXML = function() {
     outputHandler.output("Preparing XML-Creation...");
 
@@ -32,7 +34,7 @@ exports.createXML = function() {
     miscFunctions.updateCurrentDate();
     AttributesNode.ele("CreationTimestamp_Localtime").txt(miscFunctions.getCurrentLocaltime());
     AttributesNode.ele("CreationTimestamp_UTC").txt(miscFunctions.getCurrentUTC());
-    AttributesNode.ele("DEBUGGINGXML").txt(Constants.DEBUGGINGXML);
+    AttributesNode.ele("debuggingXML").txt(Constants.debuggingXML);
 
     var ParsedLogs = Data.ele("ParsedLogs");
     for (var i = 0; i < parsedLogs.length; i++) {
@@ -141,8 +143,8 @@ exports.createXML = function() {
     }
 
     var xmlOptions = {encoding: 'utf-8'};
-    if (Constants.DEBUGGINGXML) {
-        outputHandler.output("DEBUGGINXML is set to true --> larger XML for debugging");
+    if (Constants.debuggingXML) {
+        outputHandler.output("debuggingXML is set to true --> larger and prettier XML for debugging");
         xmlOptions = {
             encoding: 'utf-8',
             pretty: true,
@@ -155,10 +157,11 @@ exports.createXML = function() {
     var xmlString = Data.end(xmlOptions);
 
     try{
-        fs.writeFileSync(Constants.XMLFILE, xmlString, 'utf8');
+        fs.writeFileSync(Constants.outputXML, xmlString, 'utf8');
     }
     catch(error){
         outputHandler.output("An error occurred while creating the XML:\n" + error.message);
+        return 0;
     }
 
     outputHandler.output("XML Creation completed.");

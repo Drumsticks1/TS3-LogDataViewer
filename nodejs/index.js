@@ -13,17 +13,12 @@ const fs = require("fs"),
     createXML = require("./createXML.js"),
     miscFunctions = require("./miscFunctions.js");
 
-/**
- * Main function
- */
 exports.rebuildXML = function() {
     var programStart = new Date();
-
     miscFunctions.updateCurrentDate();
-
     outputHandler.output("Last program run\n\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
-    // Todo: Modify for a call with the options.
+    // Todo: Modify for nodeJS.
     var setLD = false, setVS = false;
     for (var i = 0; i < process.argv.length; i++) {
         if (process.argv[i].indexOf("--logdirectory=") == 0) {
@@ -54,7 +49,7 @@ exports.rebuildXML = function() {
 
     if(!Constants.bufferData){
         miscFunctions.clearGlobalArrays();
-        outputHandler.output("Cle" + "ared buffer arrays...");
+        outputHandler.output("Cleared buffer arrays...");
     }
 
     outputHandler.output("Program runtime: " + miscFunctions.getProgramRuntime(programStart) + " ms.");

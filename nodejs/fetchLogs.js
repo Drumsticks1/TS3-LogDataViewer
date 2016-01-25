@@ -11,14 +11,12 @@ const fs = require("fs"),
     outputHandler = require("./outputHandler.js"),
     checkFunctions = require("./checkFunctions.js");
 
-exports.fetchLogs = fetchLogs;
-
 /**
- *
- * @returns {boolean}
+ * Fetches the logs.
+ * @returns {boolean} true if no error occurred.
  */
-function fetchLogs() {
-    outputHandler.output("Checking logdirectory...");
+exports.fetchLogs = function() {
+    outputHandler.output("Checking log directory...");
     globalVariables.Logs.length = 0;
     try {
         var logDirectoryStats = fs.statSync(globalVariables.logDirectory);
@@ -63,7 +61,6 @@ function fetchLogs() {
                             }
                         }
                     }
-
                 } else {
                     outputHandler.output("The log directory seems to be empty.");
                 }
@@ -91,4 +88,4 @@ function fetchLogs() {
     outputHandler.output("Sorting logs...");
     globalVariables.Logs.sort();
     return true;
-}
+};

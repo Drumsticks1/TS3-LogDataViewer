@@ -1,0 +1,38 @@
+// Todo
+// Author : Drumsticks1
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
+
+- Add possibility to set logDirectory and virtualServer.
+- Comment functions.
+
+parseLogs.js:
+    - Outsource the parsing in parseLogs to extra functions.
+    - Shorten parsing by using the substring() function instead of substr().
+
+TS3-LogDataViewer.js:
+	- Replace the description divs with buttons for sorting after the connected and deleted state and remove the "connected" column afterwards.
+		- also include a resetSort option.
+	- Add button for switching between bantime in seconds and bantime in x.
+	- Make the server group data in the client table sortable.
+
+outputHandler.js:
+    - Catch errors like "no such file or directory".
+
+General:
+    - Limit rebuilds server side.
+    - Add a ServerGroup table (maybe with rights and so on - would be long-term).
+
+Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
+	- Add custom bans.
+
+maybe:
+	- Add ServerGroupName history like for the nicknames in the client list.
+	- Add additional optional ignore files for the tables.
+	- Add query clients to client list or a query client list?
+	- Make it possible to switch between the virtual servers via Webinterface.
+		- check what virtual servers are / were running by observing the logs filename endings.
+
+When preparing a new release:
+    - Update Install Instructions
+    - Update Readme
+*/

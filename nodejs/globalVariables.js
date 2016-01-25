@@ -13,8 +13,8 @@ var ignoredLogs = [],
     KickList = [],
     ComplaintList = [],
     UploadList = [],
-    virtualServer = Constants.DEFAULTVIRTUALSERVER,
-    logDirectory = LOGDIRECTORY = Constants.DEFAULTLOGDIRECTORY;
+    virtualServer = Constants.defaultVirtualServer,
+    logDirectory = LOGDIRECTORY = Constants.defaultLogDirectory;
 
 module.exports = {
     ignoredLogs: ignoredLogs,

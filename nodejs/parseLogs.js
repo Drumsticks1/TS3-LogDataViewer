@@ -74,8 +74,6 @@ exports.parseLogs = function() {
     if (UploadList.length > 0) UploadListID = UploadList.length;
     else UploadListID = 0;
 
-    // Todo: fix deletions of the parsedLogs which occur sometimes.
-    // Find problem with Logs adding before this!
     if (Constants.bufferData) {
         if (checkFunctions.isMatchingLogOrder()) {
             outputHandler.output("Comparing new and old logs...");
@@ -283,7 +281,6 @@ exports.parseLogs = function() {
                 else if (buffer_logline.indexOf(match_serverGroupAssignment) != -1 || buffer_logline.indexOf(match_serverGroupRemoval) != -1) {
                     ServerGroupName_StartPos = buffer_logline.indexOf(") was added to servergroup '") + 28;
 
-                    // Todo: Check if fixed.
                     if (ServerGroupName_StartPos == 27) {
                         ServerGroupName_StartPos = buffer_logline.indexOf(") was removed from servergroup '") + 32;
                     }
@@ -310,7 +307,6 @@ exports.parseLogs = function() {
                         ServerGroupList[ID].addServerGroupInformation(ID, ServerGroupName, "Unknown");
                     }
 
-                    // Todo: Add client to list if not already existing?
                     // Currently only reserving the vector buffer to prevent out of bounds exception.
                     if (ClientList.length < clientID + 1)
                         ClientList.resizeFill(clientID + 1, "Client");

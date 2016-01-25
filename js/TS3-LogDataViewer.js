@@ -18,7 +18,7 @@ var connectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
 function rebuildXML() {
     nanobar.go(35);
     document.getElementById("rebuildXMLButton").disabled = document.getElementById("buildNewXMLButton").disabled = true;
-    $.get("./rebuildXML.php", function() {
+    $.get("./express/rebuildXML", function() {
         buildTables();
     });
 }
@@ -27,7 +27,7 @@ function rebuildXML() {
  * Deletes the current XML and builds a new one after the deletion.
  */
 function buildNewXML() {
-    $.get("./deleteXML.php", function() {
+    $.get("./express/deleteXML", function() {
         rebuildXML();
     });
 }
@@ -1197,7 +1197,7 @@ function buildTables() {
             }
             document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
 
-            if (Attributes.getElementsByTagName("DEBUGGINGXML")[0].firstChild.nodeValue == "true") {
+            if (Attributes.getElementsByTagName("debuggingXML")[0].firstChild.nodeValue == "true") {
                 alert("At least one debug variable has been set to true before compiling the code. Please recompile the program with the debug variables set to false.");
             }
 
