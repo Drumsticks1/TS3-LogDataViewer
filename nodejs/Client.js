@@ -1,4 +1,4 @@
-// Client.js : Client clas
+// Client.js : Client class.
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -76,21 +76,6 @@ Client.prototype.addIP = function(IP) {
         }
     }
     this.IP.unshift(IP);
-};
-
-// Adds the new Nickname at the end of the IP list.
-Client.prototype.addNicknameReverse = function(Nickname) {
-    this.Nickname.push(Nickname);
-};
-
-// Adds the new DateTime at the end of the DateTime list.
-Client.prototype.addDateTimeReverse = function(DateTime) {
-    this.DateTime.push(DateTime);
-};
-
-// Adds the new IP at the end of the IP list.
-Client.prototype.addIPReverse = function(IP) {
-    this.IP.push(IP);
 };
 
 // Adjusts the CurrentConnectionsCount.

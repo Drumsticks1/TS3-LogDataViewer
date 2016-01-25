@@ -3,16 +3,16 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-const globalArrays = require("./globalArrays.js");
+const globalVariables = require("./globalVariables.js");
 
-var ClientList = globalArrays.ClientList,
-    BanList = globalArrays.BanList,
-    KickList = globalArrays.KickList,
-    ComplaintList = globalArrays.ComplaintList,
-    UploadList = globalArrays.UploadList,
-    Logs = globalArrays.Logs,
-    ignoredLogs = globalArrays.ignoredLogs,
-    parsedLogs = globalArrays.parsedLogs;
+var ClientList = globalVariables.ClientList,
+    BanList = globalVariables.BanList,
+    KickList = globalVariables.KickList,
+    ComplaintList = globalVariables.ComplaintList,
+    UploadList = globalVariables.UploadList,
+    Logs = globalVariables.Logs,
+    ignoredLogs = globalVariables.ignoredLogs,
+    parsedLogs = globalVariables.parsedLogs;
 
 module.exports = {
     /**

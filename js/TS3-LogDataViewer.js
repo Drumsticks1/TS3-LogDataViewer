@@ -1197,7 +1197,7 @@ function buildTables() {
             }
             document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
 
-            if (Attributes.getElementsByTagName("SKIPLOCKFILE")[0].firstChild.nodeValue == "true" || Attributes.getElementsByTagName("DEBUGGINGXML")[0].firstChild.nodeValue == "true") {
+            if (Attributes.getElementsByTagName("DEBUGGINGXML")[0].firstChild.nodeValue == "true") {
                 alert("At least one debug variable has been set to true before compiling the code. Please recompile the program with the debug variables set to false.");
             }
 

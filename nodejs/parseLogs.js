@@ -5,36 +5,39 @@
 "use strict";
 
 const fs = require("fs"),
-    main = require("./main.js"),
+    Constants = require("./Constants.js"),
     Upload = require("./Upload.js"),
     checkFunctions = require("./checkFunctions.js"),
-    globalArrays = require("./globalArrays.js"),
+    globalVariables = require("./globalVariables.js"),
     miscFunctions = require("./miscFunctions.js"),
     outputHandler = require("./outputHandler.js");
 
-var Logs = globalArrays.Logs,
-    parsedLogs = globalArrays.parsedLogs,
-    ClientList = globalArrays.ClientList,
-    ServerGroupList = globalArrays.ServerGroupList,
-    BanList = globalArrays.BanList,
-    KickList = globalArrays.KickList,
-    ComplaintList = globalArrays.ComplaintList,
-    UploadList = globalArrays.UploadList;
+var Logs = globalVariables.Logs,
+    parsedLogs = globalVariables.parsedLogs,
+    ClientList = globalVariables.ClientList,
+    ServerGroupList = globalVariables.ServerGroupList,
+    BanList = globalVariables.BanList,
+    KickList = globalVariables.KickList,
+    ComplaintList = globalVariables.ComplaintList,
+    UploadList = globalVariables.UploadList;
 
-exports.parseLogs = function(LOGDIRECTORY, validXML) {
-    const match_banRule = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| ban added reason='",
-        match_complaint = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| complaint added for client '",
-        match_connect = "|INFO    |VirtualServerBase|  " + main.VIRTUALSERVER + "| client connected '",
-        match_disconnect = "|INFO    |VirtualServerBase|  " + main.VIRTUALSERVER + "| client disconnected '",
-        match_serverGroupEvent = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| servergroup '",
-        match_serverGroupAssignment = ") was added to servergroup '",
-        match_serverGroupRemoval = ") was removed from servergroup '",
-        match_deleteUser1 = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| client '",
-        match_deleteUser2 = ") got deleted by client '",
-        match_upload = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| file upload to",
-        match_uploadDeletion = "|INFO    |VirtualServer |  " + main.VIRTUALSERVER + "| file deleted from";
+const match_banRule = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ban added reason='",
+    match_complaint = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| complaint added for client '",
+    match_connect = "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| client connected '",
+    match_disconnect = "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| client disconnected '",
+    match_serverGroupEvent = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| servergroup '",
+    match_serverGroupAssignment = ") was added to servergroup '",
+    match_serverGroupRemoval = ") was removed from servergroup '",
+    match_deleteUser1 = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| client '",
+    match_deleteUser2 = ") got deleted by client '",
+    match_upload = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file upload to",
+    match_uploadDeletion = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file deleted from";
 
-    var virtualServerLength = String(main.VIRTUALSERVER).length;
+/**
+ * Parses the logs.
+ */
+exports.parseLogs = function() {
+    var virtualServerLength = String(globalVariables.virtualServer).length;
 
     var DateTime, Nickname, IP,
         ServerGroupName,
@@ -71,7 +74,9 @@ exports.parseLogs = function(LOGDIRECTORY, validXML) {
     if (UploadList.length > 0) UploadListID = UploadList.length;
     else UploadListID = 0;
 
-    if (validXML) {
+    // Todo: fix deletions of the parsedLogs which occur sometimes.
+    // Find problem with Logs adding before this!
+    if (Constants.bufferData) {
         if (checkFunctions.isMatchingLogOrder()) {
             outputHandler.output("Comparing new and old logs...");
             for (var i = 0; i < parsedLogs.length; i++) {
@@ -83,15 +88,18 @@ exports.parseLogs = function(LOGDIRECTORY, validXML) {
             }
         }
         else {
-            outputHandler.output("Logs parsed for the last XML were deleted or the log order changed - skipping use of old XML...");
-            parsedLogs = [];
+            if(parsedLogs[parsedLogs.length] == Logs[Logs.lastChild]){
+
+            }
+            outputHandler.output("Logs parsed for the last program run were deleted or the log order changed - skipping use of old XML...");
+            parsedLogs.length = 0;
         }
     }
 
     outputHandler.output("Parsing new logs...");
     for (i = 0; i < Logs.length; i++) {
         if (!Logs[i].empty) {
-            var LogFilePath = LOGDIRECTORY + Logs[i];
+            var LogFilePath = globalVariables.logDirectory + Logs[i];
 
             var logfileData = fs.readFileSync(LogFilePath, "utf8");
 
@@ -124,7 +132,7 @@ exports.parseLogs = function(LOGDIRECTORY, validXML) {
 
                     ClientList[ID].addNickname(Nickname);
 
-                    if (validXML) {
+                    if (Constants.bufferData) {
                         if (!checkFunctions.isDuplicateDateTime(ID, DateTime)) {
                             ClientList[ID].addDateTime(DateTime);
                         }
@@ -457,7 +465,6 @@ exports.parseLogs = function(LOGDIRECTORY, validXML) {
                         ServerGroupName_Length = ID_StartPos - 5 - ServerGroupName_StartPos;
                         eventType = 3;
                     }
-                    else outputHandler.output("this shouldn't happen (servergroup parsing)");
 
                     if (eventType != -1) {
                         if (eventType == 0 || eventType == 1) {

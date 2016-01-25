@@ -4,12 +4,12 @@
 
 "use strict";
 
-const fs = require('fs');
-const Constants = require('./Constants.js');
+// Todo: maybe move to miscFunctions.
+
+const fs = require('fs'),
+    Constants = require('./Constants.js');
 
 var programLogfile = fs.createWriteStream(Constants.PROGRAMLOGFILE);
-
-exports.output = output;
 
 /**
  * Writes the text to the console and the logfile.
@@ -20,3 +20,5 @@ function output(text) {
     console.log(text);
     programLogfile.write(text + "\n");
 }
+
+exports.output = output;

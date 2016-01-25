@@ -4,6 +4,8 @@
 
 "use strict";
 
+const globalVariables = require("./globalVariables.js");
+
 const Client = require("./Client.js"),
     ServerGroup = require("./ServerGroup.js"),
     Ban = require("./Ban.js"),
@@ -50,7 +52,7 @@ module.exports = {
         currentDate = new Date;
     },
 
-    getProgramRuntime: function(programStart){
+    getProgramRuntime: function(programStart) {
         this.updateCurrentDate();
         return currentDate.getTime() - programStart.getTime();
     },
@@ -65,6 +67,17 @@ module.exports = {
     // Returns the current local time as string with the format "dd.mm.yyyy hh:mm:ss".
     getCurrentLocaltime: function() {
         return dateToString(currentDate);
+    },
+
+    /**
+     * Clears the arrays storing the parsed information.
+     */
+    clearGlobalArrays: function() {
+        globalVariables.ClientList.length = globalVariables.ServerGroupList.length =
+            globalVariables.BanList.length = globalVariables.KickList.length =
+                globalVariables.ComplaintList.length = globalVariables.UploadList.length =
+                    globalVariables.ignoredLogs.length = globalVariables.Logs.length =
+                        globalVariables.parsedLogs.length = 0;
     }
 };
 
@@ -85,6 +98,6 @@ function toDoubleDigit(x) {
  * @returns {string}
  */
 function dateToString(t) {
-    return toDoubleDigit(t.getDate()) + "." + toDoubleDigit(t.getMonth()) + "." + t.getFullYear() + " " +
+    return toDoubleDigit(t.getDate()) + "." + toDoubleDigit(t.getMonth() + 1) + "." + t.getFullYear() + " " +
         toDoubleDigit(t.getHours()) + ":" + toDoubleDigit(t.getMinutes()) + ":" + toDoubleDigit(t.getSeconds());
 }

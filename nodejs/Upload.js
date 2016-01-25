@@ -4,7 +4,7 @@
 
 "use strict";
 
-const globalArrays = require("./globalArrays.js");
+const globalVariables = require("./globalVariables.js");
 
 /**
  * Default constructor.
@@ -79,7 +79,7 @@ Upload.prototype.addDeletedByID = function(deletedByID) {
 
 // Adds the deletedByNickname and deletedByID data to the matching Upload.
 function addDeletedBy (channelID, filename, deletedByNickname, deletedByID) {
-    var shortFilename, UploadList = globalArrays.UploadList;
+    var shortFilename, UploadList = globalVariables.UploadList;
     if (filename.indexOf("//") != -1) {
         shortFilename = filename.substr(filename.indexOf("//") + 1);
     }

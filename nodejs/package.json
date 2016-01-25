@@ -2,15 +2,18 @@
   "name": "ts3-ldv",
   "version": "1.0.0",
   "description": "Placeholder",
-  "main": "main.js",
+  "main": "app.js",
   "dependencies": {
-    "xmlbuilder": "^4.2.1",
-    "xmldoc":"^0.4.0"
+    "express": "latest",
+    "xmlbuilder": "latest",
+    "compression": "latest"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "Placeholder"
+  ],
   "author": "Drumsticks1",
-  "license": "Placeholder"
+  "license": "ISC"
 }

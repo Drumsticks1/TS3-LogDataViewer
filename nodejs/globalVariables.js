@@ -2,6 +2,8 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
+const Constants = require("./Constants.js");
+
 var ignoredLogs = [],
     Logs = [],
     parsedLogs = [],
@@ -10,7 +12,9 @@ var ignoredLogs = [],
     BanList = [],
     KickList = [],
     ComplaintList = [],
-    UploadList = [];
+    UploadList = [],
+    virtualServer = Constants.DEFAULTVIRTUALSERVER,
+    logDirectory = LOGDIRECTORY = Constants.DEFAULTLOGDIRECTORY;
 
 module.exports = {
     ignoredLogs: ignoredLogs,
@@ -21,5 +25,7 @@ module.exports = {
     BanList: BanList,
     KickList: KickList,
     ComplaintList: ComplaintList,
-    UploadList: UploadList
+    UploadList: UploadList,
+    virtualServer: virtualServer,
+    logDirectory: logDirectory
 };

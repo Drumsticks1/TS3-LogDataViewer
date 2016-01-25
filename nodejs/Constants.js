@@ -15,12 +15,10 @@ module.exports = {
     DEFAULTLOGDIRECTORY: "./logs/",
     DEFAULTVIRTUALSERVER: 1,
 
-    // Lockfile expiration time (in seconds).
-    LOCKFILEEXPIRATION: 300,
+    // Buffer data for the next rebuildXML call.
+    bufferData: true,
 
     // Debugging options, default option for release versions should always be false:
-    // Option for skipping the lockfile check
-    SKIPLOCKFILE: true,
     // Option for building a bigger xml which can be used for easier debugging than the release one-liner xml.
     DEBUGGINGXML: false
 };

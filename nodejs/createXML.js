@@ -5,20 +5,19 @@
 "use strict";
 
 const fs = require("fs"),
- main = require("./main.js"),
  Constants = require("./Constants.js"),
- globalArrays = require("./globalArrays.js"),
+ globalVariables = require("./globalVariables.js"),
  miscFunctions = require("./miscFunctions.js"),
  outputHandler = require("./outputHandler.js"),
  builder = require('xmlbuilder');
 
-var parsedLogs =  globalArrays.parsedLogs,
- ClientList = globalArrays.ClientList,
- ServerGroupList = globalArrays.ServerGroupList,
- BanList = globalArrays.BanList,
- KickList = globalArrays.KickList,
- ComplaintList = globalArrays.ComplaintList,
- UploadList = globalArrays.UploadList;
+var parsedLogs =  globalVariables.parsedLogs,
+ ClientList = globalVariables.ClientList,
+ ServerGroupList = globalVariables.ServerGroupList,
+ BanList = globalVariables.BanList,
+ KickList = globalVariables.KickList,
+ ComplaintList = globalVariables.ComplaintList,
+ UploadList = globalVariables.UploadList;
 
 // Creates a XML for storing the data extracted from the logs.
 exports.createXML = function() {
@@ -28,12 +27,11 @@ exports.createXML = function() {
 
     var AttributesNode = Data.ele("Attributes");
     AttributesNode.ele("Generated").text("by TS3-LogDataViewer");
-    AttributesNode.ele("VirtualServer").text(main.VIRTUALSERVER);
+    AttributesNode.ele("VirtualServer").text(globalVariables.virtualServer);
 
     miscFunctions.updateCurrentDate();
     AttributesNode.ele("CreationTimestamp_Localtime").txt(miscFunctions.getCurrentLocaltime());
     AttributesNode.ele("CreationTimestamp_UTC").txt(miscFunctions.getCurrentUTC());
-    AttributesNode.ele("SKIPLOCKFILE").txt(Constants.SKIPLOCKFILE);
     AttributesNode.ele("DEBUGGINGXML").txt(Constants.DEBUGGINGXML);
 
     var ParsedLogs = Data.ele("ParsedLogs");

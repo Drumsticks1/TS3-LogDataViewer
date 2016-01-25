@@ -4,38 +4,33 @@
 
 "use strict";
 
-const fs = require("fs");
-const util = require("util");
-const main = require('./main.js');
-const Constants = require("./Constants.js");
-const globalArrays = require("./globalArrays.js");
-const outputHandler = require("./outputHandler.js");
-const checkFunctions = require("./checkFunctions.js");
+const fs = require("fs"),
+    util = require("util"),
+    Constants = require("./Constants.js"),
+    globalVariables = require("./globalVariables.js"),
+    outputHandler = require("./outputHandler.js"),
+    checkFunctions = require("./checkFunctions.js");
 
 exports.fetchLogs = fetchLogs;
 
 /**
  *
- * @param {string} LOGDIRECTORY
  * @returns {boolean}
  */
-function fetchLogs(LOGDIRECTORY) {
+function fetchLogs() {
     outputHandler.output("Checking logdirectory...");
-
+    globalVariables.Logs.length = 0;
     try {
-        var logDirectoryStats = fs.statSync(LOGDIRECTORY);
+        var logDirectoryStats = fs.statSync(globalVariables.logDirectory);
         if (logDirectoryStats.isDirectory()) {
             try {
-                var logFiles = fs.readdirSync(LOGDIRECTORY);
+                var logFiles = fs.readdirSync(globalVariables.logDirectory);
 
                 if (logFiles.length > 0) {
                     outputHandler.output("Fetching logignore...");
 
-                    var LogignorePath = LOGDIRECTORY + "logignore";
+                    var LogignorePath = globalVariables.logDirectory + "logignore";
                     try {
-                        // Todo: Check if needed for additional tests.
-                        // var LogignoreStats = fs.statSync(LogignorePath);
-
                         var LogignoreData = fs.readFileSync(LogignorePath, "utf8");
 
                         if (LogignoreData.length > 0) {
@@ -48,7 +43,7 @@ function fetchLogs(LOGDIRECTORY) {
                                 prevLineEnd = currentLineEnd;
                                 currentLineEnd = LogignoreData.indexOf("\n", prevLineEnd + 1);
 
-                               globalArrays.ignoredLogs.push(buffer_logignore);
+                                globalVariables.ignoredLogs.push(buffer_logignore);
                             }
                         } else {
                             outputHandler.output("The logignore seems to be empty - skipping...");
@@ -61,10 +56,9 @@ function fetchLogs(LOGDIRECTORY) {
                     outputHandler.output("Fetching logs...");
                     for (i = 0; i < logFiles.length; i++) {
                         if (logFiles[i].lastIndexOf(".log") == logFiles[i].length - 4) {
-                            // Todo: Add check if log is ignored!
                             if (!checkFunctions.isIgnoredLog(logFiles[i])) {
-                                if (logFiles[i].substring(38, logFiles[i].length - 4) == String(main.VIRTUALSERVER)) {
-                                    globalArrays.Logs.push(logFiles[i]);
+                                if (logFiles[i].substring(38, logFiles[i].length - 4) == String(globalVariables.virtualServer)) {
+                                    globalVariables.Logs.push(logFiles[i]);
                                 }
                             }
                         }
@@ -89,12 +83,12 @@ function fetchLogs(LOGDIRECTORY) {
         return false;
     }
 
-    if (globalArrays.Logs.length == 0) {
+    if (globalVariables.Logs.length == 0) {
         outputHandler.output("The log directory contains no valid logs.");
         return false;
     }
 
     outputHandler.output("Sorting logs...");
-    globalArrays.Logs.sort();
+    globalVariables.Logs.sort();
     return true;
 }
