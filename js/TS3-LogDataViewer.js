@@ -7,28 +7,28 @@
 /**
  * Global Variables
  */
-var connectedClientsCount, nanobar, momentInterval, XML, rebuildError = false,
+var connectedClientsCount, nanobar, momentInterval, json, rebuildError = false,
     eventListeners = [],
     tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
     tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
 
 /**
- * Rebuilds the XML and calls buildTables() when the XML creation has finished.
+ * Rebuilds the JSON and calls buildTables() when the JSON is fetched.
  */
-function rebuildXML() {
+function rebuildJSON() {
     nanobar.go(35);
-    document.getElementById("rebuildXMLButton").disabled = document.getElementById("buildNewXMLButton").disabled = true;
-    $.get("./express/rebuildXML", function() {
+    document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = true;
+    $.get("./express/rebuildJSON", function() {
         buildTables();
     });
 }
 
 /**
- * Deletes the current XML and builds a new one after the deletion.
+ * Deletes the current JSON and builds a new one after the deletion.
  */
-function buildNewXML() {
-    $.get("./express/deleteXML", function() {
-        rebuildXML();
+function buildNewJSON() {
+    $.get("./express/deleteJSON", function() {
+        rebuildJSON();
     });
 }
 
@@ -66,7 +66,7 @@ function expandOrCollapseList(list, ID) {
  */
 function expandList(list, upperList, ID, column, collapsedCellCount) {
     var x = document.getElementById(String(ID)).childNodes[column],
-        listContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
+        listContent = json.ClientList[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
     document.getElementById(list + "Button_" + ID).innerHTML = "- " + (listContent.length - collapsedCellCount);
     document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
     for (var j = 1; j < listContent.length; j++) {
@@ -94,7 +94,7 @@ function expandList(list, upperList, ID, column, collapsedCellCount) {
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
 function collapseList(list, upperList, ID, column, collapsedCellCount) {
-    var listContent = XML.getElementsByTagName("Client")[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
+    var listContent = json.ClientList[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
     document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
     document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "true");
 
@@ -180,7 +180,7 @@ function addIPsParser() {
  * Switches between ID/UID columns in the ban table.
  */
 function switchBetweenIDAndUID() {
-    var rowId, banId, idOrUid, bannedByIDOrUD, Ban = XML.getElementsByTagName("Ban"),
+    var rowId, banId, idOrUid, bannedByIDOrUD, Ban = json.BanList,
         x = document.getElementById("banTable").lastChild.childNodes,
         headRow = document.getElementById("banTable").firstChild.firstChild,
         uidState = Number(localStorage.getItem("uidState"));
@@ -202,17 +202,17 @@ function switchBetweenIDAndUID() {
 
         if (uidState) {
             if (document.getElementById(rowId).childNodes[3].firstChild.nodeValue != "Unknown") {
-                bannedByIDOrUD = Ban[banId].getElementsByTagName("ByID")[0].firstChild.nodeValue;
+                bannedByIDOrUD = Ban[banId].bannedByID;
             } else bannedByIDOrUD = "Unknown";
         } else {
-            if (Ban[banId].getElementsByTagName("ByUID")[0].firstChild !== null) {
-                bannedByIDOrUD = Ban[banId].getElementsByTagName("ByUID")[0].firstChild.nodeValue;
+            if (Ban[banId].bannedByUID.length != 0) {
+                bannedByIDOrUD = Ban[banId].bannedByUID;
             } else bannedByIDOrUD = "No UID";
         }
 
         document.getElementById(rowId).childNodes[1].setAttribute("data-title", "Banned " + idOrUid);
         document.getElementById(rowId).childNodes[4].setAttribute("data-title", "Banned by " + idOrUid);
-        document.getElementById(rowId).childNodes[1].lastChild.innerHTML = Ban[banId].getElementsByTagName(idOrUid)[0].firstChild.nodeValue;
+        document.getElementById(rowId).childNodes[1].lastChild.innerHTML = Ban[banId]["bannedBy" + idOrUid];
         document.getElementById(rowId).childNodes[4].lastChild.innerHTML = bannedByIDOrUD;
     }
 }
@@ -330,9 +330,8 @@ function removeEventListeners() {
  * @returns {string} - name of the server group.
  */
 function getServerGroupByID(ID) {
-    // Todo: Buffering the results in an array for faster handling.
-    var buffer = XML.getElementsByTagName("ServerGroup")[ID];
-    return buffer.getElementsByTagName("ServerGroupName")[0].firstChild.nodeValue;
+    return json.ServerGroupList[ID].ServerGroupName;
+
 }
 
 /**
@@ -404,7 +403,7 @@ function buildClientTable() {
 
     document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
 
-    var Client = XML.getElementsByTagName("Client"),
+    var Client = json.ClientList,
         clientTable = document.createElement("table"),
         clientHead = document.createElement("thead"),
         clientHeadRow = document.createElement("tr"),
@@ -437,14 +436,14 @@ function buildClientTable() {
 
     var clientBody = document.createElement("tbody");
     for (var i = 0; i < Client.length; i++) {
-        var ID = Number(Client[i].getElementsByTagName("ID")[0].firstChild.nodeValue);
-        if (ID != -1) {
-            var Nicknames = Client[ID].getElementsByTagName("Nicknames")[0].getElementsByTagName("N"),
-                Connections = Client[ID].getElementsByTagName("Connections")[0].getElementsByTagName("C"),
-                IPs = Client[ID].getElementsByTagName("IPs")[0].getElementsByTagName("I"),
+        var ID = Number(Client[i].ID);
+        if (ID != 0) {
+            var Nicknames = Client[ID].Nickname,
+                Connections = Client[ID].DateTime,
+                IPs = Client[ID].IP,
                 Connection_Count = Connections.length,
-                ServerGroupIDs = Client[ID].getElementsByTagName("ServerGroupIDs")[0].getElementsByTagName("S"),
-                ServerGroupAssignmentDateTimes = Client[ID].getElementsByTagName("ServerGroupAssignmentDateTimes")[0].getElementsByTagName("A");
+                ServerGroupIDs = Client[ID].ServerGroupID,
+                ServerGroupAssignmentDateTimes = Client[ID].ServerGroupAssignmentDateTime;
 
             var clientBodyRow = document.createElement("tr"),
                 cell_ID = document.createElement("td"),
@@ -469,7 +468,7 @@ function buildClientTable() {
 
             for (var j = 0; j < Nicknames.length; j++) {
                 var divNicknames = document.createElement("div");
-                divNicknames.innerHTML = Nicknames[j].firstChild.nodeValue;
+                divNicknames.innerHTML = Nicknames[j];
                 cell_Nicknames.appendChild(divNicknames);
             }
             clientBodyRow.appendChild(cell_Nicknames);
@@ -488,13 +487,13 @@ function buildClientTable() {
 
             var divLastConnection = document.createElement("div");
             divLastConnection.id = "connections_" + ID + "_0";
-            divLastConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[0].firstChild.nodeValue);
+            divLastConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[0]);
             cell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = document.createElement("div");
                 divFirstConnection.id = "connections_" + ID + "_" + (Connections.length - 1);
-                divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1].firstChild.nodeValue);
+                divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
                 cell_Connections.appendChild(divFirstConnection);
             }
             clientBodyRow.appendChild(cell_Connections);
@@ -513,21 +512,21 @@ function buildClientTable() {
 
             var divLastIP = document.createElement("div");
             divLastIP.id = "ips_" + ID + "_0";
-            divLastIP.innerHTML = IPs[0].firstChild.nodeValue;
+            divLastIP.innerHTML = IPs[0];
             cell_IPs.appendChild(divLastIP);
 
             clientBodyRow.appendChild(cell_IPs);
 
             cell_Connects.innerHTML = Connection_Count;
             clientBodyRow.appendChild(cell_Connects);
-            if (Client[ID].getElementsByTagName("Deleted")[0] !== undefined) {
+            if (Client[ID].deleted) {
                 clientBodyRow.className += "deleted";
-                cell_Connected.innerHTML = "false";
-            } else if (Client[ID].getElementsByTagName("Connected")[0] !== undefined) {
+            } else if (Client[ID].ConnectedState) {
                 clientBodyRow.className += "connected";
                 connectedClientsCount++;
-                cell_Connected.innerHTML = "true";
-            } else cell_Connected.innerHTML = "false";
+            }
+            cell_Connected.innerHTML = String(Boolean(Client[ID].ConnectedState));
+
             clientBodyRow.appendChild(cell_Connected);
 
             if (ServerGroupIDs.length === 0)
@@ -537,8 +536,8 @@ function buildClientTable() {
             for (j = 0; j < ServerGroupIDs.length; j++) {
                 var divName = document.createElement("div"),
                     divDateTime = document.createElement("div");
-                divName.innerHTML = getServerGroupByID(Number(ServerGroupIDs[j].firstChild.nodeValue));
-                divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j].firstChild.nodeValue)).format("YYYY-MM-DD HH:mm:ss");
+                divName.innerHTML = getServerGroupByID(Number(ServerGroupIDs[j]));
+                divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format("YYYY-MM-DD HH:mm:ss");
 
                 cell_ServerGroupInfo.appendChild(divName);
                 cell_ServerGroupInfo.appendChild(divDateTime);
@@ -595,7 +594,7 @@ function buildBanTable() {
     banTableControlSection.appendChild(switchBetweenIDandUIDButton);
     document.getElementById("ts3-banTable").appendChild(banTableControlSection);
 
-    var Ban = XML.getElementsByTagName("Ban"),
+    var Ban = json.BanList,
         banTable = document.createElement("table"),
         banHead = document.createElement("thead"),
         banHeadRow = document.createElement("tr"),
@@ -631,22 +630,22 @@ function buildBanTable() {
 
     var banBody = document.createElement("tbody");
     for (var i = 0; i < Ban.length; i++) {
-        var BanDateTime = Ban[i].getElementsByTagName("DateTime")[0].firstChild.nodeValue,
-            BannedID = Ban[i].getElementsByTagName("ID")[0].firstChild.nodeValue,
-            BannedNickname = Ban[i].getElementsByTagName("Nickname")[0].firstChild.nodeValue,
-            BannedIP = Ban[i].getElementsByTagName("IP")[0].firstChild.nodeValue,
+        var BanDateTime = Ban[i]["banDateTime"],
+            BannedID = Ban[i]["bannedID"],
+            BannedNickname = Ban[i]["bannedNickname"],
+            BannedIP = Ban[i]["bannedIP"],
             BannedByID;
         if (BannedIP != "Unknown") {
-            BannedByID = Ban[i].getElementsByTagName("ByID")[0].firstChild.nodeValue;
+            BannedByID = Ban[i]["bannedByID"];
         } else BannedByID = "Unknown";
 
-        var BannedByNickname = Ban[i].getElementsByTagName("ByNickname")[0].firstChild.nodeValue,
+        var BannedByNickname = Ban[i]["bannedByNickname"],
             BanReason;
-        if (Ban[i].getElementsByTagName("Reason")[0].firstChild !== null) {
-            BanReason = Ban[i].getElementsByTagName("Reason")[0].firstChild.nodeValue;
+        if (Ban[i]["banReason"].length != 0) {
+            BanReason = Ban[i]["banReason"];
         } else BanReason = "No Reason given";
 
-        var Bantime = Ban[i].getElementsByTagName("Bantime")[0].firstChild.nodeValue;
+        var Bantime = Ban[i]["bantime"];
 
         var banBodyRow = document.createElement("tr");
         banBodyRow.id = "ban_" + i;
@@ -746,7 +745,7 @@ function buildKickTable() {
 
     document.getElementById("ts3-kickTable").appendChild(kickTableControlSection);
 
-    var Kick = XML.getElementsByTagName("Kick"),
+    var Kick = json.KickList,
         kickTable = document.createElement("table"),
         kickHead = document.createElement("thead"),
         kickHeadRow = document.createElement("tr"),
@@ -776,14 +775,14 @@ function buildKickTable() {
 
     var kickBody = document.createElement("tbody");
     for (var i = 0; i < Kick.length; i++) {
-        var KickDateTime = Kick[i].getElementsByTagName("DateTime")[0].firstChild.nodeValue,
-            KickedID = Kick[i].getElementsByTagName("ID")[0].firstChild.nodeValue,
-            KickedNickname = Kick[i].getElementsByTagName("Nickname")[0].firstChild.nodeValue,
-            KickedByNickname = Kick[i].getElementsByTagName("ByNickname")[0].firstChild.nodeValue,
-            KickedByUID = Kick[i].getElementsByTagName("ByUID")[0].firstChild.nodeValue,
+        var KickDateTime = Kick[i].kickDateTime,
+            KickedID = Kick[i].kickedID,
+            KickedNickname = Kick[i].kickedNickname,
+            KickedByNickname = Kick[i].kickedByNickname,
+            KickedByUID = Kick[i].kickedByUID,
             KickReason;
-        if (Kick[i].getElementsByTagName("Reason")[0].firstChild !== null) {
-            KickReason = Kick[i].getElementsByTagName("Reason")[0].firstChild.nodeValue;
+        if (Kick[i].kickReason.length != 0) {
+            KickReason = Kick[i].kickReason;
         } else KickReason = "No Reason given";
 
         var kickBodyRow = document.createElement("tr"),
@@ -865,7 +864,7 @@ function buildComplaintTable() {
 
     document.getElementById("ts3-complaintTable").appendChild(complaintTableControlSection);
 
-    var Complaint = XML.getElementsByTagName("Complaint"),
+    var Complaint = json.ComplaintList,
         complaintTable = document.createElement("table"),
         complaintHead = document.createElement("thead"),
         complaintHeadRow = document.createElement("tr"),
@@ -895,12 +894,12 @@ function buildComplaintTable() {
 
     var complaintBody = document.createElement("tbody");
     for (var i = 0; i < Complaint.length; i++) {
-        var ComplaintDateTime = Complaint[i].getElementsByTagName("DateTime")[0].firstChild.nodeValue,
-            ComplaintAboutID = Complaint[i].getElementsByTagName("AboutID")[0].firstChild.nodeValue,
-            ComplaintAboutNickname = Complaint[i].getElementsByTagName("AboutNickname")[0].firstChild.nodeValue,
-            ComplaintReason = Complaint[i].getElementsByTagName("Reason")[0].firstChild.nodeValue,
-            ComplaintByID = Complaint[i].getElementsByTagName("ByID")[0].firstChild.nodeValue,
-            ComplaintByNickname = Complaint[i].getElementsByTagName("ByNickname")[0].firstChild.nodeValue;
+        var ComplaintDateTime = Complaint[i].complaintDateTime,
+            ComplaintAboutID = Complaint[i].complaintAboutID,
+            ComplaintAboutNickname = Complaint[i].complaintAboutNickname,
+            ComplaintReason = Complaint[i].complaintReason,
+            ComplaintByID = Complaint[i].complaintByID,
+            ComplaintByNickname = Complaint[i].complaintByNickname;
 
         var complaintBodyRow = document.createElement("tr"),
             cell_ComplaintDateTime = document.createElement("td"),
@@ -979,7 +978,7 @@ function buildUploadTable() {
 
     document.getElementById("ts3-uploadTable").appendChild(uploadTableControlSection);
 
-    var Upload = XML.getElementsByTagName("Upload"),
+    var Upload = json.UploadList,
         uploadTable = document.createElement("table"),
         uploadHead = document.createElement("thead"),
         uploadHeadRow = document.createElement("tr"),
@@ -1013,19 +1012,19 @@ function buildUploadTable() {
 
     var uploadBody = document.createElement("tbody");
     for (var i = 0; i < Upload.length; i++) {
-        var UploadDateTime = Upload[i].getElementsByTagName("DateTime")[0].firstChild.nodeValue,
-            ChannelID = Upload[i].getElementsByTagName("ChannelID")[0].firstChild.nodeValue,
-            Filename = Upload[i].getElementsByTagName("Filename")[0].firstChild.nodeValue,
-            UploadedByID = Upload[i].getElementsByTagName("UplByID")[0].firstChild.nodeValue,
-            UploadedByNickname = Upload[i].getElementsByTagName("UplByNickname")[0].firstChild.nodeValue,
+        var UploadDateTime = Upload[i].uploadDateTime,
+            ChannelID = Upload[i].channelID,
+            Filename = Upload[i].filename,
+            UploadedByID = Upload[i].uploadedByID,
+            UploadedByNickname = Upload[i].uploadedByNickname,
             DeletedByID, DeletedByNickname;
 
-        if (Upload[i].getElementsByTagName("DelByID")[0] !== undefined) {
-            DeletedByID = Upload[i].getElementsByTagName("DelByID")[0].firstChild.nodeValue;
-        } else DeletedByID = "/";
-        if (Upload[i].getElementsByTagName("DelByNickname")[0] !== undefined) {
-            DeletedByNickname = Upload[i].getElementsByTagName("DelByNickname")[0].firstChild.nodeValue;
-        } else DeletedByNickname = "/";
+        if (Upload[i].deleted) {
+            DeletedByID = Upload[i].deletedByID;
+            DeletedByNickname = Upload[i].deletedByNickname;
+        } else {
+            DeletedByID = DeletedByNickname = "/";
+        }
 
         var uploadBodyRow = document.createElement("tr"),
             cell_UploadDateTime = document.createElement("td"),
@@ -1136,10 +1135,9 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
         sessionStorage.setItem(table + "-built", "1");
 
         var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
-
         document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "";
 
-        if (XML.getElementsByTagName(leadingCapitalLetterTable.substring(0, table.search("Table"))).length) {
+        if (json[leadingCapitalLetterTable.substring(0, leadingCapitalLetterTable.indexOf("Table")) + "List"].length) {
             buildTable(table);
         } else {
             var alertBox = document.createElement("div");
@@ -1151,23 +1149,23 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
 }
 
 /**
- * Builds all tables using the data from the XML.
+ * Builds all tables using the data from the JSON.
  */
 function buildTables() {
     nanobar.go(50);
     $.ajax({
-        url: "./output.xml",
+        url: "./output.json",
         cache: false,
         error: function() {
             if (rebuildError) alert("Rebuilding failed!");
             else {
                 rebuildError = true;
-                rebuildXML();
+                rebuildJSON();
             }
         },
-        success: function(fetchedXML) {
+        success: function(fetchedJSON) {
             rebuildError = false;
-            XML = fetchedXML;
+            json = fetchedJSON;
             connectedClientsCount = 0;
 
             removeEventListeners();
@@ -1175,10 +1173,10 @@ function buildTables() {
                 buildTableWithAlertCheckAndLocalStorage(tables[i]);
             }
 
-            var Attributes = XML.getElementsByTagName("Attributes")[0],
-                creationTimestampUTC = Attributes.getElementsByTagName("CreationTimestamp_UTC")[0].firstChild.nodeValue;
+            var Attributes = json.Attributes,
+                creationTimestampUTC = Attributes.creationTimestamp_UTC;
 
-            document.getElementById("creationTimestamp_localtime").innerHTML = Attributes.getElementsByTagName("CreationTimestamp_Localtime")[0].firstChild.nodeValue;
+            document.getElementById("creationTimestamp_localtime").innerHTML = Attributes.creationTimestamp_LocalTime;
             document.getElementById("creationTimestamp_utc").innerHTML = creationTimestampUTC;
             document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
@@ -1188,20 +1186,16 @@ function buildTables() {
             }, 1000);
 
             if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
-                var Client = XML.getElementsByTagName("Client");
+                var Client = json.ClientList;
                 for (var j = 0; j < Client.length; j++) {
-                    if (Client[j].getElementsByTagName("Connected")[0] !== undefined) {
+                    if (Client[j].ConnectedState) {
                         connectedClientsCount++;
                     }
                 }
             }
             document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
 
-            if (Attributes.getElementsByTagName("debuggingXML")[0].firstChild.nodeValue == "true") {
-                alert("At least one debug variable has been set to true before compiling the code. Please recompile the program with the debug variables set to false.");
-            }
-
-            document.getElementById("rebuildXMLButton").disabled = document.getElementById("buildNewXMLButton").disabled = false;
+            document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = false;
             nanobar.go(100);
         }
     });
@@ -1259,7 +1253,7 @@ function buildControlSection() {
 
     creationTimestampSection.id = "creationTimestampSection";
     creationTimestampSection.className = "small-12 medium-8 large-8 columns";
-    creationTimestampSection.innerHTML = "Creation DateTime of the current XML";
+    creationTimestampSection.innerHTML = "Creation DateTime of the current JSON";
     creationTimestampTable.id = "creationTimestampTable";
 
     ctT_localtime.id = "creationTimestamp_localtime";
@@ -1287,26 +1281,26 @@ function buildControlSection() {
 
 
     var rebuildSection = document.createElement("div"),
-        rebuildXMLButton = document.createElement("button"),
-        buildNewXMLButton = document.createElement("button");
+        rebuildJSONButton = document.createElement("button"),
+        buildNewJSONButton = document.createElement("button");
 
     rebuildSection.id = "rebuildSection";
     rebuildSection.className = "small-12 medium-4 large-4 columns";
-    rebuildXMLButton.id = "rebuildXMLButton";
-    buildNewXMLButton.id = "buildNewXMLButton";
-    rebuildXMLButton.innerHTML = "Update current XML";
-    buildNewXMLButton.innerHTML = "Generate new XML";
-    rebuildXMLButton.disabled = buildNewXMLButton.disabled = true;
+    rebuildJSONButton.id = "rebuildJSONButton";
+    buildNewJSONButton.id = "buildNewJSONButton";
+    rebuildJSONButton.innerHTML = "Update current JSON";
+    buildNewJSONButton.innerHTML = "Generate new JSON";
+    rebuildJSONButton.disabled = buildNewJSONButton.disabled = true;
 
-    rebuildXMLButton.onclick = function() {
-        rebuildXML();
+    rebuildJSONButton.onclick = function() {
+        rebuildJSON();
     };
-    buildNewXMLButton.onclick = function() {
-        buildNewXML();
+    buildNewJSONButton.onclick = function() {
+        buildNewJSON();
     };
 
-    rebuildSection.appendChild(rebuildXMLButton);
-    rebuildSection.appendChild(buildNewXMLButton);
+    rebuildSection.appendChild(rebuildJSONButton);
+    rebuildSection.appendChild(buildNewJSONButton);
 
 
     var miscControlSection = document.createElement("div"),

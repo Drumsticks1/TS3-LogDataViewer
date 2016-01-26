@@ -5,7 +5,6 @@
   "main": "app.js",
   "dependencies": {
     "express": "latest",
-    "xmlbuilder": "latest",
     "compression": "latest",
     "helmet": "latest"
   },

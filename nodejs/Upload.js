@@ -30,17 +30,6 @@ Upload.prototype.addUpload = function(uploadDateTime, channelID, filename, uploa
     this.uploadedByID = uploadedByID;
 };
 
-// Overloaded version of the previous function for the parseXML data.
-Upload.prototype.addUpload = function(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID, deletedByNickname, deletedByID) {
-    this.uploadDateTime = uploadDateTime;
-    this.channelID = channelID;
-    this.filename = filename;
-    this.uploadedByNickname = uploadedByNickname;
-    this.uploadedByID = uploadedByID;
-    this.deletedByNickname = deletedByNickname;
-    this.deletedByID = deletedByID;
-};
-
 // Returns the requested information.
 Upload.prototype.getUploadDateTime = function() {
     return this.uploadDateTime;

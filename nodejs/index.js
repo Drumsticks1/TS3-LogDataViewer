@@ -10,11 +10,11 @@ const fs = require("fs"),
     outputHandler = require("./outputHandler.js"),
     fetchLogs = require("./fetchLogs.js"),
     parseLogs = require("./parseLogs.js"),
-    createXML = require("./createXML.js"),
+    createJSON = require("./createJSON.js"),
     miscFunctions = require("./miscFunctions.js"),
     getConfig = require("./getConfig.js");
 
-exports.rebuildXML = function() {
+exports.rebuildJSON = function() {
     var programStart = new Date();
 
     miscFunctions.updateCurrentDate();
@@ -35,7 +35,7 @@ exports.rebuildXML = function() {
 
     parseLogs.parseLogs();
 
-    createXML.createXML();
+    createJSON.createJSON();
 
     if (!globalVariables.bufferData) {
         miscFunctions.clearGlobalArrays();

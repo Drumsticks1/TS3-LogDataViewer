@@ -14,7 +14,7 @@ node_modules
 # TS3-LDV related files #
 #########################
 
-output.xml
+output.json
 logignore
 lockfile
 

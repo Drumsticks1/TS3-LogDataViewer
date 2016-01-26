@@ -17,18 +17,16 @@ app.use(compression());
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
-// Todo: Maybe add option for setting the LogDirectory and the VirtualServer via call or via conf file.
-app.get("/teamspeak/express/rebuildXML", function(req, res) {
-    index.rebuildXML();
+app.get("/teamspeak/express/rebuildJSON", function(req, res) {
+    index.rebuildJSON();
     res.end();
 });
 
-// Todo: Really delete XML / Rename the call.
-app.get("/teamspeak/express/deleteXML", function(req, res) {
+app.get("/teamspeak/express/deleteJSON", function(req, res) {
     miscFunctions.clearGlobalArrays();
     res.end();
 });
 
 app.listen(3000, function() {
-    console.log("Example app listening on port 3000!");
+    console.log("TS3-LDV listening on port 3000");
 });
