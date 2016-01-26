@@ -78,14 +78,19 @@ Client.prototype.addIP = function(IP) {
     this.IP.unshift(IP);
 };
 
-// Adjusts the CurrentConnectionsCount.
+// Adjusts the ConnectedState.
 Client.prototype.connect = function() {
     this.ConnectedState++;
 };
-
 Client.prototype.disconnect = function() {
+    // Todo: Check if necessary.
     if (this.ConnectedState > 0)
         this.ConnectedState--;
+};
+
+// Resets the ConnectedState to 0.
+Client.prototype.resetConnectedState = function() {
+    this.ConnectedState = 0;
 };
 
 // Returns the CurrentConnectionsCount.
@@ -98,13 +103,9 @@ Client.prototype.deleteClient = function() {
     this.deleted = true;
 };
 
-// Todo: Check if "return false" is compatible.
-// Returns 1 if the client has been deleted.
+// Returns the deleted value.
 Client.prototype.isDeleted = function() {
-    if (this.deleted) {
-        return 1;
-    }
-    else return 0;
+    return this.deleted;
 };
 
 //

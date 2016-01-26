@@ -69,6 +69,7 @@ module.exports = {
         return dateToString(currentDate);
     },
 
+    // Todo: maybe move to a resetFunctions js.
     /**
      * Clears the arrays storing the parsed information.
      */
@@ -78,6 +79,12 @@ module.exports = {
                 globalVariables.ComplaintList.length = globalVariables.UploadList.length =
                     globalVariables.ignoredLogs.length = globalVariables.Logs.length =
                         globalVariables.parsedLogs.length = 0;
+    },
+
+    resetConnectedStates: function() {
+        for (var i = 0; i < globalVariables.ClientList.length; i++) {
+            globalVariables.ClientList[i].resetConnectedState();
+        }
     }
 };
 

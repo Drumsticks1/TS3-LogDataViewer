@@ -26,6 +26,8 @@ Bans: Currently only includes the bans that kicked the banned client (= the bann
 	- Add custom bans.
 
 maybe:
+    - Add test cases.
+    - Replace XML creation and parsing with JSON creation and parsing.
 	- Add ServerGroupName history like for the nicknames in the client list.
 	- Add additional optional ignore files for the tables.
 	- Add query clients to client list or a query client list?

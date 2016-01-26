@@ -11,31 +11,21 @@ const fs = require("fs"),
     fetchLogs = require("./fetchLogs.js"),
     parseLogs = require("./parseLogs.js"),
     createXML = require("./createXML.js"),
-    miscFunctions = require("./miscFunctions.js");
+    miscFunctions = require("./miscFunctions.js"),
+    getConfig = require("./getConfig.js");
 
 exports.rebuildXML = function() {
     var programStart = new Date();
+
     miscFunctions.updateCurrentDate();
-    outputHandler.output("Last program run\n\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
+    outputHandler.output("\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
-    // Todo: Modify for nodeJS.
-    var setLD = false, setVS = false;
-    for (var i = 0; i < process.argv.length; i++) {
-        if (process.argv[i].indexOf("--logdirectory=") == 0) {
-            globalVariables.LOGDIRECTORY = process.argv[i].substring(15);
-            setLD = true;
-        } else if (process.argv[i].indexOf("--virtualserver=") == 0) {
-            globalVariables.VIRTUALSERVER = process.argv[i].substring(16);
-            setVS = true;
-        }
-    }
-
-    if (!setLD) {
-        outputHandler.output("No logdirectory specified - using default path...");
-    }
-
-    if (!setVS) {
-        outputHandler.output("No virtual server specified - using default value...");
+    // Currently requires an app restart until changed settings are detected!
+    if (!getConfig.getConfig()) {
+        outputHandler.output("Ignoring the config.json and using default settings...");
+        globalVariables.logDirectory = Constants.defaultLogDirectory;
+        globalVariables.virtualServer = Constants.defaultVirtualServer;
+        globalVariables.bufferData = Constants.bufferData;
     }
 
     if (!fetchLogs.fetchLogs()) {
@@ -47,10 +37,12 @@ exports.rebuildXML = function() {
 
     createXML.createXML();
 
-    if(!Constants.bufferData){
+    if (!globalVariables.bufferData) {
         miscFunctions.clearGlobalArrays();
         outputHandler.output("Cleared buffer arrays...");
     }
+
+    miscFunctions.resetConnectedStates();
 
     outputHandler.output("Program runtime: " + miscFunctions.getProgramRuntime(programStart) + " ms.");
     return 1;

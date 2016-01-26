@@ -74,7 +74,7 @@ exports.parseLogs = function() {
     if (UploadList.length > 0) UploadListID = UploadList.length;
     else UploadListID = 0;
 
-    if (Constants.bufferData) {
+    if (globalVariables.bufferData) {
         if (checkFunctions.isMatchingLogOrder()) {
             outputHandler.output("Comparing new and old logs...");
             for (var i = 0; i < parsedLogs.length; i++) {
@@ -86,10 +86,7 @@ exports.parseLogs = function() {
             }
         }
         else {
-            if(parsedLogs[parsedLogs.length] == Logs[Logs.lastChild]){
-
-            }
-            outputHandler.output("Logs parsed for the last program run were deleted or the log order changed - skipping use of old XML...");
+            outputHandler.output("Logs parsed for the last program run were deleted or the log order changed - skipping use of old data...");
             parsedLogs.length = 0;
         }
     }
@@ -130,7 +127,7 @@ exports.parseLogs = function() {
 
                     ClientList[ID].addNickname(Nickname);
 
-                    if (Constants.bufferData) {
+                    if (globalVariables.bufferData) {
                         if (!checkFunctions.isDuplicateDateTime(ID, DateTime)) {
                             ClientList[ID].addDateTime(DateTime);
                         }
