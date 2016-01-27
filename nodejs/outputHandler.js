@@ -9,16 +9,24 @@
 const fs = require('fs'),
     Constants = require('./Constants.js');
 
-var programLogfile = fs.createWriteStream(Constants.programLogfile,{ flags: 'a'});
+var programLogfile;
 
-/**
- * Writes the text to the console and the logfile.
- * Adds \n after the text when writing to the logfile.
- * @param {string} text
- */
-function output(text) {
-    console.log(text);
-    programLogfile.write(text + "\n");
-}
+module.exports = {
+    /**
+     * Updates the programLogfile write stream.
+     * Required when the log file get deleted while the process is running.
+     */
+    updateWriteStream: function() {
+        programLogfile = fs.createWriteStream(Constants.programLogfile, {flags: 'a'});
+    },
 
-exports.output = output;
+    /**
+     * Writes the text to the console and the logfile.
+     * Adds \n after the text when writing to the logfile.
+     * @param {string} text
+     */
+    output: function(text) {
+        console.log(text);
+        programLogfile.write(text + "\n");
+    }
+};

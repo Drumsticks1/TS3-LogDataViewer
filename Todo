@@ -19,7 +19,7 @@ outputHandler.js:
     - Catch errors like "no such file or directory".
 
 General:
-    - Limit rebuilds server side.
+    - Limit rebuilds server side (configurable Time between rebuild requests).
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).

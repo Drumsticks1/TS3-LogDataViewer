@@ -18,18 +18,11 @@ exports.rebuildJSON = function() {
     var programStart = new Date();
 
     miscFunctions.updateCurrentDate();
+    outputHandler.updateWriteStream();
     outputHandler.output("\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
-    // Currently requires an app restart until changed settings are detected!
-    if (!getConfig.getConfig()) {
-        outputHandler.output("Ignoring the config.json and using default settings...");
-        globalVariables.logDirectory = Constants.defaultLogDirectory;
-        globalVariables.virtualServer = Constants.defaultVirtualServer;
-        globalVariables.bufferData = Constants.bufferData;
-    }
-
     if (!fetchLogs.fetchLogs()) {
-        outputHandler.output("The program will now exit...");
+        outputHandler.output("The rebuildJSON function will now exit...");
         return 0;
     }
 

@@ -5,11 +5,24 @@
 "use strict";
 
 const index = require("./index.js"),
+    globalVariables = require("./globalVariables.js"),
+    getConfig = require("./getConfig.js"),
+    outputHandler = require("./outputHandler.js"),
     express = require("express"),
     compression = require('compression'),
     helmet = require('helmet'),
     miscFunctions = require("./miscFunctions.js"),
     app = express();
+
+outputHandler.updateWriteStream();
+miscFunctions.updateCurrentDate();
+outputHandler.output("\nProgram startup\n");
+outputHandler.output(miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
+
+// Fetch the config file and import the settings on program startup.
+if (!getConfig.getConfig()) {
+    getConfig.resetToDefaultConfiguration();
+}
 
 // Todo: check options.
 app.use(compression());
@@ -27,6 +40,6 @@ app.get("/teamspeak/express/deleteJSON", function(req, res) {
     res.end();
 });
 
-app.listen(3000, function() {
-    console.log("TS3-LDV listening on port 3000");
+app.listen(globalVariables.usedPort, function() {
+    outputHandler.output("\nTS3-LDV listening on port " + globalVariables.usedPort + "\n");
 });

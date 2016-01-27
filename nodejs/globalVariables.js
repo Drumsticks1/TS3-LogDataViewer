@@ -13,9 +13,11 @@ var ignoredLogs = [],
     KickList = [],
     ComplaintList = [],
     UploadList = [],
+    programLogfile = Constants.programLogfile,
     virtualServer = Constants.defaultVirtualServer,
     logDirectory = Constants.defaultLogDirectory,
-    bufferData = Constants.bufferData;
+    bufferData = Constants.bufferData,
+    usedPort = Constants.usedPort;
 
 module.exports = {
     ignoredLogs: ignoredLogs,
@@ -27,7 +29,9 @@ module.exports = {
     KickList: KickList,
     ComplaintList: ComplaintList,
     UploadList: UploadList,
+    programLogfile: programLogfile,
     virtualServer: virtualServer,
     logDirectory: logDirectory,
-    bufferData: bufferData
+    bufferData: bufferData,
+    usedPort: usedPort
 };
