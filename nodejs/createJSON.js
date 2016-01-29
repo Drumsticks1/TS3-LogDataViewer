@@ -49,5 +49,7 @@ exports.createJSON = function() {
         return 0;
     }
 
+    json = null;
+
     outputHandler.output("JSON creation completed.");
 };

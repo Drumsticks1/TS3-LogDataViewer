@@ -48,17 +48,15 @@ exports.parseLogs = function() {
         deletedByNickname, deletedByID,
 
         BanListID, KickListID, ComplaintListID, UploadListID, ID,
-        ID_StartPos, ID_EndPos, Nickname_StartPos, IP_StartPos, ID_Length, Nickname_Length, IP_Length,
-        ServerGroupName_StartPos, ServerGroupName_EndPos, ServerGroupName_Length,
+        ID_StartPos, ID_EndPos, Nickname_StartPos, IP_StartPos,
+        ServerGroupName_StartPos, ServerGroupName_EndPos,
         bannedByNickname_StartPos, bannedByNickname_EndPos, bannedByUID_StartPos, bannedByUID_EndPos, banReason_StartPos, banReason_EndPos, bannedIP_StartPos, bannedUID_StartPos, bannedByID_StartPos,
-        bantime_StartPos, bantime_EndPos, bannedByNickname_Length, bannedByUID_Length, banReason_Length, bantime_Length, bannedUID_Length, bannedIP_Length, bannedByID_Length,
-        kickReason_StartPos, kickedByNickname_StartPos, kickedByNickname_EndPos, kickedByUID_StartPos, kickedByUID_EndPos, kickReason_Length, kickedByNickname_Length, kickedByUID_Length,
+        bantime_StartPos, bantime_EndPos,
+        kickReason_StartPos, kickReason_EndPos, kickedByNickname_StartPos, kickedByNickname_EndPos, kickedByUID_StartPos, kickedByUID_EndPos,
         complaintAboutNickname_StartPos, complaintAboutNickname_EndPos, complaintAboutID_StartPos, complaintReason_StartPos, complaintReason_EndPos, complaintAboutID_EndPos,
         complaintByNickname_StartPos, complaintByNickname_EndPos, complaintByID_StartPos, complaintByID_EndPos,
-        complaintAboutNickname_Length, complaintAboutID_Length, complaintReason_Length, complaintByNickname_Length, complaintByID_Length,
         channelID_StartPos, channelID_EndPos, filename_StartPos, filename_EndPos, uploadedByNickname_StartPos, uploadedByNickname_EndPos, uploadedByID_StartPos, uploadedByID_EndPos,
-        channelID_Length, filename_Length, uploadedByNickname_Length, uploadedByID_Length, deletedByNickname_StartPos, deletedByNickname_EndPos, deletedByID_StartPos, deletedByID_EndPos,
-        deletedByNickname_Length, deletedByID_Length,
+        deletedByNickname_StartPos, deletedByNickname_EndPos, deletedByID_StartPos, deletedByID_EndPos,
 
         banMatch, kickMatch;
 
@@ -112,14 +110,11 @@ exports.parseLogs = function() {
                     IP_StartPos = buffer_logline.lastIndexOf(" ") + 1;
                     Nickname_StartPos = virtualServerLength + 76;
                     ID_StartPos = buffer_logline.lastIndexOf("'(id:") + 5;
-                    ID_Length = IP_StartPos - ID_StartPos - 7;
-                    Nickname_Length = ID_StartPos - Nickname_StartPos - 5;
-                    IP_Length = buffer_logline.length - IP_StartPos - 6; // - 6 for ignoring the port.
 
                     DateTime = buffer_logline.substr(0, 19);
-                    Nickname = buffer_logline.substr(Nickname_StartPos, Nickname_Length);
-                    ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
-                    IP = buffer_logline.substr(IP_StartPos, IP_Length);
+                    Nickname = buffer_logline.substring(Nickname_StartPos, ID_StartPos - 5);
+                    ID = Number(buffer_logline.substring(ID_StartPos, IP_StartPos - 7));
+                    IP = buffer_logline.substring(IP_StartPos, buffer_logline.length - 6); // -6 for ignoring the port.
 
                     if (ClientList.length < ID + 1)
                         ClientList.resizeFill(ID + 1, "Client");
@@ -157,12 +152,9 @@ exports.parseLogs = function() {
                     }
                     else ID_EndPos = buffer_logline.lastIndexOf(") reason 'reasonmsg");
 
-                    ID_Length = ID_EndPos - ID_StartPos;
-                    Nickname_Length = ID_StartPos - Nickname_StartPos - 5;
-
                     DateTime = buffer_logline.substr(0, 19);
-                    Nickname = buffer_logline.substr(Nickname_StartPos, Nickname_Length);
-                    ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
+                    Nickname = buffer_logline.substring(Nickname_StartPos, ID_StartPos - 5);
+                    ID = Number(buffer_logline.substring(ID_StartPos, ID_EndPos));
 
                     if (ClientList.length < ID + 1) {
                         ClientList.resizeFill(ID + 1, "Client");
@@ -204,32 +196,24 @@ exports.parseLogs = function() {
 
                         bantime_EndPos = buffer_logline.length - 1;
 
-                        bannedByNickname_Length = bannedByNickname_EndPos - bannedByNickname_StartPos;
-                        banReason_Length = banReason_EndPos - banReason_StartPos;
-                        bantime_Length = bantime_EndPos - bantime_StartPos;
-
-                        bannedByNickname = buffer_logline.substr(bannedByNickname_StartPos, bannedByNickname_Length);
-                        banReason = buffer_logline.substr(banReason_StartPos, banReason_Length);
-                        bantime = buffer_logline.substr(bantime_StartPos, bantime_Length);
+                        bannedByNickname = buffer_logline.substring(bannedByNickname_StartPos, bannedByNickname_EndPos);
+                        banReason = buffer_logline.substring(banReason_StartPos, banReason_EndPos);
+                        bantime = buffer_logline.substring(bantime_StartPos, bantime_EndPos);
 
                         if (validUID) {
-                            bannedByUID_Length = bannedByUID_EndPos - bannedByUID_StartPos;
-                            bannedByUID = buffer_logline.substr(bannedByUID_StartPos, bannedByUID_Length);
+                            bannedByUID = buffer_logline.substring(bannedByUID_StartPos, bannedByUID_EndPos);
                         }
                         else bannedByUID = "No UID";
 
                         if (lastUIDBanRule.length != 0 && lastIPBanRule.length != 0) {
                             if (checkFunctions.isMatchingBanRules(bannedByNickname, banReason, bantime, lastUIDBanRule, lastIPBanRule)) {
                                 bannedUID_StartPos = lastUIDBanRule.indexOf("' cluid='") + 9;
-                                bannedUID_Length = lastUIDBanRule.lastIndexOf("' bantime=") - bannedUID_StartPos;
                                 bannedIP_StartPos = lastIPBanRule.indexOf("' ip='") + 6;
-                                bannedIP_Length = lastIPBanRule.lastIndexOf("' bantime=") - bannedIP_StartPos;
                                 bannedByID_StartPos = lastIPBanRule.lastIndexOf("'(id:") + 5;
-                                bannedByID_Length = lastIPBanRule.length - bannedByID_StartPos - 1;
 
-                                bannedUID = lastUIDBanRule.substr(bannedUID_StartPos, bannedUID_Length);
-                                bannedIP = lastIPBanRule.substr(bannedIP_StartPos, bannedIP_Length);
-                                bannedByID = lastIPBanRule.substr(bannedByID_StartPos, bannedByID_Length);
+                                bannedUID = lastUIDBanRule.substring(bannedUID_StartPos, lastUIDBanRule.lastIndexOf("' bantime="));
+                                bannedIP = lastIPBanRule.substring(bannedIP_StartPos, lastIPBanRule.lastIndexOf("' bantime="));
+                                bannedByID = lastIPBanRule.substring(bannedByID_StartPos, lastIPBanRule.length - 1);
                             }
                             else {
                                 bannedUID = bannedIP = "Unknown";
@@ -248,23 +232,21 @@ exports.parseLogs = function() {
                     else if (kickMatch) {
                         if (buffer_logline.lastIndexOf(" reasonmsg=") != -1) {
                             kickReason_StartPos = buffer_logline.lastIndexOf(" reasonmsg=") + 11;
-                            kickReason_Length = buffer_logline.length - kickReason_StartPos - 1;
-                            kickReason = buffer_logline.substr(kickReason_StartPos, kickReason_Length);
+                            kickReason_EndPos = buffer_logline.length - 1;
+                            kickReason = buffer_logline.substring(kickReason_StartPos, kickReason_EndPos);
                         }
                         else kickReason = "";
 
                         kickedByNickname_StartPos = buffer_logline.lastIndexOf(" invokername=") + 13;
                         kickedByNickname_EndPos = buffer_logline.lastIndexOf(" invokeruid=");
-                        kickedByNickname_Length = kickedByNickname_EndPos - kickedByNickname_StartPos;
                         kickedByUID_StartPos = kickedByNickname_EndPos + 12;
                         if (buffer_logline.indexOf("invokeruid=serveradmin") == -1) {
                             kickedByUID_EndPos = buffer_logline.indexOf("=", kickedByUID_StartPos) + 1;
                         }
                         else kickedByUID_EndPos = buffer_logline.indexOf("reasonmsg") - 1;
-                        kickedByUID_Length = kickedByUID_EndPos - kickedByUID_StartPos;
 
-                        kickedByNickname = buffer_logline.substr(kickedByNickname_StartPos, kickedByNickname_Length);
-                        kickedByUID = buffer_logline.substr(kickedByUID_StartPos, kickedByUID_Length);
+                        kickedByNickname = buffer_logline.substring(kickedByNickname_StartPos, kickedByNickname_EndPos);
+                        kickedByUID = buffer_logline.substring(kickedByUID_StartPos, kickedByUID_EndPos);
 
                         if (!checkFunctions.isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)) {
                             KickList.resizeFill(KickListID + 1, "Kick");
@@ -283,16 +265,13 @@ exports.parseLogs = function() {
                     }
 
                     ServerGroupName_EndPos = buffer_logline.lastIndexOf("'(id:", buffer_logline.lastIndexOf(") by client '"));
-                    ServerGroupName_Length = ServerGroupName_EndPos - ServerGroupName_StartPos;
 
                     ID_StartPos = ServerGroupName_EndPos + 5;
                     ID_EndPos = buffer_logline.indexOf(")", ID_StartPos);
 
-                    ID_Length = ID_EndPos - ID_StartPos;
-
                     DateTime = buffer_logline.substr(0, 19);
-                    ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
-                    ServerGroupName = buffer_logline.substr(ServerGroupName_StartPos, ServerGroupName_Length);
+                    ID = Number(buffer_logline.substring(ID_StartPos, ID_EndPos));
+                    ServerGroupName = buffer_logline.substring(ServerGroupName_StartPos, ServerGroupName_EndPos);
 
                     var clientID = Number(buffer_logline.substr(67, buffer_logline.indexOf(") was ") - 67));
 
@@ -342,18 +321,12 @@ exports.parseLogs = function() {
                     complaintByID_StartPos = complaintByNickname_EndPos + 5;
                     complaintByID_EndPos = buffer_logline.length - 1;
 
-                    complaintAboutNickname_Length = complaintAboutNickname_EndPos - complaintAboutNickname_StartPos;
-                    complaintAboutID_Length = complaintAboutID_EndPos - complaintAboutID_StartPos;
-                    complaintReason_Length = complaintReason_EndPos - complaintReason_StartPos;
-                    complaintByNickname_Length = complaintByNickname_EndPos - complaintByNickname_StartPos;
-                    complaintByID_Length = complaintByID_EndPos - complaintByID_StartPos;
-
                     DateTime = buffer_logline.substr(0, 19);
-                    complaintAboutNickname = buffer_logline.substr(complaintAboutNickname_StartPos, complaintAboutNickname_Length);
-                    complaintAboutID = buffer_logline.substr(complaintAboutID_StartPos, complaintAboutID_Length);
-                    complaintReason = buffer_logline.substr(complaintReason_StartPos, complaintReason_Length);
-                    complaintByNickname = buffer_logline.substr(complaintByNickname_StartPos, complaintByNickname_Length);
-                    complaintByID = buffer_logline.substr(complaintByID_StartPos, complaintByID_Length);
+                    complaintAboutNickname = buffer_logline.substring(complaintAboutNickname_StartPos, complaintAboutNickname_EndPos);
+                    complaintAboutID = buffer_logline.substring(complaintAboutID_StartPos, complaintAboutID_EndPos);
+                    complaintReason = buffer_logline.substring(complaintReason_StartPos, complaintReason_EndPos);
+                    complaintByNickname = buffer_logline.substring(complaintByNickname_StartPos, complaintByNickname_EndPos);
+                    complaintByID = buffer_logline.substring(complaintByID_StartPos, complaintByID_EndPos);
 
                     if (!checkFunctions.isDuplicateComplaint(DateTime, complaintAboutNickname, Number(complaintAboutID), complaintReason, complaintByNickname, Number(complaintByID))) {
                         ComplaintList.resizeFill(ComplaintListID + 1, "Complaint");
@@ -373,16 +346,11 @@ exports.parseLogs = function() {
                     uploadedByID_StartPos = uploadedByNickname_EndPos + 5;
                     uploadedByID_EndPos = buffer_logline.length - 1;
 
-                    channelID_Length = channelID_EndPos - channelID_StartPos;
-                    filename_Length = filename_EndPos - filename_StartPos;
-                    uploadedByNickname_Length = uploadedByNickname_EndPos - uploadedByNickname_StartPos;
-                    uploadedByID_Length = uploadedByID_EndPos - uploadedByID_StartPos;
-
                     DateTime = buffer_logline.substr(0, 19);
-                    channelID = buffer_logline.substr(channelID_StartPos, channelID_Length);
-                    filename = buffer_logline.substr(filename_StartPos, filename_Length);
-                    uploadedByNickname = buffer_logline.substr(uploadedByNickname_StartPos, uploadedByNickname_Length);
-                    uploadedByID = buffer_logline.substr(uploadedByID_StartPos, uploadedByID_Length);
+                    channelID = buffer_logline.substring(channelID_StartPos, channelID_EndPos);
+                    filename = buffer_logline.substring(filename_StartPos, filename_EndPos);
+                    uploadedByNickname = buffer_logline.substring(uploadedByNickname_StartPos, uploadedByNickname_EndPos);
+                    uploadedByID = buffer_logline.substring(uploadedByID_StartPos, uploadedByID_EndPos);
 
                     if (!checkFunctions.isDuplicateUpload(DateTime, Number(channelID), filename, uploadedByNickname, Number(uploadedByID))) {
                         UploadList.resizeFill(UploadListID + 1, "Upload");
@@ -396,8 +364,8 @@ exports.parseLogs = function() {
                     if (buffer_logline.indexOf(match_deleteUser2) != -1) {
                         ID_EndPos = buffer_logline.lastIndexOf(") got deleted by client '");
                         ID_StartPos = buffer_logline.lastIndexOf("'(id:", ID_EndPos) + 5;
-                        ID_Length = ID_EndPos - ID_StartPos;
-                        ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
+
+                        ID = Number(buffer_logline.substring(ID_StartPos, ID_EndPos));
                         ClientList[ID].deleteClient();
                     }
                 }
@@ -413,15 +381,10 @@ exports.parseLogs = function() {
                     deletedByID_StartPos = deletedByNickname_EndPos + 5;
                     deletedByID_EndPos = buffer_logline.length - 1;
 
-                    channelID_Length = channelID_EndPos - channelID_StartPos;
-                    filename_Length = filename_EndPos - filename_StartPos;
-                    deletedByNickname_Length = deletedByNickname_EndPos - deletedByNickname_StartPos;
-                    deletedByID_Length = deletedByID_EndPos - deletedByID_StartPos;
-
-                    channelID = buffer_logline.substr(channelID_StartPos, channelID_Length);
-                    filename = buffer_logline.substr(filename_StartPos, filename_Length);
-                    deletedByNickname = buffer_logline.substr(deletedByNickname_StartPos, deletedByNickname_Length);
-                    deletedByID = buffer_logline.substr(deletedByID_StartPos, deletedByID_Length);
+                    channelID = buffer_logline.substring(channelID_StartPos, channelID_EndPos);
+                    filename = buffer_logline.substring(filename_StartPos, filename_EndPos);
+                    deletedByNickname = buffer_logline.substring(deletedByNickname_StartPos, deletedByNickname_EndPos);
+                    deletedByID = buffer_logline.substring(deletedByID_StartPos, deletedByID_EndPos);
 
                     Upload.addDeletedBy(Number(channelID), filename, deletedByNickname, Number(deletedByID));
                 }
@@ -448,28 +411,25 @@ exports.parseLogs = function() {
                         ID_EndPos = buffer_logline.indexOf(") was renamed to '");
                         ServerGroupName_StartPos = buffer_logline.indexOf(") was renamed to '") + 18;
                         ServerGroupName_EndPos = buffer_logline.lastIndexOf("' by '", buffer_logline.length - 1);
-                        ServerGroupName_Length = ServerGroupName_EndPos - ServerGroupName_StartPos;
                         eventType = 2;
                     }
                     else if (buffer_logline.indexOf(") was copied by '") != -1) {
                         ID_StartPos = buffer_logline.lastIndexOf("'(id:") + 5;
                         ID_EndPos = buffer_logline.length - 1;
                         ServerGroupName_StartPos = buffer_logline.indexOf(") to '") + 6;
-                        ServerGroupName_Length = ID_StartPos - 5 - ServerGroupName_StartPos;
+                        ServerGroupName_EndPos = ID_StartPos - 5;
                         eventType = 3;
                     }
 
                     if (eventType != -1) {
                         if (eventType == 0 || eventType == 1) {
                             ServerGroupName_StartPos = buffer_logline.indexOf("| servergroup '") + 15;
-                            ServerGroupName_Length = ID_StartPos - 5 - ServerGroupName_StartPos;
+                            ServerGroupName_EndPos = ID_StartPos - 5;
                         }
 
-                        ID_Length = ID_EndPos - ID_StartPos;
-
                         DateTime = buffer_logline.substr(0, 19);
-                        ID = Number(buffer_logline.substr(ID_StartPos, ID_Length));
-                        ServerGroupName = buffer_logline.substr(ServerGroupName_StartPos, ServerGroupName_Length);
+                        ID = Number(buffer_logline.substring(ID_StartPos, ID_EndPos));
+                        ServerGroupName = buffer_logline.substring(ServerGroupName_StartPos, ServerGroupName_EndPos);
 
                         switch (eventType) {
                             case 0:

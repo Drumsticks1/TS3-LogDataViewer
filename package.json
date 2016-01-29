@@ -2,11 +2,12 @@
   "name": "ts3-ldv",
   "version": "1.0.0",
   "description": "Placeholder",
-  "main": "app.js",
+  "main": "nodejs/app.js",
   "dependencies": {
     "express": "latest",
     "compression": "latest",
     "helmet": "latest",
+    "jquery": "latest",
     "tablesorter": "latest",
     "moment": "latest",
     "nanobar": "latest"

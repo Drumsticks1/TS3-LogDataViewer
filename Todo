@@ -4,7 +4,6 @@
 
 parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
-    - Shorten parsing by using the substring() function instead of substr().
 
 TS3-LogDataViewer.js:
 	- Replace the description divs with buttons for sorting after the connected and deleted state and remove the "connected" column afterwards.
