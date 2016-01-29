@@ -14,8 +14,8 @@ var ignoredLogs = [],
     ComplaintList = [],
     UploadList = [],
     programLogfile = Constants.programLogfile,
-    virtualServer = Constants.defaultVirtualServer,
-    logDirectory = Constants.defaultLogDirectory,
+    virtualServer = Constants.virtualServer,
+    logDirectory = Constants.logDirectory,
     bufferData = Constants.bufferData,
     usedPort = Constants.usedPort;
 

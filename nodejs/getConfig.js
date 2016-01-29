@@ -16,8 +16,8 @@ module.exports = {
      */
     resetToDefaultConfiguration: function() {
         outputHandler.output("Ignoring the config.json and using default settings...");
-        globalVariables.logDirectory = Constants.defaultLogDirectory;
-        globalVariables.virtualServer = Constants.defaultVirtualServer;
+        globalVariables.logDirectory = Constants.logDirectory;
+        globalVariables.virtualServer = Constants.virtualServer;
         globalVariables.bufferData = Constants.bufferData;
         globalVariables.usedPort = Constants.usedPort;
     },
@@ -53,7 +53,7 @@ module.exports = {
                         globalVariables.virtualServer = buffer;
                     } else {
                         outputHandler.output("Virtual server is not specified as a valid number - using default value...");
-                        globalVariables.virtualServer = Constants.defaultVirtualServer;
+                        globalVariables.virtualServer = Constants.virtualServer;
                     }
                 } else {
                     outputHandler.output("No virtual server specified - using default value...");
@@ -61,7 +61,7 @@ module.exports = {
 
                 if (configJSON.bufferData != undefined) {
                     buffer = configJSON.bufferData;
-                    if (buffer == false || buffer == true) {
+                    if (buffer|| !buffer) {
                         globalVariables.bufferData = buffer;
                     } else {
                         outputHandler.output("bufferData is not specified as a valid boolean (true|0|false|1) - using default value...");

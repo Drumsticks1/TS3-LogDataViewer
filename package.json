@@ -6,7 +6,10 @@
   "dependencies": {
     "express": "latest",
     "compression": "latest",
-    "helmet": "latest"
+    "helmet": "latest",
+    "tablesorter": "latest",
+    "moment": "latest",
+    "nanobar": "latest"
   },
   "devDependencies": {},
   "scripts": {

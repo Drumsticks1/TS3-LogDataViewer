@@ -1,5 +1,4 @@
 # gitignore put together by Drumsticks1.
-# Last modified: 25.01.2016
 
 # Log files
 *.log
@@ -10,17 +9,10 @@
 # node_modules folder:
 node_modules
 
-#########################
-# TS3-LDV related files #
-#########################
-
+# TS3-LDV related files
 output.json
 logignore
-lockfile
 
 # External dependencies
 foundation*.css
 foundation*.js
-jquery*.js
-moment*.js
-nanobar*.js

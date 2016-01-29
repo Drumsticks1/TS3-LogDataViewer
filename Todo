@@ -2,9 +2,6 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-- Add possibility to set logDirectory and virtualServer.
-- Comment functions.
-
 parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
     - Shorten parsing by using the substring() function instead of substr().
@@ -18,8 +15,12 @@ TS3-LogDataViewer.js:
 outputHandler.js:
     - Catch errors like "no such file or directory".
 
+createJSON.js:
+    - Check if the created json can be minimized.
+
 General:
     - Limit rebuilds server side (configurable Time between rebuild requests).
+    - Comment functions.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
 
 Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
