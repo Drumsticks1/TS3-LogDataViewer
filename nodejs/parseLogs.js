@@ -41,7 +41,7 @@ exports.parseLogs = function() {
 
     var DateTime, Nickname, IP,
         ServerGroupName,
-        lastUIDBanRule = "", lastIPBanRule = "", bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, bantime,
+        lastUIDBanRule = "", lastIPBanRule = "", bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime,
         kickedByNickname, kickedByUID, kickReason,
         complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID,
         channelID, filename, uploadedByNickname, uploadedByID,
@@ -51,7 +51,7 @@ exports.parseLogs = function() {
         ID_StartPos, ID_EndPos, Nickname_StartPos, IP_StartPos,
         ServerGroupName_StartPos, ServerGroupName_EndPos,
         bannedByNickname_StartPos, bannedByNickname_EndPos, bannedByUID_StartPos, bannedByUID_EndPos, banReason_StartPos, banReason_EndPos, bannedIP_StartPos, bannedUID_StartPos, bannedByID_StartPos,
-        bantime_StartPos, bantime_EndPos,
+        banTime_StartPos, banTime_EndPos,
         kickReason_StartPos, kickReason_EndPos, kickedByNickname_StartPos, kickedByNickname_EndPos, kickedByUID_StartPos, kickedByUID_EndPos,
         complaintAboutNickname_StartPos, complaintAboutNickname_EndPos, complaintAboutID_StartPos, complaintReason_StartPos, complaintReason_EndPos, complaintAboutID_EndPos,
         complaintByNickname_StartPos, complaintByNickname_EndPos, complaintByID_StartPos, complaintByID_EndPos,
@@ -187,18 +187,18 @@ exports.parseLogs = function() {
                         banReason_StartPos = bannedByUID_EndPos + 11;
                         if (buffer_logline.indexOf("reasonmsg=") != -1) {
                             banReason_EndPos = buffer_logline.indexOf(" bantime=", bannedByUID_EndPos);
-                            bantime_StartPos = banReason_EndPos + 9;
+                            banTime_StartPos = banReason_EndPos + 9;
                         }
                         else {
                             banReason_EndPos = banReason_StartPos;
-                            bantime_StartPos = banReason_EndPos + 8;
+                            banTime_StartPos = banReason_EndPos + 8;
                         }
 
-                        bantime_EndPos = buffer_logline.length - 1;
+                        banTime_EndPos = buffer_logline.length - 1;
 
                         bannedByNickname = buffer_logline.substring(bannedByNickname_StartPos, bannedByNickname_EndPos);
                         banReason = buffer_logline.substring(banReason_StartPos, banReason_EndPos);
-                        bantime = buffer_logline.substring(bantime_StartPos, bantime_EndPos);
+                        banTime = buffer_logline.substring(banTime_StartPos, banTime_EndPos);
 
                         if (validUID) {
                             bannedByUID = buffer_logline.substring(bannedByUID_StartPos, bannedByUID_EndPos);
@@ -206,7 +206,7 @@ exports.parseLogs = function() {
                         else bannedByUID = "No UID";
 
                         if (lastUIDBanRule.length != 0 && lastIPBanRule.length != 0) {
-                            if (checkFunctions.isMatchingBanRules(bannedByNickname, banReason, bantime, lastUIDBanRule, lastIPBanRule)) {
+                            if (checkFunctions.isMatchingBanRules(bannedByNickname, banReason, banTime, lastUIDBanRule, lastIPBanRule)) {
                                 bannedUID_StartPos = lastUIDBanRule.indexOf("' cluid='") + 9;
                                 bannedIP_StartPos = lastIPBanRule.indexOf("' ip='") + 6;
                                 bannedByID_StartPos = lastIPBanRule.lastIndexOf("'(id:") + 5;
@@ -221,9 +221,9 @@ exports.parseLogs = function() {
                             }
                         }
 
-                        if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(bantime))) {
+                        if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(banTime))) {
                             BanList.resizeFill(BanListID + 1, "Ban");
-                            BanList[BanListID].addBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(bantime));
+                            BanList[BanListID].addBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(banTime));
                             BanListID++;
                         }
                     }

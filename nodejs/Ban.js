@@ -11,7 +11,7 @@
 var Ban = function() {
     this.bannedID = 0;
     this.bannedByID = 0;
-    this.bantime = 0;
+    this.banTime = 0;
     this.banDateTime = "";
     this.bannedIP = "";
     this.bannedUID = "";
@@ -32,9 +32,9 @@ var Ban = function() {
  * @param {number} bannedByID
  * @param {string} bannedByUID
  * @param {string} banReason
- * @param {number} bantime
+ * @param {number} banTime
  */
-Ban.prototype.addBan = function(banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, bantime) {
+Ban.prototype.addBan = function(banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime) {
     this.banDateTime = banDateTime;
     this.bannedID = bannedID;
     this.bannedNickname = bannedNickname;
@@ -44,7 +44,7 @@ Ban.prototype.addBan = function(banDateTime, bannedID, bannedNickname, bannedUID
     this.bannedByNickname = bannedByNickname;
     this.bannedByUID = bannedByUID;
     this.banReason = banReason;
-    this.bantime = bantime;
+    this.banTime = banTime;
 };
 
 // Returns the requested information.
@@ -75,8 +75,8 @@ Ban.prototype.getBannedByUID = function() {
 Ban.prototype.getBanReason = function() {
     return this.banReason;
 };
-Ban.prototype.getBantime = function() {
-    return this.bantime;
+Ban.prototype.getBanTime = function() {
+    return this.banTime;
 };
 
 exports.Ban = Ban;

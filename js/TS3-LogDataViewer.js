@@ -605,7 +605,7 @@ function buildBanTable() {
         headCell_BannedByID = document.createElement("th"),
         headCell_BannedByNickname = document.createElement("th"),
         headCell_BanReason = document.createElement("th"),
-        headCell_Bantime = document.createElement("th");
+        headcell_BanTime = document.createElement("th");
 
     headCell_BanDateTime.innerHTML = "Date and Time";
     headCell_BannedID.innerHTML = "Banned ID";
@@ -614,7 +614,7 @@ function buildBanTable() {
     headCell_BannedByID.innerHTML = "Banned by ID";
     headCell_BannedByNickname.innerHTML = "Banned by Nickname";
     headCell_BanReason.innerHTML = "Reason";
-    headCell_Bantime.innerHTML = "Bantime";
+    headcell_BanTime.innerHTML = "BanTime";
 
     banHeadRow.appendChild(headCell_BanDateTime);
     banHeadRow.appendChild(headCell_BannedID);
@@ -623,7 +623,7 @@ function buildBanTable() {
     banHeadRow.appendChild(headCell_BannedByID);
     banHeadRow.appendChild(headCell_BannedByNickname);
     banHeadRow.appendChild(headCell_BanReason);
-    banHeadRow.appendChild(headCell_Bantime);
+    banHeadRow.appendChild(headcell_BanTime);
 
     banHead.appendChild(banHeadRow);
     banTable.appendChild(banHead);
@@ -645,7 +645,7 @@ function buildBanTable() {
             BanReason = Ban[i]["banReason"];
         } else BanReason = "No Reason given";
 
-        var Bantime = Ban[i]["bantime"];
+        var BanTime = Ban[i]["banTime"];
 
         var banBodyRow = document.createElement("tr");
         banBodyRow.id = "ban_" + i;
@@ -657,7 +657,7 @@ function buildBanTable() {
             cell_BannedByID = document.createElement("td"),
             cell_BannedByNickname = document.createElement("td"),
             cell_BanReason = document.createElement("td"),
-            cell_Bantime = document.createElement("td");
+            cell_BanTime = document.createElement("td");
 
         cell_BanDateTime.setAttribute("data-title", "Date and Time");
         cell_BannedID.setAttribute("data-title", "Banned ID");
@@ -666,7 +666,7 @@ function buildBanTable() {
         cell_BannedByID.setAttribute("data-title", "Banned by ID");
         cell_BannedByNickname.setAttribute("data-title", "Banned by Nickname");
         cell_BanReason.setAttribute("data-title", "Reason");
-        cell_Bantime.setAttribute("data-title", "Bantime");
+        cell_BanTime.setAttribute("data-title", "BanTime");
 
         var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime)),
             cell_BanDateTime_Div = document.createElement("div");
@@ -702,8 +702,8 @@ function buildBanTable() {
         cell_BanReason.appendChild(cell_BanReason_Div);
         banBodyRow.appendChild(cell_BanReason);
 
-        cell_Bantime.innerHTML = Bantime;
-        banBodyRow.appendChild(cell_Bantime);
+        cell_BanTime.innerHTML = BanTime;
+        banBodyRow.appendChild(cell_BanTime);
 
         banBody.appendChild(banBodyRow);
     }

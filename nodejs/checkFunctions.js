@@ -90,12 +90,12 @@ module.exports = {
      * Checks if the two ban rules are matching with a ban disconnect.
      * @param {string} bannedByNickname
      * @param {string} banReason
-     * @param {number} bantime
+     * @param {number} banTime
      * @param {string} lastUIDBanRule
      * @param {string} lastIPBanRule
      * @returns {boolean}
      */
-    isMatchingBanRules: function(bannedByNickname, banReason, bantime, lastUIDBanRule, lastIPBanRule) {
+    isMatchingBanRules: function(bannedByNickname, banReason, banTime, lastUIDBanRule, lastIPBanRule) {
         var UID = lastUIDBanRule, IP = lastIPBanRule;
         if (bannedByNickname == "Server") {
             bannedByNickname = "server";
@@ -103,7 +103,7 @@ module.exports = {
 
         if (UID.indexOf(" by client '" + bannedByNickname + "'(") != -1 && IP.indexOf(" by client '" + bannedByNickname + "'(") != -1) {
             if (UID.indexOf("| ban added reason='" + banReason + "' cluid='") != -1 && IP.indexOf("| ban added reason='" + banReason + "' ip='") != -1) {
-                if (UID.indexOf("bantime=" + bantime + " ") != -1 && IP.indexOf("bantime=" + bantime + " ") != -1) {
+                if (UID.indexOf("bantime=" + banTime + " ") != -1 && IP.indexOf("bantime=" + banTime + " ") != -1) {
                     return true;
                 }
             }
@@ -122,15 +122,15 @@ module.exports = {
      * @param {number} bannedByID
      * @param {string} bannedByUID
      * @param {string} banReason
-     * @param {number} bantime
+     * @param {number} banTime
      * @returns {boolean}
      */
-    isDuplicateBan: function(banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, bantime) {
+    isDuplicateBan: function(banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime) {
         for (var i = 0; i < BanList.length; i++) {
             if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedID() == bannedID && BanList[i].getBannedNickname() == bannedNickname &&
                 BanList[i].getBannedUID() == bannedUID && BanList[i].getBannedIP() == bannedIP && BanList[i].getBannedByID() == bannedByID &&
                 BanList[i].getBannedByNickname() == bannedByNickname && BanList[i].getBannedByUID() == bannedByUID && BanList[i].getBanReason() == banReason &&
-                BanList[i].getBantime() == bantime) return true;
+                BanList[i].getBanTime() == banTime) return true;
         }
         return false;
     },
