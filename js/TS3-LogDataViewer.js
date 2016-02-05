@@ -234,8 +234,7 @@ function importLocalStorage(table) {
 }
 
 /**
- * Todo: Better description.
- * Adds a checkbox listener for the table.
+ * Adds a checkbox listener for the table and displays/hides the navbar scroll buttons for the table.
  *
  * @param {string} table - name of the table (e.g. "clientTable").
  */
@@ -630,22 +629,22 @@ function buildBanTable() {
 
     var banBody = document.createElement("tbody");
     for (var i = 0; i < Ban.length; i++) {
-        var BanDateTime = Ban[i]["banDateTime"],
-            BannedID = Ban[i]["bannedID"],
-            BannedNickname = Ban[i]["bannedNickname"],
-            BannedIP = Ban[i]["bannedIP"],
+        var BanDateTime = Ban[i].banDateTime,
+            BannedID = Ban[i].bannedID,
+            BannedNickname = Ban[i].bannedNickname,
+            BannedIP = Ban[i].bannedIP,
             BannedByID;
         if (BannedIP != "Unknown") {
-            BannedByID = Ban[i]["bannedByID"];
+            BannedByID = Ban[i].bannedByID;
         } else BannedByID = "Unknown";
 
-        var BannedByNickname = Ban[i]["bannedByNickname"],
+        var BannedByNickname = Ban[i].bannedByNickname,
             BanReason;
-        if (Ban[i]["banReason"].length != 0) {
-            BanReason = Ban[i]["banReason"];
+        if (Ban[i].banReason.length != 0) {
+            BanReason = Ban[i].banReason;
         } else BanReason = "No Reason given";
 
-        var BanTime = Ban[i]["banTime"];
+        var BanTime = Ban[i].banTime;
 
         var banBodyRow = document.createElement("tr");
         banBodyRow.id = "ban_" + i;

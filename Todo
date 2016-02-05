@@ -10,25 +10,24 @@ TS3-LogDataViewer.js:
 		- also include a resetSort option.
 	- Add button for switching between bantime in seconds and bantime in x.
 	- Make the server group data in the client table sortable.
-
-outputHandler.js:
-    - Catch errors like "no such file or directory".
+	- check if table creation via json/ js object is faster than generating the divs.
 
 createJSON.js:
     - Check if the created json can be minimized.
+
+Ban.js:
+    - Parse Ban expiration and deletion and add it to the class.
+    - Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
+        - Add custom bans.
 
 General:
     - Limit rebuilds server side (configurable Time between rebuild requests).
     - Comment functions.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
 
-Bans: Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
-	- Add custom bans.
-
 maybe:
     - Add test cases.
 	- Add ServerGroupName history like for the nicknames in the client list.
-	- Add additional optional ignore files for the tables.
 	- Add query clients to client list or a query client list?
 	- Make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
