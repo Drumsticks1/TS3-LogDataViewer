@@ -54,11 +54,11 @@ function expandOrCollapseList(list, ID) {
     var column, upperList, collapsedCellCount;
     if (list == "ips") {
         column = 3;
-        upperList = "IPs";
+        upperList = "IP";
         collapsedCellCount = 1;
     } else {
         column = collapsedCellCount = 2;
-        upperList = "Connections";
+        upperList = "DateTime";
     }
 
     var currentDiv = document.getElementById(list + "_" + ID + "_1");
@@ -71,23 +71,23 @@ function expandOrCollapseList(list, ID) {
  * Expands the list with the given parameters.
  *
  * @param {string} list - name of the list ("connections" or "ips").
- * @param {string} upperList - name of the list with upper characters ("Connections" or "IPs").
+ * @param {string} upperList - name of the list with upper characters ("DateTime" or "IP").
  * @param {number} ID - ID of the client.
  * @param {number} column - the column ID.
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
 function expandList(list, upperList, ID, column, collapsedCellCount) {
     var x = document.getElementById(String(ID)).childNodes[column],
-        listContent = json.ClientList[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
+        listContent = json.ClientList[ID][upperList];
     document.getElementById(list + "Button_" + ID).innerHTML = "- " + (listContent.length - collapsedCellCount);
-    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
+    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "true");
     for (var j = 1; j < listContent.length; j++) {
         var currentDiv = list + "_" + ID + "_" + j;
         if (document.getElementById(currentDiv) === null) {
             var newDiv = div.cloneNode(false);
             newDiv.id = currentDiv;
-            if (collapsedCellCount == 1) newDiv.innerHTML = listContent[j].firstChild.nodeValue;
-            else newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j].firstChild.nodeValue);
+            if (collapsedCellCount == 1) newDiv.innerHTML = listContent[j];
+            else newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j]);
 
             if (column == 3) x.appendChild(newDiv);
             else x.insertBefore(newDiv, x.lastChild);
@@ -100,16 +100,15 @@ function expandList(list, upperList, ID, column, collapsedCellCount) {
  * Collapses the list with the given parameters.
  *
  * @param {string} list - name of the list ("connections" or "ips").
- * @param {string} upperList - name of the list with upper characters ("Connections" or "IPs").
+ * @param {string} upperList - name of the list with upper characters ("DateTime" or "IP").
  * @param {number} ID - ID of the client.
  * @param {number} column - the column ID.
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
 function collapseList(list, upperList, ID, column, collapsedCellCount) {
-    var listContent = json.ClientList[ID].getElementsByTagName(upperList)[0].getElementsByTagName(upperList[0]);
+    var listContent = json.ClientList[ID][upperList];
     document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
-    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "true");
-
+    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
     if (document.getElementById(String(ID)) !== null) {
         var x = document.getElementById(String(ID)).childNodes[column].childNodes;
         for (var j = 1; j < x.length - 2; j++) {
@@ -125,10 +124,10 @@ function collapseList(list, upperList, ID, column, collapsedCellCount) {
 function collapseAll() {
     var x = document.getElementById("clientTable").lastChild.childNodes;
     for (var j = 0; j < x.length; j++) {
-        if (x.item(j).childNodes.item(2).getAttribute("expanded") == "false")
-            collapseList("connections", "Connections", Number(x.item(j).getAttribute("id")), 2, 2);
+        if (x.item(j).childNodes.item(2).getAttribute("expanded") == "true")
+            collapseList("connections", "DateTime", Number(x.item(j).getAttribute("id")), 2, 2);
         if (x.item(j).childNodes.item(3).getAttribute("expanded") == "true")
-            collapseList("ips", "IPs", Number(x.item(j).getAttribute("id")), 3, 1);
+            collapseList("ips", "IP", Number(x.item(j).getAttribute("id")), 3, 1);
     }
 }
 
@@ -224,7 +223,7 @@ function switchBetweenIDAndUID() {
 
         document.getElementById(rowId).childNodes[1].setAttribute("data-title", "Banned " + idOrUid);
         document.getElementById(rowId).childNodes[4].setAttribute("data-title", "Banned by " + idOrUid);
-        document.getElementById(rowId).childNodes[1].lastChild.innerHTML = Ban[banId]["bannedBy" + idOrUid];
+        document.getElementById(rowId).childNodes[1].lastChild.innerHTML = Ban[banId]["banned" + idOrUid];
         document.getElementById(rowId).childNodes[4].lastChild.innerHTML = bannedByIDOrUD;
     }
 }
