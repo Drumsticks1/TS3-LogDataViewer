@@ -47,38 +47,35 @@ function buildNewJSON() {
 /**
  * Expands or collapses the list, depending on its current state.
  *
- * @param {string} list - name of the list ("connections" or "ips").
+ * @param {string} list - name of the list ("Connections" or "IPs").
  * @param {number} ID - ID of the client.
  */
 function expandOrCollapseList(list, ID) {
-    var column, upperList, collapsedCellCount;
-    if (list == "ips") {
+    var column, collapsedCellCount;
+    if (list == "IPs") {
         column = 3;
-        upperList = "IP";
         collapsedCellCount = 1;
     } else {
         column = collapsedCellCount = 2;
-        upperList = "DateTime";
     }
 
     var currentDiv = document.getElementById(list + "_" + ID + "_1");
     if (currentDiv === null || currentDiv.style.display == "none")
-        expandList(list, upperList, ID, column, collapsedCellCount);
-    else collapseList(list, upperList, ID, column, collapsedCellCount);
+        expandList(list, ID, column, collapsedCellCount);
+    else collapseList(list, ID, column, collapsedCellCount);
 }
 
 /**
  * Expands the list with the given parameters.
  *
- * @param {string} list - name of the list ("connections" or "ips").
- * @param {string} upperList - name of the list with upper characters ("DateTime" or "IP").
+ * @param {string} list - name of the list ("Connections" or "IPs").
  * @param {number} ID - ID of the client.
  * @param {number} column - the column ID.
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
-function expandList(list, upperList, ID, column, collapsedCellCount) {
+function expandList(list, ID, column, collapsedCellCount) {
     var x = document.getElementById(String(ID)).childNodes[column],
-        listContent = json.ClientList[ID][upperList];
+        listContent = json.ClientList[ID][list];
     document.getElementById(list + "Button_" + ID).innerHTML = "- " + (listContent.length - collapsedCellCount);
     document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "true");
     for (var j = 1; j < listContent.length; j++) {
@@ -99,14 +96,13 @@ function expandList(list, upperList, ID, column, collapsedCellCount) {
 /**
  * Collapses the list with the given parameters.
  *
- * @param {string} list - name of the list ("connections" or "ips").
- * @param {string} upperList - name of the list with upper characters ("DateTime" or "IP").
+ * @param {string} list - name of the list ("Connections" or "IPs").
  * @param {number} ID - ID of the client.
  * @param {number} column - the column ID.
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
-function collapseList(list, upperList, ID, column, collapsedCellCount) {
-    var listContent = json.ClientList[ID][upperList];
+function collapseList(list, ID, column, collapsedCellCount) {
+    var listContent = json.ClientList[ID][list];
     document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
     document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
     if (document.getElementById(String(ID)) !== null) {
@@ -125,9 +121,9 @@ function collapseAll() {
     var x = document.getElementById("clientTable").lastChild.childNodes;
     for (var j = 0; j < x.length; j++) {
         if (x.item(j).childNodes.item(2).getAttribute("expanded") == "true")
-            collapseList("connections", "DateTime", Number(x.item(j).getAttribute("id")), 2, 2);
+            collapseList("Connections", Number(x.item(j).getAttribute("id")), 2, 2);
         if (x.item(j).childNodes.item(3).getAttribute("expanded") == "true")
-            collapseList("ips", "IP", Number(x.item(j).getAttribute("id")), 3, 1);
+            collapseList("IPs", Number(x.item(j).getAttribute("id")), 3, 1);
     }
 }
 
@@ -448,12 +444,12 @@ function buildClientTable() {
     for (var i = 0; i < Client.length; i++) {
         var ID = Number(Client[i].ID);
         if (ID != 0) {
-            var Nicknames = Client[ID].Nickname,
-                Connections = Client[ID].DateTime,
-                IPs = Client[ID].IP,
+            var Nicknames = Client[ID].Nicknames,
+                Connections = Client[ID].Connections,
+                IPs = Client[ID].IPs,
                 Connection_Count = Connections.length,
-                ServerGroupIDs = Client[ID].ServerGroupID,
-                ServerGroupAssignmentDateTimes = Client[ID].ServerGroupAssignmentDateTime;
+                ServerGroupIDs = Client[ID].ServerGroupIDs,
+                ServerGroupAssignmentDateTimes = Client[ID].ServerGroupAssignmentDateTimes;
 
             var clientBodyRow = tr.cloneNode(false),
                 cell_ID = td.cloneNode(false),
@@ -485,24 +481,24 @@ function buildClientTable() {
 
             if (Connections.length > 2) {
                 var buttonExpandCollapseConnections = button.cloneNode(false);
-                buttonExpandCollapseConnections.id = "connectionsButton_" + ID;
+                buttonExpandCollapseConnections.id = "ConnectionsButton_" + ID;
                 buttonExpandCollapseConnections.innerHTML = "+ " + (Connections.length - 2);
                 (function(ID) {
                     addOnClickEvent(buttonExpandCollapseConnections, function() {
-                        expandOrCollapseList("connections", ID);
+                        expandOrCollapseList("Connections", ID);
                     });
                 })(ID);
                 cell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
             var divLastConnection = div.cloneNode(false);
-            divLastConnection.id = "connections_" + ID + "_0";
+            divLastConnection.id = "Connections_" + ID + "_0";
             divLastConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[0]);
             cell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
                 var divFirstConnection = div.cloneNode(false);
-                divFirstConnection.id = "connections_" + ID + "_" + (Connections.length - 1);
+                divFirstConnection.id = "Connections_" + ID + "_" + (Connections.length - 1);
                 divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
                 cell_Connections.appendChild(divFirstConnection);
             }
@@ -510,18 +506,18 @@ function buildClientTable() {
 
             if (IPs.length > 1) {
                 var buttonExpandCollapseIPs = button.cloneNode(false);
-                buttonExpandCollapseIPs.id = "ipsButton_" + ID;
+                buttonExpandCollapseIPs.id = "IPsButton_" + ID;
                 buttonExpandCollapseIPs.innerHTML = "+ " + (IPs.length - 1);
                 (function(ID) {
                     addOnClickEvent(buttonExpandCollapseIPs, function() {
-                        expandOrCollapseList("ips", ID);
+                        expandOrCollapseList("IPs", ID);
                     });
                 })(ID);
                 cell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
             var divLastIP = div.cloneNode(false);
-            divLastIP.id = "ips_" + ID + "_0";
+            divLastIP.id = "IPs_" + ID + "_0";
             divLastIP.innerHTML = IPs[0];
             cell_IPs.appendChild(divLastIP);
 

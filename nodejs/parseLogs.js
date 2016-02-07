@@ -58,7 +58,7 @@ exports.parseLogs = function() {
         channelID_StartPos, channelID_EndPos, filename_StartPos, filename_EndPos, uploadedByNickname_StartPos, uploadedByNickname_EndPos, uploadedByID_StartPos, uploadedByID_EndPos,
         deletedByNickname_StartPos, deletedByNickname_EndPos, deletedByID_StartPos, deletedByID_EndPos,
 
-        banMatch, kickMatch;
+        banMatch, kickMatch, lastLog;
 
     if (BanList.length > 0) BanListID = BanList.length;
     else BanListID = 0;
@@ -92,6 +92,10 @@ exports.parseLogs = function() {
     outputHandler.output("Parsing new logs...");
     for (i = 0; i < Logs.length; i++) {
         if (!Logs[i].empty) {
+            if (i + 1 == Logs.length) {
+                lastLog = true;
+            }
+
             var LogFilePath = globalVariables.logDirectory + Logs[i];
 
             var logfileData = fs.readFileSync(LogFilePath, "utf8");
@@ -123,15 +127,15 @@ exports.parseLogs = function() {
                     ClientList[ID].addNickname(Nickname);
 
                     if (globalVariables.bufferData) {
-                        if (!checkFunctions.isDuplicateDateTime(ID, DateTime)) {
-                            ClientList[ID].addDateTime(DateTime);
+                        if (!checkFunctions.isDuplicateConnection(ID, DateTime)) {
+                            ClientList[ID].addConnection(DateTime);
                         }
                     }
-                    else ClientList[ID].addDateTime(DateTime);
+                    else ClientList[ID].addConnection(DateTime);
 
                     ClientList[ID].addIP(IP);
 
-                    if (i + 1 == Logs.length) {
+                    if (lastLog) {
                         ClientList[ID].connect();
                     }
                 }
@@ -161,11 +165,11 @@ exports.parseLogs = function() {
                         ClientList[ID].addID(ID);
                     }
 
-                    if (ClientList[ID].getNicknameCount() == 0 || ClientList[ID].getUniqueNickname(0) != Nickname) {
+                    if (ClientList[ID].getNicknameCount() == 0 || ClientList[ID].getNicknameByID(0) != Nickname) {
                         ClientList[ID].addNickname(Nickname);
                     }
 
-                    if (i + 1 == Logs.length) {
+                    if (lastLog) {
                         ClientList[ID].disconnect();
                     }
 

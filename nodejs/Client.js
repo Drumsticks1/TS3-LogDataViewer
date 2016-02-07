@@ -10,12 +10,12 @@
  */
 var Client = function() {
     this.ID = 0;
-    this.Nickname = [];
-    this.DateTime = [];
-    this.IP = [];
+    this.Nicknames = [];
+    this.Connections = [];
+    this.IPs = [];
     this.ConnectedState = 0;
-    this.ServerGroupID = [];
-    this.ServerGroupAssignmentDateTime = [];
+    this.ServerGroupIDs = [];
+    this.ServerGroupAssignmentDateTimes = [];
     this.deleted = false;
 };
 
@@ -28,28 +28,28 @@ Client.prototype.getID = function() {
 };
 
 /**
- * Returns the count of the DateTime entries of the Client.
- * @returns {Number}
+ * Returns the count of the Connections.
+ * @returns {number}
  */
-Client.prototype.getDateTimeCount = function() {
-    return this.DateTime.length;
+Client.prototype.getConnectionCount = function() {
+    return this.Connections.length;
 };
 
 /**
- * Returns the count of the Nickname entries of the Client.
- * @returns {Number}
+ * Returns the count of the Nicknames.
+ * @returns {number}
  */
 Client.prototype.getNicknameCount = function() {
-    return this.Nickname.length;
+    return this.Nicknames.length;
 };
 
 /**
- * Returns the DateTime in the DateTimeID slot.
- * @param {number} DateTimeID
+ * Returns the Connection in the ConnectionID slot.
+ * @param {number} ConnectionID
  * @returns {string}
  */
-Client.prototype.getUniqueDateTime = function(DateTimeID) {
-    return this.DateTime[DateTimeID];
+Client.prototype.getConnectionByID = function(ConnectionID) {
+    return this.Connections[ConnectionID];
 };
 
 /**
@@ -57,8 +57,8 @@ Client.prototype.getUniqueDateTime = function(DateTimeID) {
  * @param {number} NicknameID
  * @returns {string}
  */
-Client.prototype.getUniqueNickname = function(NicknameID) {
-    return this.Nickname[NicknameID];
+Client.prototype.getNicknameByID = function(NicknameID) {
+    return this.Nicknames[NicknameID];
 };
 
 /**
@@ -74,33 +74,33 @@ Client.prototype.addID = function(ID) {
  * @param {string} Nickname the given Nickname.
  */
 Client.prototype.addNickname = function(Nickname) {
-    for (var i = 0; i < this.Nickname.length; i++) {
-        if (this.Nickname[i] == Nickname) {
-            this.Nickname.splice(i, 1);
+    for (var i = 0; i < this.Nicknames.length; i++) {
+        if (this.Nicknames[i] == Nickname) {
+            this.Nicknames.splice(i, 1);
         }
     }
-    this.Nickname.unshift(Nickname);
+    this.Nicknames.unshift(Nickname);
 };
 
 /**
- * Adds the given DateTime at the beginning of the DateTime list.
- * @param {string} DateTime the given DateTime.
+ * Adds the given Connection at the beginning of the Connections list.
+ * @param {string} Connection the given Connection.
  */
-Client.prototype.addDateTime = function(DateTime) {
-    this.DateTime.unshift(DateTime);
+Client.prototype.addConnection = function(Connection) {
+    this.Connections.unshift(Connection);
 };
 
 /**
- * Adds the given IP at the beginning of the IP list.
+ * Adds the given IP at the beginning of the IPs list.
  * @param {string} IP the given IP.
  */
 Client.prototype.addIP = function(IP) {
-    for (var i = 0; i < this.IP.length; i++) {
-        if (this.IP[i] == IP) {
-            this.IP.splice(i, 1);
+    for (var i = 0; i < this.IPs.length; i++) {
+        if (this.IPs[i] == IP) {
+            this.IPs.splice(i, 1);
         }
     }
-    this.IP.unshift(IP);
+    this.IPs.unshift(IP);
 };
 
 /**
@@ -139,8 +139,8 @@ Client.prototype.deleteClient = function() {
  * @param {string} ServerGroupAssignmentDateTime
  */
 Client.prototype.addServerGroup = function(ServerGroupID, ServerGroupAssignmentDateTime) {
-    this.ServerGroupID.push(ServerGroupID);
-    this.ServerGroupAssignmentDateTime.push(ServerGroupAssignmentDateTime);
+    this.ServerGroupIDs.push(ServerGroupID);
+    this.ServerGroupAssignmentDateTimes.push(ServerGroupAssignmentDateTime);
 };
 
 /**
@@ -149,10 +149,10 @@ Client.prototype.addServerGroup = function(ServerGroupID, ServerGroupAssignmentD
  */
 Client.prototype.removeServerGroupByID = function(ServerGroupID) {
     var done = false;
-    for (var i = 0; i < this.ServerGroupID.length && !done; i++) {
-        if (this.getUniqueServerGroupID(i) == ServerGroupID) {
-            this.ServerGroupID.splice(i, 1);
-            this.ServerGroupAssignmentDateTime.splice(i, 1);
+    for (var i = 0; i < this.ServerGroupIDs.length && !done; i++) {
+        if (this.getServerGroupIDByID(i) == ServerGroupID) {
+            this.ServerGroupIDs.splice(i, 1);
+            this.ServerGroupAssignmentDateTimes.splice(i, 1);
             done = true;
         }
     }
@@ -163,16 +163,16 @@ Client.prototype.removeServerGroupByID = function(ServerGroupID) {
  * @returns {Number}
  */
 Client.prototype.getServerGroupIDCount = function() {
-    return this.ServerGroupID.length;
+    return this.ServerGroupIDs.length;
 };
 
 /**
- * Returns the ServerGroupID in the ServerGroupIDPos slot.
- * @param {number} ServerGroupIDPos
+ * Returns the ServerGroupID in the ServerGroupIDsID slot.
+ * @param {number} ServerGroupIDsID
  * @returns {String}
  */
-Client.prototype.getUniqueServerGroupID = function(ServerGroupIDPos) {
-    return this.ServerGroupID[ServerGroupIDPos];
+Client.prototype.getServerGroupIDByID = function(ServerGroupIDsID) {
+    return this.ServerGroupIDs[ServerGroupIDsID];
 };
 
 exports.Client = Client;

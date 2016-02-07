@@ -23,7 +23,7 @@ module.exports = {
      */
     isDuplicateServerGroup: function(clientID, serverID) {
         for (var i = 0; i < ClientList[clientID].getServerGroupIDCount(); i++) {
-            if (ClientList[clientID].getUniqueServerGroupID(i) == serverID) {
+            if (ClientList[clientID].getServerGroupIDByID(i) == serverID) {
                 return true;
             }
         }
@@ -31,14 +31,14 @@ module.exports = {
     },
 
     /**
-     * Checks if a DateTime is already existing for the current client.
+     * Checks if a Connection is already existing for the current client.
      * @param {number} ID
-     * @param {string} DateTime
+     * @param {string} Connection
      * @returns {boolean}
      */
-    isDuplicateDateTime: function(ID, DateTime) {
-        for (var i = 0; i < ClientList[ID].getDateTimeCount(); i++) {
-            if (ClientList[ID].getUniqueDateTime(i) == DateTime) {
+    isDuplicateConnection: function(ID, Connection) {
+        for (var i = 0; i < ClientList[ID].getConnectionCount(); i++) {
+            if (ClientList[ID].getConnectionByID(i) == Connection) {
                 return true;
             }
         }
