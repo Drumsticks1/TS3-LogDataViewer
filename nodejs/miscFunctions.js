@@ -48,23 +48,37 @@ Array.prototype.resizeFill = function(length, objectName) {
 };
 
 module.exports = {
+    /**
+     * Updates the currentDate to the current date.
+     */
     updateCurrentDate: function() {
         currentDate = new Date;
     },
 
+    /**
+     * Returns the difference between the stored currentDate and the received date.
+     * @param programStart the received date.
+     * @returns {number} the difference between the dates in ms.
+     */
     getProgramRuntime: function(programStart) {
         this.updateCurrentDate();
         return currentDate.getTime() - programStart.getTime();
     },
 
-    // Returns the current UTC time as string with the format "dd.mm.yyyy hh:mm:ss".
+    /**
+     * Returns the current UTC time as string with the format "dd.mm.yyyy hh:mm:ss".
+     * @returns {string} date string with the format "dd.mm.yyyy hh:mm:ss".
+     */
     getCurrentUTC: function() {
         var t = currentDate;
         return dateToString(new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(),
             t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds(), t.getMilliseconds()));
     },
 
-    // Returns the current local time as string with the format "dd.mm.yyyy hh:mm:ss".
+    /**
+     * Returns the local time as string with the format "dd.mm.yyyy hh:mm:ss".
+     * @returns {string} date string with the format "dd.mm.yyyy hh:mm:ss".
+     */
     getCurrentLocaltime: function() {
         return dateToString(currentDate);
     },
@@ -81,6 +95,9 @@ module.exports = {
                         globalVariables.parsedLogs.length = 0;
     },
 
+    /**
+     * Resets the connectedState variable of all Clients.
+     */
     resetConnectedStates: function() {
         for (var i = 0; i < globalVariables.ClientList.length; i++) {
             globalVariables.ClientList[i].resetConnectedState();
@@ -100,9 +117,9 @@ function toDoubleDigit(x) {
 }
 
 /**
- * Returns the t as string with the format "dd.mm.yyyy hh:mm:ss".
- * @param {Date} t
- * @returns {string}
+ * Returns the a Date t as string with the format "dd.mm.yyyy hh:mm:ss".
+ * @param {Date} t the Date.
+ * @returns {string} string with the format "dd.mm.yyyy hh:mm:ss".
  */
 function dateToString(t) {
     return toDoubleDigit(t.getDate()) + "." + toDoubleDigit(t.getMonth() + 1) + "." + t.getFullYear() + " " +

@@ -10,11 +10,11 @@
  */
 var Complaint = function() {
     this.complaintDateTime = "";
+    this.complaintAboutID = 0;
     this.complaintAboutNickname = "";
     this.complaintReason = "";
-    this.complaintByNickname = "";
-    this.complaintAboutID = 0;
     this.complaintByID = 0;
+    this.complaintByNickname = "";
 };
 
 /**

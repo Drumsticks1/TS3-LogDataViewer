@@ -17,7 +17,15 @@ var Kick = function() {
     this.kickReason = "";
 };
 
-// Sets the data of the current Kick object according to the given data.
+/**
+ * Sets the data of the current Kick object according to the given data.
+ * @param {string} kickDateTime
+ * @param {number} kickedID
+ * @param {string} kickedNickname
+ * @param {string} kickedByNickname
+ * @param {string} kickedByUID
+ * @param {string} kickReason
+ */
 Kick.prototype.addKick = function(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
     this.kickDateTime = kickDateTime;
     this.kickedID = kickedID;

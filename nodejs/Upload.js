@@ -11,17 +11,24 @@ const globalVariables = require("./globalVariables.js");
  * @constructor
  */
 var Upload = function() {
-    this.channelID = 0;
-    this.uploadedByID = 0;
-    this.deletedByID = 0;
     this.uploadDateTime = "";
+    this.channelID = 0;
     this.filename = "";
+    this.uploadedByID = 0;
     this.uploadedByNickname = "";
+    this.deletedByID = 0;
     this.deletedByNickname = "";
     this.deleted = false;
 };
 
-// Sets the data of the current Upload object according to the given data.
+/**
+ * Sets the data of the current Upload object according to the given data.
+ * @param {string} uploadDateTime
+ * @param {number} channelID
+ * @param {string} filename
+ * @param {string} uploadedByNickname
+ * @param {number} uploadedByID
+ */
 Upload.prototype.addUpload = function(uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID) {
     this.uploadDateTime = uploadDateTime;
     this.channelID = channelID;
@@ -46,28 +53,38 @@ Upload.prototype.getUploadedByNickname = function() {
 Upload.prototype.getUploadedByID = function() {
     return this.uploadedByID;
 };
-Upload.prototype.getDeletedByNickname = function() {
-    return this.deletedByNickname;
-};
-Upload.prototype.getDeletedByID = function() {
-    return this.deletedByID;
-};
 
-// Sets the deleted flag to true
+/**
+ * Sets the deleted flag to true.
+ */
 Upload.prototype.deleteUpload = function() {
     this.deleted = true;
 };
 
-// Adds the deletedByNickname / deletedByID to the object.
+/**
+ * Adds the deletedByNickname to the Upload.
+ * @param {string} deletedByNickname
+ */
 Upload.prototype.addDeletedByNickname = function(deletedByNickname) {
     this.deletedByNickname = deletedByNickname;
 };
+
+/**
+ * Adds the deletedByID to the Upload.
+ * @param {number} deletedByID
+ */
 Upload.prototype.addDeletedByID = function(deletedByID) {
     this.deletedByID = deletedByID;
 };
 
-// Adds the deletedByNickname and deletedByID data to the matching Upload.
-function addDeletedBy (channelID, filename, deletedByNickname, deletedByID) {
+/**
+ * Adds the deletedByNickname and deletedByID data to the matching Upload.
+ * @param {number} channelID
+ * @param {string} filename
+ * @param {string} deletedByNickname
+ * @param {number} deletedByID
+ */
+function addDeletedBy(channelID, filename, deletedByNickname, deletedByID) {
     var shortFilename, UploadList = globalVariables.UploadList;
     if (filename.indexOf("//") != -1) {
         shortFilename = filename.substr(filename.indexOf("//") + 1);

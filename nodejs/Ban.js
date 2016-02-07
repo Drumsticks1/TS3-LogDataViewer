@@ -9,16 +9,16 @@
  * @constructor
  */
 var Ban = function() {
-    this.bannedID = 0;
-    this.bannedByID = 0;
-    this.banTime = 0;
     this.banDateTime = "";
-    this.bannedIP = "";
+    this.bannedID = 0;
     this.bannedUID = "";
     this.bannedNickname = "";
-    this.bannedByNickname = "";
+    this.bannedIP = "";
+    this.bannedByID = 0;
     this.bannedByUID = "";
+    this.bannedByNickname = "";
     this.banReason = "";
+    this.banTime = 0;
 };
 
 /**
