@@ -208,7 +208,7 @@ function switchBetweenIDAndUID() {
         banId = rowId.substring(4, rowId.length);
 
         if (uidState) {
-            if (document.getElementById(rowId).childNodes[3].firstChild.nodeValue != "Unknown") {
+            if (document.getElementById(rowId).childNodes[3].innerHTML != "Unknown") {
                 bannedByIDOrUD = Ban[banId].bannedByID;
             } else bannedByIDOrUD = "Unknown";
         } else {
@@ -219,8 +219,8 @@ function switchBetweenIDAndUID() {
 
         document.getElementById(rowId).childNodes[1].setAttribute("data-title", "Banned " + idOrUid);
         document.getElementById(rowId).childNodes[4].setAttribute("data-title", "Banned by " + idOrUid);
-        document.getElementById(rowId).childNodes[1].lastChild.innerHTML = Ban[banId]["banned" + idOrUid];
-        document.getElementById(rowId).childNodes[4].lastChild.innerHTML = bannedByIDOrUD;
+        document.getElementById(rowId).childNodes[1].innerHTML = Ban[banId]["banned" + idOrUid];
+        document.getElementById(rowId).childNodes[4].innerHTML = bannedByIDOrUD;
     }
 }
 
@@ -562,12 +562,8 @@ function buildClientTable() {
     addIPsParser();
     $(clientTable).tablesorter({
         headers: {
-            2: {
-                sorter: "Connections"
-            },
-            3: {
-                sorter: "IPs"
-            }
+            2: {sorter: "Connections"},
+            3: {sorter: "IPs"}
         },
         sortList: JSON.parse(localStorage.getItem("clientTableSortOrder"))
     }).bind("sortEnd", function() {
@@ -680,32 +676,22 @@ function buildBanTable() {
         cell_BanDateTime.appendChild(cell_BanDateTime_Div);
         banBodyRow.appendChild(cell_BanDateTime);
 
-        var cell_BannedID_Div = div.cloneNode(false);
-        cell_BannedID_Div.innerHTML = BannedID;
-        cell_BannedID.appendChild(cell_BannedID_Div);
+        cell_BannedID.innerHTML = BannedID;
         banBodyRow.appendChild(cell_BannedID);
 
-        var cell_BannedNickname_Div = div.cloneNode(false);
-        cell_BannedNickname_Div.innerHTML = BannedNickname;
-        cell_BannedNickname.appendChild(cell_BannedNickname_Div);
+        cell_BannedNickname.innerHTML = BannedNickname;
         banBodyRow.appendChild(cell_BannedNickname);
 
         cell_BannedIP.innerHTML = BannedIP;
         banBodyRow.appendChild(cell_BannedIP);
 
-        var cell_BannedByID_Div = div.cloneNode(false);
-        cell_BannedByID_Div.innerHTML = BannedByID;
-        cell_BannedByID.appendChild(cell_BannedByID_Div);
+        cell_BannedByID.innerHTML = BannedByID;
         banBodyRow.appendChild(cell_BannedByID);
 
-        var cell_BannedByNickname_Div = div.cloneNode(false);
-        cell_BannedByNickname_Div.innerHTML = BannedByNickname;
-        cell_BannedByNickname.appendChild(cell_BannedByNickname_Div);
+        cell_BannedByNickname.innerHTML = BannedByNickname;
         banBodyRow.appendChild(cell_BannedByNickname);
 
-        var cell_BanReason_Div = div.cloneNode(false);
-        cell_BanReason_Div.innerHTML = BanReason;
-        cell_BanReason.appendChild(cell_BanReason_Div);
+        cell_BanReason.innerHTML = BanReason;
         banBodyRow.appendChild(cell_BanReason);
 
         cell_BanTime.innerHTML = BanTime;
@@ -727,9 +713,7 @@ function buildBanTable() {
     addIgnoreMomentParser();
     $(banTable).tablesorter({
         headers: {
-            0: {
-                sorter: "ignoreMoment"
-            }
+            0: {sorter: "ignoreMoment"}
         },
         sortList: JSON.parse(localStorage.getItem("banTableSortOrder"))
     }).bind("sortEnd", function() {
@@ -815,24 +799,15 @@ function buildKickTable() {
         cell_KickedID.innerHTML = KickedID;
         kickBodyRow.appendChild(cell_KickedID);
 
-        var cell_KickedNickname_Div = div.cloneNode(false);
-        cell_KickedNickname_Div.innerHTML = KickedNickname;
-        cell_KickedNickname.appendChild(cell_KickedNickname_Div);
+        cell_KickedNickname.innerHTML = KickedNickname;
         kickBodyRow.appendChild(cell_KickedNickname);
-
-        var cell_KickedByNickname_Div = div.cloneNode(false);
-        cell_KickedByNickname_Div.innerHTML = KickedByNickname;
-        cell_KickedByNickname.appendChild(cell_KickedByNickname_Div);
+        cell_KickedByNickname.innerHTML = KickedByNickname;
         kickBodyRow.appendChild(cell_KickedByNickname);
 
-        var cell_KickedByUID_Div = div.cloneNode(false);
-        cell_KickedByUID_Div.innerHTML = KickedByUID;
-        cell_KickedByUID.appendChild(cell_KickedByUID_Div);
+        cell_KickedByUID.innerHTML = KickedByUID;
         kickBodyRow.appendChild(cell_KickedByUID);
 
-        var cell_KickReason_Div = div.cloneNode(false);
-        cell_KickReason_Div.innerHTML = KickReason;
-        cell_KickReason.appendChild(cell_KickReason_Div);
+        cell_KickReason.innerHTML = KickReason;
         kickBodyRow.appendChild(cell_KickReason);
 
         kickBody.appendChild(kickBodyRow);
@@ -846,9 +821,7 @@ function buildKickTable() {
     addIgnoreMomentParser();
     $(kickTable).tablesorter({
         headers: {
-            0: {
-                sorter: "ignoreMoment"
-            }
+            0: {sorter: "ignoreMoment"}
         },
         sortList: JSON.parse(localStorage.getItem("kickTableSortOrder"))
     }).bind("sortEnd", function() {
@@ -931,22 +904,16 @@ function buildComplaintTable() {
         cell_ComplaintAboutID.innerHTML = ComplaintAboutID;
         complaintBodyRow.appendChild(cell_ComplaintAboutID);
 
-        var cell_ComplaintAboutNickname_Div = div.cloneNode(false);
-        cell_ComplaintAboutNickname_Div.innerHTML = ComplaintAboutNickname;
-        cell_ComplaintAboutNickname.appendChild(cell_ComplaintAboutNickname_Div);
+        cell_ComplaintAboutNickname.innerHTML = ComplaintAboutNickname;
         complaintBodyRow.appendChild(cell_ComplaintAboutNickname);
 
-        var cell_ComplaintReason_Div = div.cloneNode(false);
-        cell_ComplaintReason_Div.innerHTML = ComplaintReason;
-        cell_ComplaintReason.appendChild(cell_ComplaintReason_Div);
+        cell_ComplaintReason.innerHTML = ComplaintReason;
         complaintBodyRow.appendChild(cell_ComplaintReason);
 
         cell_ComplaintByID.innerHTML = ComplaintByID;
         complaintBodyRow.appendChild(cell_ComplaintByID);
 
-        var cell_ComplaintByNickname_Div = div.cloneNode(false);
-        cell_ComplaintByNickname_Div.innerHTML = ComplaintByNickname;
-        cell_ComplaintByNickname.appendChild(cell_ComplaintByNickname_Div);
+        cell_ComplaintByNickname.innerHTML = ComplaintByNickname;
         complaintBodyRow.appendChild(cell_ComplaintByNickname);
 
         complaintBody.appendChild(complaintBodyRow);
@@ -960,9 +927,7 @@ function buildComplaintTable() {
     addIgnoreMomentParser();
     $(complaintTable).tablesorter({
         headers: {
-            0: {
-                sorter: "ignoreMoment"
-            }
+            0: {sorter: "ignoreMoment"}
         },
         sortList: JSON.parse(localStorage.getItem("complaintTableSortOrder"))
     }).bind("sortEnd", function() {
@@ -1058,25 +1023,19 @@ function buildUploadTable() {
         cell_ChannelID.innerHTML = ChannelID;
         uploadBodyRow.appendChild(cell_ChannelID);
 
-        var cell_Filename_Div = div.cloneNode(false);
-        cell_Filename_Div.innerHTML = Filename;
-        cell_Filename.appendChild(cell_Filename_Div);
+        cell_Filename.innerHTML = Filename;
         uploadBodyRow.appendChild(cell_Filename);
 
         cell_UploadedByID.innerHTML = UploadedByID;
         uploadBodyRow.appendChild(cell_UploadedByID);
 
-        var cell_UploadedByNickname_Div = div.cloneNode(false);
-        cell_UploadedByNickname_Div.innerHTML = UploadedByNickname;
-        cell_UploadedByNickname.appendChild(cell_UploadedByNickname_Div);
+        cell_UploadedByNickname.innerHTML = UploadedByNickname;
         uploadBodyRow.appendChild(cell_UploadedByNickname);
 
         cell_DeletedByID.innerHTML = DeletedByID;
         uploadBodyRow.appendChild(cell_DeletedByID);
 
-        var cell_DeletedByNickname_Div = div.cloneNode(false);
-        cell_DeletedByNickname_Div.innerHTML = DeletedByNickname;
-        cell_DeletedByNickname.appendChild(cell_DeletedByNickname_Div);
+        cell_DeletedByNickname.innerHTML = DeletedByNickname;
         uploadBodyRow.appendChild(cell_DeletedByNickname);
 
         uploadBody.appendChild(uploadBodyRow);
@@ -1090,9 +1049,7 @@ function buildUploadTable() {
     addIgnoreMomentParser();
     $(uploadTable).tablesorter({
         headers: {
-            0: {
-                sorter: "ignoreMoment"
-            }
+            0: {sorter: "ignoreMoment"}
         },
         sortList: JSON.parse(localStorage.getItem("uploadTableSortOrder"))
     }).bind("sortEnd", function() {
@@ -1162,6 +1119,7 @@ function buildTables() {
     $.ajax({
         url: "./output.json",
         cache: false,
+        dataType: "json",
         error: function() {
             if (rebuildError) alert("Rebuilding failed!");
             else {
