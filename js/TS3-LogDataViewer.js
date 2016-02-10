@@ -10,7 +10,8 @@
 var connectedClientsCount, nanobar, momentInterval, json, rebuildError = false,
     eventListeners = [],
     tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
-    tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
+    tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"],
+    tableBuffer = [];
 
 /**
  * Nodes for cloning
@@ -252,7 +253,8 @@ function addTableCheckboxListener(table) {
             localStorage.setItem(table, "1");
             if (sessionStorage.getItem(table + "-built") == "0") {
                 nanobar.go(50);
-                buildTable(table);
+                buildTableWithAlertCheckAndLocalStorage(table);
+                appendBufferedTables();
                 nanobar.go(100);
             }
             document.getElementById("ts3-" + table).style.display =
@@ -348,6 +350,17 @@ function resetSorting() {
         $(document.getElementById(tables[i])).trigger("sortReset");
         localStorage.setItem(tables[i] + "SortOrder", JSON.stringify([]));
     }
+}
+
+/**
+ * Appends the buffered built tables to their divs and clears the buffer array.
+ */
+function appendBufferedTables() {
+    for (var i = 0; i < tableBuffer.length; i++) {
+        document.getElementById("ts3-" + tableBuffer[i].id).appendChild(tableBuffer[i]);
+        $(tableBuffer[i]).trigger("applyWidgetId", ["stickyHeaders"]);
+    }
+    tableBuffer.length = 0;
 }
 
 /**
@@ -556,7 +569,6 @@ function buildClientTable() {
     clientTable.appendChild(clientBody);
     clientTable.id = "clientTable";
     clientTable.className += "ui-table-reflow";
-    document.getElementById("ts3-clientTable").appendChild(clientTable);
 
     addConnectionsParser();
     addIPsParser();
@@ -568,7 +580,9 @@ function buildClientTable() {
         sortList: JSON.parse(localStorage.getItem("clientTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("clientTableSortOrder", JSON.stringify(clientTable.config.sortList));
-    }).trigger("applyWidgetId", ["stickyHeaders"]);
+    });
+
+    tableBuffer.push(clientTable);
 }
 
 /**
@@ -703,7 +717,6 @@ function buildBanTable() {
 
     banTable.id = "banTable";
     banTable.className += "ui-table-reflow";
-    document.getElementById("ts3-banTable").appendChild(banTable);
 
     if (localStorage.getItem("uidState") == "1") {
         localStorage.setItem("uidState", "0");
@@ -718,7 +731,9 @@ function buildBanTable() {
         sortList: JSON.parse(localStorage.getItem("banTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("banTableSortOrder", JSON.stringify(banTable.config.sortList));
-    }).trigger("applyWidgetId", ["stickyHeaders"]);
+    });
+
+    tableBuffer.push(banTable);
 }
 
 /**
@@ -816,7 +831,6 @@ function buildKickTable() {
 
     kickTable.id = "kickTable";
     kickTable.className += "ui-table-reflow";
-    document.getElementById("ts3-kickTable").appendChild(kickTable);
 
     addIgnoreMomentParser();
     $(kickTable).tablesorter({
@@ -826,7 +840,9 @@ function buildKickTable() {
         sortList: JSON.parse(localStorage.getItem("kickTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("kickTableSortOrder", JSON.stringify(kickTable.config.sortList));
-    }).trigger("applyWidgetId", ["stickyHeaders"]);
+    });
+
+    tableBuffer.push(kickTable);
 }
 
 /**
@@ -922,7 +938,6 @@ function buildComplaintTable() {
 
     complaintTable.id = "complaintTable";
     complaintTable.className += "ui-table-reflow";
-    document.getElementById("ts3-complaintTable").appendChild(complaintTable);
 
     addIgnoreMomentParser();
     $(complaintTable).tablesorter({
@@ -932,7 +947,9 @@ function buildComplaintTable() {
         sortList: JSON.parse(localStorage.getItem("complaintTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("complaintTableSortOrder", JSON.stringify(complaintTable.config.sortList));
-    }).trigger("applyWidgetId", ["stickyHeaders"]);
+    });
+
+    tableBuffer.push(complaintTable);
 }
 
 /**
@@ -1044,7 +1061,6 @@ function buildUploadTable() {
 
     uploadTable.id = "uploadTable";
     uploadTable.className += "ui-table-reflow";
-    document.getElementById("ts3-uploadTable").appendChild(uploadTable);
 
     addIgnoreMomentParser();
     $(uploadTable).tablesorter({
@@ -1054,7 +1070,9 @@ function buildUploadTable() {
         sortList: JSON.parse(localStorage.getItem("uploadTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("uploadTableSortOrder", JSON.stringify(uploadTable.config.sortList));
-    }).trigger("applyWidgetId", ["stickyHeaders"]);
+    });
+
+    tableBuffer.push(uploadTable);
 }
 
 /**
@@ -1136,6 +1154,8 @@ function buildTables() {
             for (var i = 0; i < tables.length; i++) {
                 buildTableWithAlertCheckAndLocalStorage(tables[i]);
             }
+
+            appendBufferedTables();
 
             var Attributes = json.Attributes,
                 creationTimestampUTC = Attributes.creationTimestamp_UTC;
