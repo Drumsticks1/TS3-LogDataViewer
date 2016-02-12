@@ -14,18 +14,6 @@ var connectedClientsCount, nanobar, momentInterval, json, rebuildError = false,
     tableBuffer = [];
 
 /**
- * Nodes for cloning
- */
-var div = document.createElement("div"),
-    button = document.createElement("button"),
-    table = document.createElement("table"),
-    thead = document.createElement("thead"),
-    tbody = document.createElement("tbody"),
-    tr = document.createElement("tr"),
-    th = document.createElement("th"),
-    td = document.createElement("td");
-
-/**
  * Rebuilds the JSON and calls buildTables() when the JSON is fetched.
  */
 function rebuildJSON() {
@@ -82,7 +70,7 @@ function expandList(list, ID, column, collapsedCellCount) {
     for (var j = 1; j < listContent.length; j++) {
         var currentDiv = list + "_" + ID + "_" + j;
         if (document.getElementById(currentDiv) === null) {
-            var newDiv = div.cloneNode(false);
+            var newDiv = document.createElement("div");
             newDiv.id = currentDiv;
             if (collapsedCellCount == 1) newDiv.innerHTML = listContent[j];
             else newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j]);
@@ -252,10 +240,8 @@ function addTableCheckboxListener(table) {
         if (this.checked) {
             localStorage.setItem(table, "1");
             if (sessionStorage.getItem(table + "-built") == "0") {
-                nanobar.go(50);
                 buildTableWithAlertCheckAndLocalStorage(table);
                 appendBufferedTables();
-                nanobar.go(100);
             }
             document.getElementById("ts3-" + table).style.display =
                 document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "";
@@ -339,7 +325,6 @@ function removeEventListeners() {
  */
 function getServerGroupByID(ID) {
     return json.ServerGroupList[ID].ServerGroupName;
-
 }
 
 /**
@@ -356,26 +341,26 @@ function resetSorting() {
  * Appends the buffered built tables to their divs and clears the buffer array.
  */
 function appendBufferedTables() {
-    for (var i = 0; i < tableBuffer.length; i++) {
-        document.getElementById("ts3-" + tableBuffer[i].id).appendChild(tableBuffer[i]);
-        $(tableBuffer[i]).trigger("applyWidgetId", ["stickyHeaders"]);
+    while (tableBuffer.length) {
+        document.getElementById("ts3-" + tableBuffer[0].id).appendChild(tableBuffer[0]);
+        $(tableBuffer[0]).trigger("applyWidgetId", ["stickyHeaders"]);
+        tableBuffer.shift();
     }
-    tableBuffer.length = 0;
 }
 
 /**
  * Builds the client table.
  */
 function buildClientTable() {
-    var clientTableControlSection = div.cloneNode(false);
+    var clientTableControlSection = document.createElement("div");
     clientTableControlSection.className = "row";
 
-    var clientTableHeading = div.cloneNode(false);
+    var clientTableHeading = document.createElement("div");
     clientTableHeading.className = "tableheading large-12 columns";
     clientTableHeading.innerHTML = "Client table";
     clientTableControlSection.appendChild(clientTableHeading);
 
-    var connectionsSortTypeButton = button.cloneNode(false);
+    var connectionsSortTypeButton = document.createElement("button");
     connectionsSortTypeButton.id = "connectionsSortTypeButton";
     connectionsSortTypeButton.className = "small-12 medium-8 large-6 columns";
     connectionsSortTypeButton.innerHTML = "Currently sorting connections by the last connect";
@@ -399,7 +384,7 @@ function buildClientTable() {
     });
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
-    var collapseAllButton = button.cloneNode(false);
+    var collapseAllButton = document.createElement("button");
     collapseAllButton.id = "collapseAllButton";
     collapseAllButton.className = "small-12 medium-4 large-6 columns";
     collapseAllButton.innerHTML = "Collapse expanded lists";
@@ -409,8 +394,8 @@ function buildClientTable() {
     });
     clientTableControlSection.appendChild(collapseAllButton);
 
-    var coloredRowsDescription_green = div.cloneNode(false),
-        coloredRowsDescription_grey = div.cloneNode(false);
+    var coloredRowsDescription_green = document.createElement("div"),
+        coloredRowsDescription_grey = document.createElement("div");
     coloredRowsDescription_green.id = "description_connected";
     coloredRowsDescription_grey.id = "description_deleted";
     coloredRowsDescription_green.className = coloredRowsDescription_grey.className = "small-6 columns";
@@ -423,16 +408,16 @@ function buildClientTable() {
     document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
 
     var Client = json.ClientList,
-        clientTable = table.cloneNode(false),
-        clientHead = thead.cloneNode(false),
-        clientHeadRow = tr.cloneNode(false),
-        headCell_ID = th.cloneNode(false),
-        headCell_Nicknames = th.cloneNode(false),
-        headCell_Connections = th.cloneNode(false),
-        headCell_IPs = th.cloneNode(false),
-        headCell_Connects = th.cloneNode(false),
-        headCell_Connected = th.cloneNode(false),
-        headCell_ServerGroupInfo = th.cloneNode(false);
+        clientTable = document.createElement("table"),
+        clientHead = document.createElement("thead"),
+        clientHeadRow = document.createElement("tr"),
+        headCell_ID = document.createElement("th"),
+        headCell_Nicknames = document.createElement("th"),
+        headCell_Connections = document.createElement("th"),
+        headCell_IPs = document.createElement("th"),
+        headCell_Connects = document.createElement("th"),
+        headCell_Connected = document.createElement("th"),
+        headCell_ServerGroupInfo = document.createElement("th");
 
     headCell_ID.innerHTML = "ID";
     headCell_Nicknames.innerHTML = "Nicknames";
@@ -453,7 +438,7 @@ function buildClientTable() {
     clientHead.appendChild(clientHeadRow);
     clientTable.appendChild(clientHead);
 
-    var clientBody = tbody.cloneNode(false);
+    var clientBody = document.createElement("tbody");
     for (var i = 0; i < Client.length; i++) {
         var ID = Number(Client[i].ID);
         if (ID != 0) {
@@ -464,14 +449,14 @@ function buildClientTable() {
                 ServerGroupIDs = Client[ID].ServerGroupIDs,
                 ServerGroupAssignmentDateTimes = Client[ID].ServerGroupAssignmentDateTimes;
 
-            var clientBodyRow = tr.cloneNode(false),
-                cell_ID = td.cloneNode(false),
-                cell_Nicknames = td.cloneNode(false),
-                cell_Connections = td.cloneNode(false),
-                cell_IPs = td.cloneNode(false),
-                cell_Connects = td.cloneNode(false),
-                cell_Connected = td.cloneNode(false),
-                cell_ServerGroupInfo = td.cloneNode(false);
+            var clientBodyRow = document.createElement("tr"),
+                cell_ID = document.createElement("td"),
+                cell_Nicknames = document.createElement("td"),
+                cell_Connections = document.createElement("td"),
+                cell_IPs = document.createElement("td"),
+                cell_Connects = document.createElement("td"),
+                cell_Connected = document.createElement("td"),
+                cell_ServerGroupInfo = document.createElement("td");
 
             clientBodyRow.id = ID;
             cell_ID.setAttribute("data-title", "ID");
@@ -486,14 +471,14 @@ function buildClientTable() {
             clientBodyRow.appendChild(cell_ID);
 
             for (var j = 0; j < Nicknames.length; j++) {
-                var divNicknames = div.cloneNode(false);
+                var divNicknames = document.createElement("div");
                 divNicknames.innerHTML = Nicknames[j];
                 cell_Nicknames.appendChild(divNicknames);
             }
             clientBodyRow.appendChild(cell_Nicknames);
 
             if (Connections.length > 2) {
-                var buttonExpandCollapseConnections = button.cloneNode(false);
+                var buttonExpandCollapseConnections = document.createElement("button");
                 buttonExpandCollapseConnections.id = "ConnectionsButton_" + ID;
                 buttonExpandCollapseConnections.innerHTML = "+ " + (Connections.length - 2);
                 (function(ID) {
@@ -504,13 +489,13 @@ function buildClientTable() {
                 cell_Connections.appendChild(buttonExpandCollapseConnections);
             }
 
-            var divLastConnection = div.cloneNode(false);
+            var divLastConnection = document.createElement("div");
             divLastConnection.id = "Connections_" + ID + "_0";
             divLastConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[0]);
             cell_Connections.appendChild(divLastConnection);
 
             if (Connections.length > 1) {
-                var divFirstConnection = div.cloneNode(false);
+                var divFirstConnection = document.createElement("div");
                 divFirstConnection.id = "Connections_" + ID + "_" + (Connections.length - 1);
                 divFirstConnection.innerHTML = UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
                 cell_Connections.appendChild(divFirstConnection);
@@ -518,7 +503,7 @@ function buildClientTable() {
             clientBodyRow.appendChild(cell_Connections);
 
             if (IPs.length > 1) {
-                var buttonExpandCollapseIPs = button.cloneNode(false);
+                var buttonExpandCollapseIPs = document.createElement("button");
                 buttonExpandCollapseIPs.id = "IPsButton_" + ID;
                 buttonExpandCollapseIPs.innerHTML = "+ " + (IPs.length - 1);
                 (function(ID) {
@@ -529,7 +514,7 @@ function buildClientTable() {
                 cell_IPs.appendChild(buttonExpandCollapseIPs);
             }
 
-            var divLastIP = div.cloneNode(false);
+            var divLastIP = document.createElement("div");
             divLastIP.id = "IPs_" + ID + "_0";
             divLastIP.innerHTML = IPs[0];
             cell_IPs.appendChild(divLastIP);
@@ -553,8 +538,8 @@ function buildClientTable() {
 
 
             for (j = 0; j < ServerGroupIDs.length; j++) {
-                var divName = div.cloneNode(false),
-                    divDateTime = div.cloneNode(false);
+                var divName = document.createElement("div"),
+                    divDateTime = document.createElement("div");
                 divName.innerHTML = getServerGroupByID(Number(ServerGroupIDs[j]));
                 divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format("YYYY-MM-DD HH:mm:ss");
 
@@ -593,15 +578,15 @@ function buildBanTable() {
         localStorage.setItem("uidState", "0");
     }
 
-    var banTableControlSection = div.cloneNode(false);
+    var banTableControlSection = document.createElement("div");
     banTableControlSection.className = "row";
 
-    var banTableHeading = div.cloneNode(false);
+    var banTableHeading = document.createElement("div");
     banTableHeading.className = "tableheading large-12 columns";
     banTableHeading.innerHTML = "Ban table";
     banTableControlSection.appendChild(banTableHeading);
 
-    var switchBetweenIDandUIDButton = button.cloneNode(false);
+    var switchBetweenIDandUIDButton = document.createElement("button");
     switchBetweenIDandUIDButton.id = "switchBetweenIDandUIDButton";
     switchBetweenIDandUIDButton.innerHTML = "Switch between IDs and UIDs";
     addOnClickEvent(switchBetweenIDandUIDButton, function() {
@@ -611,17 +596,17 @@ function buildBanTable() {
     document.getElementById("ts3-banTable").appendChild(banTableControlSection);
 
     var Ban = json.BanList,
-        banTable = table.cloneNode(false),
-        banHead = thead.cloneNode(false),
-        banHeadRow = tr.cloneNode(false),
-        headCell_BanDateTime = th.cloneNode(false),
-        headCell_BannedID = th.cloneNode(false),
-        headCell_BannedNickname = th.cloneNode(false),
-        headCell_BannedIP = th.cloneNode(false),
-        headCell_BannedByID = th.cloneNode(false),
-        headCell_BannedByNickname = th.cloneNode(false),
-        headCell_BanReason = th.cloneNode(false),
-        headCell_BanTime = th.cloneNode(false);
+        banTable = document.createElement("table"),
+        banHead = document.createElement("thead"),
+        banHeadRow = document.createElement("tr"),
+        headCell_BanDateTime = document.createElement("th"),
+        headCell_BannedID = document.createElement("th"),
+        headCell_BannedNickname = document.createElement("th"),
+        headCell_BannedIP = document.createElement("th"),
+        headCell_BannedByID = document.createElement("th"),
+        headCell_BannedByNickname = document.createElement("th"),
+        headCell_BanReason = document.createElement("th"),
+        headCell_BanTime = document.createElement("th");
 
     headCell_BanDateTime.innerHTML = "Date and Time";
     headCell_BannedID.innerHTML = "Banned ID";
@@ -644,7 +629,7 @@ function buildBanTable() {
     banHead.appendChild(banHeadRow);
     banTable.appendChild(banHead);
 
-    var banBody = tbody.cloneNode(false);
+    var banBody = document.createElement("tbody");
     for (var i = 0; i < Ban.length; i++) {
         var BanDateTime = Ban[i].banDateTime,
             BannedID = Ban[i].bannedID,
@@ -663,17 +648,17 @@ function buildBanTable() {
 
         var BanTime = Ban[i].banTime;
 
-        var banBodyRow = tr.cloneNode(false);
+        var banBodyRow = document.createElement("tr");
         banBodyRow.id = "ban_" + i;
 
-        var cell_BanDateTime = td.cloneNode(false),
-            cell_BannedID = td.cloneNode(false),
-            cell_BannedNickname = td.cloneNode(false),
-            cell_BannedIP = td.cloneNode(false),
-            cell_BannedByID = td.cloneNode(false),
-            cell_BannedByNickname = td.cloneNode(false),
-            cell_BanReason = td.cloneNode(false),
-            cell_BanTime = td.cloneNode(false);
+        var cell_BanDateTime = document.createElement("td"),
+            cell_BannedID = document.createElement("td"),
+            cell_BannedNickname = document.createElement("td"),
+            cell_BannedIP = document.createElement("td"),
+            cell_BannedByID = document.createElement("td"),
+            cell_BannedByNickname = document.createElement("td"),
+            cell_BanReason = document.createElement("td"),
+            cell_BanTime = document.createElement("td");
 
         cell_BanDateTime.setAttribute("data-title", "Date and Time");
         cell_BannedID.setAttribute("data-title", "Banned ID");
@@ -685,7 +670,7 @@ function buildBanTable() {
         cell_BanTime.setAttribute("data-title", "BanTime");
 
         var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime)),
-            cell_BanDateTime_Div = div.cloneNode(false);
+            cell_BanDateTime_Div = document.createElement("div");
         cell_BanDateTime_Div.innerHTML = UTCBanDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCBanDateTime.fromNow() + ")";
         cell_BanDateTime.appendChild(cell_BanDateTime_Div);
         banBodyRow.appendChild(cell_BanDateTime);
@@ -740,10 +725,10 @@ function buildBanTable() {
  * Builds the kick table.
  */
 function buildKickTable() {
-    var kickTableControlSection = div.cloneNode(false);
+    var kickTableControlSection = document.createElement("div");
     kickTableControlSection.className = "row";
 
-    var kickTableHeading = div.cloneNode(false);
+    var kickTableHeading = document.createElement("div");
     kickTableHeading.className = "tableheading large-12 columns";
     kickTableHeading.innerHTML = "Kick table";
     kickTableControlSection.appendChild(kickTableHeading);
@@ -751,15 +736,15 @@ function buildKickTable() {
     document.getElementById("ts3-kickTable").appendChild(kickTableControlSection);
 
     var Kick = json.KickList,
-        kickTable = table.cloneNode(false),
-        kickHead = thead.cloneNode(false),
-        kickHeadRow = tr.cloneNode(false),
-        headCell_KickDateTime = th.cloneNode(false),
-        headCell_KickedID = th.cloneNode(false),
-        headCell_KickedNickname = th.cloneNode(false),
-        headCell_KickedByNickname = th.cloneNode(false),
-        headCell_KickedByUID = th.cloneNode(false),
-        headCell_KickReason = th.cloneNode(false);
+        kickTable = document.createElement("table"),
+        kickHead = document.createElement("thead"),
+        kickHeadRow = document.createElement("tr"),
+        headCell_KickDateTime = document.createElement("th"),
+        headCell_KickedID = document.createElement("th"),
+        headCell_KickedNickname = document.createElement("th"),
+        headCell_KickedByNickname = document.createElement("th"),
+        headCell_KickedByUID = document.createElement("th"),
+        headCell_KickReason = document.createElement("th");
 
     headCell_KickDateTime.innerHTML = "Date and Time";
     headCell_KickedID.innerHTML = "Kicked Client ID";
@@ -778,7 +763,7 @@ function buildKickTable() {
     kickHead.appendChild(kickHeadRow);
     kickTable.appendChild(kickHead);
 
-    var kickBody = tbody.cloneNode(false);
+    var kickBody = document.createElement("tbody");
     for (var i = 0; i < Kick.length; i++) {
         var KickDateTime = Kick[i].kickDateTime,
             KickedID = Kick[i].kickedID,
@@ -790,13 +775,13 @@ function buildKickTable() {
             KickReason = Kick[i].kickReason;
         } else KickReason = "No Reason given";
 
-        var kickBodyRow = tr.cloneNode(false),
-            cell_DateTime = td.cloneNode(false),
-            cell_KickedID = td.cloneNode(false),
-            cell_KickedNickname = td.cloneNode(false),
-            cell_KickedByNickname = td.cloneNode(false),
-            cell_KickedByUID = td.cloneNode(false),
-            cell_KickReason = td.cloneNode(false);
+        var kickBodyRow = document.createElement("tr"),
+            cell_DateTime = document.createElement("td"),
+            cell_KickedID = document.createElement("td"),
+            cell_KickedNickname = document.createElement("td"),
+            cell_KickedByNickname = document.createElement("td"),
+            cell_KickedByUID = document.createElement("td"),
+            cell_KickReason = document.createElement("td");
 
         cell_DateTime.setAttribute("data-title", "Date and Time");
         cell_KickedID.setAttribute("data-title", "Kicked ID");
@@ -806,7 +791,7 @@ function buildKickTable() {
         cell_KickReason.setAttribute("data-title", "Reason");
 
         var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime)),
-            cell_DateTime_Div = div.cloneNode(false);
+            cell_DateTime_Div = document.createElement("div");
         cell_DateTime_Div.innerHTML = UTCKickDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCKickDateTime.fromNow() + ")";
         cell_DateTime.appendChild(cell_DateTime_Div);
         kickBodyRow.appendChild(cell_DateTime);
@@ -849,10 +834,10 @@ function buildKickTable() {
  * Builds the complaint table.
  */
 function buildComplaintTable() {
-    var complaintTableControlSection = div.cloneNode(false);
+    var complaintTableControlSection = document.createElement("div");
     complaintTableControlSection.className = "row";
 
-    var complaintTableHeading = div.cloneNode(false);
+    var complaintTableHeading = document.createElement("div");
     complaintTableHeading.className = "tableheading large-12 columns";
     complaintTableHeading.innerHTML = "Complaint table";
     complaintTableControlSection.appendChild(complaintTableHeading);
@@ -860,15 +845,15 @@ function buildComplaintTable() {
     document.getElementById("ts3-complaintTable").appendChild(complaintTableControlSection);
 
     var Complaint = json.ComplaintList,
-        complaintTable = table.cloneNode(false),
-        complaintHead = thead.cloneNode(false),
-        complaintHeadRow = tr.cloneNode(false),
-        headCell_ComplaintDateTime = th.cloneNode(false),
-        headCell_ComplaintAboutID = th.cloneNode(false),
-        headCell_ComplaintAboutNickname = th.cloneNode(false),
-        headCell_ComplaintReason = th.cloneNode(false),
-        headCell_ComplaintByID = th.cloneNode(false),
-        headCell_ComplaintByNickname = th.cloneNode(false);
+        complaintTable = document.createElement("table"),
+        complaintHead = document.createElement("thead"),
+        complaintHeadRow = document.createElement("tr"),
+        headCell_ComplaintDateTime = document.createElement("th"),
+        headCell_ComplaintAboutID = document.createElement("th"),
+        headCell_ComplaintAboutNickname = document.createElement("th"),
+        headCell_ComplaintReason = document.createElement("th"),
+        headCell_ComplaintByID = document.createElement("th"),
+        headCell_ComplaintByNickname = document.createElement("th");
 
     headCell_ComplaintDateTime.innerHTML = "Date and Time";
     headCell_ComplaintAboutID.innerHTML = "About ID";
@@ -887,7 +872,7 @@ function buildComplaintTable() {
     complaintHead.appendChild(complaintHeadRow);
     complaintTable.appendChild(complaintHead);
 
-    var complaintBody = tbody.cloneNode(false);
+    var complaintBody = document.createElement("tbody");
     for (var i = 0; i < Complaint.length; i++) {
         var ComplaintDateTime = Complaint[i].complaintDateTime,
             ComplaintAboutID = Complaint[i].complaintAboutID,
@@ -896,13 +881,13 @@ function buildComplaintTable() {
             ComplaintByID = Complaint[i].complaintByID,
             ComplaintByNickname = Complaint[i].complaintByNickname;
 
-        var complaintBodyRow = tr.cloneNode(false),
-            cell_ComplaintDateTime = td.cloneNode(false),
-            cell_ComplaintAboutID = td.cloneNode(false),
-            cell_ComplaintAboutNickname = td.cloneNode(false),
-            cell_ComplaintReason = td.cloneNode(false),
-            cell_ComplaintByID = td.cloneNode(false),
-            cell_ComplaintByNickname = td.cloneNode(false);
+        var complaintBodyRow = document.createElement("tr"),
+            cell_ComplaintDateTime = document.createElement("td"),
+            cell_ComplaintAboutID = document.createElement("td"),
+            cell_ComplaintAboutNickname = document.createElement("td"),
+            cell_ComplaintReason = document.createElement("td"),
+            cell_ComplaintByID = document.createElement("td"),
+            cell_ComplaintByNickname = document.createElement("td");
 
         cell_ComplaintDateTime.setAttribute("data-title", "Date and Time");
         cell_ComplaintAboutID.setAttribute("data-title", "About ID");
@@ -912,7 +897,7 @@ function buildComplaintTable() {
         cell_ComplaintByNickname.setAttribute("data-title", "By Nickname");
 
         var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime)),
-            cell_ComplaintDateTime_Div = div.cloneNode(false);
+            cell_ComplaintDateTime_Div = document.createElement("div");
         cell_ComplaintDateTime_Div.innerHTML = UTCComplaintDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCComplaintDateTime.fromNow() + ")";
         cell_ComplaintDateTime.appendChild(cell_ComplaintDateTime_Div);
         complaintBodyRow.appendChild(cell_ComplaintDateTime);
@@ -956,10 +941,10 @@ function buildComplaintTable() {
  * Builds the upload table.
  */
 function buildUploadTable() {
-    var uploadTableControlSection = div.cloneNode(false);
+    var uploadTableControlSection = document.createElement("div");
     uploadTableControlSection.className = "row";
 
-    var uploadTableHeading = div.cloneNode(false);
+    var uploadTableHeading = document.createElement("div");
     uploadTableHeading.className = "tableheading large-12 columns";
     uploadTableHeading.innerHTML = "Upload table";
     uploadTableControlSection.appendChild(uploadTableHeading);
@@ -967,17 +952,17 @@ function buildUploadTable() {
     document.getElementById("ts3-uploadTable").appendChild(uploadTableControlSection);
 
     var Upload = json.UploadList,
-        uploadTable = table.cloneNode(false),
-        uploadHead = thead.cloneNode(false),
-        uploadHeadRow = tr.cloneNode(false),
-        headCell_UploadDateTime = th.cloneNode(false),
-        headCell_ChannelID = th.cloneNode(false),
-        headCell_Filename = th.cloneNode(false),
-        headCell_UploadedByID = th.cloneNode(false),
-        headCell_UploadedByNickname = th.cloneNode(false),
+        uploadTable = document.createElement("table"),
+        uploadHead = document.createElement("thead"),
+        uploadHeadRow = document.createElement("tr"),
+        headCell_UploadDateTime = document.createElement("th"),
+        headCell_ChannelID = document.createElement("th"),
+        headCell_Filename = document.createElement("th"),
+        headCell_UploadedByID = document.createElement("th"),
+        headCell_UploadedByNickname = document.createElement("th"),
 
-        headCell_DeletedByID = th.cloneNode(false),
-        headCell_DeletedByNickname = th.cloneNode(false);
+        headCell_DeletedByID = document.createElement("th"),
+        headCell_DeletedByNickname = document.createElement("th");
 
     headCell_UploadDateTime.innerHTML = "Date and Time";
     headCell_ChannelID.innerHTML = "Channel ID";
@@ -998,7 +983,7 @@ function buildUploadTable() {
     uploadHead.appendChild(uploadHeadRow);
     uploadTable.appendChild(uploadHead);
 
-    var uploadBody = tbody.cloneNode(false);
+    var uploadBody = document.createElement("tbody");
     for (var i = 0; i < Upload.length; i++) {
         var UploadDateTime = Upload[i].uploadDateTime,
             ChannelID = Upload[i].channelID,
@@ -1014,14 +999,14 @@ function buildUploadTable() {
             DeletedByID = DeletedByNickname = "/";
         }
 
-        var uploadBodyRow = tr.cloneNode(false),
-            cell_UploadDateTime = td.cloneNode(false),
-            cell_ChannelID = td.cloneNode(false),
-            cell_Filename = td.cloneNode(false),
-            cell_UploadedByID = td.cloneNode(false),
-            cell_UploadedByNickname = td.cloneNode(false),
-            cell_DeletedByID = td.cloneNode(false),
-            cell_DeletedByNickname = td.cloneNode(false);
+        var uploadBodyRow = document.createElement("tr"),
+            cell_UploadDateTime = document.createElement("td"),
+            cell_ChannelID = document.createElement("td"),
+            cell_Filename = document.createElement("td"),
+            cell_UploadedByID = document.createElement("td"),
+            cell_UploadedByNickname = document.createElement("td"),
+            cell_DeletedByID = document.createElement("td"),
+            cell_DeletedByNickname = document.createElement("td");
 
         cell_UploadDateTime.setAttribute("data-title", "Date and Time");
         cell_ChannelID.setAttribute("data-title", "Channel ID");
@@ -1032,7 +1017,7 @@ function buildUploadTable() {
         cell_DeletedByNickname.setAttribute("data-title", "Deleted by Nickname");
 
         var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime)),
-            cell_UploadDateTime_Div = div.cloneNode(false);
+            cell_UploadDateTime_Div = document.createElement("div");
         cell_UploadDateTime_Div.innerHTML = UTCUploadDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCUploadDateTime.fromNow() + ")";
         cell_UploadDateTime.appendChild(cell_UploadDateTime_Div);
         uploadBodyRow.appendChild(cell_UploadDateTime);
@@ -1076,37 +1061,16 @@ function buildUploadTable() {
 }
 
 /**
- * Calls the build function for the table.
- *
- * @param tableName - name of the table (e.g. "clientTable").
- */
-function buildTable(tableName) {
-    switch (tableName) {
-        case tables[0]:
-            buildClientTable();
-            break;
-        case tables[1]:
-            buildBanTable();
-            break;
-        case tables[2]:
-            buildKickTable();
-            break;
-        case tables[3]:
-            buildComplaintTable();
-            break;
-        case tables[4]:
-            buildUploadTable();
-    }
-}
-
-/**
  * Imports the local storage, builds the table if it would not be empty and sets the session storage.
  *
  * @param {string} table - name of the table (e.g. "clientTable").
  */
 function buildTableWithAlertCheckAndLocalStorage(table) {
-    $(document.getElementById(table)).trigger("destroy");
-    $(document.getElementById("ts3-" + table)).empty();
+    if (document.getElementById(table) != null) {
+        $.tablesorter.destroy(document.getElementById(table), true, function() {
+            $(document.getElementById("ts3-" + table).childNodes).remove();
+        });
+    }
 
     if (localStorage.getItem(table + "SortOrder") === null) {
         localStorage.setItem(table + "SortOrder", "[]");
@@ -1119,9 +1083,24 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
         document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "";
 
         if (json[leadingCapitalLetterTable.substring(0, leadingCapitalLetterTable.indexOf("Table")) + "List"].length) {
-            buildTable(table);
+            switch (table) {
+                case tables[0]:
+                    buildClientTable();
+                    break;
+                case tables[1]:
+                    buildBanTable();
+                    break;
+                case tables[2]:
+                    buildKickTable();
+                    break;
+                case tables[3]:
+                    buildComplaintTable();
+                    break;
+                case tables[4]:
+                    buildUploadTable();
+            }
         } else {
-            var alertBox = div.cloneNode(false);
+            var alertBox = document.createElement("div");
             alertBox.className = "alertBox";
             alertBox.innerHTML = "No " + table.substring(0, table.search("Table")) + "s were found.";
             document.getElementById("ts3-" + table).appendChild(alertBox);
@@ -1189,14 +1168,14 @@ function buildTables() {
  * Builds the control section.
  */
 function buildControlSection() {
-    var controlSection = div.cloneNode(false),
-        tableSelectionSection = div.cloneNode(false),
+    var controlSection = document.createElement("div"),
+        tableSelectionSection = document.createElement("div"),
         tableCheckboxSections = new Array(5),
         tableCheckboxes = new Array(5),
         tableCheckboxLabels = new Array(5);
 
     for (var i = 0; i < 5; i++) {
-        tableCheckboxSections[i] = div.cloneNode(false);
+        tableCheckboxSections[i] = document.createElement("div");
         tableCheckboxes[i] = document.createElement("input");
         tableCheckboxes[i].type = "checkbox";
         tableCheckboxLabels[i] = document.createElement("label");
@@ -1221,19 +1200,19 @@ function buildControlSection() {
     }
 
 
-    var creationTimestampSection = div.cloneNode(false),
-        creationTimestampTable = table.cloneNode(false),
-        ctTHead = thead.cloneNode(false),
-        ctTHeadRow = tr.cloneNode(false),
-        ctTHead_localtime = th.cloneNode(false),
-        ctTHead_utc = th.cloneNode(false),
-        ctTHead_moment = th.cloneNode(false),
-        ctTBody = tbody.cloneNode(false),
-        ctTBodyRow = tr.cloneNode(false),
-        ctT_localtime = td.cloneNode(false),
-        ctT_utc = td.cloneNode(false),
-        ctT_moment = td.cloneNode(false),
-        connectedClientsCount = div.cloneNode(false);
+    var creationTimestampSection = document.createElement("div"),
+        creationTimestampTable = document.createElement("table"),
+        ctTHead = document.createElement("thead"),
+        ctTHeadRow = document.createElement("tr"),
+        ctTHead_localtime = document.createElement("th"),
+        ctTHead_utc = document.createElement("th"),
+        ctTHead_moment = document.createElement("th"),
+        ctTBody = document.createElement("tbody"),
+        ctTBodyRow = document.createElement("tr"),
+        ctT_localtime = document.createElement("td"),
+        ctT_utc = document.createElement("td"),
+        ctT_moment = document.createElement("td"),
+        connectedClientsCount = document.createElement("div");
 
     creationTimestampSection.id = "creationTimestampSection";
     creationTimestampSection.className = "small-12 medium-8 large-8 columns";
@@ -1264,9 +1243,9 @@ function buildControlSection() {
     creationTimestampSection.appendChild(connectedClientsCount);
 
 
-    var rebuildSection = div.cloneNode(false),
-        rebuildJSONButton = button.cloneNode(false),
-        buildNewJSONButton = button.cloneNode(false);
+    var rebuildSection = document.createElement("div"),
+        rebuildJSONButton = document.createElement("button"),
+        buildNewJSONButton = document.createElement("button");
 
     rebuildSection.id = "rebuildSection";
     rebuildSection.className = "small-12 medium-4 large-4 columns";
@@ -1287,8 +1266,8 @@ function buildControlSection() {
     rebuildSection.appendChild(buildNewJSONButton);
 
 
-    var miscControlSection = div.cloneNode(false),
-        resetSortingButton = button.cloneNode(false);
+    var miscControlSection = document.createElement("div"),
+        resetSortingButton = document.createElement("button");
 
     miscControlSection.className = "columns";
     resetSortingButton.className = "small-12";
@@ -1300,8 +1279,8 @@ function buildControlSection() {
     miscControlSection.appendChild(resetSortingButton);
 
 
-    var navbar = div.cloneNode(false),
-        scrollBackToTopButton = button.cloneNode(false);
+    var navbar = document.createElement("div"),
+        scrollBackToTopButton = document.createElement("button");
 
     navbar.id = "navbar";
     scrollBackToTopButton.innerHTML = "Top";
@@ -1314,7 +1293,7 @@ function buildControlSection() {
 
     var scrollToTablesButtons = new Array(5);
     for (var j = 0; j < 5; j++) {
-        scrollToTablesButtons[j] = button.cloneNode(false);
+        scrollToTablesButtons[j] = document.createElement("button");
         scrollToTablesButtons[j].style.display = "none";
         scrollToTablesButtons[j].id = "scrollTo" + tableNames[j] + "Table";
         scrollToTablesButtons[j].innerHTML = tableNames[j] + "s";
