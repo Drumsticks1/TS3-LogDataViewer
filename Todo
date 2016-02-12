@@ -6,6 +6,10 @@ parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
 
 TS3-LogDataViewer.js:
+    - Make pager optional.
+    - Store pager settings in local storage.
+    - Debug and check where detached nodes are still linked.
+    - Outsource the creation of the control sections for the tables.
 	- Replace the description divs with buttons for sorting after the connected and deleted state and remove the "connected" column afterwards.
 		- also include a resetSort option.
 	- Add button for switching between bantime in seconds and bantime in x.
@@ -22,7 +26,7 @@ Ban.js:
 
 General:
     - Limit rebuilds server side (configurable Time between rebuild requests).
-    - Comment functions.
+    - Add Channel class and add channel name to Upload table.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
 
 maybe:

@@ -4,7 +4,7 @@ button, .tableheading {
 .row {
   max-width: 100%; }
 
-input[type='checkbox'] {
+input[type='checkbox'], .tablesorter .filtered {
   display: none; }
 
 .alertBox, label {
@@ -42,7 +42,7 @@ label {
 #TS3-LDV, .tableheading, button {
   background-color: #2ba6cb; }
 
-.alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading, #description_connected, #description_deleted, .tablesorter > thead > tr > th {
+.alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading, #description_connected, #description_deleted, .tablesorter > thead > tr > th, .tablesorter-pager {
   font-family: 'Open Sans', Arial, sans-serif;
   font-weight: 400; }
 
@@ -60,7 +60,7 @@ button {
 #tableSelectionSection {
   margin-bottom: 15px; }
 
-#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-LDV, #controlSection, .tableheading, #description_connected, #description_deleted {
+#clientTable > tbody > tr > td:nth-child(3) > div, .alertBox, #tableSelectionSection, #TS3-LDV, #controlSection, .tableheading, #description_connected, #description_deleted, .tablesorter-pager > div {
   text-align: center; }
 
 .alertBox, #controlSection, #controlSection > .small-12 {
@@ -72,7 +72,7 @@ button {
 #TS3-LDV, #buildNewJSONButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #rebuildJSONButton, #switchBetweenIDandUIDButton, .row .row, .tableheading {
   margin: 0; }
 
-#tableSelectionSection, #buildNewJSONButton, #creationTimestampTable, #rebuildJSONButton, #switchBetweenIDandUIDButton, .tablesorter {
+#tableSelectionSection, #buildNewJSONButton, #creationTimestampTable, #rebuildJSONButton, #switchBetweenIDandUIDButton, .tablesorter, .tablesorter-filter-row > td > input {
   width: 100%; }
 
 #navbar {
@@ -128,7 +128,6 @@ td, th {
   position: static;
   margin: 0 25% 5px;
   width: 50%;
-  padding: 5px 0;
   font-size: .8rem; }
 .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus {
   background-color: #007095; }
@@ -141,6 +140,17 @@ td, th {
 
 .deleted > td, #description_deleted {
   color: #999; }
+
+.tablesorter button, .tablesorter-pager {
+  padding: 5px 0; }
+
+.tablesorter-pager {
+  border: 1px solid #cdcdcd;
+  display: flex;
+  clear: left; }
+
+.tablesorter-pager > div {
+  flex-grow: 1; }
 
 @media (max-width: 1024px) {
   .tablesorter-sticky-visible {
@@ -179,4 +189,7 @@ td, th {
     margin: 0 0 5px; }
 
   #clientTable > tbody > tr > td:nth-child(3) > div {
-    text-align: left; } }
+    text-align: left; }
+
+  .tablesorter-filter-row > td {
+    display: block; } }

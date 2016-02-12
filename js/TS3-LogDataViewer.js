@@ -338,6 +338,61 @@ function resetSorting() {
 }
 
 /**
+ * Sets the placeholder text for all tablesorter filter cells according to their column name.
+ */
+function setFilterPlaceholders() {
+    var allElements = document.getElementsByTagName("*");
+    for (var i = allElements.length - 1; i > 0; i--) {
+        if (allElements[i].getAttribute("placeholder") !== null) {
+            allElements[i].setAttribute("placeholder",
+                allElements[i].parentNode.parentNode.previousSibling.children[allElements[i].getAttribute("data-column")].firstChild.innerHTML);
+        }
+    }
+}
+
+/**
+ * Adds a pager section to the given control section.
+ * @param tableControlSection the control section.
+ * @param tableName the name of the table.
+ */
+function addPagerSection(tableControlSection, tableName) {
+    var pager = document.createElement("div"),
+        first = document.createElement("div"),
+        prev = document.createElement("div"),
+        pageState = document.createElement("div"),
+        next = document.createElement("div"),
+        last = document.createElement("div"),
+        selectDiv = document.createElement("div"),
+        select = document.createElement("select"),
+        options = [document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option")];
+
+    pager.className = tableName + "Pager";
+    first.className = first.innerHTML = "first";
+    prev.className = prev.innerHTML = "prev";
+    pageState.className = "pagedisplay";
+    next.className = next.innerHTML = "next";
+    last.className = last.innerHTML = "last";
+    select.className = "pagesize";
+
+    pager.appendChild(first);
+    pager.appendChild(prev);
+    pager.appendChild(pageState);
+    pager.appendChild(next);
+    pager.appendChild(last);
+
+    var optionSizes = ["10", "25", "50", "100", "all"];
+    for (var i = 0; i < options.length; i++) {
+        options[i].value = options[i].innerHTML = optionSizes[i];
+        select.appendChild(options[i]);
+    }
+
+    selectDiv.appendChild(select);
+
+    pager.appendChild(selectDiv);
+    tableControlSection.appendChild(pager);
+}
+
+/**
  * Appends the buffered built tables to their divs and clears the buffer array.
  */
 function appendBufferedTables() {
@@ -404,6 +459,8 @@ function buildClientTable() {
 
     clientTableControlSection.appendChild(coloredRowsDescription_green);
     clientTableControlSection.appendChild(coloredRowsDescription_grey);
+
+    addPagerSection(clientTableControlSection, "clientTable");
 
     document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
 
@@ -562,11 +619,15 @@ function buildClientTable() {
             2: {sorter: "Connections"},
             3: {sorter: "IPs"}
         },
+        widgets: ["filter"],
         sortList: JSON.parse(localStorage.getItem("clientTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("clientTableSortOrder", JSON.stringify(clientTable.config.sortList));
+    }).tablesorterPager({
+        container: $(".clientTablePager"),
+        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+        savePages: false
     });
-
     tableBuffer.push(clientTable);
 }
 
@@ -593,6 +654,9 @@ function buildBanTable() {
         switchBetweenIDAndUID();
     });
     banTableControlSection.appendChild(switchBetweenIDandUIDButton);
+
+    addPagerSection(banTableControlSection, "banTable");
+
     document.getElementById("ts3-banTable").appendChild(banTableControlSection);
 
     var Ban = json.BanList,
@@ -713,9 +777,14 @@ function buildBanTable() {
         headers: {
             0: {sorter: "ignoreMoment"}
         },
+        widgets: ["filter"],
         sortList: JSON.parse(localStorage.getItem("banTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("banTableSortOrder", JSON.stringify(banTable.config.sortList));
+    }).tablesorterPager({
+        container: $(".banTablePager"),
+        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+        savePages: false
     });
 
     tableBuffer.push(banTable);
@@ -732,6 +801,8 @@ function buildKickTable() {
     kickTableHeading.className = "tableheading large-12 columns";
     kickTableHeading.innerHTML = "Kick table";
     kickTableControlSection.appendChild(kickTableHeading);
+
+    addPagerSection(kickTableControlSection, "kickTable");
 
     document.getElementById("ts3-kickTable").appendChild(kickTableControlSection);
 
@@ -822,9 +893,14 @@ function buildKickTable() {
         headers: {
             0: {sorter: "ignoreMoment"}
         },
+        widgets: ["filter"],
         sortList: JSON.parse(localStorage.getItem("kickTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("kickTableSortOrder", JSON.stringify(kickTable.config.sortList));
+    }).tablesorterPager({
+        container: $(".kickTablePager"),
+        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+        savePages: false
     });
 
     tableBuffer.push(kickTable);
@@ -841,6 +917,8 @@ function buildComplaintTable() {
     complaintTableHeading.className = "tableheading large-12 columns";
     complaintTableHeading.innerHTML = "Complaint table";
     complaintTableControlSection.appendChild(complaintTableHeading);
+
+    addPagerSection(complaintTableControlSection, "complaintTable");
 
     document.getElementById("ts3-complaintTable").appendChild(complaintTableControlSection);
 
@@ -929,9 +1007,14 @@ function buildComplaintTable() {
         headers: {
             0: {sorter: "ignoreMoment"}
         },
+        widgets: ["filter"],
         sortList: JSON.parse(localStorage.getItem("complaintTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("complaintTableSortOrder", JSON.stringify(complaintTable.config.sortList));
+    }).tablesorterPager({
+        container: $(".complaintTablePager"),
+        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+        savePages: false
     });
 
     tableBuffer.push(complaintTable);
@@ -948,6 +1031,8 @@ function buildUploadTable() {
     uploadTableHeading.className = "tableheading large-12 columns";
     uploadTableHeading.innerHTML = "Upload table";
     uploadTableControlSection.appendChild(uploadTableHeading);
+
+    addPagerSection(uploadTableControlSection, "uploadTable");
 
     document.getElementById("ts3-uploadTable").appendChild(uploadTableControlSection);
 
@@ -1052,9 +1137,14 @@ function buildUploadTable() {
         headers: {
             0: {sorter: "ignoreMoment"}
         },
+        widgets: ["filter"],
         sortList: JSON.parse(localStorage.getItem("uploadTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("uploadTableSortOrder", JSON.stringify(uploadTable.config.sortList));
+    }).tablesorterPager({
+        container: $(".uploadTablePager"),
+        output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+        savePages: false
     });
 
     tableBuffer.push(uploadTable);
@@ -1135,6 +1225,7 @@ function buildTables() {
             }
 
             appendBufferedTables();
+            setFilterPlaceholders();
 
             var Attributes = json.Attributes,
                 creationTimestampUTC = Attributes.creationTimestamp_UTC;
