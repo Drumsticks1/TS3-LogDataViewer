@@ -11,7 +11,8 @@ const Client = require("./Client.js"),
     Ban = require("./Ban.js"),
     Kick = require("./Kick.js"),
     Complaint = require("./Complaint.js"),
-    Upload = require("./Upload.js");
+    Upload = require("./Upload.js"),
+    Channel = require("./Channel.js");
 
 var currentDate;
 
@@ -42,6 +43,9 @@ Array.prototype.resizeFill = function(length, objectName) {
                 break;
             case "Upload":
                 pushObject = new Upload.Upload();
+                break;
+            case "Channel":
+                pushObject = new Channel.Channel();
         }
         this.push(pushObject);
     }

@@ -8,13 +8,10 @@ parseLogs.js:
 TS3-LogDataViewer.js:
     - Make pager optional.
     - Store pager settings in local storage.
+    - Notification if a new ban, kick, complaint or upload was added since the last visit.
     - Debug and check where detached nodes are still linked.
     - Outsource the creation of the control sections for the tables.
-	- Replace the description divs with buttons for sorting after the connected and deleted state and remove the "connected" column afterwards.
-		- also include a resetSort option.
-	- Add button for switching between bantime in seconds and bantime in x.
-	- Make the server group data in the client table sortable.
-	- check if table creation via json/ js object is faster than generating the divs.
+	- Check sorting possibilities for the server group data in the client table.
 
 createJSON.js:
     - Check if the created json can be minimized.
@@ -26,11 +23,9 @@ Ban.js:
 
 General:
     - Limit rebuilds server side (configurable Time between rebuild requests).
-    - Add Channel class and add channel name to Upload table.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
 
 maybe:
-    - Add test cases.
 	- Add ServerGroupName history like for the nicknames in the client list.
 	- Add query clients to client list or a query client list?
 	- Make it possible to switch between the virtual servers via Webinterface.

@@ -323,8 +323,18 @@ function removeEventListeners() {
  * @param {number} ID - ID of the server group.
  * @returns {string} - name of the server group.
  */
-function getServerGroupByID(ID) {
+function getServerGroupNameByID(ID) {
     return json.ServerGroupList[ID].ServerGroupName;
+}
+
+/**
+ * Returns the channel name for the given ID.
+ *
+ * @param {number} ID - ID of the channel.
+ * @returns {string} - name of the channel.
+ */
+function getChannelNameByID(ID) {
+    return json.ChannelList[ID].channelName;
 }
 
 /**
@@ -597,7 +607,7 @@ function buildClientTable() {
             for (j = 0; j < ServerGroupIDs.length; j++) {
                 var divName = document.createElement("div"),
                     divDateTime = document.createElement("div");
-                divName.innerHTML = getServerGroupByID(Number(ServerGroupIDs[j]));
+                divName.innerHTML = getServerGroupNameByID(Number(ServerGroupIDs[j]));
                 divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format("YYYY-MM-DD HH:mm:ss");
 
                 cell_ServerGroupInfo.appendChild(divName);
@@ -1042,6 +1052,7 @@ function buildUploadTable() {
         uploadHeadRow = document.createElement("tr"),
         headCell_UploadDateTime = document.createElement("th"),
         headCell_ChannelID = document.createElement("th"),
+        headCell_ChannelName = document.createElement("th"),
         headCell_Filename = document.createElement("th"),
         headCell_UploadedByID = document.createElement("th"),
         headCell_UploadedByNickname = document.createElement("th"),
@@ -1051,6 +1062,7 @@ function buildUploadTable() {
 
     headCell_UploadDateTime.innerHTML = "Date and Time";
     headCell_ChannelID.innerHTML = "Channel ID";
+    headCell_ChannelName.innerHTML = "Channel Name";
     headCell_Filename.innerHTML = "Filename";
     headCell_UploadedByID.innerHTML = "Uploaded by ID";
     headCell_UploadedByNickname.innerHTML = "Uploaded by Nickname";
@@ -1059,6 +1071,7 @@ function buildUploadTable() {
 
     uploadHeadRow.appendChild(headCell_UploadDateTime);
     uploadHeadRow.appendChild(headCell_ChannelID);
+    uploadHeadRow.appendChild(headCell_ChannelName);
     uploadHeadRow.appendChild(headCell_Filename);
     uploadHeadRow.appendChild(headCell_UploadedByID);
     uploadHeadRow.appendChild(headCell_UploadedByNickname);
@@ -1087,6 +1100,7 @@ function buildUploadTable() {
         var uploadBodyRow = document.createElement("tr"),
             cell_UploadDateTime = document.createElement("td"),
             cell_ChannelID = document.createElement("td"),
+            cell_ChannelName = document.createElement("td"),
             cell_Filename = document.createElement("td"),
             cell_UploadedByID = document.createElement("td"),
             cell_UploadedByNickname = document.createElement("td"),
@@ -1095,6 +1109,7 @@ function buildUploadTable() {
 
         cell_UploadDateTime.setAttribute("data-title", "Date and Time");
         cell_ChannelID.setAttribute("data-title", "Channel ID");
+        cell_ChannelName.setAttribute("data-title", "Channel Name");
         cell_Filename.setAttribute("data-title", "Filename");
         cell_UploadedByID.setAttribute("data-title", "Uploaded by ID");
         cell_UploadedByNickname.setAttribute("data-title", "Uploaded by Nickname");
@@ -1109,6 +1124,9 @@ function buildUploadTable() {
 
         cell_ChannelID.innerHTML = ChannelID;
         uploadBodyRow.appendChild(cell_ChannelID);
+
+        cell_ChannelName.innerHTML = getChannelNameByID(ChannelID);
+        uploadBodyRow.appendChild(cell_ChannelName);
 
         cell_Filename.innerHTML = Filename;
         uploadBodyRow.appendChild(cell_Filename);

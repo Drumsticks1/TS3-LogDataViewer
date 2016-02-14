@@ -28,11 +28,11 @@ ServerGroup.prototype.addServerGroupInformation = function(ID, ServerGroupName, 
 };
 
 /**
- * Renames the ServerGroup to the new name.
- * @param {string} newServerGroupName the new name.
+ * Changes the channelName to the new name.
+ * @param {string} serverGroupName the new name.
  */
-ServerGroup.prototype.renameServerGroup = function(newServerGroupName) {
-    this.ServerGroupName = newServerGroupName;
+ServerGroup.prototype.renameServerGroup = function(serverGroupName) {
+    this.ServerGroupName = serverGroupName;
 };
 
 /**

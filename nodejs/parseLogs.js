@@ -19,7 +19,8 @@ var Logs = globalVariables.Logs,
     BanList = globalVariables.BanList,
     KickList = globalVariables.KickList,
     ComplaintList = globalVariables.ComplaintList,
-    UploadList = globalVariables.UploadList;
+    UploadList = globalVariables.UploadList,
+    ChannelList = globalVariables.ChannelList;
 
 const match_banRule = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ban added reason='",
     match_complaint = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| complaint added for client '",
@@ -31,7 +32,12 @@ const match_banRule = "|INFO    |VirtualServer |  " + globalVariables.virtualSer
     match_deleteUser1 = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| client '",
     match_deleteUser2 = ") got deleted by client '",
     match_upload = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file upload to",
-    match_uploadDeletion = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file deleted from";
+    match_uploadDeletion = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file deleted from",
+    match_channel = "|INFO    |VirtualServerBase|  1| channel '",
+    match_channelCreation = ") created by '",
+    match_subChannelCreation = ") created as sub channel of '",
+    match_channelEdition = ") edited by '",
+    match_channelDeletion = ") deleted by '";
 
 /**
  * Parses the logs.
@@ -57,7 +63,7 @@ exports.parseLogs = function() {
         complaintByNickname_StartPos, complaintByNickname_EndPos, complaintByID_StartPos, complaintByID_EndPos,
         channelID_StartPos, channelID_EndPos, filename_StartPos, filename_EndPos, uploadedByNickname_StartPos, uploadedByNickname_EndPos, uploadedByID_StartPos, uploadedByID_EndPos,
         deletedByNickname_StartPos, deletedByNickname_EndPos, deletedByID_StartPos, deletedByID_EndPos,
-
+        channelName,
         banMatch, kickMatch, lastLog;
 
     if (BanList.length > 0) BanListID = BanList.length;
@@ -225,9 +231,12 @@ exports.parseLogs = function() {
                             }
                         }
 
-                        if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(banTime))) {
+                        ID = Number(ID);
+                        bannedByID = Number(bannedByID);
+
+                        if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime)) {
                             BanList.resizeFill(BanListID + 1, "Ban");
-                            BanList[BanListID].addBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, Number(bannedByID), bannedByUID, banReason, Number(banTime));
+                            BanList[BanListID].addBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime);
                             BanListID++;
                         }
                     }
@@ -327,14 +336,14 @@ exports.parseLogs = function() {
 
                     DateTime = buffer_logline.substr(0, 19);
                     complaintAboutNickname = buffer_logline.substring(complaintAboutNickname_StartPos, complaintAboutNickname_EndPos);
-                    complaintAboutID = buffer_logline.substring(complaintAboutID_StartPos, complaintAboutID_EndPos);
+                    complaintAboutID = Number(buffer_logline.substring(complaintAboutID_StartPos, complaintAboutID_EndPos));
                     complaintReason = buffer_logline.substring(complaintReason_StartPos, complaintReason_EndPos);
                     complaintByNickname = buffer_logline.substring(complaintByNickname_StartPos, complaintByNickname_EndPos);
-                    complaintByID = buffer_logline.substring(complaintByID_StartPos, complaintByID_EndPos);
+                    complaintByID = Number(buffer_logline.substring(complaintByID_StartPos, complaintByID_EndPos));
 
-                    if (!checkFunctions.isDuplicateComplaint(DateTime, complaintAboutNickname, Number(complaintAboutID), complaintReason, complaintByNickname, Number(complaintByID))) {
+                    if (!checkFunctions.isDuplicateComplaint(DateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID)) {
                         ComplaintList.resizeFill(ComplaintListID + 1, "Complaint");
-                        ComplaintList[ComplaintListID].addComplaint(DateTime, complaintAboutNickname, Number(complaintAboutID), complaintReason, complaintByNickname, Number(complaintByID));
+                        ComplaintList[ComplaintListID].addComplaint(DateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID);
                         ComplaintListID++;
                     }
                 }
@@ -351,14 +360,14 @@ exports.parseLogs = function() {
                     uploadedByID_EndPos = buffer_logline.length - 1;
 
                     DateTime = buffer_logline.substr(0, 19);
-                    channelID = buffer_logline.substring(channelID_StartPos, channelID_EndPos);
+                    channelID = Number(buffer_logline.substring(channelID_StartPos, channelID_EndPos));
                     filename = buffer_logline.substring(filename_StartPos, filename_EndPos);
                     uploadedByNickname = buffer_logline.substring(uploadedByNickname_StartPos, uploadedByNickname_EndPos);
-                    uploadedByID = buffer_logline.substring(uploadedByID_StartPos, uploadedByID_EndPos);
+                    uploadedByID = Number(buffer_logline.substring(uploadedByID_StartPos, uploadedByID_EndPos));
 
-                    if (!checkFunctions.isDuplicateUpload(DateTime, Number(channelID), filename, uploadedByNickname, Number(uploadedByID))) {
+                    if (!checkFunctions.isDuplicateUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID)) {
                         UploadList.resizeFill(UploadListID + 1, "Upload");
-                        UploadList[UploadListID].addUpload(DateTime, Number(channelID), filename, uploadedByNickname, Number(uploadedByID));
+                        UploadList[UploadListID].addUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID);
                         UploadListID++;
                     }
                 }
@@ -385,12 +394,66 @@ exports.parseLogs = function() {
                     deletedByID_StartPos = deletedByNickname_EndPos + 5;
                     deletedByID_EndPos = buffer_logline.length - 1;
 
-                    channelID = buffer_logline.substring(channelID_StartPos, channelID_EndPos);
+                    channelID = Number(buffer_logline.substring(channelID_StartPos, channelID_EndPos));
                     filename = buffer_logline.substring(filename_StartPos, filename_EndPos);
                     deletedByNickname = buffer_logline.substring(deletedByNickname_StartPos, deletedByNickname_EndPos);
-                    deletedByID = buffer_logline.substring(deletedByID_StartPos, deletedByID_EndPos);
+                    deletedByID = Number(buffer_logline.substring(deletedByID_StartPos, deletedByID_EndPos));
 
-                    Upload.addDeletedBy(Number(channelID), filename, deletedByNickname, Number(deletedByID));
+                    Upload.addDeletedBy(channelID, filename, deletedByNickname, deletedByID);
+                }
+
+                // Channel additions, edits or deletions.
+                else if (buffer_logline.indexOf(match_channel) != -1) {
+                    // 0 --> added
+                    // 1 --> edited
+                    // 2 --> edited undefined --> added
+                    // 3 --> deleted
+                    var eventTypeC = -1;
+
+                    if (buffer_logline.indexOf(match_channelEdition) != -1) {
+                        channelID_EndPos = buffer_logline.indexOf(match_channelEdition);
+                        eventTypeC = 1;
+                    }
+                    else if (buffer_logline.indexOf(match_channelCreation) != -1) {
+                        channelID_EndPos = buffer_logline.indexOf(match_channelCreation);
+                        eventTypeC = 0;
+                    }
+                    else if (buffer_logline.indexOf(match_subChannelCreation) != -1) {
+                        channelID_EndPos = buffer_logline.indexOf(match_subChannelCreation);
+                        eventTypeC = 0;
+                    }
+                    else if (buffer_logline.indexOf(match_channelDeletion) != -1) {
+                        channelID_EndPos = buffer_logline.indexOf(match_channelDeletion);
+                        eventTypeC = 3;
+                    }
+
+                    if (eventTypeC != -1) {
+                        DateTime = buffer_logline.substr(0, 19);
+                        channelID_StartPos = buffer_logline.indexOf("'(id:") + 5;
+                        channelID = Number(buffer_logline.substring(channelID_StartPos, channelID_EndPos));
+                        channelName = buffer_logline.substring(68, channelID_StartPos - 5);
+
+                        if (eventTypeC == 1 && !ChannelList[channelID])
+                            eventTypeC = 2;
+
+                        if (eventTypeC == 0 || eventTypeC == 2)
+                            ChannelList.resizeFill(channelID + 1, "Channel");
+
+                        switch (eventTypeC) {
+                            case 2:
+                                DateTime = "Unknown";
+                            case 0:
+                                ChannelList[channelID].addChannel(channelID, DateTime, channelName);
+                                break;
+
+                            case 1:
+                                ChannelList[channelID].renameChannel(channelName);
+                                break;
+
+                            case 3:
+                                ChannelList[channelID].deleteChannel();
+                        }
+                    }
                 }
 
                 // Servergroup additions, deletions, renamings and copying
@@ -399,34 +462,34 @@ exports.parseLogs = function() {
                     // 1 --> deleted
                     // 2 --> renamed
                     // 3 --> copied // just like "added"
-                    var eventType = -1;
+                    var eventTypeS = -1;
 
                     ID_StartPos = buffer_logline.indexOf("'(id:") + 5;
 
                     if (buffer_logline.indexOf(") was added by '") != -1) {
                         ID_EndPos = buffer_logline.indexOf(") was added by '");
-                        eventType = 0;
+                        eventTypeS = 0;
                     }
                     else if (buffer_logline.indexOf(") was deleted by '") != -1) {
                         ID_EndPos = buffer_logline.indexOf(") was deleted by '");
-                        eventType = 1;
+                        eventTypeS = 1;
                     }
                     else if (buffer_logline.indexOf(") was renamed to '") != -1) {
                         ID_EndPos = buffer_logline.indexOf(") was renamed to '");
                         ServerGroupName_StartPos = buffer_logline.indexOf(") was renamed to '") + 18;
                         ServerGroupName_EndPos = buffer_logline.lastIndexOf("' by '", buffer_logline.length - 1);
-                        eventType = 2;
+                        eventTypeS = 2;
                     }
                     else if (buffer_logline.indexOf(") was copied by '") != -1) {
                         ID_StartPos = buffer_logline.lastIndexOf("'(id:") + 5;
                         ID_EndPos = buffer_logline.length - 1;
                         ServerGroupName_StartPos = buffer_logline.indexOf(") to '") + 6;
                         ServerGroupName_EndPos = ID_StartPos - 5;
-                        eventType = 3;
+                        eventTypeS = 3;
                     }
 
-                    if (eventType != -1) {
-                        if (eventType == 0 || eventType == 1) {
+                    if (eventTypeS != -1) {
+                        if (eventTypeS == 0 || eventTypeS == 1) {
                             ServerGroupName_StartPos = buffer_logline.indexOf("| servergroup '") + 15;
                             ServerGroupName_EndPos = ID_StartPos - 5;
                         }
@@ -435,7 +498,7 @@ exports.parseLogs = function() {
                         ID = Number(buffer_logline.substring(ID_StartPos, ID_EndPos));
                         ServerGroupName = buffer_logline.substring(ServerGroupName_StartPos, ServerGroupName_EndPos);
 
-                        switch (eventType) {
+                        switch (eventTypeS) {
                             case 0:
                             case 3:
                                 ServerGroupList.resizeFill(ID + 1, "ServerGroup");
@@ -448,10 +511,8 @@ exports.parseLogs = function() {
 
                             case 2:
                                 ServerGroupList[ID].renameServerGroup(ServerGroupName);
-                                break;
                         }
                     }
-
                 }
                 currentPos += buffer_logline.length + 1;
             }
