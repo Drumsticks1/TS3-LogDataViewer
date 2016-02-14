@@ -62,6 +62,14 @@ Upload.prototype.deleteUpload = function() {
 };
 
 /**
+ * Returns if the Upload is deleted.
+ * @returns {boolean}
+ */
+Upload.prototype.isDeleted = function() {
+    return this.deleted;
+};
+
+/**
  * Adds the deletedByNickname to the Upload.
  * @param {string} deletedByNickname
  */
@@ -93,7 +101,7 @@ function addDeletedBy(channelID, filename, deletedByNickname, deletedByID) {
         shortFilename = filename.substr(filename.indexOf("\\/") + 1);
     }
     for (var i = 0; i < UploadList.length; i++) {
-        if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename) {
+        if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename && !UploadList[i].isDeleted()) {
             UploadList[i].addDeletedByNickname(deletedByNickname);
             UploadList[i].addDeletedByID(deletedByID);
             UploadList[i].deleteUpload();
