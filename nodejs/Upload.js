@@ -62,8 +62,8 @@ Upload.prototype.deleteUpload = function() {
 };
 
 /**
- * Returns if the Upload is deleted.
- * @returns {boolean}
+ * Returns the Upload deleted flag.
+ * @returns {boolean} the deleted flag.
  */
 Upload.prototype.isDeleted = function() {
     return this.deleted;

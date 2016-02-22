@@ -14,6 +14,12 @@ var connectedClientsCount, nanobar, momentInterval, json, rebuildError = false,
     tableBuffer = [];
 
 /**
+ * Constants
+ */
+const sortStrings = ["Currently sorting connections by the first connect", "Currently sorting connections by the last connect"],
+    timeFormat = "YYYY-MM-DD HH:mm:ss";
+
+/**
  * Rebuilds the JSON and calls buildTables() when the JSON is fetched.
  */
 function rebuildJSON() {
@@ -44,14 +50,15 @@ function expandOrCollapseList(list, ID) {
     if (list == "IPs") {
         column = 3;
         collapsedCellCount = 1;
-    } else {
+    } else
         column = collapsedCellCount = 2;
-    }
 
     var currentDiv = document.getElementById(list + "_" + ID + "_1");
+
     if (currentDiv === null || currentDiv.style.display == "none")
         expandList(list, ID, column, collapsedCellCount);
-    else collapseList(list, ID, column, collapsedCellCount);
+    else
+        collapseList(list, ID, column, collapsedCellCount);
 }
 
 /**
@@ -65,23 +72,32 @@ function expandOrCollapseList(list, ID) {
 function expandList(list, ID, column, collapsedCellCount) {
     var x = document.getElementById(String(ID)).childNodes[column],
         listContent = json.ClientList[ID][list];
-    document.getElementById(list + "Button_" + ID).innerHTML = "- " + (listContent.length - collapsedCellCount);
-    document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "true");
-    for (var j = 1; j < listContent.length; j++) {
-        var currentDiv = list + "_" + ID + "_" + j;
-        if (document.getElementById(currentDiv) === null) {
-            var newDiv = document.createElement("div");
-            newDiv.id = currentDiv;
-            if (collapsedCellCount == 1) newDiv.innerHTML = listContent[j];
-            else newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j]);
 
-            if (column == 3) x.appendChild(newDiv);
-            else x.insertBefore(newDiv, x.lastChild);
-        } else document.getElementById(currentDiv).style.display = "";
+    var currentDiv = document.getElementById(list + "Button_" + ID);
+    currentDiv.innerHTML = "- " + (listContent.length - collapsedCellCount);
+    currentDiv.parentNode.setAttribute("expanded", "true");
+
+    for (var j = 1; j < listContent.length; j++) {
+        var currentDivString = list + "_" + ID + "_" + j;
+
+        if (document.getElementById(currentDivString) === null) {
+            var newDiv = document.createElement("div");
+            newDiv.id = currentDivString;
+
+            if (collapsedCellCount == 1)
+                newDiv.innerHTML = listContent[j];
+            else
+                newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j]);
+
+            if (column == 3)
+                x.appendChild(newDiv);
+            else
+                x.insertBefore(newDiv, x.lastChild);
+
+        } else document.getElementById(currentDivString).style.display = "";
     }
 }
 
-//
 /**
  * Collapses the list with the given parameters.
  *
@@ -92,14 +108,19 @@ function expandList(list, ID, column, collapsedCellCount) {
  */
 function collapseList(list, ID, column, collapsedCellCount) {
     var listContent = json.ClientList[ID][list];
+
     document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
     document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
+
     if (document.getElementById(String(ID)) !== null) {
-        var x = document.getElementById(String(ID)).childNodes[column].childNodes;
-        for (var j = 1; j < x.length - 2; j++) {
+        var hideLength = document.getElementById(String(ID)).childNodes[column].childNodes.length;
+
+        if (column == 3)
+            hideLength++;
+
+        for (var j = 1; j < hideLength - 2; j++) {
             document.getElementById(list + "_" + ID + "_" + j).style.display = "none";
         }
-        if (column == 3) document.getElementById(list + "_" + ID + "_" + j).style.display = "none";
     }
 }
 
@@ -107,12 +128,13 @@ function collapseList(list, ID, column, collapsedCellCount) {
  * Collapses all expanded lists.
  */
 function collapseAll() {
-    var x = document.getElementById("clientTable").lastChild.childNodes;
-    for (var j = 0; j < x.length; j++) {
-        if (x.item(j).childNodes.item(2).getAttribute("expanded") == "true")
-            collapseList("Connections", Number(x.item(j).getAttribute("id")), 2, 2);
-        if (x.item(j).childNodes.item(3).getAttribute("expanded") == "true")
-            collapseList("IPs", Number(x.item(j).getAttribute("id")), 3, 1);
+    var rows = document.getElementById("clientTable").lastChild.childNodes;
+    for (var j = 0; j < rows.length; j++) {
+        if (rows[j].childNodes[2].getAttribute("expanded") == "true")
+            collapseList("Connections", Number(rows[j].getAttribute("id")), 2, 2);
+
+        if (rows[j].childNodes[3].getAttribute("expanded") == "true")
+            collapseList("IPs", Number(rows[j].getAttribute("id")), 3, 1);
     }
 }
 
@@ -176,9 +198,10 @@ function addIPsParser() {
  * Switches between ID/UID columns in the ban table.
  */
 function switchBetweenIDAndUID() {
-    var rowId, banId, idOrUid, bannedByIDOrUD, Ban = json.BanList,
-        x = document.getElementById("banTable").lastChild.childNodes,
-        headRow = document.getElementById("banTable").firstChild.firstChild,
+    var rowId, banId, idOrUid, bannedByIDOrUID, Ban = json.BanList,
+        banTableRows = document.getElementById("banTable").lastChild.childNodes,
+        headRowCells = document.getElementById("banTable").firstChild.firstChild.childNodes,
+        filterRowCells = document.getElementById("banTable").firstChild.childNodes[1].childNodes,
         uidState = Number(localStorage.getItem("uidState"));
 
     if (uidState) {
@@ -189,27 +212,33 @@ function switchBetweenIDAndUID() {
         localStorage.setItem("uidState", "1");
     }
 
-    headRow.childNodes[1].innerHTML = "Banned " + idOrUid;
-    headRow.childNodes[4].innerHTML = "Banned by " + idOrUid;
+    headRowCells[1].innerHTML = "Banned " + idOrUid;
+    filterRowCells[1].firstChild.setAttribute("Placeholder", "Banned " + idOrUid);
+    headRowCells[4].innerHTML = "Banned by " + idOrUid;
+    filterRowCells[4].firstChild.setAttribute("Placeholder", "Banned by " + idOrUid);
 
-    for (var j = 0; j < x.length; j++) {
-        rowId = x.item(j).getAttribute("id");
+    for (var j = 0; j < banTableRows.length; j++) {
+        rowId = banTableRows[j].getAttribute("id");
         banId = rowId.substring(4, rowId.length);
 
+        var currentRowCells = document.getElementById(rowId).childNodes;
+
         if (uidState) {
-            if (document.getElementById(rowId).childNodes[3].innerHTML != "Unknown") {
-                bannedByIDOrUD = Ban[banId].bannedByID;
-            } else bannedByIDOrUD = "Unknown";
+            if (currentRowCells[3].innerHTML != "Unknown")
+                bannedByIDOrUID = Ban[banId].bannedByID;
+            else
+                bannedByIDOrUID = "Unknown";
         } else {
-            if (Ban[banId].bannedByUID.length != 0) {
-                bannedByIDOrUD = Ban[banId].bannedByUID;
-            } else bannedByIDOrUD = "No UID";
+            if (Ban[banId].bannedByUID.length != 0)
+                bannedByIDOrUID = Ban[banId].bannedByUID;
+            else
+                bannedByIDOrUID = "No UID";
         }
 
-        document.getElementById(rowId).childNodes[1].setAttribute("data-title", "Banned " + idOrUid);
-        document.getElementById(rowId).childNodes[4].setAttribute("data-title", "Banned by " + idOrUid);
-        document.getElementById(rowId).childNodes[1].innerHTML = Ban[banId]["banned" + idOrUid];
-        document.getElementById(rowId).childNodes[4].innerHTML = bannedByIDOrUD;
+        currentRowCells[1].setAttribute("data-title", "Banned " + idOrUid);
+        currentRowCells[1].innerHTML = Ban[banId]["banned" + idOrUid];
+        currentRowCells[4].setAttribute("data-title", "Banned by " + idOrUid);
+        currentRowCells[4].innerHTML = bannedByIDOrUID;
     }
 }
 
@@ -220,9 +249,11 @@ function switchBetweenIDAndUID() {
  */
 function importLocalStorage(table) {
     if (localStorage.getItem(table)) {
-        var checkState = Boolean(Number(localStorage.getItem(table)));
-        document.getElementById(table + "Checkbox").checked = checkState;
-        if (!checkState) document.getElementById("ts3-" + table).style.display = "";
+        var checkboxState = Boolean(Number(localStorage.getItem(table)));
+        document.getElementById(table + "Checkbox").checked = checkboxState;
+        if (!checkboxState)
+            document.getElementById("ts3-" + table).style.display = "";
+
     } else {
         document.getElementById(table + "Checkbox").checked = true;
         localStorage.setItem(table, "1");
@@ -236,20 +267,23 @@ function importLocalStorage(table) {
  */
 function addTableCheckboxListener(table) {
     document.getElementById(table + "Checkbox").addEventListener("click", function() {
-        var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
+        var displayString = "";
+
         if (this.checked) {
             localStorage.setItem(table, "1");
+
             if (sessionStorage.getItem(table + "-built") == "0") {
                 buildTableWithAlertCheckAndLocalStorage(table);
                 appendBufferedTables();
             }
-            document.getElementById("ts3-" + table).style.display =
-                document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "";
         } else {
             localStorage.setItem(table, "0");
-            document.getElementById("ts3-" + table).style.display =
-                document.getElementById("scrollTo" + leadingCapitalLetterTable).style.display = "none";
+            displayString = "none";
         }
+
+        document.getElementById("ts3-" + table).style.display =
+            document.getElementById("scrollTo" + table.charAt(0).toUpperCase() + table.substring(1))
+                .style.display = displayString;
     });
 }
 
@@ -278,7 +312,7 @@ function UTCDateStringToDate(dateString) {
  */
 function toDoubleDigit(x) {
     var y = String(x);
-    if (x < 10) y = "0" + String(x);
+    if (x < 10) y = "0" + y;
     return y;
 }
 
@@ -291,16 +325,33 @@ function toDoubleDigit(x) {
  */
 function UTCDateStringToLocaltimeString(dateString) {
     var dateObject = new UTCDateStringToDate(dateString);
-    return dateObject.getFullYear() + "-" + toDoubleDigit(dateObject.getMonth() + 1) + "-" + toDoubleDigit(dateObject.getDate()) + " " +
-        toDoubleDigit(dateObject.getHours()) + ":" + toDoubleDigit(dateObject.getMinutes()) + ":" + toDoubleDigit(dateObject.getSeconds());
+    return dateObject.getFullYear()
+        + "-" + toDoubleDigit(dateObject.getMonth() + 1)
+        + "-" + toDoubleDigit(dateObject.getDate())
+        + " " + toDoubleDigit(dateObject.getHours())
+        + ":" + toDoubleDigit(dateObject.getMinutes())
+        + ":" + toDoubleDigit(dateObject.getSeconds());
 }
 
+/**
+ * Converts the given dateTime string to a string with the format
+ *
+ * YYYY-MM-DD HH:mm:ss
+ * (about ...... ago)
+ *
+ * @param {string} dateTime - the given dateTime string.
+ * @returns {string} string with the described format.
+ */
+function dateTimeToMomentString(dateTime) {
+    var dateTimeObject = moment(UTCDateStringToDate(dateTime));
+    return dateTimeObject.format(timeFormat) + "<br />(about " + dateTimeObject.fromNow() + ")";
+}
 
 /**
  * Adds the onclick event to the object and adds the object to the eventListeners array.
  *
- * @param {object} object
- * @param {function} onclickEvent
+ * @param {object} object - the given object
+ * @param {function} onclickEvent - the given onclickEvent.
  */
 function addOnClickEvent(object, onclickEvent) {
     object.onclick = onclickEvent;
@@ -343,10 +394,11 @@ function getChannelNameByID(ID) {
 function resetSorting() {
     for (var i = 0; i < tables.length; i++) {
         $(document.getElementById(tables[i])).trigger("sortReset");
-        localStorage.setItem(tables[i] + "SortOrder", JSON.stringify([]));
+        localStorage.setItem(tables[i] + "SortOrder", "[]");
     }
 }
 
+// Todo: Check if it can be optimized.
 /**
  * Sets the placeholder text for all tablesorter filter cells according to their column name.
  */
@@ -428,22 +480,22 @@ function buildClientTable() {
     var connectionsSortTypeButton = document.createElement("button");
     connectionsSortTypeButton.id = "connectionsSortTypeButton";
     connectionsSortTypeButton.className = "small-12 medium-8 large-6 columns";
-    connectionsSortTypeButton.innerHTML = "Currently sorting connections by the last connect";
+    connectionsSortTypeButton.innerHTML = sortStrings[1];
 
-    if (localStorage.getItem("connectionsSortType") === null) {
+    if (localStorage.getItem("connectionsSortType") === null)
         localStorage.setItem("connectionsSortType", "1");
-    } else if (localStorage.getItem("connectionsSortType") == "0") {
-        connectionsSortTypeButton.innerHTML = "Currently sorting connections by the first connect";
-    }
+    else if (localStorage.getItem("connectionsSortType") == "0")
+        connectionsSortTypeButton.innerHTML = sortStrings[0];
 
     addOnClickEvent(connectionsSortTypeButton, function() {
         if (localStorage.getItem("connectionsSortType") == "1") {
-            connectionsSortTypeButton.innerHTML = "Currently sorting connections by the first connect";
+            connectionsSortTypeButton.innerHTML = sortStrings[0];
             localStorage.setItem("connectionsSortType", "0");
         } else {
-            connectionsSortTypeButton.innerHTML = "Currently sorting connections by the last connect";
+            connectionsSortTypeButton.innerHTML = sortStrings[1];
             localStorage.setItem("connectionsSortType", "1");
         }
+
         $.tablesorter.updateCache(clientTable.config);
         $.tablesorter.sortOn(clientTable.config, clientTable.config.sortList);
     });
@@ -457,10 +509,12 @@ function buildClientTable() {
     addOnClickEvent(collapseAllButton, function() {
         collapseAll();
     });
+
     clientTableControlSection.appendChild(collapseAllButton);
 
     var coloredRowsDescription_green = document.createElement("div"),
         coloredRowsDescription_grey = document.createElement("div");
+
     coloredRowsDescription_green.id = "description_connected";
     coloredRowsDescription_grey.id = "description_deleted";
     coloredRowsDescription_green.className = coloredRowsDescription_grey.className = "small-6 columns";
@@ -548,6 +602,7 @@ function buildClientTable() {
                 var buttonExpandCollapseConnections = document.createElement("button");
                 buttonExpandCollapseConnections.id = "ConnectionsButton_" + ID;
                 buttonExpandCollapseConnections.innerHTML = "+ " + (Connections.length - 2);
+
                 (function(ID) {
                     addOnClickEvent(buttonExpandCollapseConnections, function() {
                         expandOrCollapseList("Connections", ID);
@@ -573,6 +628,7 @@ function buildClientTable() {
                 var buttonExpandCollapseIPs = document.createElement("button");
                 buttonExpandCollapseIPs.id = "IPsButton_" + ID;
                 buttonExpandCollapseIPs.innerHTML = "+ " + (IPs.length - 1);
+
                 (function(ID) {
                     addOnClickEvent(buttonExpandCollapseIPs, function() {
                         expandOrCollapseList("IPs", ID);
@@ -590,31 +646,30 @@ function buildClientTable() {
 
             cell_Connects.innerHTML = Connection_Count;
             clientBodyRow.appendChild(cell_Connects);
-            if (Client[ID].deleted) {
+
+            if (Client[ID].deleted)
                 clientBodyRow.className += "deleted";
-            } else if (Client[ID].ConnectedState) {
+            else if (Client[ID].ConnectedState) {
                 clientBodyRow.className += "connected";
                 connectedClientsCount++;
             }
-            cell_Connected.innerHTML = String(Boolean(Client[ID].ConnectedState));
 
+            cell_Connected.innerHTML = String(Boolean(Client[ID].ConnectedState));
             clientBodyRow.appendChild(cell_Connected);
 
             if (ServerGroupIDs.length === 0)
                 cell_ServerGroupInfo.innerHTML = "/";
 
-
             for (j = 0; j < ServerGroupIDs.length; j++) {
                 var divName = document.createElement("div"),
                     divDateTime = document.createElement("div");
                 divName.innerHTML = getServerGroupNameByID(Number(ServerGroupIDs[j]));
-                divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format("YYYY-MM-DD HH:mm:ss");
+                divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(timeFormat);
 
                 cell_ServerGroupInfo.appendChild(divName);
                 cell_ServerGroupInfo.appendChild(divDateTime);
             }
             clientBodyRow.appendChild(cell_ServerGroupInfo);
-
             clientBody.appendChild(clientBodyRow);
         }
     }
@@ -645,10 +700,6 @@ function buildClientTable() {
  * Builds the ban table.
  */
 function buildBanTable() {
-    if (localStorage.getItem("uidState") === null) {
-        localStorage.setItem("uidState", "0");
-    }
-
     var banTableControlSection = document.createElement("div");
     banTableControlSection.className = "row";
 
@@ -657,13 +708,14 @@ function buildBanTable() {
     banTableHeading.innerHTML = "Ban table";
     banTableControlSection.appendChild(banTableHeading);
 
-    var switchBetweenIDandUIDButton = document.createElement("button");
-    switchBetweenIDandUIDButton.id = "switchBetweenIDandUIDButton";
-    switchBetweenIDandUIDButton.innerHTML = "Switch between IDs and UIDs";
-    addOnClickEvent(switchBetweenIDandUIDButton, function() {
+    var switchBetweenIDAndUIDButton = document.createElement("button");
+    switchBetweenIDAndUIDButton.id = "switchBetweenIDAndUIDButton";
+    switchBetweenIDAndUIDButton.innerHTML = "Switch between IDs and UIDs";
+
+    addOnClickEvent(switchBetweenIDAndUIDButton, function() {
         switchBetweenIDAndUID();
     });
-    banTableControlSection.appendChild(switchBetweenIDandUIDButton);
+    banTableControlSection.appendChild(switchBetweenIDAndUIDButton);
 
     addPagerSection(banTableControlSection, "banTable");
 
@@ -709,18 +761,20 @@ function buildBanTable() {
             BannedID = Ban[i].bannedID,
             BannedNickname = Ban[i].bannedNickname,
             BannedIP = Ban[i].bannedIP,
-            BannedByID;
-        if (BannedIP != "Unknown") {
+            BannedByID,
+            BannedByNickname = Ban[i].bannedByNickname,
+            BanReason,
+            BanTime = Ban[i].banTime;
+
+        if (BannedIP != "Unknown")
             BannedByID = Ban[i].bannedByID;
-        } else BannedByID = "Unknown";
+        else
+            BannedByID = "Unknown";
 
-        var BannedByNickname = Ban[i].bannedByNickname,
-            BanReason;
-        if (Ban[i].banReason.length != 0) {
+        if (Ban[i].banReason.length != 0)
             BanReason = Ban[i].banReason;
-        } else BanReason = "No Reason given";
-
-        var BanTime = Ban[i].banTime;
+        else
+            BanReason = "No Reason given";
 
         var banBodyRow = document.createElement("tr");
         banBodyRow.id = "ban_" + i;
@@ -743,9 +797,8 @@ function buildBanTable() {
         cell_BanReason.setAttribute("data-title", "Reason");
         cell_BanTime.setAttribute("data-title", "BanTime");
 
-        var UTCBanDateTime = moment(UTCDateStringToDate(BanDateTime)),
-            cell_BanDateTime_Div = document.createElement("div");
-        cell_BanDateTime_Div.innerHTML = UTCBanDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCBanDateTime.fromNow() + ")";
+        var cell_BanDateTime_Div = document.createElement("div");
+        cell_BanDateTime_Div.innerHTML = dateTimeToMomentString(BanDateTime);
         cell_BanDateTime.appendChild(cell_BanDateTime_Div);
         banBodyRow.appendChild(cell_BanDateTime);
 
@@ -776,11 +829,6 @@ function buildBanTable() {
 
     banTable.id = "banTable";
     banTable.className += "ui-table-reflow";
-
-    if (localStorage.getItem("uidState") == "1") {
-        localStorage.setItem("uidState", "0");
-        switchBetweenIDAndUID();
-    }
 
     addIgnoreMomentParser();
     $(banTable).tablesorter({
@@ -871,9 +919,8 @@ function buildKickTable() {
         cell_KickedByUID.setAttribute("data-title", "Kicked by UID");
         cell_KickReason.setAttribute("data-title", "Reason");
 
-        var UTCKickDateTime = moment(UTCDateStringToDate(KickDateTime)),
-            cell_DateTime_Div = document.createElement("div");
-        cell_DateTime_Div.innerHTML = UTCKickDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCKickDateTime.fromNow() + ")";
+        var cell_DateTime_Div = document.createElement("div");
+        cell_DateTime_Div.innerHTML = dateTimeToMomentString(KickDateTime);
         cell_DateTime.appendChild(cell_DateTime_Div);
         kickBodyRow.appendChild(cell_DateTime);
 
@@ -984,9 +1031,8 @@ function buildComplaintTable() {
         cell_ComplaintByID.setAttribute("data-title", "By ID");
         cell_ComplaintByNickname.setAttribute("data-title", "By Nickname");
 
-        var UTCComplaintDateTime = moment(UTCDateStringToDate(ComplaintDateTime)),
-            cell_ComplaintDateTime_Div = document.createElement("div");
-        cell_ComplaintDateTime_Div.innerHTML = UTCComplaintDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCComplaintDateTime.fromNow() + ")";
+        var cell_ComplaintDateTime_Div = document.createElement("div");
+        cell_ComplaintDateTime_Div.innerHTML = dateTimeToMomentString(ComplaintDateTime);
         cell_ComplaintDateTime.appendChild(cell_ComplaintDateTime_Div);
         complaintBodyRow.appendChild(cell_ComplaintDateTime);
 
@@ -1116,9 +1162,8 @@ function buildUploadTable() {
         cell_DeletedByID.setAttribute("data-title", "Deleted by ID");
         cell_DeletedByNickname.setAttribute("data-title", "Deleted by Nickname");
 
-        var UTCUploadDateTime = moment(UTCDateStringToDate(UploadDateTime)),
-            cell_UploadDateTime_Div = document.createElement("div");
-        cell_UploadDateTime_Div.innerHTML = UTCUploadDateTime.format("YYYY-MM-DD HH:mm:ss") + "<br />(about " + UTCUploadDateTime.fromNow() + ")";
+        var cell_UploadDateTime_Div = document.createElement("div");
+        cell_UploadDateTime_Div.innerHTML = dateTimeToMomentString(UploadDateTime);
         cell_UploadDateTime.appendChild(cell_UploadDateTime_Div);
         uploadBodyRow.appendChild(cell_UploadDateTime);
 
@@ -1180,9 +1225,8 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
         });
     }
 
-    if (localStorage.getItem(table + "SortOrder") === null) {
+    if (localStorage.getItem(table + "SortOrder") === null)
         localStorage.setItem(table + "SortOrder", "[]");
-    }
 
     if (localStorage.getItem(table) != "0") {
         sessionStorage.setItem(table + "-built", "1");
@@ -1213,7 +1257,8 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
             alertBox.innerHTML = "No " + table.substring(0, table.search("Table")) + "s were found.";
             document.getElementById("ts3-" + table).appendChild(alertBox);
         }
-    } else sessionStorage.setItem(table + "-built", "0");
+    } else
+        sessionStorage.setItem(table + "-built", "0");
 }
 
 /**
@@ -1245,6 +1290,15 @@ function buildTables() {
             appendBufferedTables();
             setFilterPlaceholders();
 
+            // Ban table UID state action.
+            var uidState = localStorage.getItem("uidState");
+            if (uidState == null || uidState == "1") {
+                localStorage.setItem("uidState", "0");
+
+                if (uidState == "1")
+                    switchBetweenIDAndUID();
+            }
+
             var Attributes = json.Attributes,
                 creationTimestampUTC = Attributes.creationTimestamp_UTC;
 
@@ -1260,9 +1314,8 @@ function buildTables() {
             if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
                 var Client = json.ClientList;
                 for (var j = 0; j < Client.length; j++) {
-                    if (Client[j].ConnectedState) {
+                    if (Client[j].ConnectedState)
                         connectedClientsCount++;
-                    }
                 }
             }
             document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
@@ -1308,7 +1361,6 @@ function buildControlSection() {
         tableSelectionSection.appendChild(tableCheckboxSections[i]);
     }
 
-
     var creationTimestampSection = document.createElement("div"),
         creationTimestampTable = document.createElement("table"),
         ctTHead = document.createElement("thead"),
@@ -1351,7 +1403,6 @@ function buildControlSection() {
     creationTimestampSection.appendChild(creationTimestampTable);
     creationTimestampSection.appendChild(connectedClientsCount);
 
-
     var rebuildSection = document.createElement("div"),
         rebuildJSONButton = document.createElement("button"),
         buildNewJSONButton = document.createElement("button");
@@ -1374,7 +1425,6 @@ function buildControlSection() {
     rebuildSection.appendChild(rebuildJSONButton);
     rebuildSection.appendChild(buildNewJSONButton);
 
-
     var miscControlSection = document.createElement("div"),
         resetSortingButton = document.createElement("button");
 
@@ -1386,7 +1436,6 @@ function buildControlSection() {
     };
 
     miscControlSection.appendChild(resetSortingButton);
-
 
     var navbar = document.createElement("div"),
         scrollBackToTopButton = document.createElement("button");
