@@ -900,6 +900,7 @@ function buildKickTable() {
             KickedByNickname = Kick[i].kickedByNickname,
             KickedByUID = Kick[i].kickedByUID,
             KickReason;
+
         if (Kick[i].kickReason.length != 0) {
             KickReason = Kick[i].kickReason;
         } else KickReason = "No Reason given";
@@ -1220,9 +1221,8 @@ function buildUploadTable() {
  */
 function buildTableWithAlertCheckAndLocalStorage(table) {
     if (document.getElementById(table) != null) {
-        $.tablesorter.destroy(document.getElementById(table), true, function() {
-            $(document.getElementById("ts3-" + table).childNodes).remove();
-        });
+        $(document.getElementById(table)).trigger("destroy");
+        $(document.getElementById("ts3-" + table)).empty();
     }
 
     if (localStorage.getItem(table + "SortOrder") === null)
@@ -1292,7 +1292,7 @@ function buildTables() {
 
             // Ban table UID state action.
             var uidState = localStorage.getItem("uidState");
-            if (uidState == null || uidState == "1") {
+            if (document.getElementById("banTable") != null && (uidState == null || uidState == "1")) {
                 localStorage.setItem("uidState", "0");
 
                 if (uidState == "1")

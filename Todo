@@ -6,10 +6,10 @@ parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
 
 TS3-LogDataViewer.js:
+    - Split into multiple js files and use something like grunt for deployment?
     - Make pager optional.
     - Store pager settings in local storage.
     - Notification if a new ban, kick, complaint or upload was added since the last visit.
-    - Debug and check where detached nodes are still linked.
     - Outsource the creation of the control sections for the tables.
 	- Check sorting possibilities for the server group data in the client table.
 
