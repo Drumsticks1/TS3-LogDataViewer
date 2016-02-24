@@ -10,8 +10,7 @@
 var connectedClientsCount, nanobar, momentInterval, json, rebuildError = false,
     eventListeners = [],
     tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
-    tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"],
-    tableBuffer = [];
+    tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
 
 /**
  * Constants
@@ -272,10 +271,9 @@ function addTableCheckboxListener(table) {
         if (this.checked) {
             localStorage.setItem(table, "1");
 
-            if (sessionStorage.getItem(table + "-built") == "0") {
+            if (sessionStorage.getItem(table + "-built") == "0")
                 buildTableWithAlertCheckAndLocalStorage(table);
-                appendBufferedTables();
-            }
+
         } else {
             localStorage.setItem(table, "0");
             displayString = "none";
@@ -452,17 +450,6 @@ function addPagerSection(tableControlSection, tableName) {
 
     pager.appendChild(selectDiv);
     tableControlSection.appendChild(pager);
-}
-
-/**
- * Appends the buffered built tables to their divs and clears the buffer array.
- */
-function appendBufferedTables() {
-    while (tableBuffer.length) {
-        document.getElementById("ts3-" + tableBuffer[0].id).appendChild(tableBuffer[0]);
-        $(tableBuffer[0]).trigger("applyWidgetId", ["stickyHeaders"]);
-        tableBuffer.shift();
-    }
 }
 
 /**
@@ -693,7 +680,8 @@ function buildClientTable() {
         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
         savePages: false
     });
-    tableBuffer.push(clientTable);
+
+    document.getElementById("ts3-clientTable").appendChild(clientTable);
 }
 
 /**
@@ -845,7 +833,7 @@ function buildBanTable() {
         savePages: false
     });
 
-    tableBuffer.push(banTable);
+    document.getElementById("ts3-banTable").appendChild(banTable);
 }
 
 /**
@@ -961,7 +949,7 @@ function buildKickTable() {
         savePages: false
     });
 
-    tableBuffer.push(kickTable);
+    document.getElementById("ts3-kickTable").appendChild(kickTable);
 }
 
 /**
@@ -1074,7 +1062,7 @@ function buildComplaintTable() {
         savePages: false
     });
 
-    tableBuffer.push(complaintTable);
+    document.getElementById("ts3-complaintTable").appendChild(complaintTable);
 }
 
 /**
@@ -1211,7 +1199,7 @@ function buildUploadTable() {
         savePages: false
     });
 
-    tableBuffer.push(uploadTable);
+    document.getElementById("ts3-uploadTable").appendChild(uploadTable);
 }
 
 /**
@@ -1251,6 +1239,8 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
                 case tables[4]:
                     buildUploadTable();
             }
+
+            $(document.getElementById(table)).trigger("applyWidgetId", ["stickyHeaders"]);
         } else {
             var alertBox = document.createElement("div");
             alertBox.className = "alertBox";
@@ -1287,7 +1277,6 @@ function buildTables() {
                 buildTableWithAlertCheckAndLocalStorage(tables[i]);
             }
 
-            appendBufferedTables();
             setFilterPlaceholders();
 
             // Ban table UID state action.
