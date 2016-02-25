@@ -12,6 +12,3 @@ node_modules
 # TS3-LDV related files
 output.json
 logignore
-
-# files that are built on install
-css

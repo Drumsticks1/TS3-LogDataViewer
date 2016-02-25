@@ -8,16 +8,15 @@
     "compression": "latest",
     "helmet": "latest",
     "jquery": "latest",
-    "node-sass": "latest",
-    "founcation-sites": "latest",
+    "foundation-sites": "latest",
     "tablesorter": "latest",
     "moment": "latest",
     "nanobar": "latest"
   },
-  "devDependencies": {},
-  "scripts": {
-    "install": "node generateCss.js"
+  "devDependencies": {
+    "node-sass": "latest"
   },
+  "scripts": {},
   "keywords": [
     "Placeholder"
   ],
