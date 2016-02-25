@@ -1,0 +1,10 @@
+// foundation.scss
+// Author : Drumsticks1
+// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
+
+@import '../node_modules/foundation-sites/scss/foundation';
+
+@include foundation-global-styles;
+@include foundation-grid;
+@include foundation-button;
+@include foundation-table;

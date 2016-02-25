@@ -13,6 +13,5 @@ node_modules
 output.json
 logignore
 
-# External dependencies
-foundation*.css
-foundation*.js
+# files that are built on install
+css
