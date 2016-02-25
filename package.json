@@ -13,7 +13,7 @@
     "moment": "latest",
     "nanobar": "latest"
   },
-  "devDepesassndencies": {
+  "devDependencies": {
     "node-sass": "latest"
   },
   "scripts": {},
