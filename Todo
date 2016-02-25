@@ -11,12 +11,8 @@ TS3-LogDataViewer.js:
     - Split into multiple js files and use something like grunt for deployment?
     - Make pager optional.
     - Store pager settings in local storage.
-    - Notification if a new ban, kick, complaint or upload was added since the last visit.
     - Outsource the creation of the control sections for the tables.
 	- Check sorting possibilities for the server group data in the client table.
-
-createJSON.js:
-    - Check if the created json can be minimized.
 
 Ban.js:
     - Parse Ban expiration and deletion and add it to the class.
@@ -28,6 +24,7 @@ General:
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
 
 maybe:
+    - Notification if a new ban, kick, complaint or upload was added since the last visit.
 	- Add ServerGroupName history like for the nicknames in the client list.
 	- Add query clients to client list or a query client list?
 	- Make it possible to switch between the virtual servers via Webinterface.

@@ -1,12 +1,33 @@
 {
   "name": "ts3-ldv",
-  "version": "1.0.0",
-  "description": "Placeholder",
+  "version": "2.0.0",
+  "description": "TS3-LogDataViewer is an application for teamspeak3 admins. It contains a nodejs part for parsing the servers logfiles and a part with client-side javascript for showing several tables with the gathered information.",
+  "keywords": [
+    "ts3",
+    "ts",
+    "teamspeak",
+    "admin",
+    "logfiles"
+  ],
+  "bugs": {
+    "url": "https://github.com/Drumsticks1/TS3-LogDataViewer/issues"
+  },
+  "license": "GPL-3.0",
+  "author": "Drumsticks1",
+  "files": [
+    "css",
+    "express",
+    "img",
+    "js",
+    "nodejs",
+    "index.html",
+    "config.json"
+  ],
   "main": "nodejs/app.js",
   "dependencies": {
     "express": "latest",
-    "compression": "latest",
     "helmet": "latest",
+    "compression": "latest",
     "jquery": "latest",
     "foundation-sites": "latest",
     "tablesorter": "latest",
@@ -16,10 +37,5 @@
   "devDependencies": {
     "node-sass": "latest"
   },
-  "scripts": {},
-  "keywords": [
-    "Placeholder"
-  ],
-  "author": "Drumsticks1",
-  "license": "ISC"
+  "private": true
 }

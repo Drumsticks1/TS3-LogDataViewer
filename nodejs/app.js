@@ -1,4 +1,4 @@
-// app.js
+// app.js : Sets up the app.
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -30,14 +30,14 @@ app.use(compression());
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
-app.get("/teamspeak/express/rebuildJSON", function(req, res) {
+app.get("/teamspeak/express/rebuildJSON", function(request, response) {
     index.rebuildJSON();
-    res.end();
+    response.end();
 });
 
-app.get("/teamspeak/express/deleteJSON", function(req, res) {
+app.get("/teamspeak/express/deleteJSON", function(request, response) {
     miscFunctions.clearGlobalArrays();
-    res.end();
+    response.end();
 });
 
 app.listen(globalVariables.usedPort, function() {
