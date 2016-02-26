@@ -282,6 +282,9 @@ function addTableCheckboxListener(table) {
         document.getElementById("ts3-" + table).style.display =
             document.getElementById("scrollTo" + table.charAt(0).toUpperCase() + table.substring(1))
                 .style.display = displayString;
+
+        // Todo: modify when function is optimized.
+        setFilterPlaceholders();
     });
 }
 
@@ -396,7 +399,7 @@ function resetSorting() {
     }
 }
 
-// Todo: Check if it can be optimized.
+// Todo: Optimize, restrict getElementsByTagName to specific divs.
 /**
  * Sets the placeholder text for all tablesorter filter cells according to their column name.
  */

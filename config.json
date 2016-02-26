@@ -3,5 +3,6 @@
   "logDirectory": "/home/teamspeak/teamspeak3-server_linux-amd64/logs/",
   "virtualServer": 1,
   "bufferData": true,
+  "timeBetweenRebuilds": 5000,
   "usedPort": 3000
 }

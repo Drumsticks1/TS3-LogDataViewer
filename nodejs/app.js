@@ -4,15 +4,17 @@
 
 "use strict";
 
-const index = require("./index.js"),
+const express = require("express"),
+    app = express(),
+    compression = require('compression'),
+    helmet = require('helmet'),
     globalVariables = require("./globalVariables.js"),
     getConfig = require("./getConfig.js"),
     outputHandler = require("./outputHandler.js"),
-    express = require("express"),
-    compression = require('compression'),
-    helmet = require('helmet'),
     miscFunctions = require("./miscFunctions.js"),
-    app = express();
+    rebuildJSON = require("./rebuildJSON.js");
+
+var lastRebuild = 0;
 
 outputHandler.updateWriteStream();
 miscFunctions.updateCurrentDate();
@@ -30,14 +32,25 @@ app.use(compression());
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
-app.get("/teamspeak/express/rebuildJSON", function(request, response) {
-    index.rebuildJSON();
-    response.end();
+app.get("/teamspeak/express/rebuildJSON", function(req, res) {
+    var timeDifference = Date.now().valueOf() - lastRebuild;
+
+    if (timeDifference > globalVariables.timeBetweenRebuilds) {
+        rebuildJSON.rebuildJSON();
+        lastRebuild = Date.now().valueOf();
+        res.send("success");
+    } else {
+        const message = "\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenRebuilds is set to " + globalVariables.timeBetweenRebuilds + " ms.";
+        outputHandler.output(message);
+        res.send(message);
+    }
+
+    res.end();
 });
 
-app.get("/teamspeak/express/deleteJSON", function(request, response) {
+app.get("/teamspeak/express/deleteJSON", function(req, res) {
     miscFunctions.clearGlobalArrays();
-    response.end();
+    res.end();
 });
 
 app.listen(globalVariables.usedPort, function() {

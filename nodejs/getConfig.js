@@ -61,7 +61,7 @@ module.exports = {
 
                 if (configJSON.bufferData != undefined) {
                     buffer = configJSON.bufferData;
-                    if (buffer|| !buffer) {
+                    if (buffer || !buffer) {
                         globalVariables.bufferData = buffer;
                     } else {
                         outputHandler.output("bufferData is not specified as a valid boolean (true|0|false|1) - using default value...");
@@ -69,6 +69,18 @@ module.exports = {
                     }
                 } else {
                     outputHandler.output("No virtual server specified - using default value...");
+                }
+
+                if (configJSON.timeBetweenRebuilds != undefined) {
+                    buffer = Number(configJSON.timeBetweenRebuilds);
+                    if (buffer != "NaN") {
+                        globalVariables.timeBetweenRebuilds = buffer;
+                    } else {
+                        outputHandler.output("timeBetweenRebuilds is not specified as a valid number - using default value...");
+                        globalVariables.timeBetweenRebuilds = Constants.timeBetweenRebuilds;
+                    }
+                } else {
+                    outputHandler.output("timeBetweenRebuilds not specified - using default value...");
                 }
 
                 if (configJSON.usedPort != undefined) {

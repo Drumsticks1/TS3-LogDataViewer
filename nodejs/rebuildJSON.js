@@ -5,14 +5,12 @@
 "use strict";
 
 const fs = require("fs"),
-    Constants = require("./Constants.js"),
     globalVariables = require("./globalVariables.js"),
     outputHandler = require("./outputHandler.js"),
     fetchLogs = require("./fetchLogs.js"),
     parseLogs = require("./parseLogs.js"),
     createJSON = require("./createJSON.js"),
-    miscFunctions = require("./miscFunctions.js"),
-    getConfig = require("./getConfig.js");
+    miscFunctions = require("./miscFunctions.js");
 
 exports.rebuildJSON = function() {
     var programStart = new Date();
@@ -22,12 +20,11 @@ exports.rebuildJSON = function() {
     outputHandler.output("\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
     if (!fetchLogs.fetchLogs()) {
-        outputHandler.output("The rebuildJSON function will now exit...");
+        outputHandler.output("The rebuild function will now exit!");
         return 0;
     }
 
     parseLogs.parseLogs();
-
     createJSON.createJSON();
 
     if (!globalVariables.bufferData) {

@@ -22,6 +22,9 @@ module.exports = {
     // Buffer data between rebuildJSON calls for increased performance.
     bufferData: true,
 
+    // Minimum time between rebuilds, number in milliseconds.
+    timeBetweenRebuilds: 5000,
+
     // Port on which the program listens.
     usedPort: 3000
 };

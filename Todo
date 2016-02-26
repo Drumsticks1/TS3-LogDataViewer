@@ -7,7 +7,6 @@ parseLogs.js:
 
 TS3-LogDataViewer.js:
     - Investigate the nanobar memory leak.
-    - Placeholder text not showing when activating the table via table selection section.
     - Split into multiple js files and use something like grunt for deployment?
     - Make pager optional.
     - Store pager settings in local storage.
