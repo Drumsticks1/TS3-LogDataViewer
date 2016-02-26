@@ -33,18 +33,22 @@ app.use(compression());
 app.use(helmet());
 
 app.get("/teamspeak/express/rebuildJSON", function(req, res) {
-    var timeDifference = Date.now().valueOf() - lastRebuild;
+    var timeDifference = Date.now().valueOf() - lastRebuild,
+        response = {"success": true};
 
     if (timeDifference > globalVariables.timeBetweenRebuilds) {
         rebuildJSON.rebuildJSON();
         lastRebuild = Date.now().valueOf();
-        res.send("success");
     } else {
-        const message = "\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenRebuilds is set to " + globalVariables.timeBetweenRebuilds + " ms.";
-        outputHandler.output(message);
-        res.send(message);
+        outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenRebuilds is set to " + globalVariables.timeBetweenRebuilds + " ms.");
+        response = {
+            "success": false,
+            "timeBetweenRebuilds": globalVariables.timeBetweenRebuilds,
+            "timeDifference": timeDifference
+        };
     }
 
+    res.send(response);
     res.end();
 });
 

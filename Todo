@@ -6,6 +6,7 @@ parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
 
 TS3-LogDataViewer.js:
+    - Add a function for communicating with the server via response - request.
     - Investigate the nanobar memory leak.
     - Split into multiple js files and use something like grunt for deployment?
     - Make pager optional.

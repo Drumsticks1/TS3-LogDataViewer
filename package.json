@@ -7,7 +7,7 @@
     "ts",
     "teamspeak",
     "admin",
-    "logfiles"
+    "logs"
   ],
   "bugs": {
     "url": "https://github.com/Drumsticks1/TS3-LogDataViewer/issues"

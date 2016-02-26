@@ -24,8 +24,15 @@ const sortStrings = ["Currently sorting connections by the first connect", "Curr
 function rebuildJSON() {
     nanobar.go(35);
     document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = true;
-    $.get("./express/rebuildJSON", function() {
-        buildTables();
+
+    $.get("./express/rebuildJSON", function(res) {
+        if (res.success)
+            buildTables();
+        else {
+            alert("Next rebuild allowed in " + (res.timeBetweenRebuilds - res.timeDifference) + " ms!\nCurrent timeBetweenRebuilds: " + res.timeBetweenRebuilds + " ms.");
+            nanobar.go(100);
+            document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = false;
+        }
     });
 }
 
