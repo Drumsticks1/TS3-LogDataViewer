@@ -100,11 +100,11 @@ button {
   margin-top: 20px
 }
 
-#TS3-LDV, #buildNewJSONButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #rebuildJSONButton, #switchBetweenIDAndUIDButton, .row .row, .tableheading {
+#TS3-LDV, #buildJSONWithoutBufferButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #buildJSONButton, #switchBetweenIDAndUIDButton, .row .row, .tableheading {
   margin: 0;
 }
 
-#tableSelectionSection, #buildNewJSONButton, #creationTimestampTable, #rebuildJSONButton, #switchBetweenIDAndUIDButton, .tablesorter, .tablesorter-filter-row > td > input {
+#tableSelectionSection, #buildJSONWithoutBufferButton, #creationTimestampTable, #buildJSONButton, #switchBetweenIDAndUIDButton, .tablesorter, .tablesorter-filter-row > td > input {
   width: 100%;
 }
 

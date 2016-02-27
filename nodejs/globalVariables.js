@@ -18,7 +18,7 @@ var ignoredLogs = [],
     virtualServer = Constants.virtualServer,
     logDirectory = Constants.logDirectory,
     bufferData = Constants.bufferData,
-    timeBetweenRebuilds = Constants.timeBetweenRebuilds,
+    timeBetweenBuilds = Constants.timeBetweenBuilds,
     usedPort = Constants.usedPort;
 
 module.exports = {
@@ -36,6 +36,6 @@ module.exports = {
     virtualServer: virtualServer,
     logDirectory: logDirectory,
     bufferData: bufferData,
-    timeBetweenRebuilds: timeBetweenRebuilds,
+    timeBetweenBuilds: timeBetweenBuilds,
     usedPort: usedPort
 };

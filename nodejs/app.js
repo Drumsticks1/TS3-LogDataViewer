@@ -12,9 +12,9 @@ const express = require("express"),
     getConfig = require("./getConfig.js"),
     outputHandler = require("./outputHandler.js"),
     miscFunctions = require("./miscFunctions.js"),
-    rebuildJSON = require("./rebuildJSON.js");
+    buildJSON = require("./buildJSON.js");
 
-var lastRebuild = 0;
+var lastBuild = 0;
 
 outputHandler.updateWriteStream();
 miscFunctions.updateCurrentDate();
@@ -32,28 +32,26 @@ app.use(compression());
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
-app.get("/teamspeak/express/rebuildJSON", function(req, res) {
-    var timeDifference = Date.now().valueOf() - lastRebuild,
+app.get("/buildJSON", function(req, res) {
+    var timeDifference = Date.now().valueOf() - lastBuild,
         response = {"success": true};
 
-    if (timeDifference > globalVariables.timeBetweenRebuilds) {
-        rebuildJSON.rebuildJSON();
-        lastRebuild = Date.now().valueOf();
+    if (timeDifference > globalVariables.timeBetweenBuilds) {
+        if (String(req.query.clearBuffer) == "true")
+            miscFunctions.clearGlobalArrays();
+
+        buildJSON.buildJSON();
+        lastBuild = Date.now().valueOf();
     } else {
         outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenRebuilds is set to " + globalVariables.timeBetweenRebuilds + " ms.");
         response = {
             "success": false,
-            "timeBetweenRebuilds": globalVariables.timeBetweenRebuilds,
+            "timeBetweenBuilds": globalVariables.timeBetweenBuilds,
             "timeDifference": timeDifference
         };
     }
 
     res.send(response);
-    res.end();
-});
-
-app.get("/teamspeak/express/deleteJSON", function(req, res) {
-    miscFunctions.clearGlobalArrays();
     res.end();
 });
 

@@ -12,7 +12,7 @@ const fs = require("fs"),
     createJSON = require("./createJSON.js"),
     miscFunctions = require("./miscFunctions.js");
 
-exports.rebuildJSON = function() {
+exports.buildJSON = function() {
     var programStart = new Date();
 
     miscFunctions.updateCurrentDate();
@@ -20,7 +20,7 @@ exports.rebuildJSON = function() {
     outputHandler.output("\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
     if (!fetchLogs.fetchLogs()) {
-        outputHandler.output("The rebuild function will now exit!");
+        outputHandler.output("The build function will now exit!");
         return 0;
     }
 

@@ -7,42 +7,48 @@
 /**
  * Global Variables
  */
-var connectedClientsCount, nanobar, momentInterval, json, rebuildError = false,
-    eventListeners = [],
-    tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
-    tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
+var connectedClientsCount, nanobar, momentInterval, json, lastBuildCallTime, timeBetweenBuilds, buildError = false,
+    eventListeners = [];
 
 /**
  * Constants
  */
 const sortStrings = ["Currently sorting connections by the first connect", "Currently sorting connections by the last connect"],
-    timeFormat = "YYYY-MM-DD HH:mm:ss";
+    timeFormat = "YYYY-MM-DD HH:mm:ss",
+    tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
+    tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
 
+// Todo: remove duplicates in buildJSON.
 /**
- * Rebuilds the JSON and calls buildTables() when the JSON is fetched.
+ * Sends a request for building the JSON to the server.
+ * @param {boolean} clearBuffer if true: clears the buffer before building the json.
  */
-function rebuildJSON() {
-    nanobar.go(35);
-    document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = true;
+function buildJSON(clearBuffer) {
+    if (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds) {
+        lastBuildCallTime = Date.now().valueOf();
 
-    $.get("./express/rebuildJSON", function(res) {
-        if (res.success)
-            buildTables();
-        else {
-            alert("Next rebuild allowed in " + (res.timeBetweenRebuilds - res.timeDifference) + " ms!\nCurrent timeBetweenRebuilds: " + res.timeBetweenRebuilds + " ms.");
-            nanobar.go(100);
-            document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = false;
-        }
-    });
-}
+        /* An invalid request (time span between the last two requests is smaller than timeBetweenBuilds) is only sent
+         if the client-side js is modified, otherwise it is caught by the if-clause before the request. */
+        $.get("./express/buildJSON", {"clearBuffer": clearBuffer}, function(res) {
+            if (res.success) {
+                buildTables();
+            } else {
+                // Check if the stored timeBetweenBuilds is still valid.
+                if (timeBetweenBuilds != res.timeBetweenBuilds)
+                    timeBetweenBuilds = res.timeBetweenBuilds;
 
-/**
- * Deletes the current JSON and builds a new one after the deletion.
- */
-function buildNewJSON() {
-    $.get("./express/deleteJSON", function() {
-        rebuildJSON();
-    });
+                alert("Next JSON build request allowed in " + (timeBetweenBuilds - res.timeDifference) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
+
+                nanobar.go(100);
+                document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+            }
+        });
+    } else {
+        alert("Next JSON build request allowed in " + (timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime)) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
+
+        nanobar.go(100);
+        document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+    }
 }
 
 /**
@@ -1271,14 +1277,15 @@ function buildTables() {
         cache: false,
         dataType: "json",
         error: function() {
-            if (rebuildError) alert("Rebuilding failed!");
+            if (buildError)
+                alert("Building the JSON failed!");
             else {
-                rebuildError = true;
-                rebuildJSON();
+                buildError = true;
+                buildJSON(false);
             }
         },
         success: function(fetchedJSON) {
-            rebuildError = false;
+            buildError = false;
             json = fetchedJSON;
             connectedClientsCount = 0;
 
@@ -1319,7 +1326,7 @@ function buildTables() {
             }
             document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
 
-            document.getElementById("rebuildJSONButton").disabled = document.getElementById("buildNewJSONButton").disabled = false;
+            document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
             nanobar.go(100);
         }
     });
@@ -1402,27 +1409,27 @@ function buildControlSection() {
     creationTimestampSection.appendChild(creationTimestampTable);
     creationTimestampSection.appendChild(connectedClientsCount);
 
-    var rebuildSection = document.createElement("div"),
-        rebuildJSONButton = document.createElement("button"),
-        buildNewJSONButton = document.createElement("button");
+    var buildSection = document.createElement("div"),
+        buildJSONButton = document.createElement("button"),
+        buildJSONWithoutBufferButton = document.createElement("button");
 
-    rebuildSection.id = "rebuildSection";
-    rebuildSection.className = "small-12 medium-4 large-4 columns";
-    rebuildJSONButton.id = "rebuildJSONButton";
-    buildNewJSONButton.id = "buildNewJSONButton";
-    rebuildJSONButton.innerHTML = "Update current JSON";
-    buildNewJSONButton.innerHTML = "Generate new JSON";
-    rebuildJSONButton.disabled = buildNewJSONButton.disabled = true;
+    buildSection.id = "buildSection";
+    buildSection.className = "small-12 medium-4 large-4 columns";
+    buildJSONButton.id = "buildJSONButton";
+    buildJSONWithoutBufferButton.id = "buildJSONWithoutBufferButton";
+    buildJSONButton.innerHTML = "Update JSON";
+    buildJSONWithoutBufferButton.innerHTML = "Build JSON without buffer";
+    buildJSONButton.disabled = buildJSONWithoutBufferButton.disabled = true;
 
-    rebuildJSONButton.onclick = function() {
-        rebuildJSON();
+    buildJSONButton.onclick = function() {
+        buildJSON(false);
     };
-    buildNewJSONButton.onclick = function() {
-        buildNewJSON();
+    buildJSONWithoutBufferButton.onclick = function() {
+        buildJSON(true);
     };
 
-    rebuildSection.appendChild(rebuildJSONButton);
-    rebuildSection.appendChild(buildNewJSONButton);
+    buildSection.appendChild(buildJSONButton);
+    buildSection.appendChild(buildJSONWithoutBufferButton);
 
     var miscControlSection = document.createElement("div"),
         resetSortingButton = document.createElement("button");
@@ -1466,7 +1473,7 @@ function buildControlSection() {
 
     controlSection.appendChild(tableSelectionSection);
     controlSection.appendChild(creationTimestampSection);
-    controlSection.appendChild(rebuildSection);
+    controlSection.appendChild(buildSection);
     controlSection.appendChild(miscControlSection);
     controlSection.appendChild(navbar);
     document.getElementById("ts3-control").appendChild(controlSection);

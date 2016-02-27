@@ -19,11 +19,11 @@ module.exports = {
     logDirectory: "/home/teamspeak/teamspeak3-server_linux-amd64/logs/",
     virtualServer: 1,
 
-    // Buffer data between rebuildJSON calls for increased performance.
+    // Buffer data between buildJSON calls for increased performance.
     bufferData: true,
 
-    // Minimum time between rebuilds, number in milliseconds.
-    timeBetweenRebuilds: 5000,
+    // Minimum time between builds, number in milliseconds.
+    timeBetweenBuilds: 2000,
 
     // Port on which the program listens.
     usedPort: 3000
