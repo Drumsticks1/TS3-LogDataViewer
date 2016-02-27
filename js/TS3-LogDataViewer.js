@@ -7,7 +7,7 @@
 /**
  * Global Variables
  */
-var connectedClientsCount, nanobar, momentInterval, json, lastBuildCallTime, timeBetweenBuilds, buildError = false,
+var connectedClientsCount, nanobar, momentInterval, json, lastBuildCallTime, timeBetweenBuilds, buildError = false, buildRequestSend = false,
     eventListeners = [];
 
 /**
@@ -24,7 +24,8 @@ const sortStrings = ["Currently sorting connections by the first connect", "Curr
  * @param {boolean} clearBuffer if true: clears the buffer before building the json.
  */
 function buildJSON(clearBuffer) {
-    if (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds) {
+    if (!buildRequestSend && (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
+        buildRequestSend = true;
         lastBuildCallTime = Date.now().valueOf();
 
         /* An invalid request (time span between the last two requests is smaller than timeBetweenBuilds) is only sent
@@ -38,17 +39,17 @@ function buildJSON(clearBuffer) {
                     timeBetweenBuilds = res.timeBetweenBuilds;
 
                 alert("Next JSON build request allowed in " + (timeBetweenBuilds - res.timeDifference) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
-
-                nanobar.go(100);
-                document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
             }
+            buildRequestSend = false;
         });
-    } else {
+    } else if (buildRequestSend)
+        alert("A JSON build request has already be sent!");
+    else
         alert("Next JSON build request allowed in " + (timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime)) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
 
-        nanobar.go(100);
-        document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-    }
+    nanobar.go(100);
+    document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+
 }
 
 /**
