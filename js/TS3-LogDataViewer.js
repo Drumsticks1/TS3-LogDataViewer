@@ -7,7 +7,7 @@
 /**
  * Global Variables
  */
-var connectedClientsCount, nanobar, momentInterval, json, lastBuildCallTime, timeBetweenBuilds, buildError = false, buildRequestSend = false,
+var connectedClientsCount, nanobar, momentInterval, json, lastBuildCallTime, timeBetweenBuilds, buildError = false, buildRequestInProgress = false,
     eventListeners = [];
 
 /**
@@ -18,38 +18,40 @@ const sortStrings = ["Currently sorting connections by the first connect", "Curr
     tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
     tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
 
-// Todo: remove duplicates in buildJSON.
 /**
  * Sends a request for building the JSON to the server.
  * @param {boolean} clearBuffer if true: clears the buffer before building the json.
  */
 function buildJSON(clearBuffer) {
-    if (!buildRequestSend && (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
-        buildRequestSend = true;
+    /* Requests are only sent if the time span between the last two requests is bigger than timeBetweenBuilds and
+     there is no request in progress. Invalid requests are only sent when the remote timeBetweenBuilds is unknown
+     or has increased since the last request */
+    if (!buildRequestInProgress && (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
+        buildRequestInProgress = true;
         lastBuildCallTime = Date.now().valueOf();
 
-        /* An invalid request (time span between the last two requests is smaller than timeBetweenBuilds) is only sent
-         if the client-side js is modified, otherwise it is caught by the if-clause before the request. */
         $.get("./express/buildJSON", {"clearBuffer": clearBuffer}, function(res) {
             if (res.success) {
                 buildTables();
             } else {
-                // Check if the stored timeBetweenBuilds is still valid.
+                // Check if the stored timeBetweenBuilds is still up-to-date.
                 if (timeBetweenBuilds != res.timeBetweenBuilds)
                     timeBetweenBuilds = res.timeBetweenBuilds;
 
                 alert("Next JSON build request allowed in " + (timeBetweenBuilds - res.timeDifference) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
             }
-            buildRequestSend = false;
+            buildRequestInProgress = false;
         });
-    } else if (buildRequestSend)
+        return;
+    }
+
+    if (buildRequestInProgress)
         alert("A JSON build request has already be sent!");
     else
         alert("Next JSON build request allowed in " + (timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime)) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
 
     nanobar.go(100);
     document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-
 }
 
 /**
@@ -167,6 +169,7 @@ function addIgnoreMomentParser() {
         type: "text"
     });
 }
+
 /**
  * Adds a custom parser which ignores the expand/collapse button in the Connections list.
  */
@@ -695,7 +698,7 @@ function buildClientTable() {
     }).tablesorterPager({
         container: $(".clientTablePager"),
         output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-        savePages: false
+        savePages: true
     });
 
     document.getElementById("ts3-clientTable").appendChild(clientTable);
