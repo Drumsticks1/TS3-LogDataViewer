@@ -154,58 +154,42 @@ function collapseAll() {
 }
 
 /**
- * Adds a custom parser which ignores the moment.js timestamps.
+ * Adds the custom tablesorter parsers.
+ * ignoreMoment:    Ignores the moment.js timestamps.
+ * connections:     Ignores the expand/collapse buttons in the Connections column.
+ * ips:             Ignores the expand/collapse buttons in the IPs column.
  */
-function addIgnoreMomentParser() {
+function addCustomParsers() {
     $.tablesorter.addParser({
         id: "ignoreMoment",
-        is: function() {
-            return false;
-        },
         format: function(s) {
             return s;
         },
-        parsed: false,
         type: "text"
     });
-}
 
-/**
- * Adds a custom parser which ignores the expand/collapse button in the Connections list.
- */
-function addConnectionsParser() {
     $.tablesorter.addParser({
-        id: "Connections",
-        is: function() {
-            return false;
-        },
+        id: "connections",
         format: function(s, table, cell) {
             if (localStorage.getItem("connectionsSortType") == "1") {
-                if (cell.firstChild.localName == "button") {
+                if (cell.firstChild.localName == "button")
                     return cell.childNodes[1].innerHTML;
-                } else return cell.firstChild.innerHTML;
-            } else return cell.lastChild.innerHTML;
+                else
+                    return cell.firstChild.innerHTML;
+            } else
+                return cell.lastChild.innerHTML;
         },
-        parsed: false,
         type: "text"
     });
-}
 
-/**
- * Adds a custom parser which ignores the expand/collapse button in the IPs list.
- */
-function addIPsParser() {
     $.tablesorter.addParser({
-        id: "IPs",
-        is: function() {
-            return false;
-        },
+        id: "ips",
         format: function(s, table, cell) {
-            if (cell.firstChild.localName == "button") {
+            if (cell.firstChild.localName == "button")
                 return cell.childNodes[1].innerHTML;
-            } else return cell.firstChild.innerHTML;
+            else
+                return cell.firstChild.innerHTML;
         },
-        parsed: false,
         type: "text"
     });
 }
@@ -300,8 +284,7 @@ function addTableCheckboxListener(table) {
             document.getElementById("scrollTo" + table.charAt(0).toUpperCase() + table.substring(1))
                 .style.display = displayString;
 
-        // Todo: modify when function is optimized.
-        setFilterPlaceholders();
+        setFilterPlaceholders(table);
     });
 }
 
@@ -416,17 +399,15 @@ function resetSorting() {
     }
 }
 
-// Todo: Optimize, restrict getElementsByTagName to specific divs.
 /**
- * Sets the placeholder text for all tablesorter filter cells according to their column name.
+ * Sets the placeholder text for the tablesorter filter cells of the given table according to their column name.
+ * @param tableName the tableName.
  */
-function setFilterPlaceholders() {
-    var allElements = document.getElementsByTagName("*");
-    for (var i = allElements.length - 1; i > 0; i--) {
-        if (allElements[i].getAttribute("placeholder") !== null) {
-            allElements[i].setAttribute("placeholder",
-                allElements[i].parentNode.parentNode.previousSibling.children[allElements[i].getAttribute("data-column")].firstChild.innerHTML);
-        }
+function setFilterPlaceholders(tableName) {
+    var placeholders = document.getElementById(tableName).getElementsByClassName("tablesorter-filter-row")[0].getElementsByTagName("input");
+    for (var i = 0; i < placeholders.length; i++) {
+        placeholders[i].setAttribute("placeholder",
+            placeholders[i].parentNode.parentNode.previousSibling.children[placeholders[i].getAttribute("data-column")].firstChild.innerHTML);
     }
 }
 
@@ -684,8 +665,6 @@ function buildClientTable() {
     clientTable.id = "clientTable";
     clientTable.className += "ui-table-reflow";
 
-    addConnectionsParser();
-    addIPsParser();
     $(clientTable).tablesorter({
         headers: {
             2: {sorter: "Connections"},
@@ -838,7 +817,6 @@ function buildBanTable() {
     banTable.id = "banTable";
     banTable.className += "ui-table-reflow";
 
-    addIgnoreMomentParser();
     $(banTable).tablesorter({
         headers: {
             0: {sorter: "ignoreMoment"}
@@ -954,7 +932,6 @@ function buildKickTable() {
     kickTable.id = "kickTable";
     kickTable.className += "ui-table-reflow";
 
-    addIgnoreMomentParser();
     $(kickTable).tablesorter({
         headers: {
             0: {sorter: "ignoreMoment"}
@@ -1067,7 +1044,6 @@ function buildComplaintTable() {
     complaintTable.id = "complaintTable";
     complaintTable.className += "ui-table-reflow";
 
-    addIgnoreMomentParser();
     $(complaintTable).tablesorter({
         headers: {
             0: {sorter: "ignoreMoment"}
@@ -1204,7 +1180,6 @@ function buildUploadTable() {
     uploadTable.id = "uploadTable";
     uploadTable.className += "ui-table-reflow";
 
-    addIgnoreMomentParser();
     $(uploadTable).tablesorter({
         headers: {
             0: {sorter: "ignoreMoment"}
@@ -1260,6 +1235,7 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
                     buildUploadTable();
             }
 
+            setFilterPlaceholders(table);
             $(document.getElementById(table)).trigger("applyWidgetId", ["stickyHeaders"]);
         } else {
             var alertBox = document.createElement("div");
@@ -1297,8 +1273,6 @@ function buildTables() {
             for (var i = 0; i < tables.length; i++) {
                 buildTableWithAlertCheckAndLocalStorage(tables[i]);
             }
-
-            setFilterPlaceholders();
 
             // Ban table UID state action.
             var uidState = localStorage.getItem("uidState");
@@ -1492,6 +1466,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     buildControlSection();
+    addCustomParsers();
     nanobar.go(25);
 
     for (var i = 0; i < tables.length; i++) {

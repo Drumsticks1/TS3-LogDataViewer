@@ -6,7 +6,6 @@ parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
 
 TS3-LogDataViewer.js:
-    - Add a function for communicating with the server via response - request.
     - Investigate the nanobar memory leak.
     - Split into multiple js files and use something like grunt for deployment?
     - Make pager optional.
@@ -18,11 +17,8 @@ Ban.js:
     - Currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned).
         - Add custom bans.
 
-General:
-    - Limit rebuilds server side (configurable Time between rebuild requests).
-    - Add a ServerGroup table (maybe with rights and so on - would be long-term).
-
 maybe:
+    - Add a ServerGroup table (maybe with rights and so on - would be long-term).
     - Notification if a new ban, kick, complaint or upload was added since the last visit.
 	- Add ServerGroupName history like for the nicknames in the client list.
 	- Add query clients to client list or a query client list?
