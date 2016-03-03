@@ -1,6 +1,6 @@
 // generateCss.js: Script for generating the css files out of the scss files.
-// Author : Drumsticks1
-// GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
+// Author: Drumsticks1
+// GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 

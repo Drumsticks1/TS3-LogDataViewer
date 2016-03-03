@@ -1,0 +1,31 @@
+# nginx
+# Author: Drumsticks1
+# GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
+
+IMPORTANT:
+This only covers the part of the nginx configuration that deals with the ts3-ldv integration.
+If you aren't familiar with nginx: Take your time and create a secure configuration before adding
+the following code to your nginx domain configuration located in the sites-enabled folder.
+
+Another important thing is that you secure the access to the ts3-ldv webpage as it contains sensitive information and
+should be considered a security risk when accessible by untrustworthy users!
+If you aren't familiar with this you should probably have a look at this part of the nginx docs:
+    http://nginx.org/en/docs/http/ngx_http_auth_basic_module.html
+
+Template for insertion into the server block of the configuration:
+
+# Allow access to specific locations only - check nginx documentation for more information.
+location / {
+    try_files $uri $uri/ /index.html =404;
+
+    # Modify the location according to your installation.
+    location /ts3-ldv {
+        auth_basic "Authentication required!";
+        auth_basic_user_file /path/to/your/auth/file/.htpasswd;
+
+        location /ts3-ldv/express/buildJSON {
+            # Modify the port according to your port settings in conf.json.
+            proxy_pass    http://127.0.0.1:3000/buildJSON;
+        }
+    }
+}

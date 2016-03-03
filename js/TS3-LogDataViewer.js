@@ -31,9 +31,9 @@ function buildJSON(clearBuffer) {
         lastBuildCallTime = Date.now().valueOf();
 
         $.get("./express/buildJSON", {"clearBuffer": clearBuffer}, function(res) {
-            if (res.success) {
+            if (res.success)
                 buildTables();
-            } else {
+            else {
                 // Check if the stored timeBetweenBuilds is still up-to-date.
                 if (timeBetweenBuilds != res.timeBetweenBuilds)
                     timeBetweenBuilds = res.timeBetweenBuilds;
@@ -667,8 +667,8 @@ function buildClientTable() {
 
     $(clientTable).tablesorter({
         headers: {
-            2: {sorter: "Connections"},
-            3: {sorter: "IPs"}
+            2: {sorter: "connections"},
+            3: {sorter: "ips"}
         },
         widgets: ["filter"],
         sortList: JSON.parse(localStorage.getItem("clientTableSortOrder"))
@@ -887,9 +887,9 @@ function buildKickTable() {
             KickedByUID = Kick[i].kickedByUID,
             KickReason;
 
-        if (Kick[i].kickReason.length != 0) {
+        if (Kick[i].kickReason.length != 0)
             KickReason = Kick[i].kickReason;
-        } else KickReason = "No Reason given";
+        else KickReason = "No Reason given";
 
         var kickBodyRow = document.createElement("tr"),
             cell_DateTime = document.createElement("td"),

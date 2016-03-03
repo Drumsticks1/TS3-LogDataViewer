@@ -5,13 +5,13 @@
 "use strict";
 
 module.exports = {
-    // Configuration json:
-    configJSON: "../config.json",
+    // Configuration JSON:
+    confJSON: "../conf/conf.json",
 
     // JSON output path and file name.
     outputJSON: "../output.json",
 
-    // The following settings can be overwritten in the config.json.
+    // The following settings can be overwritten in the conf.json.
     // Program log path and file name.
     programLogfile: "/var/log/ts3-ldv/ts3-ldv.log",
 

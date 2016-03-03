@@ -1,0 +1,29 @@
+# ts3-ldv.service: systemd script for TS3-LogDataViewer.
+# Author: Drumsticks1
+# GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
+
+[Unit]
+Description=TS3-LogDataViewer
+After=network.target
+
+[Service]
+# Modify the following variables according to your installation.
+
+# Directory containing the ts3-ldv package.
+WorkingDirectory=/var/www/your-domain/ts3-ldv/nodejs
+
+# Create an user for ts3-ldv - only set the required permissions to prevent security issues.
+User=ts3-ldv
+
+# Set as the group which runs the teamspeak3 server or as a new group that has access to
+# the log files in the teamspeak directory.
+Group=teamspeak
+
+Type=simple
+ExecStart=/usr/bin/node app.js
+PIDFile=ts3-ldv.pid
+RestartSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

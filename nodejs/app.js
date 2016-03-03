@@ -9,7 +9,7 @@ const express = require("express"),
     compression = require('compression'),
     helmet = require('helmet'),
     globalVariables = require("./globalVariables.js"),
-    getConfig = require("./getConfig.js"),
+    getConf = require("./getConf.js"),
     outputHandler = require("./outputHandler.js"),
     miscFunctions = require("./miscFunctions.js"),
     buildJSON = require("./buildJSON.js");
@@ -22,8 +22,8 @@ outputHandler.output("\nProgram startup\n");
 outputHandler.output(miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
 // Fetch the config file and import the settings on program startup.
-if (!getConfig.getConfig()) {
-    getConfig.resetToDefaultConfiguration();
+if (!getConf.getConf()) {
+    getConf.resetToDefaultConfiguration();
 }
 
 // Todo: check options.

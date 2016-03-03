@@ -1,4 +1,4 @@
-// getConfig.js
+// getConf.js
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -15,7 +15,7 @@ module.exports = {
      * Resets the configuration to the default values set in Constants.js.
      */
     resetToDefaultConfiguration: function() {
-        outputHandler.output("Ignoring the config.json and using default settings...");
+        outputHandler.output("Ignoring the conf.json and using default settings...");
         globalVariables.logDirectory = Constants.logDirectory;
         globalVariables.virtualServer = Constants.virtualServer;
         globalVariables.bufferData = Constants.bufferData;
@@ -23,32 +23,32 @@ module.exports = {
     },
 
     /**
-     * Fetches and processes the config.json.
+     * Fetches and processes the conf.json.
      * @returns {boolean} true if no error occurred.
      */
-    getConfig: function() {
+    getConf: function() {
         outputHandler.output("Fetching and checking configuration file...");
         try {
-            var fileStats = fs.statSync(Constants.configJSON);
+            var fileStats = fs.statSync(Constants.confJSON);
             if (fileStats.isFile()) {
-                var configJSON = require(Constants.configJSON);
+                var confJSON = require(Constants.confJSON);
 
-                if (configJSON.programLogfile != undefined) {
-                    globalVariables.programLogfile = configJSON.programLogfile;
+                if (confJSON.programLogfile != undefined) {
+                    globalVariables.programLogfile = confJSON.programLogfile;
                 } else {
                     outputHandler.output("No program log file specified - using default log file...");
                     globalVariables.programLogfile = Constants.programLogfile;
                 }
 
-                if (configJSON.logDirectory != undefined) {
-                    globalVariables.logDirectory = configJSON.logDirectory;
+                if (confJSON.logDirectory != undefined) {
+                    globalVariables.logDirectory = confJSON.logDirectory;
                 } else {
                     outputHandler.output("No log directory specified - using default path...");
                     globalVariables.logDirectory = Constants.logDirectory;
                 }
 
-                if (configJSON.virtualServer != undefined) {
-                    var buffer = Number(configJSON.virtualServer);
+                if (confJSON.virtualServer != undefined) {
+                    var buffer = Number(confJSON.virtualServer);
                     if (buffer != "NaN") {
                         globalVariables.virtualServer = buffer;
                     } else {
@@ -59,8 +59,8 @@ module.exports = {
                     outputHandler.output("No virtual server specified - using default value...");
                 }
 
-                if (configJSON.bufferData != undefined) {
-                    buffer = configJSON.bufferData;
+                if (confJSON.bufferData != undefined) {
+                    buffer = confJSON.bufferData;
                     if (buffer || !buffer) {
                         globalVariables.bufferData = buffer;
                     } else {
@@ -71,8 +71,8 @@ module.exports = {
                     outputHandler.output("No virtual server specified - using default value...");
                 }
 
-                if (configJSON.timeBetweenRebuilds != undefined) {
-                    buffer = Number(configJSON.timeBetweenRebuilds);
+                if (confJSON.timeBetweenRebuilds != undefined) {
+                    buffer = Number(confJSON.timeBetweenRebuilds);
                     if (buffer != "NaN") {
                         globalVariables.timeBetweenRebuilds = buffer;
                     } else {
@@ -83,8 +83,8 @@ module.exports = {
                     outputHandler.output("timeBetweenRebuilds not specified - using default value...");
                 }
 
-                if (configJSON.usedPort != undefined) {
-                    buffer = Number(configJSON.usedPort);
+                if (confJSON.usedPort != undefined) {
+                    buffer = Number(confJSON.usedPort);
                     if (buffer != "NaN") {
                         globalVariables.usedPort = buffer;
                     } else {
@@ -100,7 +100,7 @@ module.exports = {
                 return false;
             }
         } catch (error) {
-            outputHandler.output("An error occurred while fetching the config.json:\n" + error.message);
+            outputHandler.output("An error occurred while fetching the conf.json:\n" + error.message);
             return false;
         }
 

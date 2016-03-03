@@ -2,6 +2,9 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
+general:
+    - add optional systemd and init.d scripts.
+
 parseLogs.js:
     - Outsource the parsing in parseLogs to extra functions.
 

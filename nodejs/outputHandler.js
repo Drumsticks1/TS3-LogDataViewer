@@ -4,8 +4,6 @@
 
 "use strict";
 
-// Todo: maybe move to miscFunctions.
-
 const fs = require('fs'),
     Constants = require('./Constants.js');
 
@@ -21,12 +19,11 @@ module.exports = {
     },
 
     /**
-     * Writes the text to the console and the logfile.
-     * Adds \n after the text when writing to the logfile.
+     * Writes the text to the logfile.
+     * Adds \n after the text.
      * @param {string} text
      */
     output: function(text) {
-        console.log(text);
         programLogfile.write(text + "\n");
     }
 };
