@@ -12,7 +12,7 @@ After=network.target
 # Directory containing the ts3-ldv package.
 WorkingDirectory=/var/www/your-domain/ts3-ldv/nodejs
 
-# Create an user for ts3-ldv - only set the required permissions to prevent security issues.
+# Create an user for ts3-ldv - grant only the required permissions to prevent security issues.
 User=ts3-ldv
 
 # Set as the group which runs the teamspeak3 server or as a new group that has access to
@@ -21,7 +21,6 @@ Group=teamspeak
 
 Type=simple
 ExecStart=/usr/bin/node app.js
-PIDFile=ts3-ldv.pid
 RestartSec=15
 Restart=always
 

@@ -22,9 +22,8 @@ outputHandler.output("\nProgram startup\n");
 outputHandler.output(miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
 
 // Fetch the config file and import the settings on program startup.
-if (!getConf.getConf()) {
+if (!getConf.getConf())
     getConf.resetToDefaultConfiguration();
-}
 
 // Todo: check options.
 app.use(compression());
@@ -43,7 +42,7 @@ app.get("/buildJSON", function(req, res) {
         buildJSON.buildJSON();
         lastBuild = Date.now().valueOf();
     } else {
-        outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenRebuilds is set to " + globalVariables.timeBetweenRebuilds + " ms.");
+        outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
         response = {
             "success": false,
             "timeBetweenBuilds": globalVariables.timeBetweenBuilds,

@@ -2,15 +2,11 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-general:
-    - add optional systemd and init.d scripts.
-
 parseLogs.js:
-    - Outsource the parsing in parseLogs to extra functions.
+    - New way to iterate through data: Remove line after parsing it and read the new line.
 
 TS3-LogDataViewer.js:
-    - Investigate the nanobar memory leak.
-    - Split into multiple js files and use something like grunt for deployment?
+    - Split into multiple js files and use dev tools for putting them together?
     - Make pager optional.
     - Outsource the creation of the control sections for the tables.
 	- Check sorting possibilities for the server group data in the client table.
@@ -21,6 +17,8 @@ Ban.js:
         - Add custom bans.
 
 maybe:
+    - Check if the parsed data changed since the last request and skip json creation when no changes were made?
+        - Maybe also skip table building when the client already has the latest data.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
     - Notification if a new ban, kick, complaint or upload was added since the last visit.
 	- Add ServerGroupName history like for the nicknames in the client list.

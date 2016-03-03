@@ -1121,15 +1121,17 @@ function buildUploadTable() {
             UploadedByNickname = Upload[i].uploadedByNickname,
             DeletedByID, DeletedByNickname;
 
+        var uploadBodyRow = document.createElement("tr");
+
         if (Upload[i].deleted) {
+            uploadBodyRow.className += "deleted";
             DeletedByID = Upload[i].deletedByID;
             DeletedByNickname = Upload[i].deletedByNickname;
         } else {
             DeletedByID = DeletedByNickname = "/";
         }
 
-        var uploadBodyRow = document.createElement("tr"),
-            cell_UploadDateTime = document.createElement("td"),
+        var cell_UploadDateTime = document.createElement("td"),
             cell_ChannelID = document.createElement("td"),
             cell_ChannelName = document.createElement("td"),
             cell_Filename = document.createElement("td"),
@@ -1146,6 +1148,7 @@ function buildUploadTable() {
         cell_UploadedByNickname.setAttribute("data-title", "Uploaded by Nickname");
         cell_DeletedByID.setAttribute("data-title", "Deleted by ID");
         cell_DeletedByNickname.setAttribute("data-title", "Deleted by Nickname");
+
 
         var cell_UploadDateTime_Div = document.createElement("div");
         cell_UploadDateTime_Div.innerHTML = dateTimeToMomentString(UploadDateTime);

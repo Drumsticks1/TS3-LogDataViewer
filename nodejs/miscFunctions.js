@@ -56,7 +56,7 @@ module.exports = {
      * Updates the currentDate to the current date.
      */
     updateCurrentDate: function() {
-        currentDate = new Date;
+        currentDate = new Date();
     },
 
     /**
