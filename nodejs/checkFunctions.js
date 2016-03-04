@@ -16,14 +16,14 @@ var ClientList = globalVariables.ClientList,
 
 module.exports = {
     /**
-     * Checks if a ServerGroup is already existing in the Client ServerListID vector.
+     * Checks if a ServerGroup is already existing in the Client ServerGroupListID vector.
      * @param {number} clientID
-     * @param {number} serverID
+     * @param {number} serverGroupID
      * @returns {boolean}
      */
-    isDuplicateServerGroup: function(clientID, serverID) {
+    isDuplicateServerGroup: function(clientID, serverGroupID) {
         for (var i = 0; i < ClientList[clientID].getServerGroupIDCount(); i++) {
-            if (ClientList[clientID].getServerGroupIDByID(i) == serverID) {
+            if (ClientList[clientID].getServerGroupIDByID(i) == serverGroupID) {
                 return true;
             }
         }
