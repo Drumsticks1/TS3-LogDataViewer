@@ -4,5 +4,8 @@
   "virtualServer": 1,
   "bufferData": true,
   "timeBetweenBuilds": 2000,
-  "usedPort": 3000
+  "usedPort": 3000,
+  "ignoredLogs": [
+    "ts3server_4242-42-42__42_42_42.424242_1.log"
+  ]
 }

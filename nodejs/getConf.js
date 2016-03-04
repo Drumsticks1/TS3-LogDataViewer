@@ -10,6 +10,7 @@ const fs = require("fs"),
     outputHandler = require("./outputHandler.js"),
     miscFunctions = require("./miscFunctions.js");
 
+// Todo: Optimize code in getConf!
 module.exports = {
     /**
      * Resets the configuration to the default values set in Constants.js.
@@ -33,67 +34,69 @@ module.exports = {
             if (fileStats.isFile()) {
                 var confJSON = require(Constants.confJSON);
 
-                if (confJSON.programLogfile != undefined) {
+                if (confJSON.programLogfile != undefined)
                     globalVariables.programLogfile = confJSON.programLogfile;
-                } else {
+                else {
                     outputHandler.output("No program log file specified - using default log file...");
                     globalVariables.programLogfile = Constants.programLogfile;
                 }
 
-                if (confJSON.logDirectory != undefined) {
+                if (confJSON.logDirectory != undefined)
                     globalVariables.logDirectory = confJSON.logDirectory;
-                } else {
+                else {
                     outputHandler.output("No log directory specified - using default path...");
                     globalVariables.logDirectory = Constants.logDirectory;
                 }
 
                 if (confJSON.virtualServer != undefined) {
                     var buffer = Number(confJSON.virtualServer);
-                    if (buffer != "NaN") {
+                    if (buffer != "NaN")
                         globalVariables.virtualServer = buffer;
-                    } else {
+                    else {
                         outputHandler.output("Virtual server is not specified as a valid number - using default value...");
                         globalVariables.virtualServer = Constants.virtualServer;
                     }
-                } else {
+                } else
                     outputHandler.output("No virtual server specified - using default value...");
-                }
+
 
                 if (confJSON.bufferData != undefined) {
                     buffer = confJSON.bufferData;
-                    if (buffer || !buffer) {
+                    if (buffer || !buffer)
                         globalVariables.bufferData = buffer;
-                    } else {
+                    else {
                         outputHandler.output("bufferData is not specified as a valid boolean (true|0|false|1) - using default value...");
                         globalVariables.bufferData = Constants.bufferData;
                     }
-                } else {
+                } else
                     outputHandler.output("No virtual server specified - using default value...");
-                }
 
                 if (confJSON.timeBetweenRebuilds != undefined) {
                     buffer = Number(confJSON.timeBetweenRebuilds);
-                    if (buffer != "NaN") {
+                    if (buffer != "NaN")
                         globalVariables.timeBetweenRebuilds = buffer;
-                    } else {
+                    else {
                         outputHandler.output("timeBetweenRebuilds is not specified as a valid number - using default value...");
                         globalVariables.timeBetweenRebuilds = Constants.timeBetweenRebuilds;
                     }
-                } else {
+                } else
                     outputHandler.output("timeBetweenRebuilds not specified - using default value...");
-                }
 
                 if (confJSON.usedPort != undefined) {
                     buffer = Number(confJSON.usedPort);
-                    if (buffer != "NaN") {
+                    if (buffer != "NaN")
                         globalVariables.usedPort = buffer;
-                    } else {
+                    else {
                         outputHandler.output("Port is not specified as a valid number - using default value...");
                         globalVariables.usedPort = Constants.usedPort;
                     }
-                } else {
+                } else
                     outputHandler.output("No port specified - using default value...");
-                }
+
+                if (confJSON.ignoredLogs != undefined && confJSON.ignoredLogs.length)
+                    globalVariables.ignoredLogs = confJSON.ignoredLogs;
+                else
+                    outputHandler.output("No ignored logs specified...");
 
             } else {
                 outputHandler.output("config.json is not a file...\nUsing default values for logDirectory, virtualServer and bufferData.");

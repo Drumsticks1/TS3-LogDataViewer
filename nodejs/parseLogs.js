@@ -87,22 +87,12 @@ function resetBoundaries() {
 }
 
 /**
- * Parses the given logline for information matching with the given boundariesIdentifier data.
+ * Returns a substring of the current buffer_logline that contains the information matching the given boundaries identifier.
  * @param {string} boundariesIdentifier
- * @param {string} logline
- * @returns {string} parsed data, substring of logline.
- */
-function getSubstringForLine(boundariesIdentifier, logline) {
-    return logline.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-}
-
-/**
- * Calls getSubstringForLine with buffer_logline as logline parameter.
- * @param {string} boundariesIdentifier
- * @returns {string} parsed data, substring of the current buffer_logline.
+ * @returns {string} parsed information, substring of the current buffer_logline.
  */
 function getSubstring(boundariesIdentifier) {
-    return getSubstringForLine(boundariesIdentifier, buffer_logline);
+    return buffer_logline.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
 }
 
 /**
@@ -145,15 +135,10 @@ exports.parseLogs = function() {
             if (i + 1 == Logs.length)
                 isLastLog = true;
 
-            var logfileData = fs.readFileSync(globalVariables.logDirectory + Logs[i], "utf8"),
-                prevLineEnd = -1, currentLineEnd = logfileData.indexOf("\n");
+            var logfileData = fs.readFileSync(globalVariables.logDirectory + Logs[i], "utf8");
 
-            // Todo: Check if there is a nicer way for iterating through the file content.
-            for (var currentPos = 0; currentPos < logfileData.length;) {
-                buffer_logline = logfileData.substring(prevLineEnd + 1, currentLineEnd);
-
-                prevLineEnd = currentLineEnd;
-                currentLineEnd = logfileData.indexOf("\n", prevLineEnd + 1);
+            while(logfileData.length > 0){
+                buffer_logline = logfileData.substring(0, logfileData.indexOf("\n"));
 
                 // Connects
                 if (buffer_logline.indexOf(match_connect) != -1) {
@@ -281,9 +266,9 @@ exports.parseLogs = function() {
                                     lastIPBanRule.lastIndexOf("'(id:") + 5,
                                     lastIPBanRule.length - 1];
 
-                                bannedUID = getSubstringForLine("bannedUID", lastUIDBanRule);
-                                bannedIP = getSubstringForLine("bannedIP", lastIPBanRule);
-                                bannedByID = getSubstringForLine("bannedByID", lastIPBanRule);
+                                bannedUID = lastUIDBanRule.substring(boundaries.bannedUID[0], boundaries.bannedUID[1]);
+                                bannedIP = lastIPBanRule.substring(boundaries.bannedIP[0], boundaries.bannedIP[1]);
+                                bannedByID = lastIPBanRule.substring(boundaries.bannedByID[0], boundaries.bannedByID[1]);
                             }
                             else {
                                 bannedUID = bannedIP = "Unknown";
@@ -608,7 +593,8 @@ exports.parseLogs = function() {
                         }
                     }
                 }
-                currentPos += buffer_logline.length + 1;
+                logfileData = logfileData.substring(buffer_logline.length + 1);
+              //  currentPos += buffer_logline.length + 1;
             }
 
             if (!checkFunctions.isDuplicateLog(Logs[i])) {
@@ -616,5 +602,4 @@ exports.parseLogs = function() {
             }
         }
     }
-    boundaries.length = 0;
 };
