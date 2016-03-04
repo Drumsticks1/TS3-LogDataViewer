@@ -20,6 +20,7 @@ const sortStrings = ["Currently sorting connections by the first connect", "Curr
 
 /**
  * Sends a request for building the JSON to the server.
+ *
  * @param {boolean} clearBuffer if true: clears the buffer before building the json.
  */
 function buildJSON(clearBuffer) {
@@ -31,14 +32,22 @@ function buildJSON(clearBuffer) {
         lastBuildCallTime = Date.now().valueOf();
 
         $.get("./express/buildJSON", {"clearBuffer": clearBuffer}, function(res) {
-            if (res.success)
-                buildTables();
-            else {
-                // Check if the stored timeBetweenBuilds is still up-to-date.
-                if (timeBetweenBuilds != res.timeBetweenBuilds)
-                    timeBetweenBuilds = res.timeBetweenBuilds;
+            if (res.success) {
+                updateTimeBetweenBuilds(res);
 
-                alert("Next JSON build request allowed in " + (timeBetweenBuilds - res.timeDifference) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
+                if (res.newJSON)
+                    if (res.fetchLogsError)
+                        addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert");
+                    else
+                        buildTables();
+                else
+                    addCallout("No new information!", "secondary", 2500);
+            }
+            else {
+                updateTimeBetweenBuilds(res);
+
+                var timeUntilNextBuild = (timeBetweenBuilds - res.timeDifference);
+                addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
             }
             buildRequestInProgress = false;
         });
@@ -46,12 +55,67 @@ function buildJSON(clearBuffer) {
     }
 
     if (buildRequestInProgress)
-        alert("A JSON build request has already be sent!");
-    else
-        alert("Next JSON build request allowed in " + (timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime)) + " ms!\nCurrent timeBetweenBuilds: " + timeBetweenBuilds + " ms.");
+        addCallout("A JSON build request has already been sent!", "warning", 1500);
+    else {
+        var timeUntilNextBuild = timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime);
+        addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
+    }
 
     nanobar.go(100);
     document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+}
+
+/**
+ * Updates the stored timeBetweenBuilds if necessary.
+ *
+ * @param {object} response response object of a request.
+ */
+function updateTimeBetweenBuilds(response) {
+    if (timeBetweenBuilds != response.timeBetweenBuilds)
+        timeBetweenBuilds = response.timeBetweenBuilds;
+}
+
+/**
+ * Adds a removable callout.
+ * If duration is specified the created object fades out after the duration and is removed afterwards.
+ *
+ * @param {string} message
+ * @param {string} calloutClass
+ * @param {number} [duration]
+ */
+function addCallout(message, calloutClass, duration) {
+
+    // Updates the message of the nextRequestCallout if one is already existing.
+    if (calloutClass.indexOf("nextRequestCallout") != -1) {
+        var nextRequestCallouts = document.getElementsByClassName("nextRequestCallout");
+
+        if (nextRequestCallouts.length != 0) {
+            nextRequestCallouts[0].innerText = message;
+            return;
+        }
+    }
+
+    var callout = document.createElement("div"),
+        calloutCloseButton = document.createElement("button");
+
+    callout.innerText = message;
+    callout.className = "callout " + calloutClass;
+    callout.setAttribute("data-closable", "");
+
+    calloutCloseButton.innerHTML = "&#215;";
+    calloutCloseButton.className = "close-button";
+    calloutCloseButton.setAttribute("data-close", "");
+
+    callout.appendChild(calloutCloseButton);
+    document.getElementById("calloutDiv").appendChild(callout);
+
+    if (duration != undefined) {
+        setTimeout(function() {
+            $(callout).fadeOut(function() {
+                callout.parentNode.removeChild(callout);
+            });
+        }, duration)
+    }
 }
 
 /**
@@ -1261,7 +1325,7 @@ function buildTables() {
         dataType: "json",
         error: function() {
             if (buildError)
-                alert("Building the JSON failed!");
+                addCallout("Building the JSON failed!", "error");
             else {
                 buildError = true;
                 buildJSON(false);
@@ -1287,15 +1351,15 @@ function buildTables() {
             }
 
             var Attributes = json.Attributes,
-                creationTimestampUTC = Attributes.creationTimestamp_UTC;
+                creationTime = Attributes.creationTime;
 
-            document.getElementById("creationTimestamp_localtime").innerHTML = Attributes.creationTimestamp_LocalTime;
-            document.getElementById("creationTimestamp_utc").innerHTML = creationTimestampUTC;
-            document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+            document.getElementById("creationTimestamp_localtime").innerHTML = creationTime.localTime;
+            document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
+            document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
             clearInterval(momentInterval);
             momentInterval = setInterval(function() {
-                document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTimestampUTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+                document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
             }, 1000);
 
             if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {

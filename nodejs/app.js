@@ -33,21 +33,36 @@ app.use(helmet());
 
 app.get("/buildJSON", function(req, res) {
     var timeDifference = Date.now().valueOf() - lastBuild,
-        response = {"success": true};
+        response = {
+            "success": true,
+            "fetchLogsError": false,
+            "newJSON": true,
+            "timeBetweenBuilds": globalVariables.timeBetweenBuilds,
+            "timeDifference": -1
+        };
 
     if (timeDifference > globalVariables.timeBetweenBuilds) {
         if (String(req.query.clearBuffer) == "true")
             miscFunctions.clearGlobalArrays();
 
-        buildJSON.buildJSON();
-        lastBuild = Date.now().valueOf();
+        switch (buildJSON.buildJSON()) {
+            case 0:
+                response.success = false;
+                response.fetchLogsError = true;
+                break;
+
+            case 1:
+                lastBuild = Date.now().valueOf();
+                break;
+
+            case 2:
+                response.newJSON = false;
+                break;
+        }
     } else {
         outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
-        response = {
-            "success": false,
-            "timeBetweenBuilds": globalVariables.timeBetweenBuilds,
-            "timeDifference": timeDifference
-        };
+        response.success = false;
+        response.timeDifference = timeDifference;
     }
 
     res.send(response);

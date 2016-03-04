@@ -72,7 +72,7 @@ label {
   background-color: $light-blue;
 }
 
-.alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading, #description_connected, #description_deleted, .tablesorter > thead > tr > th, .tablesorter-pager {
+.alertBox, #TS3-LDV, #creationTimestampTable > thead > tr > th, #ts3-control, .tablesorter, button, .tableheading, #description_connected, #description_deleted, .tablesorter > thead > tr > th, .tablesorter-pager, .callout {
   font-family: 'Open Sans', Arial, sans-serif;
   font-weight: 400;
 }
@@ -211,6 +211,19 @@ td, th {
 
 .tablesorter-pager > div {
   flex-grow: 1;
+}
+
+#calloutDiv {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.close-button {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
 }
 
 @media (max-width: 1024px) {
