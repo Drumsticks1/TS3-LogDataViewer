@@ -86,8 +86,7 @@ module.exports = {
     getCurrentLocaltime: function() {
         return dateToString(currentDate);
     },
-
-    // Todo: maybe move to a resetFunctions js.
+    
     /**
      * Clears the arrays storing the parsed information.
      */

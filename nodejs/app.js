@@ -6,7 +6,6 @@
 
 const express = require("express"),
     app = express(),
-    compression = require('compression'),
     helmet = require('helmet'),
     globalVariables = require("./globalVariables.js"),
     getConf = require("./getConf.js"),
@@ -24,9 +23,6 @@ outputHandler.output(miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.
 // Fetch the config file and import the settings on program startup.
 if (!getConf.getConf())
     getConf.resetToDefaultConfiguration();
-
-// Todo: check options.
-app.use(compression());
 
 // Improves security by setting various HTTP headers.
 app.use(helmet());

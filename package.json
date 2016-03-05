@@ -26,7 +26,6 @@
   "dependencies": {
     "express": "latest",
     "helmet": "latest",
-    "compression": "latest",
     "jquery": "latest",
     "foundation-sites": "latest",
     "tablesorter": "latest",

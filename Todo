@@ -3,6 +3,7 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 TS3-LogDataViewer.js:
+    - Maybe: Remove "Build JSON without buffer" or increase the time between requests and allow building a new json regardless of the last modification time of the last log.
     - Split into multiple js files and use dev tools for putting them together?
     - Make pager optional.
     - Outsource the creation of the control sections for the tables.
@@ -14,8 +15,7 @@ Ban.js:
         - Add custom bans.
 
 maybe:
-    - Check if the parsed data changed since the last request and skip json creation when no changes were made?
-        - Maybe also skip table building when the client already has the latest data.
+    - Add optional debug logging.
     - (optional) log directory watcher for automatic parsing on log updates - only building of json required when calling buildJSON.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
     - Notification if a new ban, kick, complaint or upload was added since the last visit.

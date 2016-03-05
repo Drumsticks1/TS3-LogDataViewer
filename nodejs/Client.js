@@ -114,9 +114,7 @@ Client.prototype.connect = function() {
  * Decrements the ConnectedState counter.
  */
 Client.prototype.disconnect = function() {
-    // Todo: Check if necessary.
-    if (this.ConnectedState > 0)
-        this.ConnectedState--;
+    this.ConnectedState--;
 };
 
 /**

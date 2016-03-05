@@ -39,7 +39,7 @@ const match_banRule = "|INFO    |VirtualServer |  " + globalVariables.virtualSer
     match_channelEdition = ") edited by '",
     match_channelDeletion = ") deleted by '";
 
-var buffer_logline, boundaries;
+var currentLine, boundaries;
 
 /**
  * Resets the boundaries object.
@@ -87,12 +87,12 @@ function resetBoundaries() {
 }
 
 /**
- * Returns a substring of the current buffer_logline that contains the information matching the given boundaries identifier.
+ * Returns a substring of the current currentLine that contains the information matching the given boundaries identifier.
  * @param {string} boundariesIdentifier
- * @returns {string} parsed information, substring of the current buffer_logline.
+ * @returns {string} parsed information, substring of the current currentLine.
  */
 function getSubstring(boundariesIdentifier) {
-    return buffer_logline.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
+    return currentLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
 }
 
 /**
@@ -138,17 +138,17 @@ exports.parseLogs = function() {
             var logfileData = fs.readFileSync(globalVariables.logDirectory + Logs[i], "utf8");
 
             while(logfileData.length > 0){
-                buffer_logline = logfileData.substring(0, logfileData.indexOf("\n"));
+                currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
 
                 // Connects
-                if (buffer_logline.indexOf(match_connect) != -1) {
+                if (currentLine.indexOf(match_connect) != -1) {
                     boundaries.IP = [
-                        buffer_logline.lastIndexOf(" ") + 1,
-                        buffer_logline.length - 6]; // -6 for ignoring the port.
+                        currentLine.lastIndexOf(" ") + 1,
+                        currentLine.length - 6]; // -6 for ignoring the port.
 
                     boundaries.Nickname = [
                         virtualServerLength + 76,
-                        buffer_logline.lastIndexOf("'(id:")];
+                        currentLine.lastIndexOf("'(id:")];
 
                     boundaries.ID = [
                         boundaries.Nickname[1] + 5,
@@ -179,24 +179,24 @@ exports.parseLogs = function() {
                 }
 
                 // Disconnects (including kicks and bans)
-                else if (buffer_logline.indexOf(match_disconnect) != -1) {
+                else if (currentLine.indexOf(match_disconnect) != -1) {
                     isBan = isKick = false;
 
                     boundaries.Nickname = [
                         virtualServerLength + 79,
-                        buffer_logline.lastIndexOf("'(id:")];
+                        currentLine.lastIndexOf("'(id:")];
 
                     boundaries.ID[0] = boundaries.Nickname[1] + 5;
 
-                    if (buffer_logline.lastIndexOf(") reason 'reasonmsg") == -1) {
-                        boundaries.ID[1] = buffer_logline.lastIndexOf(") reason 'invokerid=");
+                    if (currentLine.lastIndexOf(") reason 'reasonmsg") == -1) {
+                        boundaries.ID[1] = currentLine.lastIndexOf(") reason 'invokerid=");
 
-                        if (buffer_logline.lastIndexOf(" bantime=") == -1)
+                        if (currentLine.lastIndexOf(" bantime=") == -1)
                             isKick = true;
                         else
                             isBan = true;
                     } else
-                        boundaries.ID[1] = buffer_logline.lastIndexOf(") reason 'reasonmsg");
+                        boundaries.ID[1] = currentLine.lastIndexOf(") reason 'reasonmsg");
 
                     DateTime = getSubstring("DateTime");
                     ID = Number(getSubstring("ID"));
@@ -217,22 +217,22 @@ exports.parseLogs = function() {
                     // Bans
                     if (isBan) {
                         var validUID = true;
-                        boundaries.bannedByNickname[0] = buffer_logline.indexOf(" invokername=", boundaries.ID[1]) + 13;
+                        boundaries.bannedByNickname[0] = currentLine.indexOf(" invokername=", boundaries.ID[1]) + 13;
 
-                        if (buffer_logline.indexOf("invokeruid=") != -1) {
-                            boundaries.bannedByNickname[1] = buffer_logline.indexOf(" invokeruid=", boundaries.bannedByNickname[0]);
+                        if (currentLine.indexOf("invokeruid=") != -1) {
+                            boundaries.bannedByNickname[1] = currentLine.indexOf(" invokeruid=", boundaries.bannedByNickname[0]);
                             boundaries.bannedByUID = [
                                 boundaries.bannedByNickname[1] + 12,
-                                buffer_logline.indexOf(" reasonmsg", boundaries.bannedByNickname[1])];
+                                currentLine.indexOf(" reasonmsg", boundaries.bannedByNickname[1])];
                         }
                         else {
-                            boundaries.bannedByNickname[1] = boundaries.bannedByUID[1] = buffer_logline.indexOf(" reasonmsg");
+                            boundaries.bannedByNickname[1] = boundaries.bannedByUID[1] = currentLine.indexOf(" reasonmsg");
                             validUID = false;
                         }
 
                         boundaries.banReason[0] = boundaries.bannedByUID[1] + 11;
-                        if (buffer_logline.indexOf("reasonmsg=") != -1) {
-                            boundaries.banReason[1] = buffer_logline.indexOf(" bantime=", boundaries.bannedByUID[1]);
+                        if (currentLine.indexOf("reasonmsg=") != -1) {
+                            boundaries.banReason[1] = currentLine.indexOf(" bantime=", boundaries.bannedByUID[1]);
                             boundaries.banTime[0] = boundaries.banReason[1] + 9;
                         }
                         else {
@@ -240,7 +240,7 @@ exports.parseLogs = function() {
                             boundaries.banTime[0] = boundaries.banReason[1] + 8;
                         }
 
-                        boundaries.banTime[1] = buffer_logline.length - 1;
+                        boundaries.banTime[1] = currentLine.length - 1;
 
                         var bannedByNickname = getSubstring("bannedByNickname"),
                             banReason = getSubstring("banReason"),
@@ -290,26 +290,26 @@ exports.parseLogs = function() {
                     else if (isKick) {
                         var kickedByNickname, kickedByUID, kickReason = "";
 
-                        if (buffer_logline.lastIndexOf(" reasonmsg=") != -1) {
+                        if (currentLine.lastIndexOf(" reasonmsg=") != -1) {
                             boundaries.kickReason = [
-                                buffer_logline.lastIndexOf(" reasonmsg=") + 11,
-                                buffer_logline.length - 1
+                                currentLine.lastIndexOf(" reasonmsg=") + 11,
+                                currentLine.length - 1
                             ];
 
                             kickReason = getSubstring("kickReason");
                         }
 
                         boundaries.kickedByNickname = [
-                            buffer_logline.lastIndexOf(" invokername=") + 13,
-                            buffer_logline.lastIndexOf(" invokeruid=")
+                            currentLine.lastIndexOf(" invokername=") + 13,
+                            currentLine.lastIndexOf(" invokeruid=")
                         ];
 
                         boundaries.kickedByUID[0] = boundaries.kickedByNickname[1] + 12;
 
-                        if (buffer_logline.indexOf("invokeruid=serveradmin") == -1)
-                            boundaries.kickedByUID[1] = buffer_logline.indexOf("=", boundaries.kickedByUID[0]) + 1;
+                        if (currentLine.indexOf("invokeruid=serveradmin") == -1)
+                            boundaries.kickedByUID[1] = currentLine.indexOf("=", boundaries.kickedByUID[0]) + 1;
                         else
-                            boundaries.kickedByUID[1] = buffer_logline.indexOf("reasonmsg") - 1;
+                            boundaries.kickedByUID[1] = currentLine.indexOf("reasonmsg") - 1;
 
                         kickedByNickname = getSubstring("kickedByNickname");
                         kickedByUID = getSubstring("kickedByUID");
@@ -323,16 +323,16 @@ exports.parseLogs = function() {
                 }
 
                 // Client assignments to and client removals from a server group
-                else if (buffer_logline.indexOf(match_serverGroupAssignment) != -1 || buffer_logline.indexOf(match_serverGroupRemoval) != -1) {
-                    boundaries.ServerGroupName[0] = buffer_logline.indexOf(") was added to servergroup '") + 28;
+                else if (currentLine.indexOf(match_serverGroupAssignment) != -1 || currentLine.indexOf(match_serverGroupRemoval) != -1) {
+                    boundaries.ServerGroupName[0] = currentLine.indexOf(") was added to servergroup '") + 28;
 
                     if (boundaries.ServerGroupName[0] == 27)
-                        boundaries.ServerGroupName[0] = buffer_logline.indexOf(") was removed from servergroup '") + 32;
+                        boundaries.ServerGroupName[0] = currentLine.indexOf(") was removed from servergroup '") + 32;
 
-                    boundaries.ServerGroupName[1] = buffer_logline.lastIndexOf("'(id:", buffer_logline.lastIndexOf(") by client '"));
+                    boundaries.ServerGroupName[1] = currentLine.lastIndexOf("'(id:", currentLine.lastIndexOf(") by client '"));
                     boundaries.ServerGroupID[0] = boundaries.ServerGroupName[1] + 5;
-                    boundaries.ServerGroupID[1] = buffer_logline.indexOf(")", boundaries.ServerGroupName[0]);
-                    boundaries.ID = [67, buffer_logline.indexOf(") was ")];
+                    boundaries.ServerGroupID[1] = currentLine.indexOf(")", boundaries.ServerGroupName[0]);
+                    boundaries.ID = [67, currentLine.indexOf(") was ")];
 
                     DateTime = getSubstring("DateTime");
                     ServerGroupID = Number(getSubstring("ServerGroupID"));
@@ -349,7 +349,7 @@ exports.parseLogs = function() {
                     if (ClientList.length < ID + 1)
                         ClientList.resizeFill(ID + 1, "Client");
 
-                    if (buffer_logline.indexOf(match_serverGroupAssignment) != -1) {
+                    if (currentLine.indexOf(match_serverGroupAssignment) != -1) {
                         if (!checkFunctions.isDuplicateServerGroup(ID, ServerGroupID))
                             ClientList[ID].addServerGroup(ServerGroupID, DateTime);
                     }
@@ -360,35 +360,35 @@ exports.parseLogs = function() {
 
                 // Ban Rules
                 // Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
-                else if (buffer_logline.indexOf(match_banRule) != -1) {
-                    if (buffer_logline.indexOf("' cluid='") != -1 && buffer_logline.indexOf("' ip='") == -1)
-                        lastUIDBanRule = buffer_logline;
-                    else if (buffer_logline.indexOf("' ip='") != -1 && buffer_logline.indexOf("' cluid='") == -1)
-                        lastIPBanRule = buffer_logline;
+                else if (currentLine.indexOf(match_banRule) != -1) {
+                    if (currentLine.indexOf("' cluid='") != -1 && currentLine.indexOf("' ip='") == -1)
+                        lastUIDBanRule = currentLine;
+                    else if (currentLine.indexOf("' ip='") != -1 && currentLine.indexOf("' cluid='") == -1)
+                        lastIPBanRule = currentLine;
                 }
 
                 // Complaints
-                else if (buffer_logline.indexOf(match_complaint) != -1) {
+                else if (currentLine.indexOf(match_complaint) != -1) {
                     boundaries.complaintAboutNickname = [
                         virtualServerLength + 83,
-                        buffer_logline.indexOf("'(id:")];
+                        currentLine.indexOf("'(id:")];
 
                     boundaries.complaintAboutID = [
                         boundaries.complaintAboutNickname[1] + 5,
-                        buffer_logline.indexOf(") reason '")];
+                        currentLine.indexOf(") reason '")];
 
                     boundaries.complaintReason = [
                         boundaries.complaintAboutID[1] + 10,
-                        buffer_logline.lastIndexOf("' by client '")
+                        currentLine.lastIndexOf("' by client '")
                     ];
 
                     boundaries.complaintByNickname = [
                         boundaries.complaintReason[1] + 13,
-                        buffer_logline.lastIndexOf("'(id:")];
+                        currentLine.lastIndexOf("'(id:")];
 
                     boundaries.complaintByID = [
                         boundaries.complaintByNickname[1] + 5,
-                        buffer_logline.length - 1];
+                        currentLine.length - 1];
 
                     DateTime = getSubstring("DateTime");
                     var complaintAboutNickname = getSubstring("complaintAboutNickname"),
@@ -405,22 +405,22 @@ exports.parseLogs = function() {
                 }
 
                 // Uploads
-                else if (buffer_logline.indexOf(match_upload) != -1) {
+                else if (currentLine.indexOf(match_upload) != -1) {
                     boundaries.channelID = [
                         virtualServerLength + 74,
-                        buffer_logline.indexOf(")")];
+                        currentLine.indexOf(")")];
 
                     boundaries.filename = [
                         boundaries.channelID[1] + 4,
-                        buffer_logline.lastIndexOf("' by client '")];
+                        currentLine.lastIndexOf("' by client '")];
 
                     boundaries.uploadedByNickname = [
                         boundaries.filename[1] + 13,
-                        buffer_logline.lastIndexOf("'(id:")];
+                        currentLine.lastIndexOf("'(id:")];
 
                     boundaries.uploadedByID = [
                         boundaries.uploadedByNickname[1] + 5,
-                        buffer_logline.length - 1];
+                        currentLine.length - 1];
 
                     DateTime = getSubstring("DateTime");
                     channelID = Number(getSubstring("channelID"));
@@ -436,32 +436,32 @@ exports.parseLogs = function() {
                 }
 
                 // Client Deletions
-                else if (buffer_logline.indexOf(match_deleteUser1) != -1) {
-                    if (buffer_logline.indexOf(match_deleteUser2) != -1) {
-                        boundaries.ID[0] = buffer_logline.lastIndexOf(") got deleted by client '");
-                        boundaries.ID[1] = buffer_logline.lastIndexOf("'(id:", boundaries.ID[0]) + 5;
+                else if (currentLine.indexOf(match_deleteUser1) != -1) {
+                    if (currentLine.indexOf(match_deleteUser2) != -1) {
+                        boundaries.ID[0] = currentLine.lastIndexOf(") got deleted by client '");
+                        boundaries.ID[1] = currentLine.lastIndexOf("'(id:", boundaries.ID[0]) + 5;
 
                         ClientList[Number(getSubstring("ID"))].deleteClient();
                     }
                 }
 
                 // Upload Deletions
-                else if (buffer_logline.indexOf(match_uploadDeletion) != -1) {
+                else if (currentLine.indexOf(match_uploadDeletion) != -1) {
                     boundaries.channelID = [
                         virtualServerLength + 77,
-                        buffer_logline.indexOf(")")];
+                        currentLine.indexOf(")")];
 
                     boundaries.filename = [
                         boundaries.channelID[1] + 4,
-                        buffer_logline.lastIndexOf("' by client '")];
+                        currentLine.lastIndexOf("' by client '")];
 
                     boundaries.deletedByNickname = [
                         boundaries.filename[1] + 13,
-                        buffer_logline.lastIndexOf("'(id:")];
+                        currentLine.lastIndexOf("'(id:")];
 
                     boundaries.deletedByID = [
                         boundaries.deletedByNickname[1] + 5,
-                        buffer_logline.length - 1];
+                        currentLine.length - 1];
 
                     Upload.addDeletedBy(
                         Number(getSubstring("channelID")),
@@ -471,32 +471,32 @@ exports.parseLogs = function() {
                 }
 
                 // Channel additions, edits or deletions.
-                else if (buffer_logline.indexOf(match_channel) != -1) {
+                else if (currentLine.indexOf(match_channel) != -1) {
                     // 0 --> added
                     // 1 --> edited
                     // 2 --> edited undefined --> added
                     // 3 --> deleted
                     var eventTypeC = -1;
 
-                    if (buffer_logline.indexOf(match_channelEdition) != -1) {
-                        boundaries.channelID[1] = buffer_logline.indexOf(match_channelEdition);
+                    if (currentLine.indexOf(match_channelEdition) != -1) {
+                        boundaries.channelID[1] = currentLine.indexOf(match_channelEdition);
                         eventTypeC = 1;
                     }
-                    else if (buffer_logline.indexOf(match_channelCreation) != -1) {
-                        boundaries.channelID[1] = buffer_logline.indexOf(match_channelCreation);
+                    else if (currentLine.indexOf(match_channelCreation) != -1) {
+                        boundaries.channelID[1] = currentLine.indexOf(match_channelCreation);
                         eventTypeC = 0;
                     }
-                    else if (buffer_logline.indexOf(match_subChannelCreation) != -1) {
-                        boundaries.channelID[1] = buffer_logline.indexOf(match_subChannelCreation);
+                    else if (currentLine.indexOf(match_subChannelCreation) != -1) {
+                        boundaries.channelID[1] = currentLine.indexOf(match_subChannelCreation);
                         eventTypeC = 0;
                     }
-                    else if (buffer_logline.indexOf(match_channelDeletion) != -1) {
-                        boundaries.channelID[1] = buffer_logline.indexOf(match_channelDeletion);
+                    else if (currentLine.indexOf(match_channelDeletion) != -1) {
+                        boundaries.channelID[1] = currentLine.indexOf(match_channelDeletion);
                         eventTypeC = 3;
                     }
 
                     if (eventTypeC != -1) {
-                        boundaries.channelID[0] = buffer_logline.indexOf("'(id:") + 5;
+                        boundaries.channelID[0] = currentLine.indexOf("'(id:") + 5;
 
                         // Todo: check virtual server compatibility!
                         boundaries.channelName = [68, boundaries.channelID[0] - 5];
@@ -529,38 +529,38 @@ exports.parseLogs = function() {
                 }
 
                 // Servergroup additions, deletions, renamings and copying
-                else if (buffer_logline.indexOf(match_serverGroupEvent) != -1) {
+                else if (currentLine.indexOf(match_serverGroupEvent) != -1) {
                     // 0 --> added
                     // 1 --> deleted
                     // 2 --> renamed
                     // 3 --> copied // just like "added"
                     var eventTypeS = -1;
 
-                    boundaries.ServerGroupID[0] = buffer_logline.indexOf("'(id:") + 5;
+                    boundaries.ServerGroupID[0] = currentLine.indexOf("'(id:") + 5;
 
-                    if (buffer_logline.indexOf(") was added by '") != -1) {
-                        boundaries.ServerGroupID[1] = buffer_logline.indexOf(") was added by '");
+                    if (currentLine.indexOf(") was added by '") != -1) {
+                        boundaries.ServerGroupID[1] = currentLine.indexOf(") was added by '");
                         eventTypeS = 0;
                     }
-                    else if (buffer_logline.indexOf(") was deleted by '") != -1) {
-                        boundaries.ServerGroupID[1] = buffer_logline.indexOf(") was deleted by '");
+                    else if (currentLine.indexOf(") was deleted by '") != -1) {
+                        boundaries.ServerGroupID[1] = currentLine.indexOf(") was deleted by '");
                         eventTypeS = 1;
                     }
-                    else if (buffer_logline.indexOf(") was renamed to '") != -1) {
-                        boundaries.ServerGroupID[1] = buffer_logline.indexOf(") was renamed to '");
+                    else if (currentLine.indexOf(") was renamed to '") != -1) {
+                        boundaries.ServerGroupID[1] = currentLine.indexOf(") was renamed to '");
                         boundaries.ServerGroupName = [
-                            buffer_logline.indexOf(") was renamed to '") + 18,
-                            buffer_logline.lastIndexOf("' by '", buffer_logline.length - 1)];
+                            currentLine.indexOf(") was renamed to '") + 18,
+                            currentLine.lastIndexOf("' by '", currentLine.length - 1)];
 
                         eventTypeS = 2;
                     }
-                    else if (buffer_logline.indexOf(") was copied by '") != -1) {
+                    else if (currentLine.indexOf(") was copied by '") != -1) {
                         boundaries.ServerGroupID = [
-                            buffer_logline.lastIndexOf("'(id:") + 5,
-                            buffer_logline.length - 1];
+                            currentLine.lastIndexOf("'(id:") + 5,
+                            currentLine.length - 1];
 
                         boundaries.ServerGroupName = [
-                            buffer_logline.indexOf(") to '") + 6,
+                            currentLine.indexOf(") to '") + 6,
                             boundaries.ServerGroupID[0] - 5];
 
                         eventTypeS = 3;
@@ -569,7 +569,7 @@ exports.parseLogs = function() {
                     if (eventTypeS != -1) {
                         if (eventTypeS == 0 || eventTypeS == 1) {
                             boundaries.ServerGroupName = [
-                                buffer_logline.indexOf("| servergroup '") + 15,
+                                currentLine.indexOf("| servergroup '") + 15,
                                 boundaries.ServerGroupID[0] - 5];
                         }
 
@@ -593,8 +593,7 @@ exports.parseLogs = function() {
                         }
                     }
                 }
-                logfileData = logfileData.substring(buffer_logline.length + 1);
-              //  currentPos += buffer_logline.length + 1;
+                logfileData = logfileData.substring(currentLine.length + 1);
             }
 
             if (!checkFunctions.isDuplicateLog(Logs[i])) {

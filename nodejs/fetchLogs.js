@@ -18,34 +18,30 @@ const fs = require("fs"),
 exports.fetchLogs = function() {
     outputHandler.output("Checking log directory...");
     globalVariables.Logs.length = 0;
+
     try {
-        var logDirectoryStats = fs.statSync(globalVariables.logDirectory);
-        if (logDirectoryStats.isDirectory()) {
-            try {
-                var logFiles = fs.readdirSync(globalVariables.logDirectory);
-
-                if (logFiles.length > 0) {
-                    outputHandler.output("Fetching logs...");
-                    for (var i = 0; i < logFiles.length; i++) {
-                        if (logFiles[i].lastIndexOf(".log") == logFiles[i].length - 4) {
-                            if (!checkFunctions.isIgnoredLog(logFiles[i])) {
-                                if (logFiles[i].substring(38, logFiles[i].length - 4) == String(globalVariables.virtualServer)) {
-                                    globalVariables.Logs.push(logFiles[i]);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    outputHandler.output("The log directory seems to be empty.");
-                }
-
-            } catch (error) {
-                outputHandler.output("An error occurred while reading the director:\n" + error.message);
-            }
-
-        } else {
+        if (!fs.statSync(globalVariables.logDirectory).isDirectory()) {
             outputHandler.output("The log directory seems not to be a directory.");
             return false;
+        }
+
+        try {
+            var logFiles = fs.readdirSync(globalVariables.logDirectory);
+
+            if (logFiles.length > 0) {
+                outputHandler.output("Fetching logs...");
+                for (var i = 0; i < logFiles.length; i++) {
+                    if (logFiles[i].lastIndexOf(".log") == logFiles[i].length - 4
+                        && logFiles[i].substring(38, logFiles[i].length - 4) == String(globalVariables.virtualServer)
+                        && !checkFunctions.isIgnoredLog(logFiles[i])) {
+                        globalVariables.Logs.push(logFiles[i]);
+                    }
+                }
+            } else
+                outputHandler.output("The log directory seems to be empty.");
+
+        } catch (error) {
+            outputHandler.output("An error occurred while reading the director:\n" + error.message);
         }
     }
     catch (error) {
