@@ -17,7 +17,7 @@ const Client = require("./Client.js"),
 var currentDate;
 
 /**
- * Resizes the array to the request length by appending the filling objects to the array.
+ * Resize the array to the request length by appending the filling objects to the array.
  * @param length - requested length
  * @param objectName - name of the filling object class:
  *        "Client", "ServerGroup", "Ban", "Kick", "Complaint", "Upload"

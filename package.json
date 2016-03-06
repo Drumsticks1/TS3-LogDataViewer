@@ -20,7 +20,8 @@
     "img",
     "js",
     "nodejs",
-    "index.html"
+    "index.html",
+    "Install Instructions"
   ],
   "main": "nodejs/app.js",
   "dependencies": {

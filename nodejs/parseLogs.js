@@ -137,7 +137,7 @@ exports.parseLogs = function() {
 
             var logfileData = fs.readFileSync(globalVariables.logDirectory + Logs[i], "utf8");
 
-            while(logfileData.length > 0){
+            while (logfileData.length > 0) {
                 currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
 
                 // Connects
@@ -324,15 +324,15 @@ exports.parseLogs = function() {
 
                 // Client assignments to and client removals from a server group
                 else if (currentLine.indexOf(match_serverGroupAssignment) != -1 || currentLine.indexOf(match_serverGroupRemoval) != -1) {
-                    boundaries.ServerGroupName[0] = currentLine.indexOf(") was added to servergroup '") + 28;
-
-                    if (boundaries.ServerGroupName[0] == 27)
+                    if (currentLine.indexOf(match_serverGroupAssignment) != -1)
+                        boundaries.ServerGroupName[0] = currentLine.indexOf(") was added to servergroup '") + 28;
+                    else
                         boundaries.ServerGroupName[0] = currentLine.indexOf(") was removed from servergroup '") + 32;
 
                     boundaries.ServerGroupName[1] = currentLine.lastIndexOf("'(id:", currentLine.lastIndexOf(") by client '"));
                     boundaries.ServerGroupID[0] = boundaries.ServerGroupName[1] + 5;
                     boundaries.ServerGroupID[1] = currentLine.indexOf(")", boundaries.ServerGroupName[0]);
-                    boundaries.ID = [67, currentLine.indexOf(") was ")];
+                    boundaries.ID = [virtualServerLength + 66, currentLine.indexOf(") was ")];
 
                     DateTime = getSubstring("DateTime");
                     ServerGroupID = Number(getSubstring("ServerGroupID"));
@@ -353,8 +353,7 @@ exports.parseLogs = function() {
                         if (!checkFunctions.isDuplicateServerGroup(ID, ServerGroupID))
                             ClientList[ID].addServerGroup(ServerGroupID, DateTime);
                     }
-                    // Todo: extra check, may be removed later
-                    else if (checkFunctions.isDuplicateServerGroup(ID, ServerGroupID))
+                    else
                         ClientList[ID].removeServerGroupByID(ServerGroupID);
                 }
 
@@ -497,9 +496,7 @@ exports.parseLogs = function() {
 
                     if (eventTypeC != -1) {
                         boundaries.channelID[0] = currentLine.indexOf("'(id:") + 5;
-
-                        // Todo: check virtual server compatibility!
-                        boundaries.channelName = [68, boundaries.channelID[0] - 5];
+                        boundaries.channelName = [virtualServerLength + 67, boundaries.channelID[0] - 5];
 
                         DateTime = getSubstring("DateTime");
                         var channelID = Number(getSubstring("channelID")),
@@ -528,7 +525,7 @@ exports.parseLogs = function() {
                     }
                 }
 
-                // Servergroup additions, deletions, renamings and copying
+                // Servergroup additions, deletions, renaming and copying
                 else if (currentLine.indexOf(match_serverGroupEvent) != -1) {
                     // 0 --> added
                     // 1 --> deleted

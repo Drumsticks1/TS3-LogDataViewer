@@ -45,7 +45,7 @@ exports.fetchLogs = function() {
         }
     }
     catch (error) {
-        outputHandler.output("An error occurred while fetching the logfiles:");
+        outputHandler.output("An error occurred while fetching the logs:");
         outputHandler.output(error.message);
         return false;
     }
