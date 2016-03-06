@@ -2,41 +2,59 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-Linux:
+This installation instructions are intended for any linux distribution.
+Experienced users may also install it on other operating systems but I may not be able to help with issues regarding anything else than linux.
 
-1. Create a directory for the LogDataViewer in your web directory (e.g. "/var/www/html/LogDataViewer").
-	! Skipping the next step may result in serious security vulnerability of your server as anybody would be able to access this directory !
-2. Set up a .htaccess in this directory in order to restrict the access to the directory to you and chosen users or use a similar restriction method if you aren't using apache.
-3. Download the source code of the newest release available (https://github.com/Drumsticks1/TS3-LogDataViewer/releases).
-4. Download the attached compiled file (TS3-LogDataViewer.gz for Linux) from the release you are using (-> skip to step 5) or compile the code yourself using the provided makefile (-> follow the 4.x steps).
-	4.1. Downloads the makefile, the .cpp and .h files listed in the directory "TS3-LogDataViewer" (the todo.h isn't necessary for compiling as it doesn't include any code).
-	4.2. Download the Boost Library package via "https://downloads.sourceforge.net/project/boost/boost/1.60.0/boost_1_60_0.tar.bz2" and extract it to your "/usr/" folder (--> /usr/boost_1_60_0)(you may need to adjust the version number).
-	4.3. Compile the required libraries (in /usr/boost_1_60_0: "./bootstrap.sh" and then "./b2 --with-program_options --with-filesystem --with-system --with-date_time --runtime-link=static --variant=release").
-	4.4. Install the packages "libboost-iostreams1.55", "libboost-system1.55", "libboost-filesystem1.55" and "libboost-program-options1.55" (you may need to adjust the version numbers).
-	4.5. Download the pugixml library from it's github page ("https://github.com/zeux/pugixml/releases/tag/v1.7") and uncompress it.
-	4.6. Move the uncompressed folder into the directory you wish (default location set in the makefile: /usr/pugixml-1.7/) (you may need to adjust the version numbers).
-	4.7. Install the packages "make" and "g++" in order to compile using the makefile.
-	4.8. Check the include paths in the makefile and adjust them if necessary.
-	4.9. Compile with the makefile ("make -f makefile").
-5. Download a custom Foundation build with only "Grid" and "Tables" selected: "http://foundation.zurb.com/sites/download.html#customizeFoundation".
-6. Download jQuery via this link: "http://code.jquery.com/jquery-2.1.4.min.js".
-7. Download the javascript file for the loading bar via the following link: "https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js".
-8. Download the jquery plugin "moment.js" via the following link: "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js".
-9. Download the following files from motties fork of the jquery plugin "tablesorter": https://mottie.github.io/tablesorter/docs/ :
-	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.3/js/jquery.tablesorter.min.js
-	- https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.3/js/jquery.tablesorter.widgets.min.js
-10. Move the "css", "img" and the "js" folders as well as the "index.html" from the last release into your LogDataViewer directory.
-11. Unzip the foundation zip and move the content of the "js" and the "css" folders into the same-named folders in your LogDataViewer directory.
-12. Move the other javascript files you downloaded into the "js" folder in the LogDataViewer directory.
-13. Move the downloaded and unzipped or self-compiled "TS3-LogDataViewer" into the "var/www/LogDataViewer" directory and make it executable ("chmod +x TS3-LogDataViewer").
-14. Move the "rebuildXML.php" and the "deleteXML.php" into the LogDataViewer directory and change the file group to www-data (= owner of the web directories) ("chgrp www-data rebuildXML.php" and "chgrp www-data deleteXML.php").
-15. Make the logdirectory readable and executable for group users ("chown g+rx /path/to/the/teamspeak3/log/directory/").
-16. Add the user www-data to the group under which your teampeak3 server is running ("usermod -aG yourteamspeak3group www-data").
-17. (If necessary) Adjust the LDVPATH (path to the LDV directory) in the "rebuildXML.php" and the "deleteXML.php" as well as the LOGPATH and the VIRTUALSERVER in the "rebuildXML.php".
-18. Access the web interface (e.g. "https://your-webserver.com/LogDataViewer/index.html").
-19. (Optional) Add a file named "logignore" in your log directory and add the names of log files which you want to exclude from the parsing.
-20. (Optional) If you would like to change the appearance of the web interface / your website you can do this by editing the "style.css" according to your wishes.
+- Create a directory for the LogDataViewer in a directory which can be accessed on your server via nginx (e.g. ""/var/www/www.your-domain.com/ts3-ldv").
+    - Set the directory owner to the user that will run the server-side app (recommended: create a new user for this, e.g. ts3-ldv).
+    - Set the directory group to your webserver group (e.g. www-data).
+- Head over to the directory you created in the first step and execute "npm install ts3-ldv".
+- Modify the conf.json in the conf folder according to your web server and your preferences (Information about the possible settings can be found in the Configuration section in README.md).
+    - If you don't change the programLog setting you will have to create a directory /var/log/ts3-ldv/ and set the directory owner to the user that will run the server-side app.
+- Follow the steps in the nginx section below before proceeding to the next step.
+- (optional, recommended) Copy the ts3-ldv.server file to your systemd service folder and modify the settings according to your installation.
+- (optional, recommended) Copy the ts3-ldv.logrotate file for your logrotate.d config folder and rename the file to ts3-ldv (you need to change the log path if you changed the programLog setting in conf.json).
+- You should now be able to start the server-side app via "service ts3-ldv start", access the location on your domain via your browser and access the interface.
+
+If the program fails to start, doesn't work properly or you run into any other issues:
+Check the program log first and ensure that you configured the paths right.
 
 
-If there are any problems or improvement suggestions feel free to open an Issue on GitHub so I can improve the install instructions.
-Also feel free to open Issues on GitHub for feature requests and so on.
+nginx configuration:
+
+This section only covers the part of the nginx configuration for ts3-ldv integration.
+If you aren't familiar with nginx: Take your time and create a secure configuration before adding
+the following code to your nginx domain configuration located in the sites-enabled folder.
+
+Security:
+Another important thing is that you secure the access to the ts3-ldv page as it contains sensitive information and
+should be considered a security risk when accessible by untrustworthy users!
+If you aren't familiar with this you should probably have a look at this part of the nginx docs:
+    http://nginx.org/en/docs/http/ngx_http_auth_basic_module.html
+
+(I also recommend something like fail2ban for preventing brute-forcing the auth, but you will have to google for this yourself)
+
+The following lines are a template for the configuration that allows access to specific locations on the server only.
+Inside the "location / {}" block you will have to replace the two occurrences of "/ts3-ldv/" according to the path of
+the directory you created in the first step.
+Additionally if you modified the port setting in conf.json you need to modify the port in the proxy_pass directive.
+
+
+# Allow access to specific locations only - check nginx documentation for more information.
+location / {
+    try_files $uri $uri/ /index.html =404;
+
+    # Modify the location according to your installation.
+    location /ts3-ldv {
+        auth_basic "Authentication required!";
+        auth_basic_user_file /path/to/your/auth/file/.htpasswd;
+
+        location /ts3-ldv/express/buildJSON {
+            # Modify the port according to your port settings in conf.json.
+            proxy_pass    http://127.0.0.1:3000/buildJSON;
+        }
+    }
+}
+
+
+Feel free to open an issue on GitHub for improvement suggestions for the Install Instructions!

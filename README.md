@@ -1,80 +1,57 @@
-# TS3-LogDataViewer
+TS3-LogDataViewer is an easy to deploy application that gathers information from the logs of a ts3 server and displays them in an interface that is accessible via the web browser.
+The interface shows detailed information about the clients and their activity on your TeamSpeak3 server.
 
-## Short description
-TS3-LogDataViewer creates detailed lists using the data written to the log files of the TeamSpeak3 server. The provided index.html includes a control section and the following tables:
-- Client table
-- Ban table
-- Kick table
-- Complaint table
-- File upload table
+## How it works
+It contains two parts:
+- server-side: a nodejs application that parses the logs of the TS3 server, stores the information and creates a JSON for further use.
+- client-side*: an one-page-application that can be accessed via browser and displays the information in multiple tables that can easily be interacted with.
 
-## [Demo](http://drumsticks1.github.io/TS3-LogDataViewer/index.html)
-This demo is set up with gh-pages and shows the design as well as all features of the latest release version.<br />As it is set up with gh-pages the rebuild XML options aren't available but you can mess around with all other options.
+(* the files are on the server but are accessed and used in the client-side interface)
 
-## How does it work ?
-The program requires the log files of the TS3 server (logging has to be enabled in the server settings - enabling all logging options is recommended). The log files are analyzed and the relevant information (e.g. Nicknames and IPs) is collected. After all log files are parsed a XML file is created which then is used for displaying the tables in the web interface or in your custom HTML.
-
-## Current Features
-### [Responsive web design](http://www.w3schools.com/html/html_responsive.asp)
-The responsive front-end framework was used for a smooth change between various display sizes.
-On displays with a width smaller than 1024px the tables are switching to another layout which is optimized for smaller displays.
-### Multiple sortable tables
-- Client list
-- Ban list
-- Kick list
-- Complaint list
-- File upload list
-
-#### Control Section
-- Select which tables you want to be built and displayed.
-- Update the current XML via a button.
-- Generate a new XML via a button (useful when changing log directories or after an failed database migration).
-- Timestamps of the XML creation (local time of the server and UTC).
-- Count of the currently connected clients.
-- Navbar (fixed at the bottom of the page) which contains the following buttons (scroll buttons of unselected tables won't appear):
-  - Scroll back to top
-  - Scroll to client table
-  - Scroll to ban table
-  - Scroll to kick table
-  - Scroll to complaint table
-  - Scroll to upload table
-
-### Overall Program Features
-- You can select which tables you want to be built and displayed. This selection is saved to your local storage.
-- You can sort the tables and this sort order is saved to your local storage (this includes the sort type of the connections (= sort by the last or the first connects)).
-- You can change the virtual server whose logs will be analyzed by adjusting the value of  the VIRTUALSERVER variable in the rebuildXML.php.
-- You can manually create a logignore and list the log files (one each line) that you want to be ignored (e.g. invalid logs as result of a messed up database migration following a reset to the last backup state).
-- In order to save time the program uses the information from the last created XML instead of parsing all logs again.
-- Lockfile: Only one instance of the program can run at once.
-  - If a lockfile is older that 5 minutes it is deleted when running the program.<br />This prevents problems caused by lockfiles remaining when the program is terminated manually / an uncaught exception occurs.
-- Log file containing the console output of the last program run.
-
-### Planned Features
-See the latest todo.h for planned features.
-
-### It does not contain and never will
-Any information that isn't logged.
-
-## Installation
-As the file name already implies, the install instructions can be found in the file "Install Instructions".<br /> For now there are only installation instructions available for Linux but experienced users should still be able to set it up on Windows by following the Linux steps (I can't provide support for Mac as I didn't yet work with it, but this may change in the future).<br /><br/> NOTE: Compiled files for Linux and Windows can be downloaded via the release tab on GitHub since v1.3.0 (TS3-LogDataViewer.gz for Linux and TS3-LogDataViewer.exe.gz for Windows).
-
-### Dependencies
-All dependencies are covered in the install instructions.<br /> You will need to download the following external files:
-- jQuery:
-  - [jquery-2.1.4.min.js](https://code.jquery.com/jquery-2.1.4.min.js)
-- Two files from [this fork](https://mottie.github.io/tablesorter/docs/) for the jquery plugin "tablesorter":
-  - [jquery.tablesorter.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.3/js/jquery.tablesorter.min.js)
-  - [jquery.tablesorter.widgets.min.js](https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.24.3/js/jquery.tablesorter.widgets.min.js)
-- One file for the loading bar:
-  - [nanobar.min.js](https://cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js)
-- One file for moment.js:
-  - [moment.min.js](https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js)
-- The front-end framework Foundation (Please only select "Grid" and "Tables" for the custom download):
-  - [Foundation custom download](http://foundation.zurb.com/sites/download.html/#customizeFoundation)
+## [Demo](https://drumsticks1.github.io/TS3-LogDataViewer/demo/)
+This demo is set up with gh-pages and shows the design as well as some features of the latest release version.
+<br>
+As no code can be executed on the GitHub server, this isn't a demo for the server-side part.
+<br>
+The [used JSON](https://drumsticks1.github.io/TS3-LogDataViewer/demo/output.json) was created by the nodejs application
+out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/demo/test.log).
 
 #### Teamspeak 3 server settings
-It is recommended to enable all logging options in the server options.<br />
-Otherwise you can enable the logging options according to the tables you use (e.g. complaints have to be logged for the complaint table).
+It is recommended to **enable all logging options** in the server options.
+Otherwise some parts of the application may not be available or further features will only work with new data.
+
+## Server operating systems
+I privately run it on a debian jessie distribution running nginx.
+<br>
+That's why I can only provide a template for nginx configuration settings as well as a systemd service script and not configurations for other webservers.
+<br>
+
+If you use something else than nginx: make sure that you know what you are doing and restrict the access to your ts3-ldv folder!<br>
+
+The program may also run on other operating systems that have nodejs installed but it is only tested with linux!
+
+## Installation
+The installation is recommended via npm and needs a few additional small steps of configuration.
+<br>
+You can find the in-depth installation instructions in the file named `Install Instructions`, it also contains a section for the nginx configuration.
+
+## Features
+Would be too much to write down here.
+<br>
+Check it out yourself, start with the [demo](https://drumsticks1.github.io/TS3-LogDataViewer/demo/)!
+
+## Configuration settings (server-side)
+The following options can currently be specified in conf.json:
+
+| setting           | description                                             | value type       | default value                                         |
+|-------------------|---------------------------------------------------------|------------------|-------------------------------------------------------|
+| programLogfile    | Path to which the ts3-ldv log is written to             | string           | "/var/log/ts3-ldv/ts3-ldv.log"                        |
+| logDirectory      | Path to the log directory of the ts3 server             | string           | "/home/teamspeak/teamspeak3-server_linux-amd64/logs/" |
+| virtualServer     | Virtual server that's logs are to be parsed             | number           | 1                                                     |
+| bufferData        | Whether data is buffered between builds *(much faster)* | boolean          | true                                                  |
+| timeBetweenBuilds | Minimum time allowed between requests                   | number           | 2000                                                  |
+| usedPort          | The port on which the ts3-ldv app is running            | number           | 3000                                                  |
+| ignoredLogs       | Array containing log names that are excluded            | array of strings | []                                                    |
 
 ## Support
 If there are any problems, improvement suggestions or feature requests feel free to open an Issue on GitHub.
