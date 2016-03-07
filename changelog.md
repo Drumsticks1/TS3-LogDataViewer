@@ -1,8 +1,149 @@
+# Changelog
+Versions: <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+### <a name="v2.0.0">Version 2.0.0</a> (??.03.2016)
+There were more than 60 commits between v2.0.0 and v1.7.3.1 with more than 5500 code line additions and 3400 deletions.
+
+Some changes between this two versions may have been overlooked as there were many big changes, especially the rewrite
+from c++ to (node)js as well as structural adjustments.
+
+Additions:
+- Client.js
+    - Added ServerGroupIDs and ServerGroupAssignmentDateTimes
+    - Added addServerGroup, removeServerGroupByID, getServerGroupIDCount and getServerGroupIDByID functions
+- Constants.js
+    - Added confJSON, bufferData, timeBetweenBuilds and usedPort constants
+- checkFunctions.js
+    - Added isDuplicateServerGroup function
+- parseLogs.js
+    - Added parsing of server group events
+        - Creation of a server group
+        - Renaming of a server group
+        - Deletion of a server group
+        - Client assignments to a server group
+        - Client removals from a server group
+    - Added parsing of channel events (currently only used in the upload table)
+        - Creation of a channel
+        - Edit of a channel
+        - Deletion of a channel
+    - Added resetBoundaries function for resetting the boundaries object
+- Added Channel.js, class for storing channel data
+- Added ServerGroup.js, class for storing server group data
+- Added app.js, part of the server-side app that is running all the time, executes several commands on the startup and listens for requests from the client
+- Added buildJSON.js, is called when a json build is requested and coordinates the build process from fetching the logs to creating the JSON
+- Added createJSON.js, creates the output.json with the data stored in globalVariables
+- Added getConf.js, fetches, processes and applies the settings from the conf.json
+- Added globalVariables.js, storing all the persistent data including configuration settings
+- Added miscFunctions.js, multiple functions
+    - Added resizeFill function, similar to the C++ push_back function
+    - Added multiple time functions for setting and getting time values
+    - Added clearGlobalArrays function for clearing the data in globalVariables (excluding configuration settings)
+    - Added resetConnectedStates function for resetting the connectedState variables for each client
+- Added outputHandler.js for creating a writeStream and writing to it (used for the program log)
+- TS3-LogDataViewer.js (client-side)
+    - Added a constants section for strings that are used multiple times.
+    - Added the updateTimeBetweenBuilds function.
+    - Added the addCallout function for displaying messages instead of using the unhandy alert function
+    - Added the addOnClickEvent function that adds an onclick event to an object and adds the object to the eventListeners array
+    - Added the removeEventListeners function that destroys all onclick listeners that are listed in the eventListeners array
+    - Added the getServerGroupNameByID function that returns the server group name for the given ID (the ID of the server group)
+    - Added the getChannelNameByID function that returns the channel name for the given ID (the ID of the channel)
+    - Added the resetSorting functions that resets the sorting of all tables
+    - Added the setFilterPlaceholders function that sets the placeholder text for the tablesorter filter cells of the given table according to their column name
+    - Added the addPagerSection function that adds a pager section to the given control section
+    - All Tables
+        - Added tablesorter filter widget
+        - Added tablesorter pager plugin
+    - Client Table
+        - Added Server groups column containing server groups of the client and the dateTime of assignment
+        - Added description section for colored rows
+        - Connected clients now have a green colored background
+        - Deleted clients now have a green colored background
+    - Upload Table
+        - Added Channel name column - now you can see where the upload is instead of checking all channels ;)
+        - Deleted clients now have a green colored background
+    - Control Section
+        - Added the "Reset table sorting" button for resetting the sorting of all tables
+- Added package.json for npm
+- Added foundation.scss and style.scss
+- Added generateCss.js, script for generating uncompressed and minified css files out of style.scss and foundation.scss
+- Added foundation.css, foundation.min.css and style.min.css
+- Added folder conf with this files:
+    - conf.json as (default) template for a conf file
+    - ts3-ldv.server as a systemd service script template
+    - ts3-ldv.logrotate as a logrotate configuration template
+- Added changelog.md
 
 
-<a href ="#v1.x">Version 1.0 - 1.7.3.1</a>
+Changes:
+- Rewrote the server-side code from c++ to (node)js
+    - Files that are not mentioned in the Removals section were renamed from fileName.cpp to fileName.js and the code was rewritten to js
+- Renamed multiple variables and functions
+- Started documentation with JSDoc
+- Client.js
+    - Renamed DateTime to Connections (also for any occurrences in other files)
+- Constants.js
+    - Renamed the XMLFILE, PROGRAMLOGFILE, DEFAULTLOGDIRECTORY and DEFAULTVIRTUALSERVER constants
+- checkFunctions.js // check again
+- parseLogs.js
+    - Renamed multiple constants and variables
+    - Replaced function-global variables with local variables
+    - Replaced startPos and endPos variables with the boundaries object that stores this data
+    - Replaced messy substring parsing with the standard method getSubstring that uses the data stored in the boundaries object
+    - The isMatchingLogOrder check is only run if bufferData is set to true
+    - Modified way to iterate through the file data (more memory efficient)
+- css in general
+    - Now generating css via generateCss.js out of style.scss and foundation.scss
+    - Added asc.png, bg.png and desc.png as base64 data string to style.(s)css
+    - Multiple style changes
+- index.html
+    - Updated dependency links.
+    - Added calloutDiv.
+- TS3-LogDataViewer.js (client-side)
+    - using strict mode
+    - Replaced all single quotes around strings with double quotes
+    - Replaced the xml interactions with json interactions
+    - Replaced the rebuildXML with the buildJSON function that interacts with the server-side app using express behind proxies
+        - Only sends requests if the time since the last request is at least timeBetweenBuilds
+        - Requests are only allowed when none are in progress
+        - The tables are just rebuild when the data has changed since the last build
+    - Modified the functions for collapsing and expanding lists
+    - Replaced the addIgnoreMomentParser, addConnectionsParser and addIPsParser with the addCustomParsers function that is only called once on the page load
+    - Modified the switchBetweenIDAndUID function
+    - Modified the addTableCheckboxListener function
+    - Modified the dateTime converting functions
+    - Modified the buildTableWithAlertCheckAndLocalStorage function
+    - Modified the buildTables function
+    - Modified the buildControlSection function
+- All dependencies are now automatically installed by npm
+    - Updated from foundation 5 to foundation 6
+- Updated .gitignore, README and Install Instructions
 
-## <a name="v1.x">The following versions are 1.x versions (before the rewrote from c++ to (node)js)</a>
+
+Removals:
+- Removed obsolete class functions (mostly getters)
+- Constants.js:
+    - Removed LOCKFILEEXPIRATION and SKIPLOCKFILE as the lockfile functionality is obsolete
+- Removed TS3-LogDataViewer.cpp (see buildJSON.js for a similar functionality)
+- Removed createXML.cpp and createXML.h (see createJSON.js for a similar functionality)
+- Removed customStreams.h (was used for creating a logging stream to the console and the logfile, see outputHandler.js for a similar functionality)
+- fetchLogs.js
+    - Removed logignore functionality, ignored logs are now specified in conf.json
+- Removed parseXML.cpp and parseXML.h as this functionality is obsolete, buffering is far more efficient
+- Removed timeFunctions.cpp and timeFunctions.h (see miscFunctions for a similar functionality)
+- Removed todo.h (see Todo)
+- Removed deleteXML.php and rebuildXML.php
+- Removed asc.png, bg.png, desc.png (see changes, css)
+- TS3-LogDataViewer.js (client-side)
+    - Removed the localStorageAndTableCheckboxListener function
+    - Removed the addExpandCollapseConnectionsButton and the addExpandCollapseIPsButton functions, they were only called once in the code
+    - Client Table
+        - Removed deleted column, obsolete
+- Removed makefile
+- Removed need to download dependencies manually, praise npm!
+
+
+## <a name="v1.x.x">The following versions are 1.x.x versions (before the rewrite from c++ to (node)js)</a>
 Versions: <a href="#v1.7.3.1">1.7.3.1</a> | <a href="#v1.7.3">1.7.3</a> | <a href="#v1.7.2">1.7.2</a> | <a href="#v1.7.1">1.7.1</a> | <a href="#v1.7.0">1.7.0</a> | <a href="#v1.7.0">1.6.1</a> | <a href="#v1.6.0">1.6.0</a> | <a href="#v1.5.0">1.5.0</a> | <a href="#v1.4.0">1.4.0</a> | <a href="#v1.3.1">1.3.1</a> | <a href="#v1.3.0">1.3.0</a> | <a href="#v1.2.0">1.2.0</a> | <a href="#v1.1.0">1.1.0</a> | <a href="#v1.0.0">1.0.0</a>
 
 
@@ -222,15 +363,15 @@ Initial release, the release message was the complete README:
 Enhanced Client List for Teamspeak3 Server.
 
 #### Short description
-TS3_EnhancedClientList creates an enhanced client list using the information written to the logfiles of the server.<br />
+TS3_EnhancedClientList creates an enhanced client list using the information written to the logfiles of the server.<br>
 It currently provides three detailed tables that can be included in an existing website or be used with the provided Webinterface (index.html):
 - Client list
 - Kick list 
 - File upload list
 
 #### How does it work ?
-The program needs the logfiles of the ts3 server (logging has to be enabled in the server settings - enabling all logging options is recommended).<br />
-The logfiles are analyzed and the relevant information from the logmessages (e.g. Nicknames and IPs) is collected.<br />
+The program needs the logfiles of the ts3 server (logging has to be enabled in the server settings - enabling all logging options is recommended).<br>
+The logfiles are analyzed and the relevant information from the logmessages (e.g. Nicknames and IPs) is collected.
 After all logfiles are parsed a XML file is created which then is used for displaying the tables in the Webinterface or in your custom webpage.
 
 #### Current Features
@@ -257,7 +398,7 @@ You can either use the provided Webinterface (index.html) or implement the contr
 #### Client table layout and features
 ID | Nicknames | Connections | IPs | Connected | Deleted
 ---|---|:---:|:---:|---|---
-3  | Drumsticks<br />TotallyNotDrumsticks<br />Drumsticks (AFK)<br />Teamspeakuser | + -<br />2015-24-06 23:11:02<br />2013-03-11 19:46:07 | + -<br />88.888.888.75<br />99.999.999.31 | true | false
+3  | Drumsticks<br>TotallyNotDrumsticks<br>Drumsticks (AFK)<br>Teamspeakuser | + -<br>2015-24-06 23:11:02<br>2013-03-11 19:46:07 | + -<br>88.888.888.75<br>99.999.999.31 | true | false
 
 - Chronological nickname history.
 - Last and first connection time.
@@ -290,17 +431,17 @@ See the todo.h for planned features.
 - Any information that isn't logged (e.g. nickname changes while connected, but the new nickname still is added to the list when disconnecting)
 
 #### Installation
-As the file name already implies, the install instructions can be found in the file "Install Instructions".<br />
-For now there are only installation instructions available for Linux.<br />
+As the file name already implies, the install instructions can be found in the file "Install Instructions".<br>
+For now there are only installation instructions available for Linux.<br>
 Experienced Users should still be able to set it up on Windows / Mac by following the Linux steps.
 
 #### Dependencies
-All dependencies are covered in the install instructions.<br />
-You will need to downloads the jquery plugin ["tablesorter"](http://tablesorter.com) if you use a precompiled version of TS3_EnhancedClientList. <br />
+All dependencies are covered in the install instructions.<br>
+You will need to downloads the jquery plugin ["tablesorter"](http://tablesorter.com) if you use a precompiled version of TS3_EnhancedClientList. <br>
 You will also need to download the packages "libboost-filesystem1.55.0" and "libboost-program-options1.55.0" (you may need to adjust the version numbers).
 
 #### Teamspeak3 server settings
-Logging of Clients and File transfer must be enabled in the server settings as the program depends on this information. <br />
+Logging of Clients and File transfer must be enabled in the server settings as the program depends on this information. <br>
 It is recommended to enable all logging options in the server options.
 
 #### Support
