@@ -8,13 +8,13 @@ It contains two parts:
 
 (* the files are on the server but are accessed and used in the client-side interface)
 
-## [Demo](https://drumsticks1.github.io/TS3-LogDataViewer/demo/)
+## [Demo](https://drumsticks1.github.io/TS3-LogDataViewer/)
 This demo is set up with gh-pages and shows the design as well as some features of the latest release version.
 <br>
 As no code can be executed on the GitHub server, this isn't a demo for the server-side part.
 <br>
-The [used JSON](https://drumsticks1.github.io/TS3-LogDataViewer/demo/output.json) was created by the nodejs application
-out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/demo/test.log).
+The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the nodejs application
+out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/logs/test.log).
 
 #### Teamspeak 3 server settings
 It is recommended to **enable all logging options** in the server options.
@@ -23,7 +23,7 @@ Otherwise some parts of the application may not be available or further features
 ## Server operating systems
 I privately run it on a debian jessie distribution running nginx.
 <br>
-That's why I can only provide a template for nginx configuration settings as well as a systemd service script and not configurations for other webservers.
+That's why I can only provide a template for nginx configuration settings (in the Install Instruction) as well as a systemd service script and not configurations for other webservers.
 <br>
 
 If you use something else than nginx: make sure that you know what you are doing and restrict the access to your ts3-ldv folder!<br>

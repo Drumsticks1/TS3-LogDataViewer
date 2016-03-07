@@ -16,7 +16,7 @@ module.exports = {
     programLogfile: "/var/log/ts3-ldv/ts3-ldv.log",
 
     // Default logDirectory and virtual server.
-    logDirectory: "/home/teamspeak/teamspeak3-server_linux-amd64/logs/",
+    logDirectory: "/home/teamspeak/teamspeak3-server_linux_amd64/logs/",
     virtualServer: 1,
 
     // Buffer data between buildJSON calls for increased performance.

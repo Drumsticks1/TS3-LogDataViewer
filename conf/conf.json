@@ -1,6 +1,6 @@
 {
   "programLogfile": "/var/log/ts3-ldv/ts3-ldv.log",
-  "logDirectory": "/home/teamspeak/teamspeak3-server_linux-amd64/logs/",
+  "logDirectory": "/home/teamspeak/teamspeak3-server_linux_amd64/logs/",
   "virtualServer": 1,
   "bufferData": true,
   "timeBetweenBuilds": 2000,

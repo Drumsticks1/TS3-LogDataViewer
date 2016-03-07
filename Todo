@@ -2,6 +2,9 @@
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
+gh-pages:
+    - Create new json with more data.
+
 TS3-LogDataViewer.js:
     - Maybe: Remove "Build JSON without buffer" or increase the time between requests and allow building a new json regardless of the last modification time of the last log.
     - Split into multiple js files and use dev tools for putting them together?
