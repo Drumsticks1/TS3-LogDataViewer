@@ -7,6 +7,8 @@ There were more than 60 commits between v2.0.0 and v1.7.3.1 with more than 5500 
 Some changes between this two versions may have been overlooked as there were many big changes, especially the rewrite
 from c++ to (node)js as well as structural adjustments.
 
+<br>
+
 Additions:
 - Client.js
     - Added ServerGroupIDs and ServerGroupAssignmentDateTimes
@@ -74,6 +76,7 @@ Additions:
     - ts3-ldv.logrotate as a logrotate configuration template
 - Added changelog.md
 
+<br>
 
 Changes:
 - Rewrote the server-side code from c++ to (node)js
@@ -84,7 +87,6 @@ Changes:
     - Renamed DateTime to Connections (also for any occurrences in other files)
 - Constants.js
     - Renamed the XMLFILE, PROGRAMLOGFILE, DEFAULTLOGDIRECTORY and DEFAULTVIRTUALSERVER constants
-- checkFunctions.js // check again
 - parseLogs.js
     - Renamed multiple constants and variables
     - Replaced function-global variables with local variables
@@ -119,6 +121,7 @@ Changes:
     - Updated from foundation 5 to foundation 6
 - Updated .gitignore, README and Install Instructions
 
+<br>
 
 Removals:
 - Removed obsolete class functions (mostly getters)

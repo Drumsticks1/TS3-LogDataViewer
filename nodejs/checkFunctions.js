@@ -102,7 +102,7 @@ module.exports = {
         }
 
         if (UID.indexOf(" by client '" + bannedByNickname + "'(") != -1 && IP.indexOf(" by client '" + bannedByNickname + "'(") != -1) {
-            if (UID.indexOf("| ban added reason='" + banReason + "' cluid='") != -1 && IP.indexOf("| ban added reason='" + banReason + "' ip='") != -1) {
+            if (UID.indexOf("ban added reason='" + banReason + "' cluid='") != -1 && IP.indexOf("ban added reason='" + banReason + "' ip='") != -1) {
                 if (UID.indexOf("bantime=" + banTime + " ") != -1 && IP.indexOf("bantime=" + banTime + " ") != -1) {
                     return true;
                 }

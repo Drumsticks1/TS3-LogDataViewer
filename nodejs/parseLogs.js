@@ -22,18 +22,43 @@ var Logs = globalVariables.Logs,
     UploadList = globalVariables.UploadList,
     ChannelList = globalVariables.ChannelList;
 
-const match_banRule = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ban added reason='",
-    match_complaint = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| complaint added for client '",
-    match_connect = "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| client connected '",
-    match_disconnect = "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| client disconnected '",
-    match_serverGroupEvent = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| servergroup '",
-    match_serverGroupAssignment = ") was added to servergroup '",
+// Including changed logging patterns for versions beginning with 3.0.12.0
+const match = {
+    "VirtualServer": [
+        "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ",
+        "|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |"
+    ],
+    "VirtualServerBase": [
+        "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| ",
+        "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
+    ],
+
+    // VirtualServer
+    "banRule": "ban added reason='",
+    "complaint": "complaint added for client '",
+    "serverGroupEvent": "servergroup '",
+    "deleteUser1": "client '",
+    "upload": "file upload to ",
+    "uploadDeletion": "file deleted from",
+
+    // VirtualServerBase
+    "connect": "client connected '",
+    "disconnect": "client disconnected '",
+    "channel": "channel '"
+};
+
+function matches(virtualServerOrVirtualServerBase, matchRule) {
+    for (var i = 0; i < match[virtualServerOrVirtualServerBase].length; i++) {
+        if (currentLine.indexOf(match[virtualServerOrVirtualServerBase][i] + match[matchRule]) != -1)
+            return true;
+    }
+
+    return false;
+}
+
+const match_serverGroupAssignment = ") was added to servergroup '",
     match_serverGroupRemoval = ") was removed from servergroup '",
-    match_deleteUser1 = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| client '",
     match_deleteUser2 = ") got deleted by client '",
-    match_upload = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file upload to",
-    match_uploadDeletion = "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| file deleted from",
-    match_channel = "|INFO    |VirtualServerBase|  1| channel '",
     match_channelCreation = ") created by '",
     match_subChannelCreation = ") created as sub channel of '",
     match_channelEdition = ") edited by '",
@@ -99,8 +124,6 @@ function getSubstring(boundariesIdentifier) {
  * Parses the logs.
  */
 exports.parseLogs = function() {
-    var virtualServerLength = String(globalVariables.virtualServer).length;
-
     var lastUIDBanRule = "", lastIPBanRule = "",
         BanListID, KickListID, ComplaintListID, UploadListID,
         isBan, isKick, isLastLog;
@@ -141,13 +164,13 @@ exports.parseLogs = function() {
                 currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
 
                 // Connects
-                if (currentLine.indexOf(match_connect) != -1) {
+                if (matches("VirtualServerBase", "connect")) {
                     boundaries.IP = [
                         currentLine.lastIndexOf(" ") + 1,
                         currentLine.length - 6]; // -6 for ignoring the port.
 
                     boundaries.Nickname = [
-                        virtualServerLength + 76,
+                        currentLine.indexOf("client connected '") + 18,
                         currentLine.lastIndexOf("'(id:")];
 
                     boundaries.ID = [
@@ -179,11 +202,11 @@ exports.parseLogs = function() {
                 }
 
                 // Disconnects (including kicks and bans)
-                else if (currentLine.indexOf(match_disconnect) != -1) {
+                else if (matches("VirtualServerBase", "disconnect")) {
                     isBan = isKick = false;
 
                     boundaries.Nickname = [
-                        virtualServerLength + 79,
+                        currentLine.indexOf("client disconnected '") + 21,
                         currentLine.lastIndexOf("'(id:")];
 
                     boundaries.ID[0] = boundaries.Nickname[1] + 5;
@@ -332,7 +355,9 @@ exports.parseLogs = function() {
                     boundaries.ServerGroupName[1] = currentLine.lastIndexOf("'(id:", currentLine.lastIndexOf(") by client '"));
                     boundaries.ServerGroupID[0] = boundaries.ServerGroupName[1] + 5;
                     boundaries.ServerGroupID[1] = currentLine.indexOf(")", boundaries.ServerGroupName[0]);
-                    boundaries.ID = [virtualServerLength + 66, currentLine.indexOf(") was ")];
+                    boundaries.ID = [
+                        currentLine.indexOf("client (id:") + 11,
+                        currentLine.indexOf(") was ")];
 
                     DateTime = getSubstring("DateTime");
                     ServerGroupID = Number(getSubstring("ServerGroupID"));
@@ -359,7 +384,7 @@ exports.parseLogs = function() {
 
                 // Ban Rules
                 // Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
-                else if (currentLine.indexOf(match_banRule) != -1) {
+                else if (matches("VirtualServer", "banRule")) {
                     if (currentLine.indexOf("' cluid='") != -1 && currentLine.indexOf("' ip='") == -1)
                         lastUIDBanRule = currentLine;
                     else if (currentLine.indexOf("' ip='") != -1 && currentLine.indexOf("' cluid='") == -1)
@@ -367,9 +392,9 @@ exports.parseLogs = function() {
                 }
 
                 // Complaints
-                else if (currentLine.indexOf(match_complaint) != -1) {
+                else if (matches("VirtualServer", "complaint")) {
                     boundaries.complaintAboutNickname = [
-                        virtualServerLength + 83,
+                        currentLine.indexOf("complaint added for client '") + 28,
                         currentLine.indexOf("'(id:")];
 
                     boundaries.complaintAboutID = [
@@ -404,9 +429,10 @@ exports.parseLogs = function() {
                 }
 
                 // Uploads
-                else if (currentLine.indexOf(match_upload) != -1) {
+                // VirtualServerBase since version 3.0.12.0
+                else if (matches("VirtualServer", "upload") || matches("VirtualServerBase", "upload")) {
                     boundaries.channelID = [
-                        virtualServerLength + 74,
+                        currentLine.indexOf("file upload to (id:") + 19,
                         currentLine.indexOf(")")];
 
                     boundaries.filename = [
@@ -435,7 +461,7 @@ exports.parseLogs = function() {
                 }
 
                 // Client Deletions
-                else if (currentLine.indexOf(match_deleteUser1) != -1) {
+                else if (matches("VirtualServer", "deleteUser1")) {
                     if (currentLine.indexOf(match_deleteUser2) != -1) {
                         boundaries.ID[0] = currentLine.lastIndexOf(") got deleted by client '");
                         boundaries.ID[1] = currentLine.lastIndexOf("'(id:", boundaries.ID[0]) + 5;
@@ -445,9 +471,9 @@ exports.parseLogs = function() {
                 }
 
                 // Upload Deletions
-                else if (currentLine.indexOf(match_uploadDeletion) != -1) {
+                else if (matches("VirtualServer", "uploadDeletion")) {
                     boundaries.channelID = [
-                        virtualServerLength + 77,
+                        currentLine.indexOf("file deleted from (id:") + 22,
                         currentLine.indexOf(")")];
 
                     boundaries.filename = [
@@ -470,7 +496,7 @@ exports.parseLogs = function() {
                 }
 
                 // Channel additions, edits or deletions.
-                else if (currentLine.indexOf(match_channel) != -1) {
+                else if (matches("VirtualServerBase", "channel")) {
                     // 0 --> added
                     // 1 --> edited
                     // 2 --> edited undefined --> added
@@ -496,7 +522,10 @@ exports.parseLogs = function() {
 
                     if (eventTypeC != -1) {
                         boundaries.channelID[0] = currentLine.indexOf("'(id:") + 5;
-                        boundaries.channelName = [virtualServerLength + 67, boundaries.channelID[0] - 5];
+
+                        boundaries.channelName = [
+                            currentLine.indexOf("channel '") + 9,
+                            boundaries.channelID[0] - 5];
 
                         DateTime = getSubstring("DateTime");
                         var channelID = Number(getSubstring("channelID")),
@@ -526,7 +555,7 @@ exports.parseLogs = function() {
                 }
 
                 // Servergroup additions, deletions, renaming and copying
-                else if (currentLine.indexOf(match_serverGroupEvent) != -1) {
+                else if (matches("VirtualServer", "serverGroupEvent")) {
                     // 0 --> added
                     // 1 --> deleted
                     // 2 --> renamed
