@@ -14,12 +14,13 @@ const fs = require("fs"),
 
 /**
  * Builds the JSON.
+ * @param {boolean} ignoreLastModificationCheck the lastModification check is ignored if true
  * @returns {number}
  *      0 if fetching the logs fails.
  *      1 if building the json completes successfully.
  *      2 if building wasn't necessary because there are no new log lines.
  */
-exports.buildJSON = function() {
+exports.buildJSON = function(ignoreLastModificationCheck) {
     var programStart = new Date();
 
     miscFunctions.updateCurrentDate();
@@ -33,10 +34,12 @@ exports.buildJSON = function() {
 
     var lastModification = fs.statSync(globalVariables.logDirectory + globalVariables.Logs[globalVariables.Logs.length - 1]).mtime.valueOf();
 
-    if (lastModification == globalVariables.lastModificationOfTheLastLog) {
-        outputHandler.output("No modifications to the last log since the last request - skipping building a new json!");
-        return 2;
-    }
+    if (!ignoreLastModificationCheck) {
+        if (lastModification == globalVariables.lastModificationOfTheLastLog) {
+            outputHandler.output("No modifications to the last log since the last request - skipping building a new json!");
+            return 2;
+        }
+    } else outputHandler.output("Ignoring lastModification check!");
 
     globalVariables.lastModificationOfTheLastLog = lastModification;
 

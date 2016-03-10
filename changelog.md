@@ -28,7 +28,6 @@ Additions:
         - Creation of a channel
         - Edit of a channel
         - Deletion of a channel
-    - Added resetBoundaries function for resetting the boundaries object
 - Added Channel.js, class for storing channel data
 - Added ServerGroup.js, class for storing server group data
 - Added app.js, part of the server-side app that is running all the time, executes several commands on the startup and listens for requests from the client
@@ -79,6 +78,7 @@ Additions:
 <br>
 
 Changes:
+- Added support for the new file transfer logging introduced in 3.0.12.0
 - Rewrote the server-side code from c++ to (node)js
     - Files that are not mentioned in the Removals section were renamed from fileName.cpp to fileName.js and the code was rewritten to js
 - Renamed multiple variables and functions
@@ -94,6 +94,8 @@ Changes:
     - Replaced messy substring parsing with the standard method getSubstring that uses the data stored in the boundaries object
     - The isMatchingLogOrder check is only run if bufferData is set to true
     - Modified way to iterate through the file data (more memory efficient)
+    - Optimized parsing (including, not limited to:)
+        - Separated else if structure into VirtualServer and VirtualServerBase switch.
 - css in general
     - Now generating css via generateCss.js out of style.scss and foundation.scss
     - Added asc.png, bg.png and desc.png as base64 data string to style.(s)css
@@ -108,7 +110,7 @@ Changes:
     - Replaced the rebuildXML with the buildJSON function that interacts with the server-side app using express behind proxies
         - Only sends requests if the time since the last request is at least timeBetweenBuilds
         - Requests are only allowed when none are in progress
-        - The tables are just rebuild when the data has changed since the last build
+        - The tables are just rebuild when the data has changed since the last build (check is ignored for "Build JSON without buffer" calls)
     - Modified the functions for collapsing and expanding lists
     - Replaced the addIgnoreMomentParser, addConnectionsParser and addIPsParser with the addCustomParsers function that is only called once on the page load
     - Modified the switchBetweenIDAndUID function

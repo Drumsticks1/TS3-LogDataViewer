@@ -38,10 +38,11 @@ app.get("/buildJSON", function(req, res) {
         };
 
     if (timeDifference > globalVariables.timeBetweenBuilds) {
-        if (String(req.query.clearBuffer) == "true")
+        var clearBuffer = String(req.query.clearBuffer) == "true";
+        if (clearBuffer)
             miscFunctions.clearGlobalArrays();
 
-        switch (buildJSON.buildJSON()) {
+        switch (buildJSON.buildJSON(clearBuffer)) {
             case 0:
                 response.success = false;
                 response.fetchLogsError = true;
