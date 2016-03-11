@@ -14,7 +14,7 @@ This demo is set up with gh-pages and shows the design as well as some features 
 As no code can be executed on the GitHub server, this isn't a demo for the server-side part.
 <br>
 The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the nodejs application
-out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/logs/test.log).
+out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/logs/ts3server_2016-03-11__15_00_44.563532_1.log).
 
 #### Teamspeak 3 server settings
 It is recommended to **enable all logging options** in the server options.

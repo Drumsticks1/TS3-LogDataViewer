@@ -4,9 +4,6 @@
 
 Add note about upload deletion problem between version 3.0.12.0 - 3.0.x
 
-gh-pages:
-    - Create new json with more data.
-
 TS3-LogDataViewer.js:
     - Maybe: optional time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer".
     - Split into multiple js files and use dev tools for putting them together?
