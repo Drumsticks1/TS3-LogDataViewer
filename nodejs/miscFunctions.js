@@ -4,9 +4,8 @@
 
 "use strict";
 
-const globalVariables = require("./globalVariables.js");
-
-const Client = require("./Client.js"),
+const globalVariables = require("./globalVariables.js"),
+    Client = require("./Client.js"),
     ServerGroup = require("./ServerGroup.js"),
     Ban = require("./Ban.js"),
     Kick = require("./Kick.js"),

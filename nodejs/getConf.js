@@ -7,8 +7,7 @@
 const fs = require("fs"),
     Constants = require("./Constants.js"),
     globalVariables = require("./globalVariables.js"),
-    outputHandler = require("./outputHandler.js"),
-    miscFunctions = require("./miscFunctions.js");
+    outputHandler = require("./outputHandler.js");
 
 var confJSON;
 

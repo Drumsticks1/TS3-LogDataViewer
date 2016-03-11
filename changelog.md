@@ -2,7 +2,7 @@
 Versions: <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
 ### <a name="v2.0.0">Version 2.0.0</a> (??.03.2016)
-There were more than 60 commits between v2.0.0 and v1.7.3.1 with more than 5500 code line additions and 3400 deletions.
+There were more than 60 commits between v1.7.3.1 and v2.0.0 with (according to git) more than 5500 code line additions and 3400 deletions.
 
 Some changes between this two versions may have been overlooked as there were many big changes, especially the rewrite
 from c++ to (node)js as well as structural adjustments.

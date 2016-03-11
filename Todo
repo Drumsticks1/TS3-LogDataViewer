@@ -8,7 +8,7 @@ gh-pages:
     - Create new json with more data.
 
 TS3-LogDataViewer.js:
-    - Maybe: Remove "Build JSON without buffer" or increase the time between requests and allow building a new json regardless of the last modification time of the last log.
+    - Maybe: optional time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer".
     - Split into multiple js files and use dev tools for putting them together?
     - Outsource the creation of the control sections for the tables.
 	- Check sorting possibilities for the server group data in the client table.
@@ -27,4 +27,3 @@ maybe:
 	- Add query clients to client list or a query client list?
 	- Make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.
-*/

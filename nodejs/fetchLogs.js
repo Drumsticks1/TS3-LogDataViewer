@@ -5,8 +5,6 @@
 "use strict";
 
 const fs = require("fs"),
-    util = require("util"),
-    Constants = require("./Constants.js"),
     globalVariables = require("./globalVariables.js"),
     outputHandler = require("./outputHandler.js"),
     checkFunctions = require("./checkFunctions.js");

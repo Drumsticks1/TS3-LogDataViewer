@@ -5,7 +5,7 @@
 "use strict";
 
 const fs = require("fs"),
-    sass = require('node-sass');
+    sass = require("node-sass");
 
 // Generate css directory if not already existing.
 if (!fs.existsSync("../css")) {
@@ -18,7 +18,7 @@ if (!fs.existsSync("../css")) {
  * @param {string} outputFilePath - the path of the output file.
  * @param {Boolean} compressed - true if the output file should be compressed.
  */
-function generateCss(inputFilePath, outputFilePath, compressed) {
+function processScssFile(inputFilePath, outputFilePath, compressed) {
     var outputStyle = "nested";
     if (compressed)
         outputStyle = "compressed";
@@ -36,14 +36,23 @@ function generateCss(inputFilePath, outputFilePath, compressed) {
     });
 }
 
-// style.scss --> style.css
-generateCss("../scss/style.scss", "../css/style.css", false);
+/**
+ * Generates all css files out of the scss files in the input directory.
+ *
+ * @param {string} inputDirectory - the path of the directory containing the scss files.
+ * @param {string} outputDirectory - the path of the directory the css files are written to.
+ */
+function generateCss(inputDirectory, outputDirectory) {
+    var scssFiles = fs.readdirSync(inputDirectory);
 
-// style.scss --> style.min.css
-generateCss("../scss/style.scss", "../css/style.min.css", true);
+    console.log("Processing scss files...");
+    for (var i = 0; i < scssFiles.length; i++) {
+        var inputPath = inputDirectory + "/" + scssFiles[i],
+            outputPathWithoutEnding = outputDirectory + "/" + scssFiles[i].substring(0, scssFiles[i].indexOf(".scss"));
 
-// foundation.scss --> foundation.css
-generateCss("../scss/foundation.scss", "../css/foundation.css", false);
+        processScssFile(inputPath, outputPathWithoutEnding + ".css", false);
+        processScssFile(inputPath, outputPathWithoutEnding + ".min.css", true);
+    }
+}
 
-// foundation.scss --> foundation.min.css
-generateCss("../scss/foundation.scss", "../css/foundation.min.css", true);
+generateCss("../scss/", "../css/");

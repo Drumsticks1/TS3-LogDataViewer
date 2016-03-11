@@ -5,11 +5,9 @@
 "use strict";
 
 const fs = require("fs"),
-    Constants = require("./Constants.js"),
     Upload = require("./Upload.js"),
     checkFunctions = require("./checkFunctions.js"),
     globalVariables = require("./globalVariables.js"),
-    miscFunctions = require("./miscFunctions.js"),
     outputHandler = require("./outputHandler.js");
 
 var Logs = globalVariables.Logs,
@@ -22,7 +20,7 @@ var Logs = globalVariables.Logs,
     UploadList = globalVariables.UploadList,
     ChannelList = globalVariables.ChannelList;
 
-// Including changed logging patterns for versions beginning with 3.0.12.0
+// Object containing matching patterns for parsing.
 const match = {
     /**
      * Patterns and their ts3server versions (ordered as below):
@@ -49,17 +47,17 @@ const match = {
     // VirtualServerBase
     "connect": "client connected '",
     "disconnect": "client disconnected '",
-    "channel": "channel '"
-};
+    "channel": "channel '",
 
-// Additional matching patterns
-const match_serverGroupAssignment = ") was added to servergroup '",
-    match_serverGroupRemoval = ") was removed from servergroup '",
-    match_deleteUser2 = ") got deleted by client '",
-    match_channelCreation = ") created by '",
-    match_subChannelCreation = ") created as sub channel of '",
-    match_channelEdition = ") edited by '",
-    match_channelDeletion = ") deleted by '";
+    // Additional patterns
+    "serverGroupAssignment": ") was added to servergroup '",
+    "serverGroupRemoval": ") was removed from servergroup '",
+    "deleteUser2": ") got deleted by client '",
+    "channelCreation": ") created by '",
+    "subChannelCreation": ") created as sub channel of '",
+    "channelEdit": ") edited by '",
+    "channelDeletion": ") deleted by '"
+};
 
 var currentLine, boundaries, logPattern;
 
@@ -174,8 +172,8 @@ exports.parseLogs = function() {
                     // VirtualSever
                     case 0:
                         // Client assignments to and client removals from a server group
-                        if (currentLine.indexOf(match_serverGroupAssignment) != -1 || currentLine.indexOf(match_serverGroupRemoval) != -1) {
-                            if (currentLine.indexOf(match_serverGroupAssignment) != -1)
+                        if (currentLine.indexOf(match.serverGroupAssignment) != -1 || currentLine.indexOf(match.serverGroupRemoval) != -1) {
+                            if (currentLine.indexOf(match.serverGroupAssignment) != -1)
                                 boundaries.ServerGroupName[0] = currentLine.indexOf(") was added to servergroup '") + 28;
                             else
                                 boundaries.ServerGroupName[0] = currentLine.indexOf(") was removed from servergroup '") + 32;
@@ -203,7 +201,7 @@ exports.parseLogs = function() {
                             if (ClientList.length < ID + 1)
                                 ClientList.resizeFill(ID + 1, "Client");
 
-                            if (currentLine.indexOf(match_serverGroupAssignment) != -1) {
+                            if (currentLine.indexOf(match.serverGroupAssignment) != -1) {
                                 if (!checkFunctions.isDuplicateServerGroup(ID, ServerGroupID))
                                     ClientList[ID].addServerGroup(ServerGroupID, DateTime);
                             }
@@ -259,7 +257,7 @@ exports.parseLogs = function() {
 
                         // Client Deletions
                         else if (currentLine.indexOf(match.deleteUser1) == beginOfParsingBlock) {
-                            if (currentLine.indexOf(match_deleteUser2) != -1) {
+                            if (currentLine.indexOf(match.deleteUser2) != -1) {
                                 boundaries.ID[0] = currentLine.lastIndexOf(") got deleted by client '");
                                 boundaries.ID[1] = currentLine.lastIndexOf("'(id:", boundaries.ID[0]) + 5;
 
@@ -553,20 +551,20 @@ exports.parseLogs = function() {
                             // 3 --> deleted
                             var eventTypeC = -1;
 
-                            if (currentLine.indexOf(match_channelEdition) != -1) {
-                                boundaries.channelID[1] = currentLine.indexOf(match_channelEdition);
+                            if (currentLine.indexOf(match.channelEdit) != -1) {
+                                boundaries.channelID[1] = currentLine.indexOf(match.channelEdit);
                                 eventTypeC = 1;
                             }
-                            else if (currentLine.indexOf(match_channelCreation) != -1) {
-                                boundaries.channelID[1] = currentLine.indexOf(match_channelCreation);
+                            else if (currentLine.indexOf(match.channelCreation) != -1) {
+                                boundaries.channelID[1] = currentLine.indexOf(match.channelCreation);
                                 eventTypeC = 0;
                             }
-                            else if (currentLine.indexOf(match_subChannelCreation) != -1) {
-                                boundaries.channelID[1] = currentLine.indexOf(match_subChannelCreation);
+                            else if (currentLine.indexOf(match.subChannelCreation) != -1) {
+                                boundaries.channelID[1] = currentLine.indexOf(match.subChannelCreation);
                                 eventTypeC = 0;
                             }
-                            else if (currentLine.indexOf(match_channelDeletion) != -1) {
-                                boundaries.channelID[1] = currentLine.indexOf(match_channelDeletion);
+                            else if (currentLine.indexOf(match.channelDeletion) != -1) {
+                                boundaries.channelID[1] = currentLine.indexOf(match.channelDeletion);
                                 eventTypeC = 3;
                             }
 
