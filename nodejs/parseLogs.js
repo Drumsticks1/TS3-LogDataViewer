@@ -24,7 +24,7 @@ var Logs = globalVariables.Logs,
 const match = {
     /**
      * Patterns and their ts3server versions (ordered as below):
-     * - until v3.0.11.4
+     * - v3.0.11.4 and before
      * - since v3.0.12.0
      */
     "VirtualServer": [
@@ -41,13 +41,16 @@ const match = {
     "complaint": "complaint added for client '",
     "serverGroupEvent": "servergroup '",
     "deleteUser1": "client '",
-    "upload": "file upload to ",
-    "uploadDeletion": "file deleted from",
 
     // VirtualServerBase
     "connect": "client connected '",
     "disconnect": "client disconnected '",
     "channel": "channel '",
+
+    // v3.0.11.4 and before : VirtualServer
+    // since v3.0.12.0      : VirtualServerBase
+    "upload": "file upload to ",
+    "uploadDeletion": "file deleted from",
 
     // Additional patterns
     "serverGroupAssignment": ") was added to servergroup '",
@@ -265,31 +268,6 @@ exports.parseLogs = function() {
                             }
                         }
 
-                        // Upload Deletions
-                        else if (currentLine.indexOf(match.uploadDeletion) == beginOfParsingBlock) {
-                            boundaries.channelID = [
-                                currentLine.indexOf("file deleted from (id:") + 22,
-                                currentLine.indexOf(")")];
-
-                            boundaries.filename = [
-                                boundaries.channelID[1] + 4,
-                                currentLine.lastIndexOf("' by client '")];
-
-                            boundaries.deletedByNickname = [
-                                boundaries.filename[1] + 13,
-                                currentLine.lastIndexOf("'(id:")];
-
-                            boundaries.deletedByID = [
-                                boundaries.deletedByNickname[1] + 5,
-                                currentLine.length - 1];
-
-                            Upload.addDeletedBy(
-                                Number(getSubstring("channelID")),
-                                getSubstring("filename"),
-                                getSubstring("deletedByNickname"),
-                                Number(getSubstring("deletedByID")));
-                        }
-
                         // Servergroup additions, deletions, renaming and copying
                         else if (currentLine.indexOf(match.serverGroupEvent) == beginOfParsingBlock) {
                             // 0 --> added
@@ -331,7 +309,7 @@ exports.parseLogs = function() {
                             if (eventTypeS != -1) {
                                 if (eventTypeS == 0 || eventTypeS == 1) {
                                     boundaries.ServerGroupName = [
-                                        currentLine.indexOf("| servergroup '") + 15,
+                                        currentLine.indexOf("servergroup '") + 13,
                                         boundaries.ServerGroupID[0] - 5];
                                 }
 
@@ -588,6 +566,7 @@ exports.parseLogs = function() {
                                 switch (eventTypeC) {
                                     case 2:
                                         DateTime = "Unknown";
+                                    // Intended fallthrough
                                     case 0:
                                         ChannelList[channelID].addChannel(channelID, DateTime, channelName);
                                         break;
@@ -604,39 +583,65 @@ exports.parseLogs = function() {
                         else checkIfUpload = true;
                 }
 
-                // Uploads
                 // VirtualServer for version 3.0.11.4 and before
                 // VirtualServerBase since version 3.0.12.0
-                if (checkIfUpload && currentLine.indexOf(match.upload) == beginOfParsingBlock) {
-                    boundaries.channelID = [
-                        currentLine.indexOf("file upload to (id:") + 19,
-                        currentLine.indexOf(")")];
+                if (checkIfUpload) {
+                    // Uploads
+                    if (currentLine.indexOf(match.upload) == beginOfParsingBlock) {
+                        boundaries.channelID = [
+                            currentLine.indexOf("file upload to (id:") + 19,
+                            currentLine.indexOf(")")];
 
-                    boundaries.filename = [
-                        boundaries.channelID[1] + 4,
-                        currentLine.lastIndexOf("' by client '")];
+                        boundaries.filename = [
+                            boundaries.channelID[1] + 4,
+                            currentLine.lastIndexOf("' by client '")];
 
-                    boundaries.uploadedByNickname = [
-                        boundaries.filename[1] + 13,
-                        currentLine.lastIndexOf("'(id:")];
+                        boundaries.uploadedByNickname = [
+                            boundaries.filename[1] + 13,
+                            currentLine.lastIndexOf("'(id:")];
 
-                    boundaries.uploadedByID = [
-                        boundaries.uploadedByNickname[1] + 5,
-                        currentLine.length - 1];
+                        boundaries.uploadedByID = [
+                            boundaries.uploadedByNickname[1] + 5,
+                            currentLine.length - 1];
 
-                    DateTime = getSubstring("DateTime");
-                    channelID = Number(getSubstring("channelID"));
-                    var filename = getSubstring("filename"),
-                        uploadedByNickname = getSubstring("uploadedByNickname"),
-                        uploadedByID = Number(getSubstring("uploadedByID"));
+                        DateTime = getSubstring("DateTime");
+                        channelID = Number(getSubstring("channelID"));
+                        var filename = getSubstring("filename"),
+                            uploadedByNickname = getSubstring("uploadedByNickname"),
+                            uploadedByID = Number(getSubstring("uploadedByID"));
 
-                    if (!checkFunctions.isDuplicateUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID)) {
-                        UploadList.resizeFill(UploadListID + 1, "Upload");
-                        UploadList[UploadListID].addUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID);
-                        UploadListID++;
+                        if (!checkFunctions.isDuplicateUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID)) {
+                            UploadList.resizeFill(UploadListID + 1, "Upload");
+                            UploadList[UploadListID].addUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID);
+                            UploadListID++;
+                        }
+                    }
+
+                    // Upload Deletions
+                    else if (currentLine.indexOf(match.uploadDeletion) == beginOfParsingBlock) {
+                        boundaries.channelID = [
+                            currentLine.indexOf("file deleted from (id:") + 22,
+                            currentLine.indexOf(")")];
+
+                        boundaries.filename = [
+                            boundaries.channelID[1] + 4,
+                            currentLine.lastIndexOf("' by client '")];
+
+                        boundaries.deletedByNickname = [
+                            boundaries.filename[1] + 13,
+                            currentLine.lastIndexOf("'(id:")];
+
+                        boundaries.deletedByID = [
+                            boundaries.deletedByNickname[1] + 5,
+                            currentLine.length - 1];
+
+                        Upload.addDeletedBy(
+                            Number(getSubstring("channelID")),
+                            getSubstring("filename"),
+                            getSubstring("deletedByNickname"),
+                            Number(getSubstring("deletedByID")));
                     }
                 }
-
                 logfileData = logfileData.substring(currentLine.length + 1);
             }
 

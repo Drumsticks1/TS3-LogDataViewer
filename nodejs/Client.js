@@ -114,7 +114,11 @@ Client.prototype.connect = function() {
  * Decrements the ConnectedState counter.
  */
 Client.prototype.disconnect = function() {
-    this.ConnectedState--;
+    // Check is required when a client disconnects without connection first.
+    // At least occurs once when the server is started and the logging settings are set by the server admin.
+    // As his connect isn't logged this would result in a negative ConnectedState and cause further issues.
+    if (this.ConnectedState > 0)
+        this.ConnectedState--;
 };
 
 /**
