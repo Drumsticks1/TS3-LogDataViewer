@@ -7,16 +7,16 @@ Description=TS3-LogDataViewer
 After=network.target
 
 [Service]
-# Modify the following variables according to your installation.
+# Modify the following settings according to your installation.
 
-# Directory containing the ts3-ldv package.
+# nodejs directory inside the directory containing the ts3-ldv package.
 WorkingDirectory=/var/www/your-domain/ts3-ldv/nodejs
 
 # Create an user for ts3-ldv - grant only the required permissions to prevent security issues.
 User=ts3-ldv
 
 # Set as the group which runs the teamspeak3 server or as a new group that has access to
-# the log files in the teamspeak directory.
+# the log directory in the teamspeak directory and the log files inside it.
 Group=teamspeak
 
 Type=simple

@@ -1,7 +1,9 @@
 # Changelog
 Versions: <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
-### <a name="v2.0.0">Version 2.0.0</a> (??.03.2016)
+<br>
+
+### <a name="v2.0.0">Version 2.0.0</a> (11.03.2016)
 There were more than 60 commits between v1.7.3.1 and v2.0.0 with (according to git) more than 5500 code line additions and 3400 deletions.
 
 Some changes between this two versions may have been overlooked as there were many big changes, especially the rewrite
@@ -49,29 +51,30 @@ Additions:
     - Added the removeEventListeners function that destroys all onclick listeners that are listed in the eventListeners array
     - Added the getServerGroupNameByID function that returns the server group name for the given ID (the ID of the server group)
     - Added the getChannelNameByID function that returns the channel name for the given ID (the ID of the channel)
-    - Added the resetSorting functions that resets the sorting of all tables
-    - Added the setFilterPlaceholders function that sets the placeholder text for the tablesorter filter cells of the given table according to their column name
+    - Added the setFilterPlaceholders function that sets the placeholder text for the tablesorter filter cells of the given table according to their column titles
     - Added the addPagerSection function that adds a pager section to the given control section
-    - All Tables
+    - All tables
         - Added tablesorter filter widget
         - Added tablesorter pager plugin
     - Client Table
-        - Added Server groups column containing server groups of the client and the dateTime of assignment
+        - Added Server groups column containing server groups of the client and the dateTime of assignment (most recent date when assigned to a group multiple times)
         - Added description section for colored rows
-        - Connected clients now have a green colored background
-        - Deleted clients now have a green colored background
+        - Rows with connected clients now have a green colored background
+        - Rows with deleted clients now have a grey colored background
     - Upload Table
         - Added Channel name column - now you can see where the upload is instead of checking all channels ;)
-        - Deleted clients now have a green colored background
+        - Rows with deleted clients now have a grey colored background
     - Control Section
-        - Added the "Reset table sorting" button for resetting the sorting of all tables
+        - Added the "Reset table sorting" button for resetting the sorting of all tables (especially for mobile devices without CTRL + left click)
+- index.html:
+    - Added calloutDiv
 - Added package.json for npm
 - Added foundation.scss and style.scss
 - Added generateCss.js, script for generating uncompressed and minified css files out of style.scss and foundation.scss
 - Added foundation.css, foundation.min.css and style.min.css
 - Added folder conf with this files:
-    - conf.json as (default) template for a conf file
-    - ts3-ldv.server as a systemd service script template
+    - default-conf.json as default template for a conf.json file
+    - ts3-ldv.service as a systemd service script template
     - ts3-ldv.logrotate as a logrotate configuration template
 - Added changelog.md
 
@@ -80,16 +83,17 @@ Additions:
 Changes:
 - Added support for the new file transfer logging introduced in 3.0.12.0
 - Rewrote the server-side code from c++ to (node)js
-    - Files that are not mentioned in the Removals section were renamed from fileName.cpp to fileName.js and the code was rewritten to js
+    - Files that are not mentioned in the Removals section were renamed from fileName.cpp to fileName.js and the code was rewritten into javascript
 - Renamed multiple variables and functions
 - Started documentation with JSDoc
+- using strict mode in all js files
 - Client.js
     - Renamed DateTime to Connections (also for any occurrences in other files)
 - Constants.js
     - Renamed the XMLFILE, PROGRAMLOGFILE, DEFAULTLOGDIRECTORY and DEFAULTVIRTUALSERVER constants
 - parseLogs.js
     - Renamed multiple constants and variables
-    - Replaced function-global variables with local variables
+    - Replaced function-global variables in the parseLogs function with local variables
     - Replaced startPos and endPos variables with the boundaries object that stores this data
     - Replaced messy substring parsing with the standard method getSubstring that uses the data stored in the boundaries object
     - The isMatchingLogOrder check is only run if bufferData is set to true
@@ -101,16 +105,15 @@ Changes:
     - Added asc.png, bg.png and desc.png as base64 data string to style.(s)css
     - Multiple style changes
 - index.html
-    - Updated dependency links.
-    - Added calloutDiv.
+    - Updated dependency links (linking to node_modules subdirectories containing the dependencies).
 - TS3-LogDataViewer.js (client-side)
-    - using strict mode
     - Replaced all single quotes around strings with double quotes
     - Replaced the xml interactions with json interactions
-    - Replaced the rebuildXML with the buildJSON function that interacts with the server-side app using express behind proxies
+    - Replaced the rebuildXML with the buildJSON function that interacts with the server-side app using express behind a nginx proxy
         - Only sends requests if the time since the last request is at least timeBetweenBuilds
         - Requests are only allowed when none are in progress
         - The tables are just rebuild when the data has changed since the last build (check is ignored for "Build JSON without buffer" calls)
+            - This rule only applies to requests that don't have the clearBuffer flag set to true
     - Modified the functions for collapsing and expanding lists
     - Replaced the addIgnoreMomentParser, addConnectionsParser and addIPsParser with the addCustomParsers function that is only called once on the page load
     - Modified the switchBetweenIDAndUID function
@@ -121,7 +124,8 @@ Changes:
     - Modified the buildControlSection function
 - All dependencies are now automatically installed by npm
     - Updated from foundation 5 to foundation 6
-- Updated .gitignore, README and Install Instructions
+- Updated gh-pages to the newest version (removed old branch and added a fresh one)
+- Updated .gitignore, README and install instructions
 
 <br>
 
@@ -129,22 +133,22 @@ Removals:
 - Removed obsolete class functions (mostly getters)
 - Constants.js:
     - Removed LOCKFILEEXPIRATION and SKIPLOCKFILE as the lockfile functionality is obsolete
-- Removed TS3-LogDataViewer.cpp (see buildJSON.js for a similar functionality)
-- Removed createXML.cpp and createXML.h (see createJSON.js for a similar functionality)
-- Removed customStreams.h (was used for creating a logging stream to the console and the logfile, see outputHandler.js for a similar functionality)
+- Removed TS3-LogDataViewer.cpp (see buildJSON.js for similar functionality)
+- Removed createXML.cpp and createXML.h (see createJSON.js for similar functionality)
+- Removed customStreams.h (was used for creating a logging stream to the console and the logfile, see outputHandler.js for similar functionality)
 - fetchLogs.js
     - Removed logignore functionality, ignored logs are now specified in conf.json
-- Removed parseXML.cpp and parseXML.h as this functionality is obsolete, buffering is far more efficient
-- Removed timeFunctions.cpp and timeFunctions.h (see miscFunctions for a similar functionality)
+- Removed parseXML.cpp and parseXML.h as this functionality is obsolete, buffering the data is far more efficient
+- Removed timeFunctions.cpp and timeFunctions.h (see miscFunctions for similar functionality)
 - Removed todo.h (see Todo)
 - Removed deleteXML.php and rebuildXML.php
-- Removed asc.png, bg.png, desc.png (see changes, css)
+- Removed asc.png, bg.png, desc.png (see changes, section css)
 - TS3-LogDataViewer.js (client-side)
     - Removed the localStorageAndTableCheckboxListener function
-    - Removed the addExpandCollapseConnectionsButton and the addExpandCollapseIPsButton functions, they were only called once in the code
+    - Removed the addExpandCollapseConnectionsButton and the addExpandCollapseIPsButton functions, they were only called once
     - Client Table
         - Removed deleted column, obsolete
-- Removed makefile
+- Removed makefile, obsolete
 - Removed need to download dependencies manually, praise npm!
 
 

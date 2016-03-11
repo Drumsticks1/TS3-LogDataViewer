@@ -20,7 +20,7 @@
     "js",
     "nodejs",
     "index.html",
-    "Install Instructions"
+    "install instructions"
   ],
   "main": "nodejs/app.js",
   "dependencies": {

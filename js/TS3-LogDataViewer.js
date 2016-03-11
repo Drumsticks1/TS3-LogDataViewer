@@ -61,8 +61,8 @@ function buildJSON(clearBuffer) {
         addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
     }
 
-    nanobar.go(100);
     document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+    nanobar.go(100);
 }
 
 /**
@@ -451,16 +451,6 @@ function getServerGroupNameByID(ID) {
  */
 function getChannelNameByID(ID) {
     return json.ChannelList[ID].channelName;
-}
-
-/**
- * Resets the sorting of all tables.
- */
-function resetSorting() {
-    for (var i = 0; i < tables.length; i++) {
-        $(document.getElementById(tables[i])).trigger("sortReset");
-        localStorage.setItem(tables[i] + "SortOrder", "[]");
-    }
 }
 
 /**
@@ -1483,7 +1473,10 @@ function buildControlSection() {
     resetSortingButton.className = "small-12";
     resetSortingButton.innerHTML = "Reset table sorting";
     resetSortingButton.onclick = function() {
-        resetSorting();
+        for (var i = 0; i < tables.length; i++) {
+            $(document.getElementById(tables[i])).trigger("sortReset");
+            localStorage.setItem(tables[i] + "SortOrder", "[]");
+        }
     };
 
     miscControlSection.appendChild(resetSortingButton);

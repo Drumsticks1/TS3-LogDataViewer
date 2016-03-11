@@ -23,7 +23,7 @@ Otherwise some parts of the application may not be available or further features
 ## Server operating systems
 I privately run it on a debian jessie distribution running nginx.
 <br>
-That's why I can only provide a template for nginx configuration settings (in the Install Instruction) as well as a systemd service script and not configurations for other webservers.
+That's why I can only provide a template for nginx configuration settings (in the install instruction) as well as a systemd service script and not configurations for other webservers.
 <br>
 
 If you use something else than nginx: make sure that you know what you are doing and restrict the access to your ts3-ldv folder!<br>
@@ -33,7 +33,7 @@ The program may also run on other operating systems that have nodejs installed b
 ## Installation
 The installation is recommended via npm and needs a few additional small steps of configuration.
 <br>
-You can find the in-depth installation instructions in the file named `Install Instructions`, it also contains a section for the nginx configuration.
+You can find the in-depth installation instructions in the file named `install instructions`, it also contains a section for the nginx configuration.
 
 ## Features
 Would be too much to write down here.

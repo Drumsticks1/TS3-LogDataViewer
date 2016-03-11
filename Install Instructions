@@ -1,4 +1,4 @@
-// Install Instructions
+// install instructions
 // Author : Drumsticks1
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -8,11 +8,11 @@ Experienced users may also install it on other operating systems but I may not b
 - Create a directory for the LogDataViewer in a directory which can be accessed on your server via nginx (e.g. ""/var/www/www.your-domain.com/ts3-ldv").
     - Set the directory owner to the user that will run the server-side app (recommended: create a new user for this, e.g. ts3-ldv).
     - Set the directory group to your webserver group (e.g. www-data).
-- Head over to the directory you created in the first step and execute "npm install ts3-ldv".
-- Modify the conf.json in the conf folder according to your web server and your preferences (Information about the possible settings can be found in the Configuration section in README.md).
+- Head over to the directory you just created and execute "npm install ts3-ldv" (you must have nodejs installed).
+- Rename the default-conf.json in the conf folder to conf.json and modify it according to your web server and your preferences (Information about the possible settings can be found in the Configuration section in README.md).
     - If you don't change the programLog setting you will have to create a directory /var/log/ts3-ldv/ and set the directory owner to the user that will run the server-side app.
 - Follow the steps in the nginx section below before proceeding to the next step.
-- (optional, recommended) Copy the ts3-ldv.server file to your systemd service folder and modify the settings according to your installation.
+- (optional, recommended) Copy the ts3-ldv.service file to your systemd service folder and modify the settings according to your installation.
 - (optional, recommended) Copy the ts3-ldv.logrotate file for your logrotate.d config folder and rename the file to ts3-ldv (you need to change the log path if you changed the programLog setting in conf.json).
 - You should now be able to start the server-side app via "service ts3-ldv start", access the location on your domain via your browser and access the interface.
 
@@ -32,7 +32,7 @@ should be considered a security risk when accessible by untrustworthy users!
 If you aren't familiar with this you should probably have a look at this part of the nginx docs:
     http://nginx.org/en/docs/http/ngx_http_auth_basic_module.html
 
-(I also recommend something like fail2ban for preventing brute-forcing the auth, but you will have to google for this yourself)
+(I also recommend something like fail2ban to prevent brute-forcing the auth, but this is only another layer of security, be sure you have at least the one described above!)
 
 The following lines are a template for the configuration that allows access to specific locations on the server only.
 Inside the "location / {}" block you will have to replace the two occurrences of "/ts3-ldv/" according to the path of
@@ -57,4 +57,4 @@ location / {
 }
 
 
-Feel free to open an issue on GitHub for improvement suggestions for the Install Instructions!
+Feel free to open an issue on GitHub for improvement suggestions for the install instructions!
