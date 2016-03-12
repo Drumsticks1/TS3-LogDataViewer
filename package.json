@@ -12,7 +12,7 @@
   "homepage": "https://drumsticks1.github.io/TS3-LogDataViewer/",
   "bugs": "https://github.com/Drumsticks1/TS3-LogDataViewer/issues",
   "license": "GPL-3.0",
-  "author": "Drumsticks1",
+  "author": "Drumsticks <drumsticks.code@gmail.com>",
   "files": [
     "conf",
     "css",

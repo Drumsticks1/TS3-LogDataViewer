@@ -1,5 +1,5 @@
 # ts3-ldv.logrotate: logrotate template for TS3-LogDataViewer.
-# Author: Drumsticks1
+# Author: Drumsticks
 # GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
 /var/log/ts3-ldv/ts3-ldv.log {

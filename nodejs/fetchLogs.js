@@ -1,5 +1,5 @@
 // fetchLogs.js: Fetching of the log files.
-// Author : Drumsticks1
+// Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";

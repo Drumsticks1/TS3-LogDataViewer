@@ -1,5 +1,5 @@
 // app.js : Sets up the app.
-// Author : Drumsticks1
+// Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";

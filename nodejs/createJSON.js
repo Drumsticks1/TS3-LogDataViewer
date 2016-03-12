@@ -1,5 +1,5 @@
 // createJSON.js
-// Author : Drumsticks1
+// Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
@@ -20,7 +20,7 @@ exports.createJSON = function() {
     var json = {
         "ProgramInfo": {
             "Name": "TS3-LogDataViewer",
-            "Author": "Drumsticks1",
+            "Author": "Drumsticks",
             "GitHub": "https://github.com/Drumsticks1/TS3-LogDataViewer"
         },
         "Attributes": {

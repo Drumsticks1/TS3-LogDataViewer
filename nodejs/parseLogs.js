@@ -1,5 +1,5 @@
 // parseLogs.js : Parsing of the logs.
-// Author : Drumsticks1
+// Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";

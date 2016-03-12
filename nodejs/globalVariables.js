@@ -1,5 +1,5 @@
 // globalVariables.js
-// Author : Drumsticks1
+// Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 const Constants = require("./Constants.js");
