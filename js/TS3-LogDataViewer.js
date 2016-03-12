@@ -1318,7 +1318,7 @@ function buildTables() {
                 addCallout("Building the JSON failed!", "error");
             else {
                 buildError = true;
-                buildJSON(false);
+                addCallout("Couldn't fetch the output.json", "alert");
             }
         },
         success: function(fetchedJSON) {
@@ -1457,10 +1457,10 @@ function buildControlSection() {
     buildJSONButton.disabled = buildJSONWithoutBufferButton.disabled = true;
 
     buildJSONButton.onclick = function() {
-        buildJSON(false);
+        addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
     };
     buildJSONWithoutBufferButton.onclick = function() {
-        buildJSON(true);
+        addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
     };
 
     buildSection.appendChild(buildJSONButton);

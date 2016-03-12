@@ -1,0 +1,154 @@
+﻿2016-03-11 15:00:49.606735|INFO    |VirtualServer |1  |listening on 0.0.0.0:9987
+2016-03-11 15:00:49.611616|INFO    |VirtualServer |1  |client 'server'(id:0) added privilege key for servergroup 'Server Admin'(id:6)
+2016-03-11 15:00:49.612117|WARNING |VirtualServer |1  |--------------------------------------------------------
+2016-03-11 15:00:49.612117|WARNING |VirtualServer |1  |ServerAdmin privilege key created, please use the line below
+2016-03-11 15:00:49.612117|WARNING |VirtualServer |1  |token=ZmK+hWCZIbBkyon61rpNgGfk27AwQVcjgHyaNBrV
+2016-03-11 15:00:49.612117|WARNING |VirtualServer |1  |--------------------------------------------------------
+2016-03-11 15:05:05.606860|INFO    |VirtualServer |1  |client (id:2) was added to servergroup 'Server Admin'(id:6) by client 'server'(id:0)
+2016-03-11 15:05:05.607862|INFO    |VirtualServer |1  |client 'Testclient 1'(id:2) used privilege key 'ZmK+hWCZIbBkyon61rpNgGfk27AwQVcjgHyaNBrV' and was added to servergroup 'Server Admin'(id:6)
+2016-03-11 15:05:25.882692|INFO    |VirtualServerBase|1  |server was edited by 'Testclient 1'(id:2)
+2016-03-11 15:05:53.805903|INFO    |VirtualServerBase|1  |server was edited by 'Testclient 1'(id:2)
+2016-03-11 15:06:13.744356|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 1'(id:2) reason 'reasonmsg'
+2016-03-11 15:06:14.422785|INFO    |VirtualServerBase|1  |client connected 'Testclient 1'(id:2) from 127.0.0.1:63783
+2016-03-11 15:06:32.333138|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 1'(id:2) reason 'reasonmsg'
+2016-03-11 15:06:33.011781|INFO    |VirtualServerBase|1  |client connected 'Testclient 2'(id:4) from 127.0.0.1:63783
+2016-03-11 15:06:39.293963|INFO    |VirtualServerBase|1  |client connected 'Testclient 1'(id:2) from 127.0.0.1:55374
+2016-03-11 15:06:44.160500|INFO    |VirtualServerBase|1  |client connected 'Testclient 3'(id:5) from 127.0.0.1:55376
+2016-03-11 15:06:47.595061|INFO    |VirtualServerBase|1  |client connected 'Testclient 4'(id:6) from 127.0.0.1:55378
+2016-03-11 15:06:51.251575|INFO    |VirtualServerBase|1  |client connected 'Testclient 5'(id:7) from 127.0.0.1:55380
+2016-03-11 15:07:23.996143|INFO    |VirtualServerBase|1  |channel 'New Channel'(id:2) created by 'Testclient 1'(id:2)
+2016-03-11 15:08:29.601584|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_upload_power'(id:234) with values (value:-1) was added by 'Testclient 1'(id:2) to channel 'New Channel'(id:2)
+2016-03-11 15:08:29.605589|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_download_power'(id:236) with values (value:-1) was added by 'Testclient 1'(id:2) to channel 'New Channel'(id:2)
+2016-03-11 15:08:36.708095|INFO    |VirtualServer |1  |client (id:4) was added to servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
+2016-03-11 15:09:11.394574|INFO    |VirtualServerBase|1  |client disconnected 'Former Testclient 1'(id:2) reason 'reasonmsg'
+2016-03-11 15:09:12.139207|INFO    |VirtualServerBase|1  |client connected 'Testclient 1'(id:2) from 127.0.0.1:55374
+2016-03-11 15:09:22.132896|INFO    |VirtualServerBase|1  |file upload to (id:2), '/upload1.txt' by client 'Testclient 1'(id:2)
+2016-03-11 15:09:22.134383|INFO    |VirtualServerBase|1  |file upload to (id:2), '/upload2.txt' by client 'Testclient 1'(id:2)
+2016-03-11 15:09:31.493796|INFO    |VirtualServerBase|1  |file download from (id:2), '/upload1.txt' by client 'Testclient 1'(id:2)
+2016-03-11 15:09:38.739780|INFO    |VirtualServerBase|1  |file download from (id:2), '/upload1.txt' by client 'Testclient 4'(id:6)
+2016-03-11 15:09:40.502170|INFO    |VirtualServerBase|1  |file download from (id:2), '/upload2.txt' by client 'Testclient 4'(id:6)
+2016-03-11 15:09:53.205748|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 3'(id:5) reason 'reasonmsg'
+2016-03-11 15:09:53.878951|INFO    |VirtualServerBase|1  |client connected 'Testclient 3'(id:5) from 127.0.0.1:55376
+2016-03-11 15:10:27.160593|INFO    |VirtualServerBase|1  |channel 'New Subchannel'(id:3) created by 'Testclient 2'(id:4)
+2016-03-11 15:10:27.171646|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_upload_power'(id:234) with values (value:-1) was added by 'Testclient 2'(id:4) to channel 'New Subchannel'(id:3)
+2016-03-11 15:10:27.175648|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_download_power'(id:236) with values (value:-1) was added by 'Testclient 2'(id:4) to channel 'New Subchannel'(id:3)
+2016-03-11 15:10:27.179648|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_browse_power'(id:242) with values (value:-1) was added by 'Testclient 2'(id:4) to channel 'New Subchannel'(id:3)
+2016-03-11 15:10:54.469937|INFO    |VirtualServerBase|1  |channel 'New Subchannel'(id:4) created as sub channel of 'New Channel'(id:2) by 'Testclient 2'(id:4)
+2016-03-11 15:10:54.480434|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_upload_power'(id:234) with values (value:-1) was added by 'Testclient 2'(id:4) to channel 'New Subchannel'(id:4)
+2016-03-11 15:10:54.484435|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_download_power'(id:236) with values (value:-1) was added by 'Testclient 2'(id:4) to channel 'New Subchannel'(id:4)
+2016-03-11 15:10:54.487935|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_browse_power'(id:242) with values (value:-1) was added by 'Testclient 2'(id:4) to channel 'New Subchannel'(id:4)
+2016-03-11 15:11:07.808775|INFO    |VirtualServerBase|1  |channel 'Private Channel'(id:3) edited by 'Testclient 2'(id:4)
+2016-03-11 15:11:15.666708|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 5'(id:7) reason 'reasonmsg'
+2016-03-11 15:11:16.340803|INFO    |VirtualServerBase|1  |client connected 'Testclient 5'(id:7) from 127.0.0.1:55380
+2016-03-11 15:11:31.385862|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 5'(id:7) reason 'reasonmsg'
+2016-03-11 15:11:32.054076|INFO    |VirtualServerBase|1  |client connected 'You don't know me!'(id:7) from 127.0.0.1:55380
+2016-03-11 15:12:15.772729|INFO    |VirtualServer |1  |servergroup 'UploaderGroup'(id:9) was added by 'Testclient 1'(id:2)
+2016-03-11 15:12:22.973794|INFO    |VirtualServer |1  |permission 'b_ft_ignore_password'(id:231) with values (value:1, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.977294|INFO    |VirtualServer |1  |permission 'b_ft_transfer_list'(id:232) with values (value:1, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.980296|INFO    |VirtualServer |1  |permission 'i_ft_file_upload_power'(id:233) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.983795|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_upload_power'(id:234) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.986796|INFO    |VirtualServer |1  |permission 'i_ft_file_download_power'(id:235) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.989297|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_download_power'(id:236) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.991298|INFO    |VirtualServer |1  |permission 'i_ft_file_delete_power'(id:237) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.995292|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_delete_power'(id:238) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:22.998293|INFO    |VirtualServer |1  |permission 'i_ft_file_rename_power'(id:239) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.001293|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_rename_power'(id:240) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.004075|INFO    |VirtualServer |1  |permission 'i_ft_file_browse_power'(id:241) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.006793|INFO    |VirtualServer |1  |permission 'i_ft_needed_file_browse_power'(id:242) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.009294|INFO    |VirtualServer |1  |permission 'i_ft_directory_create_power'(id:243) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.011319|INFO    |VirtualServer |1  |permission 'i_ft_needed_directory_create_power'(id:244) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.015505|INFO    |VirtualServer |1  |permission 'i_ft_quota_mb_download_per_client'(id:245) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:23.018006|INFO    |VirtualServer |1  |permission 'i_ft_quota_mb_upload_per_client'(id:246) with values (value:75, negated:0, skipchannel:0) was added by 'Testclient 1'(id:2) to servergroup 'UploaderGroup'(id:9)
+2016-03-11 15:12:54.605719|INFO    |VirtualServerBase|1  |client disconnected 'You don't know me!'(id:7) reason 'invokerid=8 invokername=Testclient 1 invokeruid=6+ywHg9D+TtL3W5J9zIcXT0fHqg= reasonmsg=Yes, I do!'
+2016-03-11 15:13:08.831423|INFO    |VirtualServer |1  |client (id:5) was added to servergroup 'UploaderGroup'(id:9) by client 'Testclient 2'(id:4)
+2016-03-11 15:13:11.650426|INFO    |VirtualServer |1  |client (id:6) was added to servergroup 'UploaderGroup'(id:9) by client 'Testclient 2'(id:4)
+2016-03-11 15:13:14.241379|INFO    |VirtualServer |1  |client (id:6) was removed from servergroup 'UploaderGroup'(id:9) by client 'Testclient 2'(id:4)
+2016-03-11 15:13:24.844515|INFO    |VirtualServer |1  |ban added reason='Testban' cluid='F4nl9HOb9eIjq9vO/Mv2a75xzhs=' bantime=43200 by client 'Testclient 2'(id:4)
+2016-03-11 15:13:24.848016|INFO    |VirtualServer |1  |ban added reason='Testban' ip='127.0.0.1' bantime=43200 by client 'Testclient 2'(id:4)
+2016-03-11 15:13:24.848016|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 4'(id:6) reason 'invokerid=3 invokername=Testclient 2 invokeruid=grQkI8li6gwTVfuxp29ZU7VPosc= reasonmsg=Testban bantime=43200'
+2016-03-11 15:13:53.866061|INFO    |VirtualServer |1  |ban deleted reason='Testban' ip='127.0.0.1' bantime=43200 by client 'Testclient 2'(id:4)
+2016-03-11 15:13:56.934615|INFO    |VirtualServer |1  |ban deleted reason='Testban' cluid='F4nl9HOb9eIjq9vO/Mv2a75xzhs=' bantime=43200 by client 'Testclient 2'(id:4)
+2016-03-11 15:14:13.208888|INFO    |VirtualServerBase|1  |client connected 'I am back!'(id:6) from 127.0.0.1:55380
+2016-03-11 15:15:13.292391|INFO    |VirtualServer |1  |complaint added for client 'I am back!'(id:6) reason 'I want him banned for w/e' by client 'Testclient 3'(id:5)
+2016-03-11 15:15:29.616826|INFO    |VirtualServerBase|1  |client connected 'Alias'(id:7) from 127.0.0.1:55378
+2016-03-11 15:15:58.499734|INFO    |VirtualServerBase|1  |server was edited by 'Testclient 1'(id:2)
+2016-03-11 15:15:58.507238|INFO    |VirtualServerBase|1  |channel 'Default Channel'(id:1) edited by 'server'(id:0)
+2016-03-11 15:15:58.514741|INFO    |VirtualServerBase|1  |channel 'New Channel'(id:2) edited by 'server'(id:0)
+2016-03-11 15:15:58.522473|INFO    |VirtualServerBase|1  |channel 'Private Channel'(id:3) edited by 'server'(id:0)
+2016-03-11 15:15:58.529475|INFO    |VirtualServerBase|1  |channel 'New Subchannel'(id:4) edited by 'server'(id:0)
+2016-03-11 15:16:27.662817|INFO    |VirtualServerBase|1  |server was edited by 'Testclient 1'(id:2)
+2016-03-11 15:16:33.615201|INFO    |VirtualServer |1  |all complaints got deleted by client 'Testclient 1'(id:2) for client 'I am back!'(id:6)
+2016-03-11 15:16:41.971678|INFO    |VirtualServer |1  |complaint added for client 'I am back!'(id:6) reason 'So do I!' by client 'Testclient 1'(id:2)
+2016-03-11 15:16:41.975679|INFO    |VirtualServer |1  |ban added reason='You received too many complaints' cluid='F4nl9HOb9eIjq9vO/Mv2a75xzhs=' bantime=1200 by client 'server'(id:0)
+2016-03-11 15:16:41.978680|INFO    |VirtualServer |1  |ban added reason='You received too many complaints' ip='127.0.0.1' bantime=1200 by client 'server'(id:0)
+2016-03-11 15:16:41.979180|INFO    |VirtualServerBase|1  |client disconnected 'I am back!'(id:6) reason 'invokerid=0 invokername=Server reasonmsg=You received too many complaints bantime=1200'
+2016-03-11 15:17:09.432096|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 2'(id:4) reason 'reasonmsg'
+2016-03-11 15:17:10.102940|INFO    |VirtualServerBase|1  |client connected 'Troll of Trollington'(id:4) from 127.0.0.1:63783
+2016-03-11 15:17:16.357531|INFO    |VirtualServer |1  |client (id:4) was removed from servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
+2016-03-11 15:17:34.097782|INFO    |VirtualServer |1  |ban added reason='w/e' cluid='grQkI8li6gwTVfuxp29ZU7VPosc=' bantime=0 by client 'Testclient 1'(id:2)
+2016-03-11 15:17:34.101306|INFO    |VirtualServer |1  |ban added reason='w/e' ip='127.0.0.1' bantime=0 by client 'Testclient 1'(id:2)
+2016-03-11 15:17:34.101306|INFO    |VirtualServerBase|1  |client disconnected 'Troll of Trollington'(id:4) reason 'invokerid=8 invokername=Testclient 1 invokeruid=6+ywHg9D+TtL3W5J9zIcXT0fHqg= reasonmsg=w/e bantime=0'
+2016-03-11 15:18:47.017275|INFO    |VirtualServer |1  |ban added reason='Custom ban' ip='77\.77\.77\.77' name='Troll' cluid='HFOLWPF924DFkj23RK42DS' bantime=900 by client 'Testclient 1'(id:2)
+2016-03-11 15:19:03.254064|INFO    |VirtualServer |1  |ban deleted reason='You received too many complaints' ip='127.0.0.1' bantime=1200 by client 'Testclient 1'(id:2)
+2016-03-11 15:19:05.565703|INFO    |VirtualServer |1  |ban deleted reason='Custom ban' ip='77\.77\.77\.77' name='Troll' cluid='HFOLWPF924DFkj23RK42DS' bantime=900 by client 'Testclient 1'(id:2)
+2016-03-11 15:19:08.405749|INFO    |VirtualServer |1  |ban deleted reason='You received too many complaints' cluid='F4nl9HOb9eIjq9vO/Mv2a75xzhs=' bantime=1200 by client 'Testclient 1'(id:2)
+2016-03-11 15:20:00.115283|INFO    |VirtualServerBase|1  |file upload to (id:4), '/upload1.txt' by client 'Testclient 1'(id:2)
+2016-03-11 15:20:00.122785|INFO    |VirtualServerBase|1  |file upload to (id:4), '/upload2.txt' by client 'Testclient 1'(id:2)
+2016-03-11 15:20:41.755253|INFO    |VirtualServer |1  |client (id:5) was added to servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
+2016-03-11 15:21:01.068508|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 3'(id:5) reason 'reasonmsg'
+2016-03-11 15:21:01.740029|INFO    |VirtualServerBase|1  |client connected 'Promoted!'(id:5) from 127.0.0.1:55376
+2016-03-11 15:21:22.794755|INFO    |VirtualServerBase|1  |client disconnected 'Renamed while online'(id:2) reason 'reasonmsg'
+2016-03-11 15:21:23.470982|INFO    |VirtualServerBase|1  |client connected 'Oops'(id:2) from 127.0.0.1:55374
+2016-03-11 15:21:28.807614|INFO    |VirtualServerBase|1  |client disconnected 'Oops'(id:2) reason 'reasonmsg'
+2016-03-11 15:21:29.538559|INFO    |VirtualServerBase|1  |client connected 'Serveradmin'(id:2) from 127.0.0.1:55374
+2016-03-11 15:22:16.556896|INFO    |VirtualServerBase|1  |file upload to (id:3), '/importantFile.pdf' by client 'Promoted!'(id:5)
+2016-03-11 15:22:23.265612|INFO    |VirtualServerBase|1  |file directory 'files\virtualserver_1\channel_3/subfolder' created by client 'Promoted!'(id:5) in (id:3)
+2016-03-11 15:22:29.040913|INFO    |VirtualServerBase|1  |file directory 'files\virtualserver_1\channel_3/subfolder/another subfolder' created by client 'Promoted!'(id:5) in (id:3)
+2016-03-11 15:22:43.820034|INFO    |VirtualServerBase|1  |file upload to (id:3), '/subfolder/another subfolder/even more important File.pdf' by client 'Promoted!'(id:5)
+2016-03-11 15:24:55.035639|INFO    |VirtualServer |1  |client (id:7) was added to servergroup 'UploaderGroup'(id:9) by client 'Promoted!'(id:5)
+2016-03-11 15:25:27.288201|INFO    |VirtualServerBase|1  |file directory 'files\virtualserver_1\channel_3/More files for testing the pager' created by client 'Alias'(id:7) in (id:3)
+2016-03-11 15:25:27.389280|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/1' by client 'Alias'(id:7)
+2016-03-11 15:25:27.389280|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/10' by client 'Alias'(id:7)
+2016-03-11 15:25:27.390281|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/2' by client 'Alias'(id:7)
+2016-03-11 15:25:27.391783|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/3' by client 'Alias'(id:7)
+2016-03-11 15:25:27.392281|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/4' by client 'Alias'(id:7)
+2016-03-11 15:25:27.895415|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/5' by client 'Alias'(id:7)
+2016-03-11 15:25:27.895415|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/6' by client 'Alias'(id:7)
+2016-03-11 15:25:27.896417|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/7' by client 'Alias'(id:7)
+2016-03-11 15:25:27.897919|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/8' by client 'Alias'(id:7)
+2016-03-11 15:25:27.898420|INFO    |VirtualServerBase|1  |file upload to (id:3), '/More files for testing the pager/9' by client 'Alias'(id:7)
+2016-03-11 15:25:38.135394|INFO    |VirtualServerBase|1  |file deleted from (id:3), '/More files for testing the pager/3' by client 'Alias'(id:7)
+2016-03-11 15:25:42.564756|INFO    |VirtualServerBase|1  |file deleted from (id:3), '/More files for testing the pager/1' by client 'Alias'(id:7)
+2016-03-11 15:26:34.959907|INFO    |VirtualServerBase|1  |client disconnected 'Alias'(id:7) reason 'invokerid=18 invokername=Serveradmin invokeruid=6+ywHg9D+TtL3W5J9zIcXT0fHqg= reasonmsg=Sry, we need another kick for the kick table!'
+2016-03-11 15:26:46.502962|INFO    |VirtualServerBase|1  |client disconnected 'Promoted!'(id:5) reason 'invokerid=18 invokername=Serveradmin invokeruid=6+ywHg9D+TtL3W5J9zIcXT0fHqg= reasonmsg=One more would be good ;)'
+2016-03-11 15:27:03.167627|INFO    |VirtualServerBase|1  |client connected 'Raging Serveradmin'(id:2) from 127.0.0.1:55376
+2016-03-11 15:27:27.740954|INFO    |VirtualServer |1  |client (id:2) was removed from servergroup 'Server Admin'(id:6) by client 'Raging Serveradmin'(id:2)
+2016-03-11 15:28:38.188967|INFO    |VirtualServerBase|1  |client disconnected 'Raging Serveradmin'(id:2) reason 'reasonmsg'
+2016-03-11 15:31:23.512029|INFO    |VirtualServerBase|1  |client connected 'Testclient 3'(id:5) from 127.0.0.1:64853
+2016-03-11 15:31:48.057846|INFO    |VirtualServer |1  |client 'Testclient 3'(id:5) added privilege key for servergroup 'Server Admin'(id:6)
+2016-03-11 15:32:04.989271|INFO    |VirtualServerBase|1  |client disconnected 'That was dumb...'(id:2) reason 'invokerid=3 invokername=Testclient 3 invokeruid=bMRxB2msWPkc4z/Yq8QpAuL5JJI= reasonmsg=Yeah, it was'
+2016-03-11 15:32:23.916093|INFO    |VirtualServer |1  |ban deleted reason='w/e' ip='127.0.0.1' bantime=0 by client 'Testclient 3'(id:5)
+2016-03-11 15:33:06.849581|INFO    |VirtualServer |1  |ban deleted reason='w/e' cluid='grQkI8li6gwTVfuxp29ZU7VPosc=' bantime=0 by client 'Testclient 3'(id:5)
+2016-03-11 15:33:11.731119|INFO    |VirtualServerBase|1  |client connected 'Testclient 1'(id:2) from 127.0.0.1:60069
+2016-03-11 15:33:15.794174|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 1'(id:2) reason 'reasonmsg'
+2016-03-11 15:33:19.551313|INFO    |VirtualServerBase|1  |client connected 'Testclient 1'(id:2) from 127.0.0.1:55380
+2016-03-11 15:33:23.778966|INFO    |VirtualServer |1  |client (id:2) was added to servergroup 'Server Admin'(id:6) by client 'Testclient 3'(id:5)
+2016-03-11 15:33:46.788190|INFO    |VirtualServer |1  |complaint added for client 'Testclient 1'(id:2) reason 'One more!' by client 'Testclient 3'(id:5)
+2016-03-11 15:33:46.792691|INFO    |VirtualServer |1  |ban added reason='You received too many complaints' cluid='6+ywHg9D+TtL3W5J9zIcXT0fHqg=' bantime=1200 by client 'server'(id:0)
+2016-03-11 15:33:46.796192|INFO    |VirtualServer |1  |ban added reason='You received too many complaints' ip='127.0.0.1' bantime=1200 by client 'server'(id:0)
+2016-03-11 15:33:46.796192|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 1'(id:2) reason 'invokerid=0 invokername=Server reasonmsg=You received too many complaints bantime=1200'
+2016-03-11 15:33:59.391234|INFO    |VirtualServer |1  |ban deleted reason='You received too many complaints' cluid='6+ywHg9D+TtL3W5J9zIcXT0fHqg=' bantime=1200 by client 'Testclient 3'(id:5)
+2016-03-11 15:33:59.395244|INFO    |VirtualServer |1  |ban deleted reason='You received too many complaints' ip='127.0.0.1' bantime=1200 by client 'Testclient 3'(id:5)
+2016-03-11 15:34:09.621219|INFO    |VirtualServerBase|1  |client disconnected 'Testclient 3'(id:5) reason 'reasonmsg'
+2016-03-11 15:34:10.296079|INFO    |VirtualServerBase|1  |client connected 'Testclient 1'(id:2) from 127.0.0.1:64853
+2016-03-11 15:34:15.119712|INFO    |VirtualServerBase|1  |client connected 'Testclient 2'(id:4) from 127.0.0.1:55380
+2016-03-11 15:34:19.097624|INFO    |VirtualServerBase|1  |client connected 'Testclient 3'(id:5) from 127.0.0.1:55378
+2016-03-11 15:34:33.646321|INFO    |VirtualServerBase|1  |client connected 'Testclient 4'(id:6) from 127.0.0.1:49514
+2016-03-11 15:34:37.764978|INFO    |VirtualServer |1  |client (id:6) was added to servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
+2016-03-11 15:34:49.637453|INFO    |VirtualServer |1  |client (id:5) was removed from servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
+[NOTICE: Excluded the following four lines to show the functionality linked to connected clients by removing the "VirtualServerBase" part!]
+2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 1'(id:2) reason 'reasonmsg=Server Shutdown!'
+2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 2'(id:4) reason 'reasonmsg=Server Shutdown!'
+2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 3'(id:5) reason 'reasonmsg=Server Shutdown!'
+2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 4'(id:6) reason 'reasonmsg=Server Shutdown!'
+2016-03-11 15:39:24.823857|INFO    |VirtualServerBase|1  |stopped

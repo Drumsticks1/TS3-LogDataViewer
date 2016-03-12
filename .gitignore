@@ -1,8 +1,5 @@
 # gitignore put together by Drumsticks.
 
-# Log files
-*.log
-
 # WebStorm directory-based project format:
 .idea/
 
@@ -11,4 +8,3 @@ node_modules
 
 # TS3-LDV related files
 conf.json
-output.json
