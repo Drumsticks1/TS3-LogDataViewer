@@ -10,6 +10,7 @@ const fs = require("fs"),
     fetchLogs = require("./fetchLogs.js"),
     parseLogs = require("./parseLogs.js"),
     createJSON = require("./createJSON.js"),
+    Constants = require("./Constants.js"),
     miscFunctions = require("./miscFunctions.js");
 
 /**
@@ -33,13 +34,15 @@ exports.buildJSON = function(ignoreLastModificationCheck) {
     }
 
     var lastModification = fs.statSync(globalVariables.logDirectory + globalVariables.Logs[globalVariables.Logs.length - 1]).mtime.valueOf();
-
-    if (!ignoreLastModificationCheck) {
-        if (lastModification == globalVariables.lastModificationOfTheLastLog) {
-            outputHandler.output("No modifications to the last log since the last request - skipping building a new json!");
-            return 2;
-        }
-    } else outputHandler.output("Ignoring lastModification check!");
+    
+    if (fs.existsSync(Constants.outputJSON)) {
+        if (!ignoreLastModificationCheck) {
+            if (lastModification == globalVariables.lastModificationOfTheLastLog) {
+                outputHandler.output("No modifications to the last log since the last request - skipping building a new json!");
+                return 2;
+            }
+        } else outputHandler.output("Skipping lastModification check!");
+    } else outputHandler.output("Didn't find output.json, skipping lastModification check!");
 
     globalVariables.lastModificationOfTheLastLog = lastModification;
 
