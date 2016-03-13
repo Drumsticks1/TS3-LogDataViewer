@@ -1,5 +1,12 @@
 # Changelog
-Versions: <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+<br>
+
+### <a name="v2.0.1">Version 2.0.1</a> (13.03.2016)
+Changes:
+- Modified the way of accessing the ts3-ldv package installed with npm
+- Updated install instructions, especially the nginx configuration template
 
 <br>
 

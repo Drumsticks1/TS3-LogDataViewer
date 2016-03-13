@@ -9,8 +9,8 @@ After=network.target
 [Service]
 # Modify the following settings according to your installation.
 
-# nodejs directory inside the directory containing the ts3-ldv package.
-WorkingDirectory=/var/www/your-domain/ts3-ldv/nodejs
+# nodejs directory inside the ts3-ldv package, the part after /teamspeak/ must remain unmodified.
+WorkingDirectory=/var/www/www.your-domain.com/teamspeak/node_modules/ts3-ldv/nodejs
 
 # Create an user for ts3-ldv - grant only the required permissions to prevent security issues.
 User=ts3-ldv

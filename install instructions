@@ -5,12 +5,12 @@
 This installation instructions are intended for any linux distribution.
 Experienced users may also install it on other operating systems but I may not be able to help with issues regarding anything else than linux.
 
-- Create a directory for the LogDataViewer in a directory which can be accessed on your server via nginx (e.g. ""/var/www/www.your-domain.com/ts3-ldv").
-    - Set the directory owner to the user that will run the server-side app (recommended: create a new user for this, e.g. ts3-ldv).
-    - Set the directory group to your webserver group (e.g. www-data).
+- Create a directory for the LogDataViewer in a directory which can be accessed on your server via nginx (e.g.""/var/www/www.your-domain.com/teamspeak").
+- Set the directory owner to the user that will run the server-side app (recommended: create a new user for this, e.g. ts3-ldv).
+- Set the directory group to your webserver group (e.g. www-data).
 - Head over to the directory you just created and execute "npm install ts3-ldv" (you must have nodejs installed).
 - Rename the default-conf.json in the conf folder to conf.json and modify it according to your web server and your preferences (Information about the possible settings can be found in the Configuration section in README.md).
-    - If you don't change the programLog setting you will have to create a directory /var/log/ts3-ldv/ and set the directory owner to the user that will run the server-side app.
+- If you don't change the programLog setting you will have to create a directory /var/log/ts3-ldv/ and set the directory owner to the user that will run the server-side app.
 - Follow the steps in the nginx section below before proceeding to the next step.
 - (optional, recommended) Copy the ts3-ldv.service file to your systemd service folder and modify the settings according to your installation.
 - (optional, recommended) Copy the ts3-ldv.logrotate file for your logrotate.d config folder and rename the file to ts3-ldv (you need to change the log path if you changed the programLog setting in conf.json).
@@ -35,8 +35,7 @@ If you aren't familiar with this you should probably have a look at this part of
 (I also recommend something like fail2ban to prevent brute-forcing the auth, but this is only another layer of security, be sure you have at least the one described above!)
 
 The following lines are a template for the configuration that allows access to specific locations on the server only.
-Inside the "location / {}" block you will have to replace the two occurrences of "/ts3-ldv/" according to the path of
-the directory you created in the first step.
+If you don't use "teamspeak" as directory you will have to replace ALL occurrences of "teamspeak" in the below configuration according to your installation.
 Additionally if you modified the port setting in conf.json you need to modify the port in the proxy_pass directive.
 
 
@@ -45,13 +44,30 @@ location / {
     try_files $uri $uri/ /index.html =404;
 
     # Modify the location according to your installation.
-    location /ts3-ldv {
+    location /teamspeak {
         auth_basic "Authentication required!";
         auth_basic_user_file /path/to/your/auth/file/.htpasswd;
 
-        location /ts3-ldv/express/buildJSON {
-            # Modify the port according to your port settings in conf.json.
-            proxy_pass    http://127.0.0.1:3000/buildJSON;
+        # Ignore the node_modules directory for the rewrite after this location section.
+        location /teamspeak/node_modules {
+            # For use via your-domain.com/teamspeak/node_modules/ts3-ldv/
+            location /teamspeak/node_modules/ts3-ldv/node_modules {
+                rewrite ^/teamspeak/node_modules/ts3-ldv/(.*)$ /teamspeak/$1 last;
+            }
+        }
+
+        # Rewrites the urls in order to make the ts3-ldv page accessible via your-domain.com/teamspeak/
+        # and not only via your-domain.com/teamspeak/node_modules/ts3-ldv/
+        rewrite ^/teamspeak/(.*)$ /teamspeak/node_modules/ts3-ldv/$1 last;
+
+        # For the buildJSON request when issued via your-domain.com/teamspeak/
+        location /teamspeak/express/buildJSON {
+            proxy_pass http://127.0.0.1:3000/buildJSON;
+        }
+
+        # For the buildJSON request when issued via your-domain.com/teamspeak/node_modules/ts3-ldv/
+        location /teamspeak/node_modules/ts3-ldv/express/buildJSON {
+            proxy_pass http://127.0.0.1:3000/buildJSON;
         }
     }
 }
