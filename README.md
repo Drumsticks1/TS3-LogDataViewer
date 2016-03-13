@@ -33,12 +33,14 @@ The program may also run on other operating systems that have nodejs installed b
 ## Installation
 The installation is recommended via npm and needs a few additional small steps of configuration.
 <br>
+[ts3-ldv package on npm](https://www.npmjs.com/package/ts3-ldv)
+<br>
 You can find the in-depth installation instructions in the file named `install instructions`, it also contains a section for the nginx configuration.
 
 ## Features
 Would be too much to write down here.
 <br>
-Check it out yourself, start with the [demo](https://drumsticks1.github.io/TS3-LogDataViewer/demo/)!
+Check it out yourself, start with the [demo](https://drumsticks1.github.io/TS3-LogDataViewer/)!
 
 ## Configuration settings (server-side)
 The following options can currently be specified in conf.json:
