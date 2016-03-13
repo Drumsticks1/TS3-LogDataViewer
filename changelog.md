@@ -1,22 +1,28 @@
 # Changelog
-Versions: <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
-<br>
+### <a name="v2.0.2">Version 2.0.2</a> (13.03.2016)
+Additions:
+- Added extra check if output.json exists before the lastModification checks in order to always build the output.json when it does not exist, regardless of the lastModification check.
+
+Changes:
+- Updated Readme and install instructions
+
+Fixes:
+- Fixed server accepting too frequent requests, was caused by the lastBuild variable not being updated in all possible cases.
+
 
 ### <a name="v2.0.1">Version 2.0.1</a> (13.03.2016)
 Changes:
 - Modified the way of accessing the ts3-ldv package installed with npm
 - Updated install instructions, especially the nginx configuration template
 
-<br>
 
 ### <a name="v2.0.0">Version 2.0.0</a> (13.03.2016)
 There were 75 commits between v1.7.3.1 and v2.0.0 with (according to git) more than 5500 additions and almost 3400 deletions.
 
 Some changes between this two versions may have been overlooked as there were many big changes, especially the rewrite
 from c++ to (node)js as well as structural adjustments.
-
-<br>
 
 Additions:
 - Client.js
@@ -85,8 +91,6 @@ Additions:
     - ts3-ldv.logrotate as a logrotate configuration template
 - Added changelog.md
 
-<br>
-
 Changes:
 - Added support for the new file transfer logging introduced in 3.0.12.0
 - Rewrote the server-side code from c++ to (node)js
@@ -133,8 +137,6 @@ Changes:
     - Updated from foundation 5 to foundation 6
 - Updated gh-pages to the newest version (removed old branch and added a fresh one)
 - Updated .gitignore, README and install instructions
-
-<br>
 
 Removals:
 - Removed obsolete class functions (mostly getters)
