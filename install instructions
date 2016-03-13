@@ -2,11 +2,11 @@
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-This installation instructions are intended for any linux distribution.
+This installation instructions are intended for any linux distribution (you need to write your own init script for the ts3-ldv service if your linux distribution doesn't use systemd).
 Experienced users may also install it on other operating systems but I may not be able to help with issues regarding anything else than linux.
 
 - Create a directory for the LogDataViewer in a directory which can be accessed on your server via nginx (e.g.""/var/www/www.your-domain.com/teamspeak").
-    - Set the directory group to your webserver group (e.g. www-data) to ensure that nginx has access to it.
+    - Set the directory owner and the directory group to your webserver group (e.g. www-data) to ensure that nginx has access to it.
 - Head over to the directory you just created and execute "npm install ts3-ldv" (nodejs has to be installed).
     - This will create the directory node_modules in the current folder, ts3-ldv and it's dependencies are packages in this directory.
 - Make the ts3-ldv user the owner of the ts3-ldv directory that npm installed (command: "chown ts3-ldv node_modules/ts3-ldv").
@@ -14,6 +14,7 @@ Experienced users may also install it on other operating systems but I may not b
     - If you don't change the programLog setting you will have to create a directory /var/log/ts3-ldv/ and set the directory owner to the user that will run the server-side app.
 - Follow the steps in the nginx section below before proceeding to the next step.
 - (optional, recommended) Copy the ts3-ldv.service file to your systemd service folder and modify the settings according to your installation.
+    - If the distribution doesn't use systemd you will have to write your own init script for the ts3-ldv service.
 - (optional, recommended) Copy the ts3-ldv.logrotate file for your logrotate.d config folder and rename the file to ts3-ldv (you need to change the log path if you changed the programLog setting in conf.json).
 - You should now be able to start the server-side app via "service ts3-ldv start", access the location on your domain via your browser and access the interface.
 

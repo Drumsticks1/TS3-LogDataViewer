@@ -1,4 +1,4 @@
-TS3-LogDataViewer is an easy to deploy application that gathers information from the logs of a ts3 server and displays them in an interface that is accessible via the web browser.
+TS3-LogDataViewer is an easy to deploy application that gathers information from the logs of a ts3 server and displays them in an interface that is accessible via your web browser.
 The interface shows detailed information about the clients and their activity on your TeamSpeak3 server.
 
 ## How it works
@@ -13,7 +13,7 @@ This demo is set up with gh-pages and shows the design as well as some features 
 <br>
 As no code can be executed on the GitHub server, this isn't a demo for the server-side part.
 <br>
-The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the nodejs application
+The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the nodejs application (v2.0.0)
 out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/logs/ts3server_2016-03-11__15_00_44.563532_1.log).
 
 #### Teamspeak 3 server settings
@@ -23,7 +23,7 @@ Otherwise some parts of the application may not be available or further features
 ## Server operating systems
 I privately run it on a debian jessie distribution running nginx.
 <br>
-That's why I can only provide a template for nginx configuration settings (in the install instruction) as well as a systemd service script and not configurations for other webservers.
+That's why I can only provide a template for nginx configuration settings (in the install instruction) as well as a systemd service script and not configurations for other webservers or init systems.
 <br>
 
 If you use something else than nginx: make sure that you know what you are doing and restrict the access to your ts3-ldv folder!<br>
@@ -54,6 +54,9 @@ The following options can currently be specified in conf.json:
 | timeBetweenBuilds | Minimum time allowed between requests                   | number           | 2000                                                  |
 | usedPort          | The port on which the ts3-ldv app is running            | number           | 3000                                                  |
 | ignoredLogs       | Array containing log names that are excluded            | array of strings | []                                                    |
+
+## Changelog
+The changelog for each release version can be found in the file `changelog.md`
 
 ## Support
 If there are any problems, improvement suggestions or feature requests feel free to open an Issue on GitHub.
