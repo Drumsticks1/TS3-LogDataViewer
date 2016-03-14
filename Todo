@@ -5,6 +5,7 @@
 Add note about upload deletion problem between version 3.0.12.0 - 3.0.x
 
 TS3-LogDataViewer.js:
+    - Check filter type (e.g regex) compatibility for the Nicknames, Connections, IPs and Server Group column.
     - Maybe: optional time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer".
     - Split into multiple js files and use dev tools for putting them together?
     - Outsource the creation of the control sections for the tables.
