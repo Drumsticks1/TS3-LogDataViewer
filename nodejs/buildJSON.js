@@ -22,23 +22,20 @@ const fs = require("fs"),
  *      2 if building wasn't necessary because there are no new log lines.
  */
 exports.buildJSON = function(ignoreLastModificationCheck) {
-    var programStart = new Date();
-
-    miscFunctions.updateCurrentDate();
-    outputHandler.updateWriteStream();
-    outputHandler.output("\n" + miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
+    miscFunctions.setProgramStartDate();
+    outputHandler.output("Processing build request...");
 
     if (!fetchLogs.fetchLogs()) {
-        outputHandler.output("The build function will now exit!");
+        outputHandler.output("The build function will now exit!\n");
         return 0;
     }
 
     var lastModification = fs.statSync(globalVariables.logDirectory + globalVariables.Logs[globalVariables.Logs.length - 1]).mtime.valueOf();
-    
+
     if (fs.existsSync(Constants.outputJSON)) {
         if (!ignoreLastModificationCheck) {
             if (lastModification == globalVariables.lastModificationOfTheLastLog) {
-                outputHandler.output("No modifications to the last log since the last request - skipping building a new json!");
+                outputHandler.output("No modifications to the last log since the last request - skipping building a new json!\n");
                 return 2;
             }
         } else outputHandler.output("Skipping lastModification check!");
@@ -56,6 +53,6 @@ exports.buildJSON = function(ignoreLastModificationCheck) {
 
     miscFunctions.resetConnectedStates();
 
-    outputHandler.output("Program runtime: " + miscFunctions.getProgramRuntime(programStart) + " ms.");
+    outputHandler.output("Build process runtime: " + miscFunctions.getProgramRuntime() + " ms.\n");
     return 1;
 };

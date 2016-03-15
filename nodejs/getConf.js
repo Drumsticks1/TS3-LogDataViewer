@@ -20,11 +20,14 @@ var confJSON;
 function acquireSetting(settingName, settingValueType) {
     if (confJSON[settingName] != undefined) {
         if (typeof confJSON[settingName] == settingValueType) {
-            globalVariables[settingName] = confJSON[settingName];
-            // Todo: optional debug logging.
-            // outputHandler.output("Configuration variable \"" + settingName + "\" is set to " + confJSON[settingName]);
-        }
-        else {
+            if (globalVariables[settingName] != confJSON[settingName]) {
+                globalVariables[settingName] = confJSON[settingName];
+                // Todo: optional debug logging.
+                // outputHandler.output("Configuration variable \"" + settingName + "\" is set to " + confJSON[settingName]);
+            } else {
+                // Todo: Add debug logging.
+            }
+        } else {
             outputHandler.output("Configuration variable \"" + settingName + "\" is not specified as a valid " + settingValueType + " - using default value!");
             globalVariables[settingName] = Constants[settingName];
         }
@@ -40,9 +43,11 @@ module.exports = {
      */
     resetToDefaultConfiguration: function() {
         outputHandler.output("Ignoring the conf.json and using default settings...");
+        globalVariables.programLogfile = Constants.programLogfile;
         globalVariables.logDirectory = Constants.logDirectory;
         globalVariables.virtualServer = Constants.virtualServer;
         globalVariables.bufferData = Constants.bufferData;
+        globalVariables.timeBetweenBuilds = Constants.timeBetweenBuilds;
         globalVariables.usedPort = Constants.usedPort;
         globalVariables.ignoredLogs = [];
     },
@@ -59,12 +64,14 @@ module.exports = {
                 confJSON = require(Constants.confJSON);
 
                 acquireSetting("programLogfile", "string");
+                outputHandler.updateWriteStream();
                 acquireSetting("logDirectory", "string");
                 acquireSetting("virtualServer", "number");
                 acquireSetting("bufferData", "boolean");
                 acquireSetting("timeBetweenBuilds", "number");
+                acquireSetting("usedPort", "number");
 
-                if(Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0)
+                if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0)
                     globalVariables.ignoredLogs = confJSON.ignoredLogs;
                 else {
                     outputHandler.output("No ignored logs specified...");

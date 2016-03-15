@@ -15,10 +15,7 @@ const express = require("express"),
 
 var lastBuild = 0;
 
-outputHandler.updateWriteStream();
-miscFunctions.updateCurrentDate();
-outputHandler.output("\nProgram startup\n");
-outputHandler.output(miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
+outputHandler.output("Program startup");
 
 // Fetch the config file and import the settings on program startup.
 if (!getConf.getConf())
@@ -26,6 +23,10 @@ if (!getConf.getConf())
 
 // Improves security by setting various HTTP headers.
 app.use(helmet());
+
+app.listen(globalVariables.usedPort, function() {
+    outputHandler.output("TS3-LDV listening on port " + globalVariables.usedPort + "\n");
+});
 
 app.get("/buildJSON", function(req, res) {
     var timeDifference = Date.now().valueOf() - lastBuild,
@@ -58,14 +59,10 @@ app.get("/buildJSON", function(req, res) {
                 break;
         }
     } else {
-        outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
+        outputHandler.output("The last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
         response.timeDifference = timeDifference;
     }
 
     res.send(response);
     res.end();
-});
-
-app.listen(globalVariables.usedPort, function() {
-    outputHandler.output("\nTS3-LDV listening on port " + globalVariables.usedPort + "\n");
 });

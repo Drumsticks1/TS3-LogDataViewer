@@ -16,7 +16,7 @@ const fs = require("fs"),
 exports.createJSON = function() {
     outputHandler.output("Starting JSON creation...");
 
-    miscFunctions.updateCurrentDate();
+    var timestamps = miscFunctions.getCurrentTimestamps();
     var json = {
         "ProgramInfo": {
             "Name": "TS3-LogDataViewer",
@@ -26,8 +26,8 @@ exports.createJSON = function() {
         "Attributes": {
             "virtualServer": globalVariables.virtualServer,
             "creationTime": {
-                "localTime": miscFunctions.getCurrentLocaltime(),
-                "UTC": miscFunctions.getCurrentUTC()
+                "localTime": timestamps.local,
+                "UTC": timestamps.utc
             }
         },
         "parsedLogs": globalVariables.parsedLogs,

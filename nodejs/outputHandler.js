@@ -5,25 +5,39 @@
 "use strict";
 
 const fs = require('fs'),
-    Constants = require('./Constants.js');
+    globalVariables = require("./globalVariables.js"),
+    miscFunctions = require("./miscFunctions.js");
 
-var programLogfile;
+var programLogfile, logBuffer = [];
 
 module.exports = {
     /**
      * Updates the programLogfile write stream.
-     * Required when the log file get deleted while the process is running.
+     * Logs the logBuffer entries after updating the write stream.
+     * Required when the log file get deleted while the process is running or when the programLogfile paths changed.
      */
     updateWriteStream: function() {
-        programLogfile = fs.createWriteStream(Constants.programLogfile, {flags: 'a'});
+        programLogfile = fs.createWriteStream(globalVariables.programLogfile, {flags: 'a'});
+        if (logBuffer.length != 0) {
+            while (logBuffer.length != 0) {
+                programLogfile.write(logBuffer.shift());
+            }
+        }
     },
 
     /**
-     * Writes the text to the logfile.
+     * Logs the text to the specified programLogfile.
      * Adds \n after the text.
-     * @param {string} text
+     * If the programLogfile (write stream) is undefined the text is instead stored in the logBuffer array.
+     *
+     * @param {string} text the text to be logged
      */
     output: function(text) {
-        programLogfile.write(text + "\n");
+        var logLine = "[" + miscFunctions.getCurrentUTC() + "] " + text + "\n";
+
+        if (programLogfile != undefined)
+            programLogfile.write(logLine);
+        else
+            logBuffer.push(logLine);
     }
 };
