@@ -1,15 +1,45 @@
 # Changelog
-Versions: <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+### <a name="v2.0.3">Version 2.0.3</a> (15.03.2016)
+Additions:
+- Added logLevel to Constants, globalVariables and as setting for conf.json - Available values: 0: ERROR | 1: WARN | 2: INFO (default) | 3: DEBUG
+- TS3-LogDataViewer.js
+    - Added custom filter functions for the Connections and IPs columns, now filtering through all connections and ips (processing json instead of cell content)
+    - Set filter_searchDelay to 0 (was 300 by default) for all tables
+- log.js (former outputHandler.js)
+    - Added parameters logLevel and alreadyProcessed to the log function
+    - Added the log functions error, warn, info and debug to the module exports, they call the log function with the according logLevel
+    - Added utc timestamps to each message logged to the program log.
+
+Changes:
+- Updated several log messages
+- Renamed outputHandler.js to log.js and redesigned logging
+    - Renamed the output function to log and moved it out of the module exports of log.js
+    - Now buffering log messages until the programLogfile and the logLevel settings from conf.json are processed
+- miscFunctions.js
+    - Several changes regarding the time functions
+- getConf.js
+    - Made resetToDefaultConfiguration local, it's now only called by the getConf function.
+
+Fixes:
+- parseLogs.js
+    - Fixed match rules only matching logs from virtual server 1
+- getConf.js
+    - Fixed specified ignoredLogs not being ignored
+    - Fixed usedPort setting not being checked and configured in getConf
+    - Fixed global variables programLogfile and timeBetweenBuilds not being reset to their Constants value upon calling the resetToDefaultConfiguration function
+
 
 ### <a name="v2.0.2">Version 2.0.2</a> (13.03.2016)
 Additions:
-- Added extra check if output.json exists before the lastModification checks in order to always build the output.json when it does not exist, regardless of the lastModification check.
+- Added extra check if output.json exists before the lastModification checks in order to always build the output.json when it does not exist, regardless of the lastModification check
 
 Changes:
 - Updated Readme and install instructions
 
 Fixes:
-- Fixed server accepting too frequent requests, was caused by the lastBuild variable not being updated in all possible cases.
+- Fixed server accepting too frequent requests, was caused by the lastBuild variable not being updated in all possible cases
 
 
 ### <a name="v2.0.1">Version 2.0.1</a> (13.03.2016)

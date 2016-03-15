@@ -44,7 +44,7 @@ exports.createJSON = function() {
         fs.writeFileSync(Constants.outputJSON, JSON.stringify(json), 'utf8');
     }
     catch (error) {
-        log.error("An error occurred while creating the JSON:\n" + error.message);
+        log.error("An error occurred while creating the JSON:\n\t" + error.message);
         return 0;
     }
 
