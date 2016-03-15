@@ -20,6 +20,7 @@ var ignoredLogs = [],
     bufferData = Constants.bufferData,
     timeBetweenBuilds = Constants.timeBetweenBuilds,
     usedPort = Constants.usedPort,
+    logLevel = Constants.logLevel,
     lastModificationOfTheLastLog = 0;
 
 module.exports = {
@@ -39,5 +40,6 @@ module.exports = {
     bufferData: bufferData,
     timeBetweenBuilds: timeBetweenBuilds,
     usedPort: usedPort,
+    logLevel: logLevel,
     lastModificationOfTheLastLog: lastModificationOfTheLastLog
 };

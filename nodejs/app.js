@@ -6,26 +6,26 @@
 
 const express = require("express"),
     app = express(),
-    helmet = require('helmet'),
+    helmet = require("helmet"),
     globalVariables = require("./globalVariables.js"),
     getConf = require("./getConf.js"),
-    outputHandler = require("./outputHandler.js"),
+    log = require("./log.js"),
     miscFunctions = require("./miscFunctions.js"),
     buildJSON = require("./buildJSON.js");
 
 var lastBuild = 0;
 
-outputHandler.updateWriteStream();
-miscFunctions.updateCurrentDate();
-outputHandler.output("\nProgram startup\n");
-outputHandler.output(miscFunctions.getCurrentUTC() + " (UTC)\n" + miscFunctions.getCurrentLocaltime() + " (Local time)\n");
+log.info("Program startup");
 
 // Fetch the config file and import the settings on program startup.
-if (!getConf.getConf())
-    getConf.resetToDefaultConfiguration();
+getConf.getConf();
 
 // Improves security by setting various HTTP headers.
 app.use(helmet());
+
+app.listen(globalVariables.usedPort, function() {
+    log.info("TS3-LDV is listening on port " + globalVariables.usedPort + "\n");
+});
 
 app.get("/buildJSON", function(req, res) {
     var timeDifference = Date.now().valueOf() - lastBuild,
@@ -58,14 +58,10 @@ app.get("/buildJSON", function(req, res) {
                 break;
         }
     } else {
-        outputHandler.output("\nThe last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
+        log.debug("The last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
         response.timeDifference = timeDifference;
     }
 
     res.send(response);
     res.end();
-});
-
-app.listen(globalVariables.usedPort, function() {
-    outputHandler.output("\nTS3-LDV listening on port " + globalVariables.usedPort + "\n");
 });

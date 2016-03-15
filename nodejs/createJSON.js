@@ -8,15 +8,15 @@ const fs = require("fs"),
     Constants = require("./Constants.js"),
     globalVariables = require("./globalVariables.js"),
     miscFunctions = require("./miscFunctions.js"),
-    outputHandler = require("./outputHandler.js");
+    log = require("./log.js");
 
 /**
  * Creates a json containing the data extracted from the logs.
  */
 exports.createJSON = function() {
-    outputHandler.output("Starting JSON creation...");
+    log.info("Starting JSON creation.");
 
-    miscFunctions.updateCurrentDate();
+    var timestamps = miscFunctions.getCurrentTimestamps();
     var json = {
         "ProgramInfo": {
             "Name": "TS3-LogDataViewer",
@@ -26,8 +26,8 @@ exports.createJSON = function() {
         "Attributes": {
             "virtualServer": globalVariables.virtualServer,
             "creationTime": {
-                "localTime": miscFunctions.getCurrentLocaltime(),
-                "UTC": miscFunctions.getCurrentUTC()
+                "localTime": timestamps.local,
+                "UTC": timestamps.utc
             }
         },
         "parsedLogs": globalVariables.parsedLogs,
@@ -44,11 +44,10 @@ exports.createJSON = function() {
         fs.writeFileSync(Constants.outputJSON, JSON.stringify(json), 'utf8');
     }
     catch (error) {
-        outputHandler.output("An error occurred while creating the JSON:\n" + error.message);
+        log.error("An error occurred while creating the JSON:\n\t" + error.message);
         return 0;
     }
 
     json = null;
-
-    outputHandler.output("JSON creation completed.");
+    log.info("JSON creation completed.");
 };

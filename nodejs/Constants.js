@@ -26,5 +26,8 @@ module.exports = {
     timeBetweenBuilds: 2000,
 
     // Port on which the program listens.
-    usedPort: 3000
+    usedPort: 3000,
+
+    // Log level, see log.js for a list of the possible options.
+    logLevel: 2
 };

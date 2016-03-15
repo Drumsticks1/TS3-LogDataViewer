@@ -13,7 +13,7 @@ const globalVariables = require("./globalVariables.js"),
     Upload = require("./Upload.js"),
     Channel = require("./Channel.js");
 
-var currentDate;
+var programStartDate;
 
 /**
  * Resize the array to the request length by appending the filling objects to the array.
@@ -52,38 +52,38 @@ Array.prototype.resizeFill = function(length, objectName) {
 
 module.exports = {
     /**
-     * Updates the currentDate to the current date.
+     * Sets the programStartDate to the current date.
      */
-    updateCurrentDate: function() {
-        currentDate = new Date();
+    setProgramStartDate: function() {
+        programStartDate = new Date();
     },
 
     /**
-     * Returns the difference between the stored currentDate and the received date.
-     * @param programStart the received date.
-     * @returns {number} the difference between the dates in ms.
+     * Returns the difference between the programStartDate and the current date.
+     * @returns {number} the program runtime in ms.
      */
-    getProgramRuntime: function(programStart) {
-        this.updateCurrentDate();
-        return currentDate.getTime() - programStart.getTime();
+    getProgramRuntime: function() {
+        return new Date() - programStartDate.getTime();
     },
 
     /**
-     * Returns the current UTC time as string with the format "dd.mm.yyyy hh:mm:ss".
-     * @returns {string} date string with the format "dd.mm.yyyy hh:mm:ss".
+     * Returns the current time as utc string with the format "dd.mm.yyyy hh:mm:ss".
+     * @returns {string} utc date string with the format "dd.mm.yyyy hh:mm:ss".
      */
     getCurrentUTC: function() {
-        var t = currentDate;
-        return dateToString(new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(),
-            t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds(), t.getMilliseconds()));
+        return dateToUTCString(new Date());
     },
 
     /**
-     * Returns the local time as string with the format "dd.mm.yyyy hh:mm:ss".
-     * @returns {string} date string with the format "dd.mm.yyyy hh:mm:ss".
+     * Returns an object containing a localtime and a utc string of the current dateTime.
+     * @returns {{local: string, utc: string}}
      */
-    getCurrentLocaltime: function() {
-        return dateToString(currentDate);
+    getCurrentTimestamps: function() {
+        var currentDate = new Date();
+        return {
+            "local": dateToString(currentDate),
+            "utc": dateToUTCString(currentDate)
+        };
     },
     
     /**
@@ -126,4 +126,14 @@ function toDoubleDigit(x) {
 function dateToString(t) {
     return toDoubleDigit(t.getDate()) + "." + toDoubleDigit(t.getMonth() + 1) + "." + t.getFullYear() + " " +
         toDoubleDigit(t.getHours()) + ":" + toDoubleDigit(t.getMinutes()) + ":" + toDoubleDigit(t.getSeconds());
+}
+
+/**
+ * Returns the a Date t as utc string with the format "dd.mm.yyyy hh:mm:ss".
+ * @param {Date} t the Date.
+ * @returns {string} utc string with the format "dd.mm.yyyy hh:mm:ss".
+ */
+function dateToUTCString(t) {
+    return dateToString(new Date(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(),
+        t.getUTCHours(), t.getUTCMinutes(), t.getUTCSeconds(), t.getMilliseconds()));
 }

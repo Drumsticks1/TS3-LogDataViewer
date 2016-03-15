@@ -725,6 +725,33 @@ function buildClientTable() {
             3: {sorter: "ips"}
         },
         widgets: ["filter"],
+        widgetOptions: {
+            filter_searchDelay: 0,
+
+            // Filter functions for filtering with all connections / ips data from the json.
+            filter_functions: {
+                2: function(e, n, f, i, $r, c, data) {
+                    var connections = json.ClientList[Number(data.$cells[0].innerHTML)].Connections;
+
+                    for (i = 0; i < connections.length; i++) {
+                        if (connections[i].indexOf(data.filter) != -1)
+                            return true;
+                    }
+
+                    return false;
+                },
+                3: function(e, n, f, i, $r, c, data) {
+                    var ips = json.ClientList[Number(data.$cells[0].innerHTML)].IPs;
+
+                    for (i = 0; i < ips.length; i++) {
+                        if (ips[i].indexOf(data.filter) != -1)
+                            return true;
+                    }
+
+                    return false;
+                }
+            }
+        },
         sortList: JSON.parse(localStorage.getItem("clientTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("clientTableSortOrder", JSON.stringify(clientTable.config.sortList));
@@ -876,6 +903,7 @@ function buildBanTable() {
             0: {sorter: "ignoreMoment"}
         },
         widgets: ["filter"],
+        widgetOptions: {filter_searchDelay: 0},
         sortList: JSON.parse(localStorage.getItem("banTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("banTableSortOrder", JSON.stringify(banTable.config.sortList));
@@ -991,6 +1019,7 @@ function buildKickTable() {
             0: {sorter: "ignoreMoment"}
         },
         widgets: ["filter"],
+        widgetOptions: {filter_searchDelay: 0},
         sortList: JSON.parse(localStorage.getItem("kickTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("kickTableSortOrder", JSON.stringify(kickTable.config.sortList));
@@ -1103,6 +1132,7 @@ function buildComplaintTable() {
             0: {sorter: "ignoreMoment"}
         },
         widgets: ["filter"],
+        widgetOptions: {filter_searchDelay: 0},
         sortList: JSON.parse(localStorage.getItem("complaintTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("complaintTableSortOrder", JSON.stringify(complaintTable.config.sortList));
@@ -1242,6 +1272,7 @@ function buildUploadTable() {
             0: {sorter: "ignoreMoment"}
         },
         widgets: ["filter"],
+        widgetOptions: {filter_searchDelay: 0},
         sortList: JSON.parse(localStorage.getItem("uploadTableSortOrder"))
     }).bind("sortEnd", function() {
         localStorage.setItem("uploadTableSortOrder", JSON.stringify(uploadTable.config.sortList));

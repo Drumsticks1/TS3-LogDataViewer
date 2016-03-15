@@ -8,7 +8,7 @@ const fs = require("fs"),
     Upload = require("./Upload.js"),
     checkFunctions = require("./checkFunctions.js"),
     globalVariables = require("./globalVariables.js"),
-    outputHandler = require("./outputHandler.js");
+    log = require("./log.js");
 
 var Logs = globalVariables.Logs,
     parsedLogs = globalVariables.parsedLogs,
@@ -21,20 +21,10 @@ var Logs = globalVariables.Logs,
     ChannelList = globalVariables.ChannelList;
 
 // Object containing matching patterns for parsing.
-const match = {
-    /**
-     * Patterns and their ts3server versions (ordered as below):
-     * - v3.0.11.4 and before
-     * - since v3.0.12.0
-     */
-    "VirtualServer": [
-        "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ",
-        "|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |"
-    ],
-    "VirtualServerBase": [
-        "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| ",
-        "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
-    ],
+var match = {
+    // Set in parseLogs in order to use the latest globalVariables.virtualServer value.
+    "VirtualServer": [],
+    "VirtualServerBase": [],
 
     // VirtualServer
     "banRule": "ban added reason='",
@@ -87,6 +77,22 @@ function getSubstring(boundariesIdentifier) {
  * Parses the logs.
  */
 exports.parseLogs = function() {
+    log.info("Starting log parsing.");
+
+    /**
+     * Patterns and their ts3server versions (ordered as below):
+     * - v3.0.11.4 and before
+     * - since v3.0.12.0
+     */
+    match.VirtualServer = [
+        "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ",
+        "|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |"
+    ];
+    match.VirtualServerBase = [
+        "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| ",
+        "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
+    ];
+
     var lastUIDBanRule = "", lastIPBanRule = "",
         BanListID, KickListID, ComplaintListID, UploadListID,
         isBan, isKick, isLastLog;
@@ -98,7 +104,7 @@ exports.parseLogs = function() {
 
     if (globalVariables.bufferData) {
         if (checkFunctions.isMatchingLogOrder()) {
-            outputHandler.output("Comparing new and old logs...");
+            log.debug("Comparing new and old logs.");
             for (var i = 0; i < parsedLogs.length; i++) {
                 for (var j = 0; j < Logs.length - 1; j++) {
                     if (Logs[j] == parsedLogs[i]) {
@@ -108,7 +114,7 @@ exports.parseLogs = function() {
             }
         }
         else {
-            outputHandler.output("Logs parsed for the last program run were deleted or the log order changed - skipping use of old data...");
+            log.warn("Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
             parsedLogs.length = 0;
         }
     }
@@ -137,7 +143,7 @@ exports.parseLogs = function() {
         "channelName": [0, 0]
     };
 
-    outputHandler.output("Parsing new logs...");
+    log.debug("Parsing new logs.");
     for (i = 0; i < Logs.length; i++) {
         if (!Logs[i].empty) {
             if (i + 1 == Logs.length)
@@ -151,7 +157,7 @@ exports.parseLogs = function() {
                 logPattern = 0;
             else if (currentLine.indexOf("|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |listening on") != -1)
                 logPattern = 1;
-            // else{debug logging}
+            // Todo: Add option for unknown log pattern!
 
             while (logfileData.length > 0) {
                 currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
@@ -200,7 +206,6 @@ exports.parseLogs = function() {
                             if (ServerGroupList[ServerGroupID].getID() == 0)
                                 ServerGroupList[ServerGroupID].addServerGroupInformation(ServerGroupID, ServerGroupName, "Unknown");
 
-                            // Currently only reserving the vector buffer to prevent out of bounds exception.
                             if (ClientList.length < ID + 1)
                                 ClientList.resizeFill(ID + 1, "Client");
 
@@ -233,8 +238,7 @@ exports.parseLogs = function() {
 
                             boundaries.complaintReason = [
                                 boundaries.complaintAboutID[1] + 10,
-                                currentLine.lastIndexOf("' by client '")
-                            ];
+                                currentLine.lastIndexOf("' by client '")];
 
                             boundaries.complaintByNickname = [
                                 boundaries.complaintReason[1] + 13,
@@ -583,6 +587,7 @@ exports.parseLogs = function() {
                         else checkIfUpload = true;
                 }
 
+                // Upload / file system events
                 // VirtualServer for version 3.0.11.4 and before
                 // VirtualServerBase since version 3.0.12.0
                 if (checkIfUpload) {
