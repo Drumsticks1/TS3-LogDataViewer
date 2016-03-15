@@ -6,7 +6,7 @@
 
 const express = require("express"),
     app = express(),
-    helmet = require('helmet'),
+    helmet = require("helmet"),
     globalVariables = require("./globalVariables.js"),
     getConf = require("./getConf.js"),
     log = require("./log.js"),
@@ -18,10 +18,7 @@ var lastBuild = 0;
 log.info("Program startup");
 
 // Fetch the config file and import the settings on program startup.
-if (!getConf.getConf()) {
-    log.updateWriteStream();
-    getConf.resetToDefaultConfiguration();
-}
+getConf.getConf();
 
 // Improves security by setting various HTTP headers.
 app.use(helmet());

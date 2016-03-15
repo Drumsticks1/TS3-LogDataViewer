@@ -114,7 +114,7 @@ exports.parseLogs = function() {
             }
         }
         else {
-            log.warn("Logs parsed for the last program run were deleted or the log order changed - clearing buffered data.");
+            log.warn("Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
             parsedLogs.length = 0;
         }
     }
@@ -157,7 +157,7 @@ exports.parseLogs = function() {
                 logPattern = 0;
             else if (currentLine.indexOf("|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |listening on") != -1)
                 logPattern = 1;
-            // Todo: else{debug logging}
+            // Todo: Add option for unknown log pattern!
 
             while (logfileData.length > 0) {
                 currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
@@ -206,7 +206,6 @@ exports.parseLogs = function() {
                             if (ServerGroupList[ServerGroupID].getID() == 0)
                                 ServerGroupList[ServerGroupID].addServerGroupInformation(ServerGroupID, ServerGroupName, "Unknown");
 
-                            // Currently only reserving the vector buffer to prevent out of bounds exception.
                             if (ClientList.length < ID + 1)
                                 ClientList.resizeFill(ID + 1, "Client");
 
@@ -239,8 +238,7 @@ exports.parseLogs = function() {
 
                             boundaries.complaintReason = [
                                 boundaries.complaintAboutID[1] + 10,
-                                currentLine.lastIndexOf("' by client '")
-                            ];
+                                currentLine.lastIndexOf("' by client '")];
 
                             boundaries.complaintByNickname = [
                                 boundaries.complaintReason[1] + 13,
@@ -589,6 +587,7 @@ exports.parseLogs = function() {
                         else checkIfUpload = true;
                 }
 
+                // Upload / file system events
                 // VirtualServer for version 3.0.11.4 and before
                 // VirtualServerBase since version 3.0.12.0
                 if (checkIfUpload) {

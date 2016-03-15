@@ -36,22 +36,23 @@ function acquireSetting(settingName, settingValueType) {
     }
 }
 
-module.exports = {
-    /**
-     * Resets the configuration to the default values set in Constants.js.
-     */
-    resetToDefaultConfiguration: function() {
-        log.info("Ignoring the conf.json and using default settings...");
-        globalVariables.programLogfile = Constants.programLogfile;
-        globalVariables.logDirectory = Constants.logDirectory;
-        globalVariables.virtualServer = Constants.virtualServer;
-        globalVariables.bufferData = Constants.bufferData;
-        globalVariables.timeBetweenBuilds = Constants.timeBetweenBuilds;
-        globalVariables.usedPort = Constants.usedPort;
-        globalVariables.logLevel = Constants.logLevel;
-        globalVariables.ignoredLogs = [];
-    },
+/**
+ * Resets the configuration to the default values set in Constants.js.
+ */
+function resetToDefaultConfiguration() {
+    log.debug("Ignoring the conf.json and using default settings.");
+    globalVariables.programLogfile = Constants.programLogfile;
+    globalVariables.logDirectory = Constants.logDirectory;
+    globalVariables.virtualServer = Constants.virtualServer;
+    globalVariables.bufferData = Constants.bufferData;
+    globalVariables.timeBetweenBuilds = Constants.timeBetweenBuilds;
+    globalVariables.usedPort = Constants.usedPort;
+    globalVariables.logLevel = Constants.logLevel;
+    globalVariables.ignoredLogs.length = 0;
+    log.updateWriteStream();
+}
 
+module.exports = {
     /**
      * Fetches and processes the conf.json.
      * @returns {boolean} true if no error occurs.
@@ -76,22 +77,24 @@ module.exports = {
                 acquireSetting("timeBetweenBuilds", "number");
                 acquireSetting("usedPort", "number");
 
-                if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0)
-                    globalVariables.ignoredLogs = confJSON.ignoredLogs;
+                if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0) {
+                    for (var i = 0; i < confJSON.ignoredLogs.length; i++) {
+                        var ignoredLog = confJSON.ignoredLogs[i];
+                        globalVariables.ignoredLogs.push(ignoredLog);
+                        log.debug("Added ignored log: \"" + ignoredLog + "\".");
+                    }
+                }
                 else {
                     log.debug("No ignored logs specified.");
-                    globalVariables.ignoredLogs = [];
+                    globalVariables.ignoredLogs.length = 0;
                 }
-
             } else {
-                log.info("conf.json is not a file...\nUsing default values for the settings!");
-                return false;
+                log.info("conf.json is not a file, using default values for the settings!");
+                resetToDefaultConfiguration();
             }
         } catch (error) {
             log.warn("An error occurred while fetching and parsing conf.json:\n\t" + error.message);
-            return false;
+            resetToDefaultConfiguration();
         }
-
-        return true;
     }
 };
