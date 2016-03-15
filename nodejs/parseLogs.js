@@ -8,7 +8,7 @@ const fs = require("fs"),
     Upload = require("./Upload.js"),
     checkFunctions = require("./checkFunctions.js"),
     globalVariables = require("./globalVariables.js"),
-    outputHandler = require("./outputHandler.js");
+    log = require("./log.js");
 
 var Logs = globalVariables.Logs,
     parsedLogs = globalVariables.parsedLogs,
@@ -77,6 +77,8 @@ function getSubstring(boundariesIdentifier) {
  * Parses the logs.
  */
 exports.parseLogs = function() {
+    log.info("Starting log parsing.");
+
     /**
      * Patterns and their ts3server versions (ordered as below):
      * - v3.0.11.4 and before
@@ -102,7 +104,7 @@ exports.parseLogs = function() {
 
     if (globalVariables.bufferData) {
         if (checkFunctions.isMatchingLogOrder()) {
-            outputHandler.output("Comparing new and old logs...");
+            log.debug("Comparing new and old logs.");
             for (var i = 0; i < parsedLogs.length; i++) {
                 for (var j = 0; j < Logs.length - 1; j++) {
                     if (Logs[j] == parsedLogs[i]) {
@@ -112,7 +114,7 @@ exports.parseLogs = function() {
             }
         }
         else {
-            outputHandler.output("Logs parsed for the last program run were deleted or the log order changed - skipping use of old data...");
+            log.warn("Logs parsed for the last program run were deleted or the log order changed - clearing buffered data.");
             parsedLogs.length = 0;
         }
     }
@@ -141,7 +143,7 @@ exports.parseLogs = function() {
         "channelName": [0, 0]
     };
 
-    outputHandler.output("Parsing new logs...");
+    log.debug("Parsing new logs.");
     for (i = 0; i < Logs.length; i++) {
         if (!Logs[i].empty) {
             if (i + 1 == Logs.length)
@@ -155,7 +157,7 @@ exports.parseLogs = function() {
                 logPattern = 0;
             else if (currentLine.indexOf("|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |listening on") != -1)
                 logPattern = 1;
-            // else{debug logging}
+            // Todo: else{debug logging}
 
             while (logfileData.length > 0) {
                 currentLine = logfileData.substring(0, logfileData.indexOf("\n"));

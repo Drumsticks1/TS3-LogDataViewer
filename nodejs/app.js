@@ -9,23 +9,25 @@ const express = require("express"),
     helmet = require('helmet'),
     globalVariables = require("./globalVariables.js"),
     getConf = require("./getConf.js"),
-    outputHandler = require("./outputHandler.js"),
+    log = require("./log.js"),
     miscFunctions = require("./miscFunctions.js"),
     buildJSON = require("./buildJSON.js");
 
 var lastBuild = 0;
 
-outputHandler.output("Program startup");
+log.info("Program startup");
 
 // Fetch the config file and import the settings on program startup.
-if (!getConf.getConf())
+if (!getConf.getConf()) {
+    log.updateWriteStream();
     getConf.resetToDefaultConfiguration();
+}
 
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
 app.listen(globalVariables.usedPort, function() {
-    outputHandler.output("TS3-LDV listening on port " + globalVariables.usedPort + "\n");
+    log.info("TS3-LDV is listening on port " + globalVariables.usedPort + "\n");
 });
 
 app.get("/buildJSON", function(req, res) {
@@ -59,7 +61,7 @@ app.get("/buildJSON", function(req, res) {
                 break;
         }
     } else {
-        outputHandler.output("The last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
+        log.debug("The last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
         response.timeDifference = timeDifference;
     }
 

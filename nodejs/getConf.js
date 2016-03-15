@@ -7,7 +7,7 @@
 const fs = require("fs"),
     Constants = require("./Constants.js"),
     globalVariables = require("./globalVariables.js"),
-    outputHandler = require("./outputHandler.js");
+    log = require("./log.js");
 
 var confJSON;
 
@@ -22,17 +22,16 @@ function acquireSetting(settingName, settingValueType) {
         if (typeof confJSON[settingName] == settingValueType) {
             if (globalVariables[settingName] != confJSON[settingName]) {
                 globalVariables[settingName] = confJSON[settingName];
-                // Todo: optional debug logging.
-                // outputHandler.output("Configuration variable \"" + settingName + "\" is set to " + confJSON[settingName]);
+                log.debug("Configuration variable \"" + settingName + "\" is set to \"" + confJSON[settingName] + "\".");
             } else {
-                // Todo: Add debug logging.
+                log.debug("Configuration variable \"" + settingName + "\" already equals the default value.");
             }
         } else {
-            outputHandler.output("Configuration variable \"" + settingName + "\" is not specified as a valid " + settingValueType + " - using default value!");
+            log.debug("Configuration variable \"" + settingName + "\" is not specified as a valid " + settingValueType + ", using default value.");
             globalVariables[settingName] = Constants[settingName];
         }
     } else {
-        outputHandler.output("Configuration variable \"" + settingName + "\" is not specified - using default value!");
+        log.debug("Configuration variable \"" + settingName + "\" is not specified, using default value.");
         globalVariables[settingName] = Constants[settingName];
     }
 }
@@ -42,13 +41,14 @@ module.exports = {
      * Resets the configuration to the default values set in Constants.js.
      */
     resetToDefaultConfiguration: function() {
-        outputHandler.output("Ignoring the conf.json and using default settings...");
+        log.info("Ignoring the conf.json and using default settings...");
         globalVariables.programLogfile = Constants.programLogfile;
         globalVariables.logDirectory = Constants.logDirectory;
         globalVariables.virtualServer = Constants.virtualServer;
         globalVariables.bufferData = Constants.bufferData;
         globalVariables.timeBetweenBuilds = Constants.timeBetweenBuilds;
         globalVariables.usedPort = Constants.usedPort;
+        globalVariables.logLevel = Constants.logLevel;
         globalVariables.ignoredLogs = [];
     },
 
@@ -57,14 +57,19 @@ module.exports = {
      * @returns {boolean} true if no error occurs.
      */
     getConf: function() {
-        outputHandler.output("Fetching and checking configuration file...");
+        log.info("Fetching and checking configuration file.");
         try {
             var fileStats = fs.statSync(Constants.confJSON);
             if (fileStats.isFile()) {
                 confJSON = require(Constants.confJSON);
 
                 acquireSetting("programLogfile", "string");
-                outputHandler.updateWriteStream();
+                acquireSetting("logLevel", "number");
+                if (globalVariables.logLevel != 0 && globalVariables.logLevel != 1 && globalVariables.logLevel != 2 && globalVariables.logLevel != 3) {
+                    log.info("logLevel setting \"" + globalVariables.logLevel + "\" is invalid, setting default value.");
+                    globalVariables.logLevel = Constants.logLevel;
+                }
+                log.updateWriteStream();
                 acquireSetting("logDirectory", "string");
                 acquireSetting("virtualServer", "number");
                 acquireSetting("bufferData", "boolean");
@@ -74,16 +79,16 @@ module.exports = {
                 if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0)
                     globalVariables.ignoredLogs = confJSON.ignoredLogs;
                 else {
-                    outputHandler.output("No ignored logs specified...");
+                    log.debug("No ignored logs specified.");
                     globalVariables.ignoredLogs = [];
                 }
 
             } else {
-                outputHandler.output("conf.json is not a file...\nUsing default values for the settings!");
+                log.info("conf.json is not a file...\nUsing default values for the settings!");
                 return false;
             }
         } catch (error) {
-            outputHandler.output("An error occurred while fetching the conf.json:\n" + error.message);
+            log.warn("An error occurred while fetching and parsing conf.json:\n\t" + error.message);
             return false;
         }
 

@@ -6,7 +6,7 @@
 
 const fs = require("fs"),
     globalVariables = require("./globalVariables.js"),
-    outputHandler = require("./outputHandler.js"),
+    log = require("./log.js"),
     fetchLogs = require("./fetchLogs.js"),
     parseLogs = require("./parseLogs.js"),
     createJSON = require("./createJSON.js"),
@@ -23,10 +23,10 @@ const fs = require("fs"),
  */
 exports.buildJSON = function(ignoreLastModificationCheck) {
     miscFunctions.setProgramStartDate();
-    outputHandler.output("Processing build request...");
+    log.info("Processing build request.");
 
     if (!fetchLogs.fetchLogs()) {
-        outputHandler.output("The build function will now exit!\n");
+        log.info("The build function will now exit!\n");
         return 0;
     }
 
@@ -35,11 +35,13 @@ exports.buildJSON = function(ignoreLastModificationCheck) {
     if (fs.existsSync(Constants.outputJSON)) {
         if (!ignoreLastModificationCheck) {
             if (lastModification == globalVariables.lastModificationOfTheLastLog) {
-                outputHandler.output("No modifications to the last log since the last request - skipping building a new json!\n");
+                log.info("No modifications to the last log since the last request, stopping build process.\n");
                 return 2;
             }
-        } else outputHandler.output("Skipping lastModification check!");
-    } else outputHandler.output("Didn't find output.json, skipping lastModification check!");
+        } else
+            log.debug("Skipping lastModification check.");
+    } else
+        log.debug("Didn't find output.json, skipping lastModification check.");
 
     globalVariables.lastModificationOfTheLastLog = lastModification;
 
@@ -48,11 +50,11 @@ exports.buildJSON = function(ignoreLastModificationCheck) {
 
     if (!globalVariables.bufferData) {
         miscFunctions.clearGlobalArrays();
-        outputHandler.output("Cleared buffer arrays...");
+        log.debug("Cleared buffer arrays.");
     }
 
     miscFunctions.resetConnectedStates();
 
-    outputHandler.output("Build process runtime: " + miscFunctions.getProgramRuntime() + " ms.\n");
+    log.info("Build process runtime: " + miscFunctions.getProgramRuntime() + " ms.\n");
     return 1;
 };

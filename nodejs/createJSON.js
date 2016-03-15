@@ -8,13 +8,13 @@ const fs = require("fs"),
     Constants = require("./Constants.js"),
     globalVariables = require("./globalVariables.js"),
     miscFunctions = require("./miscFunctions.js"),
-    outputHandler = require("./outputHandler.js");
+    log = require("./log.js");
 
 /**
  * Creates a json containing the data extracted from the logs.
  */
 exports.createJSON = function() {
-    outputHandler.output("Starting JSON creation...");
+    log.info("Starting JSON creation.");
 
     var timestamps = miscFunctions.getCurrentTimestamps();
     var json = {
@@ -44,11 +44,10 @@ exports.createJSON = function() {
         fs.writeFileSync(Constants.outputJSON, JSON.stringify(json), 'utf8');
     }
     catch (error) {
-        outputHandler.output("An error occurred while creating the JSON:\n" + error.message);
+        log.error("An error occurred while creating the JSON:\n" + error.message);
         return 0;
     }
 
     json = null;
-
-    outputHandler.output("JSON creation completed.");
+    log.info("JSON creation completed.");
 };

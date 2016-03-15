@@ -6,7 +6,7 @@
 
 const fs = require("fs"),
     globalVariables = require("./globalVariables.js"),
-    outputHandler = require("./outputHandler.js"),
+    log = require("./log.js"),
     checkFunctions = require("./checkFunctions.js");
 
 /**
@@ -14,12 +14,12 @@ const fs = require("fs"),
  * @returns {boolean} true if no error occurred.
  */
 exports.fetchLogs = function() {
-    outputHandler.output("Checking log directory...");
+    log.info("Checking log directory.");
     globalVariables.Logs.length = 0;
 
     try {
         if (!fs.statSync(globalVariables.logDirectory).isDirectory()) {
-            outputHandler.output("The log directory seems not to be a directory.");
+            log.warn("The log directory seems not to be a directory.");
             return false;
         }
 
@@ -27,7 +27,7 @@ exports.fetchLogs = function() {
             var logFiles = fs.readdirSync(globalVariables.logDirectory);
 
             if (logFiles.length > 0) {
-                outputHandler.output("Fetching logs...");
+                log.info("Fetching logs.");
                 for (var i = 0; i < logFiles.length; i++) {
                     if (logFiles[i].lastIndexOf(".log") == logFiles[i].length - 4
                         && logFiles[i].substring(38, logFiles[i].length - 4) == String(globalVariables.virtualServer)
@@ -36,24 +36,23 @@ exports.fetchLogs = function() {
                     }
                 }
             } else
-                outputHandler.output("The log directory seems to be empty.");
+                log.warn("The log directory seems to be empty.");
 
         } catch (error) {
-            outputHandler.output("An error occurred while reading the director:\n" + error.message);
+            log.error("An error occurred while reading the directory:\n\t" + error.message);
         }
     }
     catch (error) {
-        outputHandler.output("An error occurred while fetching the logs:");
-        outputHandler.output(error.message);
+        log.error("An error occurred while fetching the logs:\n\t"+ error.message);
         return false;
     }
 
     if (globalVariables.Logs.length == 0) {
-        outputHandler.output("The log directory contains no valid logs.");
+        log.warn("The log directory contains no valid logs.");
         return false;
     }
 
-    outputHandler.output("Sorting logs...");
+    log.info("Sorting logs.");
     globalVariables.Logs.sort();
     return true;
 };
