@@ -21,20 +21,10 @@ var Logs = globalVariables.Logs,
     ChannelList = globalVariables.ChannelList;
 
 // Object containing matching patterns for parsing.
-const match = {
-    /**
-     * Patterns and their ts3server versions (ordered as below):
-     * - v3.0.11.4 and before
-     * - since v3.0.12.0
-     */
-    "VirtualServer": [
-        "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ",
-        "|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |"
-    ],
-    "VirtualServerBase": [
-        "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| ",
-        "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
-    ],
+var match = {
+    // Set in parseLogs in order to use the latest globalVariables.virtualServer value.
+    "VirtualServer": [],
+    "VirtualServerBase": [],
 
     // VirtualServer
     "banRule": "ban added reason='",
@@ -87,6 +77,20 @@ function getSubstring(boundariesIdentifier) {
  * Parses the logs.
  */
 exports.parseLogs = function() {
+    /**
+     * Patterns and their ts3server versions (ordered as below):
+     * - v3.0.11.4 and before
+     * - since v3.0.12.0
+     */
+    match.VirtualServer = [
+        "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ",
+        "|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |"
+    ];
+    match.VirtualServerBase = [
+        "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| ",
+        "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
+    ];
+
     var lastUIDBanRule = "", lastIPBanRule = "",
         BanListID, KickListID, ComplaintListID, UploadListID,
         isBan, isKick, isLastLog;
