@@ -8,11 +8,11 @@
  * Default constructor.
  * @constructor
  */
-var ServerGroup = function() {
-    this.ID = 0;
-    this.ServerGroupName = "";
-    this.CreationDateTime = "";
-    this.deleted = false;
+var ServerGroup = function () {
+  this.ID = 0;
+  this.ServerGroupName = "";
+  this.CreationDateTime = "";
+  this.deleted = false;
 };
 
 /**
@@ -21,33 +21,33 @@ var ServerGroup = function() {
  * @param {string} ServerGroupName
  * @param {string} CreationDateTime
  */
-ServerGroup.prototype.addServerGroupInformation = function(ID, ServerGroupName, CreationDateTime) {
-    this.ID = ID;
-    this.ServerGroupName = ServerGroupName;
-    this.CreationDateTime = CreationDateTime;
+ServerGroup.prototype.addServerGroupInformation = function (ID, ServerGroupName, CreationDateTime) {
+  this.ID = ID;
+  this.ServerGroupName = ServerGroupName;
+  this.CreationDateTime = CreationDateTime;
 };
 
 /**
  * Changes the channelName to the new name.
  * @param {string} serverGroupName the new name.
  */
-ServerGroup.prototype.renameServerGroup = function(serverGroupName) {
-    this.ServerGroupName = serverGroupName;
+ServerGroup.prototype.renameServerGroup = function (serverGroupName) {
+  this.ServerGroupName = serverGroupName;
 };
 
 /**
  * Returns the ID of the ServerGroup.
  * @returns {number|*} the ID.
  */
-ServerGroup.prototype.getID = function() {
-    return this.ID;
+ServerGroup.prototype.getID = function () {
+  return this.ID;
 };
 
 /**
  * Sets the deleted flag to true.
  */
-ServerGroup.prototype.deleteServerGroup = function() {
-    this.deleted = true;
+ServerGroup.prototype.deleteServerGroup = function () {
+  this.deleted = true;
 };
 
 exports.ServerGroup = ServerGroup;

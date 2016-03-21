@@ -8,13 +8,13 @@
  * Default constructor.
  * @constructor
  */
-var Kick = function() {
-    this.kickedID = 0;
-    this.kickDateTime = "";
-    this.kickedNickname = "";
-    this.kickedByNickname = "";
-    this.kickedByUID = "";
-    this.kickReason = "";
+var Kick = function () {
+  this.kickedID = 0;
+  this.kickDateTime = "";
+  this.kickedNickname = "";
+  this.kickedByNickname = "";
+  this.kickedByUID = "";
+  this.kickReason = "";
 };
 
 /**
@@ -26,33 +26,33 @@ var Kick = function() {
  * @param {string} kickedByUID
  * @param {string} kickReason
  */
-Kick.prototype.addKick = function(kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
-    this.kickDateTime = kickDateTime;
-    this.kickedID = kickedID;
-    this.kickedNickname = kickedNickname;
-    this.kickedByNickname = kickedByNickname;
-    this.kickedByUID = kickedByUID;
-    this.kickReason = kickReason;
+Kick.prototype.addKick = function (kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
+  this.kickDateTime = kickDateTime;
+  this.kickedID = kickedID;
+  this.kickedNickname = kickedNickname;
+  this.kickedByNickname = kickedByNickname;
+  this.kickedByUID = kickedByUID;
+  this.kickReason = kickReason;
 };
 
 // Returns the requested information.
-Kick.prototype.getKickDateTime = function() {
-    return this.kickDateTime;
+Kick.prototype.getKickDateTime = function () {
+  return this.kickDateTime;
 };
-Kick.prototype.getKickedID = function() {
-    return this.kickedID;
+Kick.prototype.getKickedID = function () {
+  return this.kickedID;
 };
-Kick.prototype.getKickedNickname = function() {
-    return this.kickedNickname;
+Kick.prototype.getKickedNickname = function () {
+  return this.kickedNickname;
 };
-Kick.prototype.getKickedByNickname = function() {
-    return this.kickedByNickname;
+Kick.prototype.getKickedByNickname = function () {
+  return this.kickedByNickname;
 };
-Kick.prototype.getKickedByUID = function() {
-    return this.kickedByUID;
+Kick.prototype.getKickedByUID = function () {
+  return this.kickedByUID;
 };
-Kick.prototype.getKickReason = function() {
-    return this.kickReason;
+Kick.prototype.getKickReason = function () {
+  return this.kickReason;
 };
 
 exports.Kick = Kick;

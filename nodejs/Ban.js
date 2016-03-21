@@ -8,17 +8,17 @@
  * Default constructor.
  * @constructor
  */
-var Ban = function() {
-    this.banDateTime = "";
-    this.bannedID = 0;
-    this.bannedUID = "";
-    this.bannedNickname = "";
-    this.bannedIP = "";
-    this.bannedByID = 0;
-    this.bannedByUID = "";
-    this.bannedByNickname = "";
-    this.banReason = "";
-    this.banTime = 0;
+var Ban = function () {
+  this.banDateTime = "";
+  this.bannedID = 0;
+  this.bannedUID = "";
+  this.bannedNickname = "";
+  this.bannedIP = "";
+  this.bannedByID = 0;
+  this.bannedByUID = "";
+  this.bannedByNickname = "";
+  this.banReason = "";
+  this.banTime = 0;
 };
 
 /**
@@ -34,49 +34,49 @@ var Ban = function() {
  * @param {string} banReason
  * @param {number} banTime
  */
-Ban.prototype.addBan = function(banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime) {
-    this.banDateTime = banDateTime;
-    this.bannedID = bannedID;
-    this.bannedNickname = bannedNickname;
-    this.bannedUID = bannedUID;
-    this.bannedIP = bannedIP;
-    this.bannedByID = bannedByID;
-    this.bannedByNickname = bannedByNickname;
-    this.bannedByUID = bannedByUID;
-    this.banReason = banReason;
-    this.banTime = banTime;
+Ban.prototype.addBan = function (banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime) {
+  this.banDateTime = banDateTime;
+  this.bannedID = bannedID;
+  this.bannedNickname = bannedNickname;
+  this.bannedUID = bannedUID;
+  this.bannedIP = bannedIP;
+  this.bannedByID = bannedByID;
+  this.bannedByNickname = bannedByNickname;
+  this.bannedByUID = bannedByUID;
+  this.banReason = banReason;
+  this.banTime = banTime;
 };
 
 // Returns the requested information.
-Ban.prototype.getBanDateTime = function() {
-    return this.banDateTime;
+Ban.prototype.getBanDateTime = function () {
+  return this.banDateTime;
 };
-Ban.prototype.getBannedID = function() {
-    return this.bannedID;
+Ban.prototype.getBannedID = function () {
+  return this.bannedID;
 };
-Ban.prototype.getBannedNickname = function() {
-    return this.bannedNickname;
+Ban.prototype.getBannedNickname = function () {
+  return this.bannedNickname;
 };
-Ban.prototype.getBannedUID = function() {
-    return this.bannedUID;
+Ban.prototype.getBannedUID = function () {
+  return this.bannedUID;
 };
-Ban.prototype.getBannedIP = function() {
-    return this.bannedIP;
+Ban.prototype.getBannedIP = function () {
+  return this.bannedIP;
 };
-Ban.prototype.getBannedByNickname = function() {
-    return this.bannedByNickname;
+Ban.prototype.getBannedByNickname = function () {
+  return this.bannedByNickname;
 };
-Ban.prototype.getBannedByID = function() {
-    return this.bannedByID;
+Ban.prototype.getBannedByID = function () {
+  return this.bannedByID;
 };
-Ban.prototype.getBannedByUID = function() {
-    return this.bannedByUID;
+Ban.prototype.getBannedByUID = function () {
+  return this.bannedByUID;
 };
-Ban.prototype.getBanReason = function() {
-    return this.banReason;
+Ban.prototype.getBanReason = function () {
+  return this.banReason;
 };
-Ban.prototype.getBanTime = function() {
-    return this.banTime;
+Ban.prototype.getBanTime = function () {
+  return this.banTime;
 };
 
 exports.Ban = Ban;

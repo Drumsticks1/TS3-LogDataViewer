@@ -8,13 +8,13 @@
  * Default constructor.
  * @constructor
  */
-var Complaint = function() {
-    this.complaintDateTime = "";
-    this.complaintAboutID = 0;
-    this.complaintAboutNickname = "";
-    this.complaintReason = "";
-    this.complaintByID = 0;
-    this.complaintByNickname = "";
+var Complaint = function () {
+  this.complaintDateTime = "";
+  this.complaintAboutID = 0;
+  this.complaintAboutNickname = "";
+  this.complaintReason = "";
+  this.complaintByID = 0;
+  this.complaintByNickname = "";
 };
 
 /**
@@ -26,33 +26,33 @@ var Complaint = function() {
  * @param {string} complaintByNickname
  * @param {number} complaintByID
  */
-Complaint.prototype.addComplaint = function(complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
-    this.complaintDateTime = complaintDateTime;
-    this.complaintAboutNickname = complaintAboutNickname;
-    this.complaintAboutID = complaintAboutID;
-    this.complaintReason = complaintReason;
-    this.complaintByNickname = complaintByNickname;
-    this.complaintByID = complaintByID;
+Complaint.prototype.addComplaint = function (complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+  this.complaintDateTime = complaintDateTime;
+  this.complaintAboutNickname = complaintAboutNickname;
+  this.complaintAboutID = complaintAboutID;
+  this.complaintReason = complaintReason;
+  this.complaintByNickname = complaintByNickname;
+  this.complaintByID = complaintByID;
 };
 
 // Returns the requested information.
-Complaint.prototype.getComplaintDateTime = function() {
-    return this.complaintDateTime;
+Complaint.prototype.getComplaintDateTime = function () {
+  return this.complaintDateTime;
 };
-Complaint.prototype.getComplaintAboutNickname = function() {
-    return this.complaintAboutNickname;
+Complaint.prototype.getComplaintAboutNickname = function () {
+  return this.complaintAboutNickname;
 };
-Complaint.prototype.getComplaintAboutID = function() {
-    return this.complaintAboutID;
+Complaint.prototype.getComplaintAboutID = function () {
+  return this.complaintAboutID;
 };
-Complaint.prototype.getComplaintReason = function() {
-    return this.complaintReason;
+Complaint.prototype.getComplaintReason = function () {
+  return this.complaintReason;
 };
-Complaint.prototype.getComplaintByNickname = function() {
-    return this.complaintByNickname;
+Complaint.prototype.getComplaintByNickname = function () {
+  return this.complaintByNickname;
 };
-Complaint.prototype.getComplaintByID = function() {
-    return this.complaintByID;
+Complaint.prototype.getComplaintByID = function () {
+  return this.complaintByID;
 };
 
 exports.Complaint = Complaint;
