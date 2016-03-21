@@ -7,7 +7,8 @@
 const fs = require("fs"),
   globalVariables = require("./globalVariables.js"),
   log = require("./log.js"),
-  checkFunctions = require("./checkFunctions.js");
+  checkFunctions = require("./checkFunctions.js"),
+  miscFunctions = require("./miscFunctions.js");
 
 /**
  * Fetches the logs.
@@ -15,7 +16,6 @@ const fs = require("fs"),
  */
 exports.fetchLogs = function () {
   log.info("Checking log directory.");
-  globalVariables.Logs.length = 0;
 
   try {
     if (!fs.statSync(globalVariables.logDirectory).isDirectory()) {
@@ -39,16 +39,52 @@ exports.fetchLogs = function () {
     return false;
   }
 
+  var newLogObjects = [];
+
   log.info("Fetching logs.");
   for (var i = 0; i < logFiles.length; i++) {
-    if (logFiles[i].lastIndexOf(".log") == logFiles[i].length - 4
-      && logFiles[i].substring(38, logFiles[i].length - 4) == String(globalVariables.virtualServer)
-      && !checkFunctions.isIgnoredLog(logFiles[i])) {
-      globalVariables.Logs.push(logFiles[i]);
+    var currentLog = logFiles[i];
+    if (currentLog.lastIndexOf(".log") == currentLog.length - 4
+      && currentLog.substring(38, currentLog.length - 4) == String(globalVariables.virtualServer)) {
+      newLogObjects.push({
+        logName: currentLog,
+        ignored: checkFunctions.isIgnoredLog(currentLog),
+        parsed: false
+      });
     }
   }
 
   log.info("Sorting logs.");
-  globalVariables.Logs.sort();
+  newLogObjects.sort(
+    /**
+     * Custom sort function for the newLogObjects array, using logNames for sorting.
+     * @param {object} a
+     * @param {object} b
+     * @returns {number}
+     */
+    function (a, b) {
+      return a.logName.localeCompare(b.logName);
+    });
+
+  if (globalVariables.bufferData) {
+    if (checkFunctions.isMatchingLogOrder(newLogObjects)) {
+      log.debug("Comparing new and old logs.");
+
+      // The last parsed log might contain new data, don't modify it's ignored state.
+      for (i = 0; i < globalVariables.Logs.length - 1; i++) {
+        newLogObjects[i].parsed = globalVariables.Logs[i].parsed;
+      }
+    }
+    else {
+      log.warn("Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
+      miscFunctions.clearGlobalArrays();
+    }
+  }
+
+  globalVariables.Logs.length = 0;
+  for (i = 0; i < newLogObjects.length; i++) {
+    globalVariables.Logs.push(newLogObjects[i]);
+  }
+
   return true;
 };

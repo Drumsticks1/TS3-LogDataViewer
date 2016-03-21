@@ -30,7 +30,6 @@ exports.createJSON = function () {
         "UTC": timestamps.utc
       }
     },
-    "parsedLogs": globalVariables.parsedLogs,
     "ClientList": globalVariables.ClientList,
     "ServerGroupList": globalVariables.ServerGroupList,
     "BanList": globalVariables.BanList,

@@ -30,7 +30,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
     return 0;
   }
 
-  var lastModification = fs.statSync(globalVariables.logDirectory + globalVariables.Logs[globalVariables.Logs.length - 1]).mtime.valueOf();
+  var lastModification = fs.statSync(globalVariables.logDirectory + globalVariables.Logs[globalVariables.Logs.length - 1].logName).mtime.valueOf();
 
   if (fs.existsSync(Constants.outputJSON)) {
     if (!ignoreLastModificationCheck) {

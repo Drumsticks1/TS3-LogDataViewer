@@ -11,8 +11,7 @@ var ClientList = globalVariables.ClientList,
   ComplaintList = globalVariables.ComplaintList,
   UploadList = globalVariables.UploadList,
   Logs = globalVariables.Logs,
-  ignoredLogs = globalVariables.ignoredLogs,
-  parsedLogs = globalVariables.parsedLogs;
+  ignoredLogs = globalVariables.ignoredLogs;
 
 module.exports = {
   /**
@@ -59,25 +58,14 @@ module.exports = {
   },
 
   /**
-   * Checks if a log is already existing in the parsedLogs list.
-   * @param {string} log
+   * Checks if the order of old logs and new logs as well as the ignored flags are matching.
+   * @param {Array} newLogObjects array containing log objects (see fetchLogs)
    * @returns {boolean}
    */
-  isDuplicateLog: function (log) {
-    for (var i = 0; i < parsedLogs.length; i++) {
-      if (log == parsedLogs[i]) return true;
-    }
-    return false;
-  },
-
-  /**
-   * Checks if the order of Logs and ParsedLogs is matching.
-   * @returns {boolean}
-   */
-  isMatchingLogOrder: function () {
-    for (var i = 0; i < parsedLogs.length; i++) {
-      if (i < Logs.length) {
-        if (parsedLogs[i] != Logs[i]) {
+  isMatchingLogOrder: function (newLogObjects) {
+    for (var i = 0; i < Logs.length; i++) {
+      if (i < newLogObjects.length) {
+        if (Logs[i].logName != newLogObjects[i].logName || Logs[i].ignored != this.isIgnoredLog(newLogObjects[i].logName)) {
           return false;
         }
       }

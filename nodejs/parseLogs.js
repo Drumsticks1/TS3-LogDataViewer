@@ -11,7 +11,6 @@ const fs = require("fs"),
   log = require("./log.js");
 
 var Logs = globalVariables.Logs,
-  parsedLogs = globalVariables.parsedLogs,
   ClientList = globalVariables.ClientList,
   ServerGroupList = globalVariables.ServerGroupList,
   BanList = globalVariables.BanList,
@@ -102,23 +101,6 @@ exports.parseLogs = function () {
   ComplaintListID = ComplaintList.length;
   UploadListID = UploadList.length;
 
-  if (globalVariables.bufferData) {
-    if (checkFunctions.isMatchingLogOrder()) {
-      log.debug("Comparing new and old logs.");
-      for (var i = 0; i < parsedLogs.length; i++) {
-        for (var j = 0; j < Logs.length - 1; j++) {
-          if (Logs[j] == parsedLogs[i]) {
-            Logs.splice(j, 1);
-          }
-        }
-      }
-    }
-    else {
-      log.warn("Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
-      parsedLogs.length = 0;
-    }
-  }
-
   boundaries = {
     // General
     "DateTime": [0, 19],
@@ -144,12 +126,12 @@ exports.parseLogs = function () {
   };
 
   log.debug("Parsing new logs.");
-  for (i = 0; i < Logs.length; i++) {
-    if (!Logs[i].empty) {
+  for (var i = 0; i < Logs.length; i++) {
+    if (!Logs[i].parsed && !Logs[i].ignored) {
       if (i + 1 == Logs.length)
         isLastLog = true;
 
-      var logfileData = fs.readFileSync(globalVariables.logDirectory + Logs[i], "utf8");
+      var logfileData = fs.readFileSync(globalVariables.logDirectory + Logs[i].logName, "utf8");
 
       currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
 
@@ -650,9 +632,7 @@ exports.parseLogs = function () {
         logfileData = logfileData.substring(currentLine.length + 1);
       }
 
-      if (!checkFunctions.isDuplicateLog(Logs[i])) {
-        parsedLogs.push(Logs[i]);
-      }
+      Logs[i].parsed = true;
     }
   }
 };

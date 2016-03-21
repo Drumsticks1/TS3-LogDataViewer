@@ -93,8 +93,7 @@ module.exports = {
     globalVariables.ClientList.length = globalVariables.ServerGroupList.length =
       globalVariables.BanList.length = globalVariables.KickList.length =
         globalVariables.ComplaintList.length = globalVariables.UploadList.length =
-          globalVariables.ignoredLogs.length = globalVariables.Logs.length =
-            globalVariables.parsedLogs.length = 0;
+          globalVariables.ignoredLogs.length = globalVariables.Logs.length = 0;
   },
 
   /**

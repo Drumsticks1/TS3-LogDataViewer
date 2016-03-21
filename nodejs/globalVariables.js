@@ -6,7 +6,6 @@ const Constants = require("./Constants.js");
 
 var ignoredLogs = [],
   Logs = [],
-  parsedLogs = [],
   ClientList = [],
   ServerGroupList = [],
   BanList = [],
@@ -26,7 +25,6 @@ var ignoredLogs = [],
 module.exports = {
   ignoredLogs: ignoredLogs,
   Logs: Logs,
-  parsedLogs: parsedLogs,
   ClientList: ClientList,
   ServerGroupList: ServerGroupList,
   BanList: BanList,
