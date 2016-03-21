@@ -18,6 +18,24 @@ const sortStrings = ["Currently sorting connections by the first connect", "Curr
   tables = ["clientTable", "banTable", "kickTable", "complaintTable", "uploadTable"],
   tableNames = ["Client", "Ban", "Kick", "Complaint", "Upload"];
 
+// Lookup object, used for calling elements of some arrays via the ID of the wanted entry.
+// Required when ID and index of entries differ in lists (ClientList, ChannelList, ServerGroupList).
+// The lookup object is updated when the data is fetched.
+var lookup = {ClientList: {}, ChannelList: {}, ServerGroupList: {}};
+
+/**
+ * Updates the lookup object for the given list
+ * @param {string} list name of the list, e.g. ClientList
+ */
+function updateLookupObject(list) {
+  lookup[list] = {};
+
+  var bufferObj = json[list];
+  for (var i = 0; i < bufferObj.length; i++) {
+    lookup[list][bufferObj[i].ID] = bufferObj[i];
+  }
+}
+
 /**
  * Sends a request for building the JSON to the server.
  *
@@ -150,7 +168,7 @@ function expandOrCollapseList(list, ID) {
  */
 function expandList(list, ID, column, collapsedCellCount) {
   var x = document.getElementById(String(ID)).childNodes[column],
-    listContent = json.ClientList[ID][list];
+    listContent = lookup.ClientList[ID][list];
 
   var currentDiv = document.getElementById(list + "Button_" + ID);
   currentDiv.innerHTML = "- " + (listContent.length - collapsedCellCount);
@@ -186,7 +204,7 @@ function expandList(list, ID, column, collapsedCellCount) {
  * @param {number} collapsedCellCount - count of the cells if collapsed.
  */
 function collapseList(list, ID, column, collapsedCellCount) {
-  var listContent = json.ClientList[ID][list];
+  var listContent = lookup.ClientList[ID][list];
 
   document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
   document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
@@ -431,26 +449,6 @@ function removeEventListeners() {
     eventListeners[i].onclick = null;
     eventListeners.pop();
   }
-}
-
-/**
- * Returns the server group name for the given ID.
- *
- * @param {number} ID - ID of the server group.
- * @returns {string} - name of the server group.
- */
-function getServerGroupNameByID(ID) {
-  return json.ServerGroupList[ID].ServerGroupName;
-}
-
-/**
- * Returns the channel name for the given ID.
- *
- * @param {number} ID - ID of the channel.
- * @returns {string} - name of the channel.
- */
-function getChannelNameByID(ID) {
-  return json.ChannelList[ID].channelName;
 }
 
 /**
@@ -705,7 +703,7 @@ function buildClientTable() {
       for (j = 0; j < ServerGroupIDs.length; j++) {
         var divName = document.createElement("div"),
           divDateTime = document.createElement("div");
-        divName.innerHTML = getServerGroupNameByID(Number(ServerGroupIDs[j]));
+        divName.innerHTML = lookup.ServerGroupList[ServerGroupIDs[j]].ServerGroupName;
         divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(timeFormat);
 
         cell_ServerGroupInfo.appendChild(divName);
@@ -1242,7 +1240,7 @@ function buildUploadTable() {
     cell_ChannelID.innerHTML = ChannelID;
     uploadBodyRow.appendChild(cell_ChannelID);
 
-    cell_ChannelName.innerHTML = getChannelNameByID(ChannelID);
+    cell_ChannelName.innerHTML = lookup.ChannelList[ChannelID].channelName;
     uploadBodyRow.appendChild(cell_ChannelName);
 
     cell_Filename.innerHTML = Filename;
@@ -1356,6 +1354,10 @@ function buildTables() {
       buildError = false;
       json = fetchedJSON;
       connectedClientsCount = 0;
+
+      updateLookupObject("ClientList");
+      updateLookupObject("ChannelList");
+      updateLookupObject("ServerGroupList");
 
       removeEventListeners();
       for (var i = 0; i < tables.length; i++) {

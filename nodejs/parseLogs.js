@@ -185,7 +185,7 @@ exports.parseLogs = function () {
               if (ServerGroupList.length < ServerGroupID + 1)
                 ServerGroupList.resizeFill(ServerGroupID + 1, "ServerGroup");
 
-              if (ServerGroupList[ServerGroupID].getID() == 0)
+              if (ServerGroupList[ServerGroupID].CreationDateTime.length == 0)
                 ServerGroupList[ServerGroupID].addServerGroupInformation(ServerGroupID, ServerGroupName, "Unknown");
 
               if (ClientList.length < ID + 1)

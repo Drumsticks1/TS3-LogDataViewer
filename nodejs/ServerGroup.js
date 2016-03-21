@@ -9,7 +9,7 @@
  * @constructor
  */
 var ServerGroup = function () {
-  this.ID = 0;
+  this.ID = -1;
   this.ServerGroupName = "";
   this.CreationDateTime = "";
   this.deleted = false;
