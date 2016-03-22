@@ -1357,6 +1357,11 @@ function buildTables() {
 
       updateLookupObject("ClientList");
       updateLookupObject("ChannelList");
+      lookup.ChannelList[0] = {
+        ID: 0,
+        channelName: "Server",
+        deleted: false
+      };
       updateLookupObject("ServerGroupList");
 
       removeEventListeners();

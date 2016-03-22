@@ -593,6 +593,13 @@ exports.parseLogs = function () {
 
             DateTime = getSubstring("DateTime");
             channelID = Number(getSubstring("channelID"));
+
+            if (channelID >= ChannelList.length)
+              ChannelList.resizeFill(channelID + 1, "Channel");
+
+            if (ChannelList[channelID].creationDateTime.length == 0 && channelID != 0)
+              ChannelList[channelID].addChannel(channelID, "Unknown", "Unknown");
+
             var filename = getSubstring("filename"),
               uploadedByNickname = getSubstring("uploadedByNickname"),
               uploadedByID = Number(getSubstring("uploadedByID"));

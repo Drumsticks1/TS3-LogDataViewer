@@ -9,7 +9,7 @@
  * @constructor
  */
 var Channel = function () {
-  this.ID = 0;
+  this.ID = -1;
   this.creationDateTime = "";
   this.channelName = "";
   this.deleted = false;
