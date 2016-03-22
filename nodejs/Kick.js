@@ -35,6 +35,19 @@ Kick.prototype.addKick = function (kickDateTime, kickedID, kickedNickname, kicke
   this.kickReason = kickReason;
 };
 
+/**
+ * Sets the data of the current Kick according to the data in the given kickObject.
+ * @param {object} kickObject containing the kick data.
+ */
+Kick.prototype.addKickViaObject = function (kickObject) {
+  this.kickedID = kickObject.kickedID;
+  this.kickDateTime = kickObject.kickDateTime;
+  this.kickedNickname = kickObject.kickedNickname;
+  this.kickedByNickname = kickObject.kickedByNickname;
+  this.kickedByUID = kickObject.kickedByUID;
+  this.kickReason = kickObject.kickReason;
+};
+
 // Returns the requested information.
 Kick.prototype.getKickDateTime = function () {
   return this.kickDateTime;

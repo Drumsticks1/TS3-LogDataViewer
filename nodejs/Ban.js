@@ -47,6 +47,24 @@ Ban.prototype.addBan = function (banDateTime, bannedID, bannedNickname, bannedUI
   this.banTime = banTime;
 };
 
+/**
+ * Sets the data of the current Ban according to the data in the given banObject.
+ * @param {object} banObject containing the ban data.
+ */
+Ban.prototype.addBanViaObject = function (banObject) {
+  this.addBan(
+    banObject.banDateTime,
+    banObject.bannedID,
+    banObject.bannedNickname,
+    banObject.bannedUID,
+    banObject.bannedIP,
+    banObject.bannedByNickname,
+    banObject.bannedByID,
+    banObject.bannedByUID,
+    banObject.banReason,
+    banObject.banTime)
+};
+
 // Returns the requested information.
 Ban.prototype.getBanDateTime = function () {
   return this.banDateTime;

@@ -602,7 +602,7 @@ function buildClientTable() {
   var clientBody = document.createElement("tbody");
   for (var i = 0; i < Client.length; i++) {
     var ID = Number(Client[i].ID);
-    if (ID != 0) {
+    if (ID != -1) {
       var Nicknames = Client[ID].Nicknames,
         Connections = Client[ID].Connections,
         IPs = Client[ID].IPs,

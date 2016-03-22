@@ -35,6 +35,19 @@ Complaint.prototype.addComplaint = function (complaintDateTime, complaintAboutNi
   this.complaintByID = complaintByID;
 };
 
+/**
+ * Sets the data of the current Complaint according to the data in the given complaintObject.
+ * @param {object} complaintObject containing the complaint data.
+ */
+Complaint.prototype.addComplaintViaObject = function (complaintObject) {
+  this.complaintDateTime = complaintObject.complaintDateTime;
+  this.complaintAboutID = complaintObject.complaintAboutID;
+  this.complaintAboutNickname = complaintObject.complaintAboutNickname;
+  this.complaintReason = complaintObject.complaintReason;
+  this.complaintByID = complaintObject.complaintByID;
+  this.complaintByNickname = complaintObject.complaintByNickname;
+};
+
 // Returns the requested information.
 Complaint.prototype.getComplaintDateTime = function () {
   return this.complaintDateTime;

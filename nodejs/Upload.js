@@ -37,6 +37,21 @@ Upload.prototype.addUpload = function (uploadDateTime, channelID, filename, uplo
   this.uploadedByID = uploadedByID;
 };
 
+/**
+ * Sets the data of the current Upload according to the data in the given uploadObject.
+ * @param {object} uploadObject containing the upload data.
+ */
+Upload.prototype.addUploadViaObject = function (uploadObject) {
+  this.uploadDateTime = uploadObject.uploadDateTime;
+  this.channelID = uploadObject.channelID;
+  this.filename = uploadObject.filename;
+  this.uploadedByID = uploadObject.uploadedByID;
+  this.uploadedByNickname =uploadObject.uploadedByNickname;
+  this.deletedByID = uploadObject.deletedByID;
+  this.deletedByNickname = uploadObject.deletedByNickname;
+  this.deleted = uploadObject.deleted;
+};
+
 // Returns the requested information.
 Upload.prototype.getUploadDateTime = function () {
   return this.uploadDateTime;

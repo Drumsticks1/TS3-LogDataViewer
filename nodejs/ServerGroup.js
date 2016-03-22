@@ -28,6 +28,17 @@ ServerGroup.prototype.addServerGroupInformation = function (ID, ServerGroupName,
 };
 
 /**
+ * Sets the data of the current ServerGroup according to the data in the given serverGroupObject.
+ * @param {object} serverGroupObject containing the server group data.
+ */
+ServerGroup.prototype.addServerGroupViaObject = function (serverGroupObject) {
+  this.ID = serverGroupObject.ID;
+  this.ServerGroupName = serverGroupObject.ServerGroupName;
+  this.CreationDateTime = serverGroupObject.CreationDateTime;
+  this.deleted = serverGroupObject.deleted;
+};
+
+/**
  * Changes the channelName to the new name.
  * @param {string} serverGroupName the new name.
  */

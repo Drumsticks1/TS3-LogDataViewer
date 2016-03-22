@@ -28,6 +28,17 @@ Channel.prototype.addChannel = function (ID, creationDateTime, channelName) {
 };
 
 /**
+ * Sets the data of the current Channel according to the data in the given channelObject.
+ * @param {object} channelObject containing the channel data.
+ */
+Channel.prototype.addChannelViaObject = function (channelObject) {
+  this.ID = channelObject.ID;
+  this.channelName = channelObject.channelName;
+  this.creationDateTime = channelObject.creationDateTime;
+  this.deleted = channelObject.deleted;
+};
+
+/**
  * Changes the channelName to the new name.
  * @param {string} channelName the new name.
  */

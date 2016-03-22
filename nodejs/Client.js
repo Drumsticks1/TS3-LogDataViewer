@@ -9,7 +9,7 @@
  * @constructor
  */
 var Client = function () {
-  this.ID = 0;
+  this.ID = -1;
   this.Nicknames = [];
   this.Connections = [];
   this.IPs = [];
@@ -17,6 +17,21 @@ var Client = function () {
   this.ServerGroupIDs = [];
   this.ServerGroupAssignmentDateTimes = [];
   this.deleted = false;
+};
+
+/**
+ * Sets the data of the current Client according to the data in the given clientObject.
+ * @param {object} clientObject containing the client data.
+ */
+Client.prototype.addClientViaObject = function (clientObject) {
+  this.ID = clientObject.ID;
+  this.Nicknames = clientObject.Nicknames;
+  this.Connections = clientObject.Connections;
+  this.IPs = clientObject.IPs;
+  this.ConnectedState = clientObject.ConnectedState;
+  this.ServerGroupIDs = clientObject.ServerGroupIDs;
+  this.ServerGroupAssignmentDateTimes = clientObject.ServerGroupAssignmentDateTimes;
+  this.deleted = clientObject.deleted;
 };
 
 /**
