@@ -5,7 +5,7 @@
 "use strict";
 
 /**
- * @param {number} banId
+ * @param {number} banListId
  * @param {string} banDateTime
  * @param {number} bannedID
  * @param {string} bannedNickname
@@ -18,8 +18,8 @@
  * @param {number} banTime
  * @constructor
  */
-var Ban = function (banId, banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
-  this.banId = banId;
+var Ban = function (banListId, banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
+  this.banListId = banListId;
   this.banDateTime = banDateTime;
   this.bannedID = bannedID;
   this.bannedNickname = bannedNickname;
@@ -106,7 +106,7 @@ module.exports = {
   addBanViaObject: function (array, banObject) {
     array.push(
       new Ban(
-        banObject.banId,
+        banObject.banListId,
         banObject.banDateTime,
         banObject.bannedID,
         banObject.bannedNickname,

@@ -5,7 +5,7 @@
 "use strict";
 
 /**
- * @param {number} kickId
+ * @param {number} kickListId
  * @param {string} kickDateTime
  * @param {number} kickedID
  * @param {string} kickedNickname
@@ -14,8 +14,8 @@
  * @param {string} kickReason
  * @constructor
  */
-var Kick = function (kickId, kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
-  this.kickId = kickId;
+var Kick = function (kickListId, kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
+  this.kickListId = kickListId;
   this.kickDateTime = kickDateTime;
   this.kickedID = kickedID;
   this.kickedNickname = kickedNickname;
@@ -78,7 +78,7 @@ module.exports = {
   addKickViaObject: function (array, kickObject) {
     array.push(
       new Kick(
-        kickObject.kickId,
+        kickObject.kickListId,
         kickObject.kickDateTime,
         kickObject.kickedID,
         kickObject.kickedNickname,

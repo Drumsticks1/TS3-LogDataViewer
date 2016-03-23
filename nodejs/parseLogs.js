@@ -13,6 +13,7 @@ var Kick = require("./Kick.js");
 var Ban = require("./Ban.js");
 var Complaint = require("./Complaint.js");
 var Channel = require("./Channel.js");
+var ServerGroup = require("./ServerGroup.js");
 
 var Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
@@ -181,11 +182,10 @@ exports.parseLogs = function () {
               var ServerGroupID = Number(getSubstring("ServerGroupID")),
                 ServerGroupName = getSubstring("ServerGroupName");
 
-              if (ServerGroupList.length < ServerGroupID + 1)
-                ServerGroupList.resizeFill(ServerGroupID + 1, "ServerGroup");
+              var serverGroupObject = ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID);
 
-              if (ServerGroupList[ServerGroupID].CreationDateTime.length == 0)
-                ServerGroupList[ServerGroupID].addServerGroupInformation(ServerGroupID, ServerGroupName, "Unknown");
+              if (serverGroupObject === null)
+                ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
 
               if (ClientList.length < ID + 1)
                 ClientList.resizeFill(ID + 1, "Client");
@@ -299,19 +299,23 @@ exports.parseLogs = function () {
                 ServerGroupID = Number(getSubstring("ServerGroupID"));
                 ServerGroupName = getSubstring("ServerGroupName");
 
+                if (eventTypeS == 1 || eventTypeS == 2) {
+                  if (ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID) === null)
+                    ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
+                }
+
                 switch (eventTypeS) {
                   case 0:
                   case 3:
-                    ServerGroupList.resizeFill(ServerGroupID + 1, "ServerGroup");
-                    ServerGroupList[ServerGroupID].addServerGroupInformation(ServerGroupID, ServerGroupName, DateTime);
+                    ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, DateTime, ServerGroupName);
                     break;
 
                   case 1:
-                    ServerGroupList[ServerGroupID].deleteServerGroup();
+                    ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).deleteServerGroup();
                     break;
 
                   case 2:
-                    ServerGroupList[ServerGroupID].renameServerGroup(ServerGroupName);
+                    ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).renameServerGroup(ServerGroupName);
                 }
               }
             }

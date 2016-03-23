@@ -60,20 +60,17 @@ module.exports = {
    * @param {object} channelObject containing the channel data.
    */
   addChannelViaObject: function (array, channelObject) {
-    this.channelListId = channelObject.channelListId;
-    this.channelId = channelObject.channelId;
-    this.channelName = channelObject.channelName;
-    this.creationDateTime = channelObject.creationDateTime;
-    this.deleted = channelObject.deleted;
-  },
+    var channel = new Channel(
+      channelObject.channelListId,
+      channelObject.channelId,
+      channelObject.channelName,
+      channelObject.creationDateTime
+    );
 
-  /**
-   * Changes the channelName to the new name.
-   * @param {number} channelListId
-   * @param {string} channelName the new name.
-   */
-  renameChannel: function (channelListId, channelName) {
-    this.channelName = channelName;
+    if (channelObject.deleted)
+      channel.deleteChannel();
+
+    array.push(channelObject);
   },
 
   /**

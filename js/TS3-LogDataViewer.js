@@ -704,7 +704,7 @@ function buildClientTable() {
       for (j = 0; j < ServerGroupIDs.length; j++) {
         var divName = document.createElement("div"),
           divDateTime = document.createElement("div");
-        divName.innerHTML = lookup.ServerGroupList[ServerGroupIDs[j]].ServerGroupName;
+        divName.innerHTML = lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName;
         divDateTime.innerHTML = moment(UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(timeFormat);
 
         cell_ServerGroupInfo.appendChild(divName);
@@ -1363,7 +1363,7 @@ function buildTables() {
         channelName: "Server",
         deleted: false
       };
-      updateLookupObject("ServerGroupList", "ID");
+      updateLookupObject("ServerGroupList", "serverGroupId");
 
       removeEventListeners();
       for (var i = 0; i < tables.length; i++) {

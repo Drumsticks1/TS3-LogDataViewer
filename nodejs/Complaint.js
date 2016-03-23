@@ -5,7 +5,7 @@
 "use strict";
 
 /**
- * @param {number} complaintId
+ * @param {number} complaintListId
  * @param {string} complaintDateTime
  * @param {string} complaintAboutNickname
  * @param {number} complaintAboutID
@@ -14,8 +14,8 @@
  * @param {number} complaintByID
  * @constructor
  */
-var Complaint = function (complaintId, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
-  this.complaintId = complaintId;
+var Complaint = function (complaintListId, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+  this.complaintListId = complaintListId;
   this.complaintDateTime = complaintDateTime;
   this.complaintAboutID = complaintAboutID;
   this.complaintAboutNickname = complaintAboutNickname;
@@ -78,7 +78,7 @@ module.exports = {
   addComplaintViaObject: function (array, complaintObject) {
     array.push(
       new Complaint(
-        complaintObject.complaintId,
+        complaintObject.complaintListId,
         complaintObject.complaintDateTime,
         complaintObject.complaintAboutNickname,
         complaintObject.complaintAboutID,

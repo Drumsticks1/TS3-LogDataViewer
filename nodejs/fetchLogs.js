@@ -91,5 +91,5 @@ exports.fetchLogs = function () {
     globalVariables.Logs.push(newLogObjects[i]);
   }
 
-  return rebuildRequired ? 2:1;
+  return rebuildRequired ? 2 : 1;
 };
