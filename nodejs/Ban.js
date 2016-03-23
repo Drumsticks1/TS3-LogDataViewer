@@ -5,36 +5,21 @@
 "use strict";
 
 /**
- * Default constructor.
- * @constructor
- */
-var Ban = function () {
-  this.banDateTime = "";
-  this.bannedID = 0;
-  this.bannedUID = "";
-  this.bannedNickname = "";
-  this.bannedIP = "";
-  this.bannedByID = 0;
-  this.bannedByUID = "";
-  this.bannedByNickname = "";
-  this.banReason = "";
-  this.banTime = 0;
-};
-
-/**
- * Sets the data of the current Ban object according to the given data.
+ * @param {number} banId
  * @param {string} banDateTime
  * @param {number} bannedID
  * @param {string} bannedNickname
  * @param {string} bannedUID
  * @param {string} bannedIP
- * @param {string} bannedByNickname
  * @param {number} bannedByID
+ * @param {string} bannedByNickname
  * @param {string} bannedByUID
  * @param {string} banReason
  * @param {number} banTime
+ * @constructor
  */
-Ban.prototype.addBan = function (banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime) {
+var Ban = function (banId, banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
+  this.banId = banId;
   this.banDateTime = banDateTime;
   this.bannedID = bannedID;
   this.bannedNickname = bannedNickname;
@@ -45,24 +30,6 @@ Ban.prototype.addBan = function (banDateTime, bannedID, bannedNickname, bannedUI
   this.bannedByUID = bannedByUID;
   this.banReason = banReason;
   this.banTime = banTime;
-};
-
-/**
- * Sets the data of the current Ban according to the data in the given banObject.
- * @param {object} banObject containing the ban data.
- */
-Ban.prototype.addBanViaObject = function (banObject) {
-  this.addBan(
-    banObject.banDateTime,
-    banObject.bannedID,
-    banObject.bannedNickname,
-    banObject.bannedUID,
-    banObject.bannedIP,
-    banObject.bannedByNickname,
-    banObject.bannedByID,
-    banObject.bannedByUID,
-    banObject.banReason,
-    banObject.banTime)
 };
 
 // Returns the requested information.
@@ -97,4 +64,59 @@ Ban.prototype.getBanTime = function () {
   return this.banTime;
 };
 
-exports.Ban = Ban;
+module.exports = {
+  Ban: Ban,
+
+  /**
+   * Adds a new Ban with the given data to the array.
+   * @param {Array} array
+   * @param {string} banDateTime
+   * @param {number} bannedID
+   * @param {string} bannedNickname
+   * @param {string} bannedUID
+   * @param {string} bannedIP
+   * @param {number} bannedByID
+   * @param {string} bannedByNickname
+   * @param {string} bannedByUID
+   * @param {string} banReason
+   * @param {number} banTime
+   */
+  addBan: function (array, banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
+    array.push(
+      new Ban(
+        array.length + 1,
+        banDateTime,
+        bannedID,
+        bannedNickname,
+        bannedUID,
+        bannedIP,
+        bannedByID,
+        bannedByNickname,
+        bannedByUID,
+        banReason,
+        banTime
+      ));
+  },
+
+  /**
+   * Adds a new Ban containing the data of the banObject to the array.
+   * @param {Array} array
+   * @param {object} banObject containing the ban data.
+   */
+  addBanViaObject: function (array, banObject) {
+    array.push(
+      new Ban(
+        banObject.banId,
+        banObject.banDateTime,
+        banObject.bannedID,
+        banObject.bannedNickname,
+        banObject.bannedUID,
+        banObject.bannedIP,
+        banObject.bannedByID,
+        banObject.bannedByNickname,
+        banObject.bannedByUID,
+        banObject.banReason,
+        banObject.banTime
+      ));
+  }
+};

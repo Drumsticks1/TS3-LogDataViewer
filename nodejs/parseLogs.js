@@ -9,6 +9,8 @@ const fs = require("fs"),
   checkFunctions = require("./checkFunctions.js"),
   globalVariables = require("./globalVariables.js"),
   log = require("./log.js");
+var Kick = require("./Kick.js");
+var Ban = require("./Ban.js");
 
 var Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
@@ -93,11 +95,9 @@ exports.parseLogs = function () {
   ];
 
   var lastUIDBanRule = "", lastIPBanRule = "",
-    BanListID, KickListID, ComplaintListID, UploadListID,
+    ComplaintListID, UploadListID,
     isBan, isKick, isLastLog;
 
-  BanListID = BanList.length;
-  KickListID = KickList.length;
   ComplaintListID = ComplaintList.length;
   UploadListID = UploadList.length;
 
@@ -464,11 +464,8 @@ exports.parseLogs = function () {
                 ID = Number(ID);
                 bannedByID = Number(bannedByID);
 
-                if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime)) {
-                  BanList.resizeFill(BanListID + 1, "Ban");
-                  BanList[BanListID].addBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime);
-                  BanListID++;
-                }
+                if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP,bannedByID, bannedByNickname, bannedByUID, banReason, banTime))
+                  Ban.addBan(BanList, DateTime, ID, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime);
               }
 
               // Kicks
@@ -500,9 +497,7 @@ exports.parseLogs = function () {
                 kickedByUID = getSubstring("kickedByUID");
 
                 if (!checkFunctions.isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)) {
-                  KickList.resizeFill(KickListID + 1, "Kick");
-                  KickList[KickListID].addKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason);
-                  KickListID++;
+                  Kick.addKick(KickList, DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason);
                 }
               }
             }

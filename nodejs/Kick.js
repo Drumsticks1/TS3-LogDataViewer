@@ -5,47 +5,23 @@
 "use strict";
 
 /**
- * Default constructor.
- * @constructor
- */
-var Kick = function () {
-  this.kickedID = 0;
-  this.kickDateTime = "";
-  this.kickedNickname = "";
-  this.kickedByNickname = "";
-  this.kickedByUID = "";
-  this.kickReason = "";
-};
-
-/**
- * Sets the data of the current Kick object according to the given data.
+ * @param {number} kickId
  * @param {string} kickDateTime
  * @param {number} kickedID
  * @param {string} kickedNickname
  * @param {string} kickedByNickname
  * @param {string} kickedByUID
  * @param {string} kickReason
+ * @constructor
  */
-Kick.prototype.addKick = function (kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
+var Kick = function (kickId, kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
+  this.kickId = kickId;
   this.kickDateTime = kickDateTime;
   this.kickedID = kickedID;
   this.kickedNickname = kickedNickname;
   this.kickedByNickname = kickedByNickname;
   this.kickedByUID = kickedByUID;
   this.kickReason = kickReason;
-};
-
-/**
- * Sets the data of the current Kick according to the data in the given kickObject.
- * @param {object} kickObject containing the kick data.
- */
-Kick.prototype.addKickViaObject = function (kickObject) {
-  this.kickedID = kickObject.kickedID;
-  this.kickDateTime = kickObject.kickDateTime;
-  this.kickedNickname = kickObject.kickedNickname;
-  this.kickedByNickname = kickObject.kickedByNickname;
-  this.kickedByUID = kickObject.kickedByUID;
-  this.kickReason = kickObject.kickReason;
 };
 
 // Returns the requested information.
@@ -68,4 +44,47 @@ Kick.prototype.getKickReason = function () {
   return this.kickReason;
 };
 
-exports.Kick = Kick;
+module.exports = {
+  Kick: Kick,
+
+  /**
+   * Adds a new Kick with the given data to the array.
+   * @param {Array} array
+   * @param {string} kickDateTime
+   * @param {number} kickedID
+   * @param {string} kickedNickname
+   * @param {string} kickedByNickname
+   * @param {string} kickedByUID
+   * @param {string} kickReason
+   */
+  addKick: function (array, kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
+    array.push(
+      new Kick(
+        array.length + 1,
+        kickDateTime,
+        kickedID,
+        kickedNickname,
+        kickedByNickname,
+        kickedByUID,
+        kickReason
+      ));
+  },
+
+  /**
+   * Adds a new Kick containing the data of the kickObject to the array.
+   * @param {Array} array
+   * @param {object} kickObject containing the kick data.
+   */
+  addKickViaObject: function (array, kickObject) {
+    array.push(
+      new Kick(
+        kickObject.kickId,
+        kickObject.kickDateTime,
+        kickObject.kickedID,
+        kickObject.kickedNickname,
+        kickObject.kickedByNickname,
+        kickObject.kickedByUID,
+        kickObject.kickReason
+      ));
+  }
+};

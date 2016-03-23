@@ -106,14 +106,14 @@ module.exports = {
    * @param {string} bannedNickname
    * @param {string} bannedUID
    * @param {string} bannedIP
-   * @param {string} bannedByNickname
    * @param {number} bannedByID
+   * @param {string} bannedByNickname
    * @param {string} bannedByUID
    * @param {string} banReason
    * @param {number} banTime
    * @returns {boolean}
    */
-  isDuplicateBan: function (banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByNickname, bannedByID, bannedByUID, banReason, banTime) {
+  isDuplicateBan: function (banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
     for (var i = 0; i < BanList.length; i++) {
       if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedID() == bannedID && BanList[i].getBannedNickname() == bannedNickname &&
         BanList[i].getBannedUID() == bannedUID && BanList[i].getBannedIP() == bannedIP && BanList[i].getBannedByID() == bannedByID &&
