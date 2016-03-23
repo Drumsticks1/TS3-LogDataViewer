@@ -26,13 +26,14 @@ var lookup = {ClientList: {}, ChannelList: {}, ServerGroupList: {}};
 /**
  * Updates the lookup object for the given list
  * @param {string} list name of the list, e.g. ClientList
+ * @param {string} idIdentifier name of the id property in the list
  */
-function updateLookupObject(list) {
+function updateLookupObject(list, idIdentifier) {
   lookup[list] = {};
 
   var bufferObj = json[list];
   for (var i = 0; i < bufferObj.length; i++) {
-    lookup[list][bufferObj[i].ID] = bufferObj[i];
+    lookup[list][bufferObj[i][idIdentifier]] = bufferObj[i];
   }
 }
 
@@ -942,8 +943,8 @@ function buildKickTable() {
     headCell_KickReason = document.createElement("th");
 
   headCell_KickDateTime.innerHTML = "Date and Time";
-  headCell_KickedID.innerHTML = "Kicked Client ID";
-  headCell_KickedNickname.innerHTML = "Kicked Client Nickname";
+  headCell_KickedID.innerHTML = "Kicked ID";
+  headCell_KickedNickname.innerHTML = "Kicked Nickname";
   headCell_KickedByNickname.innerHTML = "Kicked by Nickname";
   headCell_KickedByUID.innerHTML = "Kicked by UID";
   headCell_KickReason.innerHTML = "Reason";
@@ -1355,14 +1356,14 @@ function buildTables() {
       json = fetchedJSON;
       connectedClientsCount = 0;
 
-      updateLookupObject("ClientList");
-      updateLookupObject("ChannelList");
+      updateLookupObject("ClientList", "ID");
+      updateLookupObject("ChannelList", "channelId");
       lookup.ChannelList[0] = {
         ID: 0,
         channelName: "Server",
         deleted: false
       };
-      updateLookupObject("ServerGroupList");
+      updateLookupObject("ServerGroupList", "ID");
 
       removeEventListeners();
       for (var i = 0; i < tables.length; i++) {

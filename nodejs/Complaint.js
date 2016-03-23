@@ -5,47 +5,23 @@
 "use strict";
 
 /**
- * Default constructor.
- * @constructor
- */
-var Complaint = function () {
-  this.complaintDateTime = "";
-  this.complaintAboutID = 0;
-  this.complaintAboutNickname = "";
-  this.complaintReason = "";
-  this.complaintByID = 0;
-  this.complaintByNickname = "";
-};
-
-/**
- * Adds the complaint data to the current complaint.
+ * @param {number} complaintId
  * @param {string} complaintDateTime
  * @param {string} complaintAboutNickname
  * @param {number} complaintAboutID
  * @param {string} complaintReason
  * @param {string} complaintByNickname
  * @param {number} complaintByID
+ * @constructor
  */
-Complaint.prototype.addComplaint = function (complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+var Complaint = function (complaintId, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+  this.complaintId = complaintId;
   this.complaintDateTime = complaintDateTime;
-  this.complaintAboutNickname = complaintAboutNickname;
   this.complaintAboutID = complaintAboutID;
+  this.complaintAboutNickname = complaintAboutNickname;
   this.complaintReason = complaintReason;
   this.complaintByNickname = complaintByNickname;
   this.complaintByID = complaintByID;
-};
-
-/**
- * Sets the data of the current Complaint according to the data in the given complaintObject.
- * @param {object} complaintObject containing the complaint data.
- */
-Complaint.prototype.addComplaintViaObject = function (complaintObject) {
-  this.complaintDateTime = complaintObject.complaintDateTime;
-  this.complaintAboutID = complaintObject.complaintAboutID;
-  this.complaintAboutNickname = complaintObject.complaintAboutNickname;
-  this.complaintReason = complaintObject.complaintReason;
-  this.complaintByID = complaintObject.complaintByID;
-  this.complaintByNickname = complaintObject.complaintByNickname;
 };
 
 // Returns the requested information.
@@ -68,4 +44,47 @@ Complaint.prototype.getComplaintByID = function () {
   return this.complaintByID;
 };
 
-exports.Complaint = Complaint;
+module.exports = {
+  Complaint: Complaint,
+
+  /**
+   * Adds a new Complaint with the given data to the array.
+   * @param {Array} array
+   * @param {string} complaintDateTime
+   * @param {string} complaintAboutNickname
+   * @param {number} complaintAboutID
+   * @param {string} complaintReason
+   * @param {string} complaintByNickname
+   * @param {number} complaintByID
+   */
+  addComplaint: function (array, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+    array.push(
+      new Complaint(
+        array.length + 1,
+        complaintDateTime,
+        complaintAboutNickname,
+        complaintAboutID,
+        complaintReason,
+        complaintByNickname,
+        complaintByID
+      ));
+  },
+
+  /**
+   * Adds a new Complaint containing the data of the complaintObject to the array.
+   * @param {Array} array
+   * @param {object} complaintObject containing the complaint data.
+   */
+  addComplaintViaObject: function (array, complaintObject) {
+    array.push(
+      new Complaint(
+        complaintObject.complaintId,
+        complaintObject.complaintDateTime,
+        complaintObject.complaintAboutNickname,
+        complaintObject.complaintAboutID,
+        complaintObject.complaintReason,
+        complaintObject.complaintByNickname,
+        complaintObject.complaintByID
+      ));
+  }
+};

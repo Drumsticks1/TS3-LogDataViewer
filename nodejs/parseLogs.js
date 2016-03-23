@@ -11,6 +11,8 @@ const fs = require("fs"),
   log = require("./log.js");
 var Kick = require("./Kick.js");
 var Ban = require("./Ban.js");
+var Complaint = require("./Complaint.js");
+var Channel = require("./Channel.js");
 
 var Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
@@ -95,11 +97,8 @@ exports.parseLogs = function () {
   ];
 
   var lastUIDBanRule = "", lastIPBanRule = "",
-    ComplaintListID, UploadListID,
+    UploadListID = UploadList.length,
     isBan, isKick, isLastLog;
-
-  ComplaintListID = ComplaintList.length;
-  UploadListID = UploadList.length;
 
   boundaries = {
     // General
@@ -237,11 +236,8 @@ exports.parseLogs = function () {
                 complaintByNickname = getSubstring("complaintByNickname"),
                 complaintByID = Number(getSubstring("complaintByID"));
 
-              if (!checkFunctions.isDuplicateComplaint(DateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID)) {
-                ComplaintList.resizeFill(ComplaintListID + 1, "Complaint");
-                ComplaintList[ComplaintListID].addComplaint(DateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID);
-                ComplaintListID++;
-              }
+              if (!checkFunctions.isDuplicateComplaint(DateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID))
+                Complaint.addComplaint(ComplaintList, DateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID);
             }
 
             // Client Deletions
@@ -464,7 +460,7 @@ exports.parseLogs = function () {
                 ID = Number(ID);
                 bannedByID = Number(bannedByID);
 
-                if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP,bannedByID, bannedByNickname, bannedByUID, banReason, banTime))
+                if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime))
                   Ban.addBan(BanList, DateTime, ID, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime);
               }
 
@@ -496,9 +492,8 @@ exports.parseLogs = function () {
                 kickedByNickname = getSubstring("kickedByNickname");
                 kickedByUID = getSubstring("kickedByUID");
 
-                if (!checkFunctions.isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason)) {
+                if (!checkFunctions.isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason))
                   Kick.addKick(KickList, DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason);
-                }
               }
             }
 
@@ -538,26 +533,25 @@ exports.parseLogs = function () {
                 var channelID = Number(getSubstring("channelID")),
                   channelName = getSubstring("channelName");
 
-                if (eventTypeC == 1 && !ChannelList[channelID])
-                  eventTypeC = 2;
+                var channelObject = Channel.getChannelByChannelId(ChannelList, channelID);
 
-                if (eventTypeC == 0 || eventTypeC == 2)
-                  ChannelList.resizeFill(channelID + 1, "Channel");
+                if (eventTypeC == 1 && channelObject === null)
+                  eventTypeC = 2;
 
                 switch (eventTypeC) {
                   case 2:
                     DateTime = "Unknown";
                   // Intended fallthrough
                   case 0:
-                    ChannelList[channelID].addChannel(channelID, DateTime, channelName);
+                    Channel.addChannel(ChannelList, channelID, DateTime, channelName);
                     break;
 
                   case 1:
-                    ChannelList[channelID].renameChannel(channelName);
+                    channelObject.renameChannel(channelName);
                     break;
 
                   case 3:
-                    ChannelList[channelID].deleteChannel();
+                    channelObject.deleteChannel();
                 }
               }
             }
@@ -589,11 +583,8 @@ exports.parseLogs = function () {
             DateTime = getSubstring("DateTime");
             channelID = Number(getSubstring("channelID"));
 
-            if (channelID >= ChannelList.length)
-              ChannelList.resizeFill(channelID + 1, "Channel");
-
-            if (ChannelList[channelID].creationDateTime.length == 0 && channelID != 0)
-              ChannelList[channelID].addChannel(channelID, "Unknown", "Unknown");
+            if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
+              Channel.addChannel(ChannelList, channelID, "Unknown", "Unknown");
 
             var filename = getSubstring("filename"),
               uploadedByNickname = getSubstring("uploadedByNickname"),

@@ -31,20 +31,8 @@ Array.prototype.resizeFill = function (length, objectName) {
       case "ServerGroup":
         pushObject = new ServerGroup.ServerGroup();
         break;
-      case "Ban":
-        pushObject = new Ban.Ban();
-        break;
-      case "Kick":
-        pushObject = new Kick.Kick();
-        break;
-      case "Complaint":
-        pushObject = new Complaint.Complaint();
-        break;
       case "Upload":
         pushObject = new Upload.Upload();
-        break;
-      case "Channel":
-        pushObject = new Channel.Channel();
     }
     this.push(pushObject);
   }

@@ -5,37 +5,18 @@
 "use strict";
 
 /**
- * Default constructor.
- * @constructor
- */
-var Channel = function () {
-  this.ID = -1;
-  this.creationDateTime = "";
-  this.channelName = "";
-  this.deleted = false;
-};
-
-/**
- * Adds the given information to the Channel object.
- * @param {number} ID
+ * @param {number} channelListId
+ * @param {number} channelId
  * @param {string} creationDateTime
  * @param {string} channelName
+ * @constructor
  */
-Channel.prototype.addChannel = function (ID, creationDateTime, channelName) {
-  this.ID = ID;
-  this.channelName = channelName;
+var Channel = function (channelListId, channelId, creationDateTime, channelName) {
+  this.channelListId = channelListId;
+  this.channelId = channelId;
   this.creationDateTime = creationDateTime;
-};
-
-/**
- * Sets the data of the current Channel according to the data in the given channelObject.
- * @param {object} channelObject containing the channel data.
- */
-Channel.prototype.addChannelViaObject = function (channelObject) {
-  this.ID = channelObject.ID;
-  this.channelName = channelObject.channelName;
-  this.creationDateTime = channelObject.creationDateTime;
-  this.deleted = channelObject.deleted;
+  this.channelName = channelName;
+  this.deleted = false;
 };
 
 /**
@@ -47,18 +28,65 @@ Channel.prototype.renameChannel = function (channelName) {
 };
 
 /**
- * Returns the ID of the Channel.
- * @returns {number|*} the ID.
- */
-Channel.prototype.getID = function () {
-  return this.ID;
-};
-
-/**
  * Sets the deleted flag to true.
  */
 Channel.prototype.deleteChannel = function () {
   this.deleted = true;
 };
 
-exports.Channel = Channel;
+module.exports = {
+  Channel: Channel,
+
+  /**
+   * Adds a new Channel with the given data to the array.
+   * @param {Array} array
+   * @param {number} channelId
+   * @param {string} creationDateTime
+   * @param {string} channelName
+   */
+  addChannel: function (array, channelId, creationDateTime, channelName) {
+    array.push(
+      new Channel(
+        array.length + 1,
+        channelId,
+        creationDateTime,
+        channelName
+      ));
+  },
+
+  /**
+   * Adds a new Chanel containing the data of the channelObject to the array.
+   * @param {Array} array
+   * @param {object} channelObject containing the channel data.
+   */
+  addChannelViaObject: function (array, channelObject) {
+    this.channelListId = channelObject.channelListId;
+    this.channelId = channelObject.channelId;
+    this.channelName = channelObject.channelName;
+    this.creationDateTime = channelObject.creationDateTime;
+    this.deleted = channelObject.deleted;
+  },
+
+  /**
+   * Changes the channelName to the new name.
+   * @param {number} channelListId
+   * @param {string} channelName the new name.
+   */
+  renameChannel: function (channelListId, channelName) {
+    this.channelName = channelName;
+  },
+
+  /**
+   * Returns the object in the array with the given channelId.
+   * @param {Array} array
+   * @param {number} channelId
+   * @returns {object}
+   */
+  getChannelByChannelId: function (array, channelId) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i].channelId == channelId)
+        return array[i];
+    }
+    return null;
+  }
+};
