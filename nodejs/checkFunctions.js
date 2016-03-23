@@ -85,9 +85,8 @@ module.exports = {
    */
   isMatchingBanRules: function (bannedByNickname, banReason, banTime, lastUIDBanRule, lastIPBanRule) {
     var UID = lastUIDBanRule, IP = lastIPBanRule;
-    if (bannedByNickname == "Server") {
+    if (bannedByNickname == "Server")
       bannedByNickname = "server";
-    }
 
     if (UID.indexOf(" by client '" + bannedByNickname + "'(") != -1 && IP.indexOf(" by client '" + bannedByNickname + "'(") != -1) {
       if (UID.indexOf("ban added reason='" + banReason + "' cluid='") != -1 && IP.indexOf("ban added reason='" + banReason + "' ip='") != -1) {
@@ -118,7 +117,8 @@ module.exports = {
       if (BanList[i].getBanDateTime() == banDateTime && BanList[i].getBannedID() == bannedID && BanList[i].getBannedNickname() == bannedNickname &&
         BanList[i].getBannedUID() == bannedUID && BanList[i].getBannedIP() == bannedIP && BanList[i].getBannedByID() == bannedByID &&
         BanList[i].getBannedByNickname() == bannedByNickname && BanList[i].getBannedByUID() == bannedByUID && BanList[i].getBanReason() == banReason &&
-        BanList[i].getBanTime() == banTime) return true;
+        BanList[i].getBanTime() == banTime)
+        return true;
     }
     return false;
   },
@@ -136,7 +136,8 @@ module.exports = {
   isDuplicateKick: function (kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
     for (var i = 0; i < KickList.length; i++) {
       if (KickList[i].getKickDateTime() == kickDateTime && KickList[i].getKickedID() == kickedID && KickList[i].getKickedNickname() == kickedNickname &&
-        KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason) return true;
+        KickList[i].getKickedByNickname() == kickedByNickname && KickList[i].getKickedByUID() == kickedByUID && KickList[i].getKickReason() == kickReason)
+        return true;
     }
     return false;
   },
@@ -155,7 +156,8 @@ module.exports = {
     for (var i = 0; i < ComplaintList.length; i++) {
       if (ComplaintList[i].getComplaintDateTime() == complaintDateTime && ComplaintList[i].getComplaintAboutNickname() == complaintAboutNickname &&
         ComplaintList[i].getComplaintAboutID() == complaintAboutID && ComplaintList[i].getComplaintReason() == complaintReason &&
-        ComplaintList[i].getComplaintByNickname() == complaintByNickname && ComplaintList[i].getComplaintByID() == complaintByID) return true;
+        ComplaintList[i].getComplaintByNickname() == complaintByNickname && ComplaintList[i].getComplaintByID() == complaintByID)
+        return true;
     }
     return false;
   },
@@ -165,14 +167,15 @@ module.exports = {
    * @param {string} uploadDateTime
    * @param {number} channelID
    * @param {string} filename
-   * @param {string} uploadedByNickname
    * @param {number} uploadedByID
+   * @param {string} uploadedByNickname
    * @returns {boolean}
    */
-  isDuplicateUpload: function (uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID) {
+  isDuplicateUpload: function (uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
     for (var i = 0; i < UploadList.length; i++) {
       if (UploadList[i].getUploadDateTime() == uploadDateTime && UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename &&
-        UploadList[i].getUploadedByNickname() == uploadedByNickname && UploadList[i].getUploadedByID() == uploadedByID) return true;
+        UploadList[i].getUploadedByID() == uploadedByID && UploadList[i].getUploadedByNickname() == uploadedByNickname )
+        return true;
     }
     return false;
   }

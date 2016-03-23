@@ -97,9 +97,7 @@ exports.parseLogs = function () {
     "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
   ];
 
-  var lastUIDBanRule = "", lastIPBanRule = "",
-    UploadListID = UploadList.length,
-    isBan, isKick, isLastLog;
+  var lastUIDBanRule = "", lastIPBanRule = "", isBan, isKick, isLastLog;
 
   boundaries = {
     // General
@@ -547,7 +545,8 @@ exports.parseLogs = function () {
                     DateTime = "Unknown";
                   // Intended fallthrough
                   case 0:
-                    Channel.addChannel(ChannelList, channelID, DateTime, channelName);
+                    if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
+                      Channel.addChannel(ChannelList, channelID, DateTime, channelName);
                     break;
 
                   case 1:
@@ -594,11 +593,8 @@ exports.parseLogs = function () {
               uploadedByNickname = getSubstring("uploadedByNickname"),
               uploadedByID = Number(getSubstring("uploadedByID"));
 
-            if (!checkFunctions.isDuplicateUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID)) {
-              UploadList.resizeFill(UploadListID + 1, "Upload");
-              UploadList[UploadListID].addUpload(DateTime, channelID, filename, uploadedByNickname, uploadedByID);
-              UploadListID++;
-            }
+            if (!checkFunctions.isDuplicateUpload(DateTime, channelID, filename, uploadedByID, uploadedByNickname))
+              Upload.addUpload(UploadList, DateTime, channelID, filename, uploadedByID, uploadedByNickname);
           }
 
           // Upload Deletions
@@ -622,8 +618,8 @@ exports.parseLogs = function () {
             Upload.addDeletedBy(
               Number(getSubstring("channelID")),
               getSubstring("filename"),
-              getSubstring("deletedByNickname"),
-              Number(getSubstring("deletedByID")));
+              Number(getSubstring("deletedByID")),
+              getSubstring("deletedByNickname"));
           }
         }
         logfileData = logfileData.substring(currentLine.length + 1);

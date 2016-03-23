@@ -7,49 +7,24 @@
 const globalVariables = require("./globalVariables.js");
 
 /**
- * Default constructor.
- * @constructor
- */
-var Upload = function () {
-  this.uploadDateTime = "";
-  this.channelID = 0;
-  this.filename = "";
-  this.uploadedByID = 0;
-  this.uploadedByNickname = "";
-  this.deletedByID = 0;
-  this.deletedByNickname = "";
-  this.deleted = false;
-};
-
-/**
- * Sets the data of the current Upload object according to the given data.
+ * @param {number} uploadListId
  * @param {string} uploadDateTime
  * @param {number} channelID
  * @param {string} filename
- * @param {string} uploadedByNickname
  * @param {number} uploadedByID
+ * @param {string} uploadedByNickname
+ * @constructor
  */
-Upload.prototype.addUpload = function (uploadDateTime, channelID, filename, uploadedByNickname, uploadedByID) {
+var Upload = function (uploadListId, uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
+  this.uploadListId = uploadListId;
   this.uploadDateTime = uploadDateTime;
   this.channelID = channelID;
   this.filename = filename;
-  this.uploadedByNickname = uploadedByNickname;
   this.uploadedByID = uploadedByID;
-};
-
-/**
- * Sets the data of the current Upload according to the data in the given uploadObject.
- * @param {object} uploadObject containing the upload data.
- */
-Upload.prototype.addUploadViaObject = function (uploadObject) {
-  this.uploadDateTime = uploadObject.uploadDateTime;
-  this.channelID = uploadObject.channelID;
-  this.filename = uploadObject.filename;
-  this.uploadedByID = uploadObject.uploadedByID;
-  this.uploadedByNickname = uploadObject.uploadedByNickname;
-  this.deletedByID = uploadObject.deletedByID;
-  this.deletedByNickname = uploadObject.deletedByNickname;
-  this.deleted = uploadObject.deleted;
+  this.uploadedByNickname = uploadedByNickname;
+  this.deletedByID = 0;
+  this.deletedByNickname = "";
+  this.deleted = false;
 };
 
 // Returns the requested information.
@@ -69,62 +44,80 @@ Upload.prototype.getUploadedByID = function () {
   return this.uploadedByID;
 };
 
-/**
- * Sets the deleted flag to true.
- */
-Upload.prototype.deleteUpload = function () {
-  this.deleted = true;
-};
-
-/**
- * Returns the Upload deleted flag.
- * @returns {boolean} the deleted flag.
- */
 Upload.prototype.isDeleted = function () {
   return this.deleted;
 };
 
-/**
- * Adds the deletedByNickname to the Upload.
- * @param {string} deletedByNickname
- */
-Upload.prototype.addDeletedByNickname = function (deletedByNickname) {
-  this.deletedByNickname = deletedByNickname;
-};
+module.exports = {
+  Upload: Upload,
 
-/**
- * Adds the deletedByID to the Upload.
- * @param {number} deletedByID
- */
-Upload.prototype.addDeletedByID = function (deletedByID) {
-  this.deletedByID = deletedByID;
-};
+  /**
+   * Adds a new Upload with the given data to the array.
+   * @param {Array} array
+   * @param {string} uploadDateTime
+   * @param {number} channelID
+   * @param {string} filename
+   * @param {number} uploadedByID
+   * @param {string} uploadedByNickname
+   */
+  addUpload: function (array, uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
+    array.push(
+      new Upload(
+        array.length + 1,
+        uploadDateTime,
+        channelID,
+        filename,
+        uploadedByID,
+        uploadedByNickname
+      ));
+  },
 
-/**
- * Adds the deletedByNickname and deletedByID data to the matching Upload.
- * @param {number} channelID
- * @param {string} filename
- * @param {string} deletedByNickname
- * @param {number} deletedByID
- */
-function addDeletedBy(channelID, filename, deletedByNickname, deletedByID) {
-  var shortFilename, UploadList = globalVariables.UploadList;
-  if (filename.indexOf("//") != -1) {
-    shortFilename = filename.substr(filename.indexOf("//") + 1);
-  }
-  else {
-    shortFilename = filename.substr(filename.indexOf("\\/") + 1);
-  }
-  for (var i = 0; i < UploadList.length; i++) {
-    if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename && !UploadList[i].isDeleted()) {
-      UploadList[i].addDeletedByNickname(deletedByNickname);
-      UploadList[i].addDeletedByID(deletedByID);
-      UploadList[i].deleteUpload();
-      break;
+  /**
+   * Adds a new Upload containing the data of the uploadObject to the array.
+   * @param {Array} array
+   * @param {object} uploadObject containing the upload data.
+   */
+  addUploadViaObject: function (array, uploadObject) {
+    var upload = new Upload(
+      uploadObject.uploadListId,
+      uploadObject.uploadDateTime,
+      uploadObject.channelID,
+      uploadObject.filename,
+      uploadObject.uploadedByID,
+      uploadObject.uploadedByNickname
+    );
+
+    if (uploadObject.deleted) {
+      upload.deletedByID = uploadObject.deletedByID;
+      upload.deletedByNickname = uploadObject.deletedByNickname;
+      upload.deleted = uploadObject.deleted;
+    }
+
+    array.push(upload);
+  },
+
+  // Todo: check function, maybe modify
+  /**
+   * Adds the deletedByNickname and deletedByID data to the matching Upload in the UploadList.
+   * @param {number} channelID
+   * @param {string} filename
+   * @param {number} deletedByID
+   * @param {string} deletedByNickname
+   */
+  addDeletedBy: function (channelID, filename, deletedByID, deletedByNickname) {
+    var shortFilename, UploadList = globalVariables.UploadList;
+    if (filename.indexOf("//") != -1)
+      shortFilename = filename.substr(filename.indexOf("//") + 1);
+    else
+      shortFilename = filename.substr(filename.indexOf("\\/") + 1);
+
+    for (var i = 0; i < UploadList.length; i++) {
+      if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename && !UploadList[i].isDeleted()) {
+        UploadList[i].deletedByID = deletedByID;
+        UploadList[i].deletedByNickname = deletedByNickname;
+        UploadList[i].deleted = true;
+        return;
+      }
     }
   }
-}
-
-exports.addDeletedBy = addDeletedBy;
-
-exports.Upload = Upload;
+};

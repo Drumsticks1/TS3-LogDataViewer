@@ -27,12 +27,6 @@ Array.prototype.resizeFill = function (length, objectName) {
     switch (objectName) {
       case "Client":
         pushObject = new Client.Client();
-        break;
-      case "ServerGroup":
-        pushObject = new ServerGroup.ServerGroup();
-        break;
-      case "Upload":
-        pushObject = new Upload.Upload();
     }
     this.push(pushObject);
   }

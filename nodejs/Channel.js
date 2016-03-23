@@ -55,7 +55,7 @@ module.exports = {
   },
 
   /**
-   * Adds a new Chanel containing the data of the channelObject to the array.
+   * Adds a new Channel containing the data of the channelObject to the array.
    * @param {Array} array
    * @param {object} channelObject containing the channel data.
    */
@@ -63,14 +63,12 @@ module.exports = {
     var channel = new Channel(
       channelObject.channelListId,
       channelObject.channelId,
-      channelObject.channelName,
-      channelObject.creationDateTime
+      channelObject.creationDateTime,
+      channelObject.channelName
     );
 
-    if (channelObject.deleted)
-      channel.deleteChannel();
-
-    array.push(channelObject);
+    channel.deleted = channelObject.deleted;
+    array.push(channel);
   },
 
   /**

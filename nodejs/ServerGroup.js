@@ -65,10 +65,8 @@ module.exports = {
       serverGroupObject.creationDateTime,
       serverGroupObject.serverGroupName
     );
-
-    if (serverGroupObject.deleted)
-      serverGroup.deleteServerGroup();
-
+    
+    serverGroup.deleted = serverGroupObject.deleted;
     array.push(serverGroup);
   },
 

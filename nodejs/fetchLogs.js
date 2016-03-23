@@ -51,6 +51,7 @@ exports.fetchLogs = function () {
     if (currentLog.lastIndexOf(".log") == currentLog.length - 4
       && currentLog.substring(38, currentLog.length - 4) == String(globalVariables.virtualServer)) {
       newLogObjects.push({
+        logListId: newLogObjects.length + 1,
         logName: currentLog,
         ignored: checkFunctions.isIgnoredLog(currentLog),
         parsed: false
