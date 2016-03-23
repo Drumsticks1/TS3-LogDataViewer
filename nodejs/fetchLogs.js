@@ -12,20 +12,24 @@ const fs = require("fs"),
 
 /**
  * Fetches the logs.
- * @returns {boolean} true if no error occurred.
+ * @returns {number}
+ * 0 --> error occurred
+ * 1 --> No rebuild needed, no logs deleted, no changed log order
+ * 2 --> Rebuild required, isMatchingLogOrder failed
  */
 exports.fetchLogs = function () {
   log.info("Checking log directory.");
+  var rebuildRequired = false;
 
   try {
     if (!fs.statSync(globalVariables.logDirectory).isDirectory()) {
       log.warn("The log directory seems not to be a directory.");
-      return false;
+      return 0;
     }
   }
   catch (error) {
     log.error("An error occurred while fetching the logs:\n\t" + error.message);
-    return false;
+    return 0;
   }
 
   try {
@@ -36,7 +40,7 @@ exports.fetchLogs = function () {
 
   if (logFiles.length == 0) {
     log.warn("The log directory contains no valid logs.");
-    return false;
+    return 0;
   }
 
   var newLogObjects = [];
@@ -77,6 +81,7 @@ exports.fetchLogs = function () {
     }
     else {
       log.warn("Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
+      rebuildRequired = true;
       miscFunctions.clearGlobalArrays();
     }
   }
@@ -86,5 +91,5 @@ exports.fetchLogs = function () {
     globalVariables.Logs.push(newLogObjects[i]);
   }
 
-  return true;
+  return rebuildRequired ? 2:1;
 };
