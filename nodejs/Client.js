@@ -5,11 +5,11 @@
 "use strict";
 
 /**
- * Default constructor.
+ * @param {number} clientId
  * @constructor
  */
-var Client = function () {
-  this.ID = -1;
+var Client = function (clientId) {
+  this.clientId = clientId;
   this.Nicknames = [];
   this.Connections = [];
   this.IPs = [];
@@ -24,22 +24,14 @@ var Client = function () {
  * @param {object} clientObject containing the client data.
  */
 Client.prototype.addClientViaObject = function (clientObject) {
-  this.ID = clientObject.ID;
-  this.Nicknames = clientObject.Nicknames;
-  this.Connections = clientObject.Connections;
-  this.IPs = clientObject.IPs;
+  this.clientId = clientObject.clientId;
+  this.Nicknames = clientObject.Nicknames.slice();
+  this.Connections = clientObject.Connections.slice();
+  this.IPs = clientObject.IPs.slice();
   this.ConnectedState = clientObject.ConnectedState;
-  this.ServerGroupIDs = clientObject.ServerGroupIDs;
-  this.ServerGroupAssignmentDateTimes = clientObject.ServerGroupAssignmentDateTimes;
+  this.ServerGroupIDs = clientObject.ServerGroupIDs.slice();
+  this.ServerGroupAssignmentDateTimes = clientObject.ServerGroupAssignmentDateTimes.slice();
   this.deleted = clientObject.deleted;
-};
-
-/**
- * Returns the ID of the Client.
- * @returns {number|*}
- */
-Client.prototype.getID = function () {
-  return this.ID;
 };
 
 /**
@@ -77,11 +69,11 @@ Client.prototype.getNicknameByID = function (NicknameID) {
 };
 
 /**
- * Sets the given ID as Client ID.
- * @param {number} ID the given ID.
+ * Sets the given clientId as clientId.
+ * @param {number} clientId
  */
-Client.prototype.addID = function (ID) {
-  this.ID = ID;
+Client.prototype.updateClientId = function (clientId) {
+  this.clientId = clientId;
 };
 
 /**
@@ -192,4 +184,17 @@ Client.prototype.getServerGroupIDByID = function (ServerGroupIDsID) {
   return this.ServerGroupIDs[ServerGroupIDsID];
 };
 
-exports.Client = Client;
+module.exports = {
+  Client: Client,
+
+  /**
+   * Fills the array with dummy Clients until its length equals the clientId + 1.
+   * @param {Array} array
+   * @param {number} clientId
+   */
+  fillArrayWithDummyClients: function (array, clientId) {
+    while (array.length < clientId + 1) {
+      array.push(new Client(array.length));
+    }
+  }
+};

@@ -4,33 +4,9 @@
 
 "use strict";
 
-const globalVariables = require("./globalVariables.js"),
-  Client = require("./Client.js"),
-  ServerGroup = require("./ServerGroup.js"),
-  Ban = require("./Ban.js"),
-  Kick = require("./Kick.js"),
-  Complaint = require("./Complaint.js"),
-  Upload = require("./Upload.js"),
-  Channel = require("./Channel.js");
+const globalVariables = require("./globalVariables.js");
 
 var programStartDate;
-
-/**
- * Resize the array to the request length by appending the filling objects to the array.
- * @param length - requested length
- * @param objectName - name of the filling object class:
- *        "Client", "ServerGroup", "Ban", "Kick", "Complaint", "Upload"
- */
-Array.prototype.resizeFill = function (length, objectName) {
-  for (var i = this.length; i < length; i++) {
-    var pushObject;
-    switch (objectName) {
-      case "Client":
-        pushObject = new Client.Client();
-    }
-    this.push(pushObject);
-  }
-};
 
 module.exports = {
   /**

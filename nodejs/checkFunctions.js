@@ -29,6 +29,7 @@ module.exports = {
     return false;
   },
 
+  // Todo: optimize function
   /**
    * Checks if a Connection is already existing for the current client.
    * @param {number} ID

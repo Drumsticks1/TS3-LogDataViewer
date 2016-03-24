@@ -14,6 +14,7 @@ var Ban = require("./Ban.js");
 var Complaint = require("./Complaint.js");
 var Channel = require("./Channel.js");
 var ServerGroup = require("./ServerGroup.js");
+var Client = require("./Client.js");
 
 var Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
@@ -102,7 +103,7 @@ exports.parseLogs = function () {
   boundaries = {
     // General
     "DateTime": [0, 19],
-    "ID": [0, 0], "Nickname": [0, 0], "IP": [0, 0],
+    "clientId": [0, 0], "Nickname": [0, 0], "IP": [0, 0],
 
     // Ban
     "bannedUID": [0, 0], "bannedIP": [0, 0], "bannedByID": [0, 0], "bannedByNickname": [0, 0],
@@ -170,12 +171,12 @@ exports.parseLogs = function () {
               boundaries.ServerGroupName[1] = currentLine.lastIndexOf("'(id:", currentLine.lastIndexOf(") by client '"));
               boundaries.ServerGroupID[0] = boundaries.ServerGroupName[1] + 5;
               boundaries.ServerGroupID[1] = currentLine.indexOf(")", boundaries.ServerGroupName[0]);
-              boundaries.ID = [
+              boundaries.clientId = [
                 currentLine.indexOf("client (id:") + 11,
                 currentLine.indexOf(") was ")];
 
               DateTime = getSubstring("DateTime");
-              ID = Number(getSubstring("ID"));
+              clientId = Number(getSubstring("clientId"));
 
               var ServerGroupID = Number(getSubstring("ServerGroupID")),
                 ServerGroupName = getSubstring("ServerGroupName");
@@ -185,15 +186,14 @@ exports.parseLogs = function () {
               if (serverGroupObject === null)
                 ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
 
-              if (ClientList.length < ID + 1)
-                ClientList.resizeFill(ID + 1, "Client");
+                Client.fillArrayWithDummyClients(ClientList,clientId);
 
               if (currentLine.indexOf(match.serverGroupAssignment) != -1) {
-                if (!checkFunctions.isDuplicateServerGroup(ID, ServerGroupID))
-                  ClientList[ID].addServerGroup(ServerGroupID, DateTime);
+                if (!checkFunctions.isDuplicateServerGroup(clientId, ServerGroupID))
+                  ClientList[clientId].addServerGroup(ServerGroupID, DateTime);
               }
               else
-                ClientList[ID].removeServerGroupByID(ServerGroupID);
+                ClientList[clientId].removeServerGroupByID(ServerGroupID);
             }
 
             // Ban Rules
@@ -241,10 +241,10 @@ exports.parseLogs = function () {
             // Client Deletions
             else if (currentLine.indexOf(match.deleteUser1) == beginOfParsingBlock) {
               if (currentLine.indexOf(match.deleteUser2) != -1) {
-                boundaries.ID[0] = currentLine.lastIndexOf(") got deleted by client '");
-                boundaries.ID[1] = currentLine.lastIndexOf("'(id:", boundaries.ID[0]) + 5;
+                boundaries.clientId[0] = currentLine.lastIndexOf(") got deleted by client '");
+                boundaries.clientId[1] = currentLine.lastIndexOf("'(id:", boundaries.clientId[0]) + 5;
 
-                ClientList[Number(getSubstring("ID"))].deleteClient();
+                ClientList[Number(getSubstring("clientId"))].deleteClient();
               }
             }
 
@@ -333,32 +333,31 @@ exports.parseLogs = function () {
                 currentLine.indexOf("client connected '") + 18,
                 currentLine.lastIndexOf("'(id:")];
 
-              boundaries.ID = [
+              boundaries.clientId = [
                 boundaries.Nickname[1] + 5,
                 boundaries.IP[0] - 7];
 
               var DateTime = getSubstring("DateTime"),
-                ID = Number(getSubstring("ID"));
+                clientId = Number(getSubstring("clientId"));
 
-              if (ClientList.length < ID + 1)
-                ClientList.resizeFill(ID + 1, "Client");
+                Client.fillArrayWithDummyClients(ClientList,clientId);
 
-              if (ClientList[ID].getID() != ID)
-                ClientList[ID].addID(ID);
+              if (ClientList[clientId].clientId == -1)
+                ClientList[clientId].updateClientId(clientId);
 
-              ClientList[ID].addNickname(getSubstring("Nickname"));
+              ClientList[clientId].addNickname(getSubstring("Nickname"));
 
               if (globalVariables.bufferData) {
-                if (!checkFunctions.isDuplicateConnection(ID, DateTime))
-                  ClientList[ID].addConnection(DateTime);
+                if (!checkFunctions.isDuplicateConnection(clientId, DateTime))
+                  ClientList[clientId].addConnection(DateTime);
               }
               else
-                ClientList[ID].addConnection(DateTime);
+                ClientList[clientId].addConnection(DateTime);
 
-              ClientList[ID].addIP(getSubstring("IP"));
+              ClientList[clientId].addIP(getSubstring("IP"));
 
               if (isLastLog)
-                ClientList[ID].connect();
+                ClientList[clientId].connect();
             }
 
             // Disconnects (including kicks and bans)
@@ -369,38 +368,38 @@ exports.parseLogs = function () {
                 currentLine.indexOf("client disconnected '") + 21,
                 currentLine.lastIndexOf("'(id:")];
 
-              boundaries.ID[0] = boundaries.Nickname[1] + 5;
+              boundaries.clientId[0] = boundaries.Nickname[1] + 5;
 
               if (currentLine.lastIndexOf(") reason 'reasonmsg") == -1) {
-                boundaries.ID[1] = currentLine.lastIndexOf(") reason 'invokerid=");
+                boundaries.clientId[1] = currentLine.lastIndexOf(") reason 'invokerid=");
 
                 if (currentLine.lastIndexOf(" bantime=") == -1)
                   isKick = true;
                 else
                   isBan = true;
               } else
-                boundaries.ID[1] = currentLine.lastIndexOf(") reason 'reasonmsg");
+                boundaries.clientId[1] = currentLine.lastIndexOf(") reason 'reasonmsg");
 
               DateTime = getSubstring("DateTime");
-              ID = Number(getSubstring("ID"));
+              clientId = Number(getSubstring("clientId"));
 
               var Nickname = getSubstring("Nickname");
 
-              if (ClientList.length < ID + 1) {
-                ClientList.resizeFill(ID + 1, "Client");
-                ClientList[ID].addID(ID);
+              if (ClientList.length < clientId + 1){
+                Client.fillArrayWithDummyClients(ClientList,clientId);
+                ClientList[clientId].updateClientId(clientId);
               }
 
-              if (ClientList[ID].getNicknameCount() == 0 || ClientList[ID].getNicknameByID(0) != Nickname)
-                ClientList[ID].addNickname(Nickname);
+              if (ClientList[clientId].getNicknameCount() == 0 || ClientList[clientId].getNicknameByID(0) != Nickname)
+                ClientList[clientId].addNickname(Nickname);
 
               if (isLastLog)
-                ClientList[ID].disconnect();
+                ClientList[clientId].disconnect();
 
               // Bans
               if (isBan) {
                 var validUID = true;
-                boundaries.bannedByNickname[0] = currentLine.indexOf(" invokername=", boundaries.ID[1]) + 13;
+                boundaries.bannedByNickname[0] = currentLine.indexOf(" invokername=", boundaries.clientId[1]) + 13;
 
                 if (currentLine.indexOf("invokeruid=") != -1) {
                   boundaries.bannedByNickname[1] = currentLine.indexOf(" invokeruid=", boundaries.bannedByNickname[0]);
@@ -459,11 +458,11 @@ exports.parseLogs = function () {
                   }
                 }
 
-                ID = Number(ID);
+                clientId = Number(clientId);
                 bannedByID = Number(bannedByID);
 
-                if (!checkFunctions.isDuplicateBan(DateTime, ID, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime))
-                  Ban.addBan(BanList, DateTime, ID, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime);
+                if (!checkFunctions.isDuplicateBan(DateTime, clientId, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime))
+                  Ban.addBan(BanList, DateTime, clientId, Nickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime);
               }
 
               // Kicks
@@ -494,8 +493,8 @@ exports.parseLogs = function () {
                 kickedByNickname = getSubstring("kickedByNickname");
                 kickedByUID = getSubstring("kickedByUID");
 
-                if (!checkFunctions.isDuplicateKick(DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason))
-                  Kick.addKick(KickList, DateTime, ID, Nickname, kickedByNickname, kickedByUID, kickReason);
+                if (!checkFunctions.isDuplicateKick(DateTime, clientId, Nickname, kickedByNickname, kickedByUID, kickReason))
+                  Kick.addKick(KickList, DateTime, clientId, Nickname, kickedByNickname, kickedByUID, kickReason);
               }
             }
 

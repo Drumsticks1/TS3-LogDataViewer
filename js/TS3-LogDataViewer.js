@@ -602,8 +602,8 @@ function buildClientTable() {
 
   var clientBody = document.createElement("tbody");
   for (var i = 0; i < Client.length; i++) {
-    var ID = Number(Client[i].ID);
-    if (ID != -1) {
+    var ID = Number(Client[i].clientId);
+    if (Client[ID].Nicknames.length != 0) {
       var Nicknames = Client[ID].Nicknames,
         Connections = Client[ID].Connections,
         IPs = Client[ID].IPs,
@@ -1356,10 +1356,10 @@ function buildTables() {
       json = fetchedJSON;
       connectedClientsCount = 0;
 
-      updateLookupObject("ClientList", "ID");
+      updateLookupObject("ClientList", "clientId");
       updateLookupObject("ChannelList", "channelId");
       lookup.ChannelList[0] = {
-        ID: 0,
+        channelId: 0,
         channelName: "Server",
         deleted: false
       };
