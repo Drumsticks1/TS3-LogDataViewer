@@ -5,54 +5,86 @@
 "use strict";
 
 /**
- * Default constructor.
- * @constructor
- */
-var Complaint = function() {
-    this.complaintDateTime = "";
-    this.complaintAboutID = 0;
-    this.complaintAboutNickname = "";
-    this.complaintReason = "";
-    this.complaintByID = 0;
-    this.complaintByNickname = "";
-};
-
-/**
- * Adds the complaint data to the current complaint.
+ * @param {number} complaintListId
  * @param {string} complaintDateTime
  * @param {string} complaintAboutNickname
  * @param {number} complaintAboutID
  * @param {string} complaintReason
  * @param {string} complaintByNickname
  * @param {number} complaintByID
+ * @constructor
  */
-Complaint.prototype.addComplaint = function(complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
-    this.complaintDateTime = complaintDateTime;
-    this.complaintAboutNickname = complaintAboutNickname;
-    this.complaintAboutID = complaintAboutID;
-    this.complaintReason = complaintReason;
-    this.complaintByNickname = complaintByNickname;
-    this.complaintByID = complaintByID;
+var Complaint = function (complaintListId, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+  this.complaintListId = complaintListId;
+  this.complaintDateTime = complaintDateTime;
+  this.complaintAboutID = complaintAboutID;
+  this.complaintAboutNickname = complaintAboutNickname;
+  this.complaintReason = complaintReason;
+  this.complaintByNickname = complaintByNickname;
+  this.complaintByID = complaintByID;
 };
 
 // Returns the requested information.
-Complaint.prototype.getComplaintDateTime = function() {
-    return this.complaintDateTime;
+Complaint.prototype.getComplaintDateTime = function () {
+  return this.complaintDateTime;
 };
-Complaint.prototype.getComplaintAboutNickname = function() {
-    return this.complaintAboutNickname;
+Complaint.prototype.getComplaintAboutNickname = function () {
+  return this.complaintAboutNickname;
 };
-Complaint.prototype.getComplaintAboutID = function() {
-    return this.complaintAboutID;
+Complaint.prototype.getComplaintAboutID = function () {
+  return this.complaintAboutID;
 };
-Complaint.prototype.getComplaintReason = function() {
-    return this.complaintReason;
+Complaint.prototype.getComplaintReason = function () {
+  return this.complaintReason;
 };
-Complaint.prototype.getComplaintByNickname = function() {
-    return this.complaintByNickname;
+Complaint.prototype.getComplaintByNickname = function () {
+  return this.complaintByNickname;
 };
-Complaint.prototype.getComplaintByID = function() {
-    return this.complaintByID;
+Complaint.prototype.getComplaintByID = function () {
+  return this.complaintByID;
 };
 
-exports.Complaint = Complaint;
+module.exports = {
+  Complaint: Complaint,
+
+  /**
+   * Adds a new Complaint with the given data to the array.
+   * @param {Array} array
+   * @param {string} complaintDateTime
+   * @param {string} complaintAboutNickname
+   * @param {number} complaintAboutID
+   * @param {string} complaintReason
+   * @param {string} complaintByNickname
+   * @param {number} complaintByID
+   */
+  addComplaint: function (array, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+    array.push(
+      new Complaint(
+        array.length + 1,
+        complaintDateTime,
+        complaintAboutNickname,
+        complaintAboutID,
+        complaintReason,
+        complaintByNickname,
+        complaintByID
+      ));
+  },
+
+  /**
+   * Adds a new Complaint containing the data of the complaintObject to the array.
+   * @param {Array} array
+   * @param {object} complaintObject containing the complaint data.
+   */
+  addComplaintViaObject: function (array, complaintObject) {
+    array.push(
+      new Complaint(
+        complaintObject.complaintListId,
+        complaintObject.complaintDateTime,
+        complaintObject.complaintAboutNickname,
+        complaintObject.complaintAboutID,
+        complaintObject.complaintReason,
+        complaintObject.complaintByNickname,
+        complaintObject.complaintByID
+      ));
+  }
+};

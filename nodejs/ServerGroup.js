@@ -5,49 +5,82 @@
 "use strict";
 
 /**
- * Default constructor.
+ * @param {number} serverGroupListId
+ * @param {number} serverGroupId
+ * @param {string} creationDateTime
+ * @param {string} serverGroupName
  * @constructor
  */
-var ServerGroup = function() {
-    this.ID = 0;
-    this.ServerGroupName = "";
-    this.CreationDateTime = "";
-    this.deleted = false;
-};
-
-/**
- * Adds the given information to the ServerGroup object.
- * @param {number} ID
- * @param {string} ServerGroupName
- * @param {string} CreationDateTime
- */
-ServerGroup.prototype.addServerGroupInformation = function(ID, ServerGroupName, CreationDateTime) {
-    this.ID = ID;
-    this.ServerGroupName = ServerGroupName;
-    this.CreationDateTime = CreationDateTime;
+var ServerGroup = function (serverGroupListId, serverGroupId, creationDateTime, serverGroupName) {
+  this.serverGroupListId = serverGroupListId;
+  this.serverGroupId = serverGroupId;
+  this.creationDateTime = creationDateTime;
+  this.serverGroupName = serverGroupName;
+  this.deleted = false;
 };
 
 /**
  * Changes the channelName to the new name.
  * @param {string} serverGroupName the new name.
  */
-ServerGroup.prototype.renameServerGroup = function(serverGroupName) {
-    this.ServerGroupName = serverGroupName;
-};
-
-/**
- * Returns the ID of the ServerGroup.
- * @returns {number|*} the ID.
- */
-ServerGroup.prototype.getID = function() {
-    return this.ID;
+ServerGroup.prototype.renameServerGroup = function (serverGroupName) {
+  this.serverGroupName = serverGroupName;
 };
 
 /**
  * Sets the deleted flag to true.
  */
-ServerGroup.prototype.deleteServerGroup = function() {
-    this.deleted = true;
+ServerGroup.prototype.deleteServerGroup = function () {
+  this.deleted = true;
 };
 
-exports.ServerGroup = ServerGroup;
+module.exports = {
+  ServerGroup: ServerGroup,
+
+  /**
+   * Adds a new ServerGroup with the given data to the array.
+   * @param {Array} array
+   * @param {number} serverGroupId
+   * @param {string} creationDateTime
+   * @param {string} serverGroupName
+   */
+  addServerGroup: function (array, serverGroupId, creationDateTime, serverGroupName) {
+    array.push(
+      new ServerGroup(
+        array.length + 1,
+        serverGroupId,
+        creationDateTime,
+        serverGroupName));
+  },
+
+  /**
+   * Adds a new ServerGroup containing the data of the serverGroupObject to the array.
+   * @param {Array} array
+   * @param {object} serverGroupObject containing the serverGroup data.
+   */
+  addServerGroupViaObject: function (array, serverGroupObject) {
+    var serverGroup = new ServerGroup(
+      serverGroupObject.serverGroupListId,
+      serverGroupObject.serverGroupId,
+      serverGroupObject.creationDateTime,
+      serverGroupObject.serverGroupName
+    );
+    
+    serverGroup.deleted = serverGroupObject.deleted;
+    array.push(serverGroup);
+  },
+
+  /**
+   * Returns the object in the array with the given serverGroupId.
+   * @param {Array} array
+   * @param {number} serverGroupId
+   * @returns {object}
+   */
+  getServerGroupByServerGroupId: function (array, serverGroupId) {
+    for (var i = 0; i < array.length; i++) {
+      if (array[i].serverGroupId == serverGroupId)
+        return array[i];
+    }
+    return null;
+  }
+};

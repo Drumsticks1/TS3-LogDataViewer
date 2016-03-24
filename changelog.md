@@ -1,5 +1,42 @@
 # Changelog
-Versions: <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+### <a name="v2.0.4">Version 2.0.4</a> (24.03.2016)
+Additions:
+- TS3-LogDataViewer.js
+    - Added a lookup object which is created for the ClientList, the ChannelList and the ServerGroupList making the lookups easy and independent from the order of the entries
+    - Manually added the channel lookup entry with the index 0 for the server (containing icons)
+- parseLogs.js
+    - Now adding a new Channel entry when a file is uploaded to an unknown channelID
+    - Added check if a channel already exists before adding it (wasn't necessary before the class changes)
+- All classes
+    - Added addViaObject functions to all classes, preparation for future database implementation
+
+Changes:
+- Changed Indentation of the js code: 4 --> 2 spaces
+- fetchLogs.js
+    - Improved code structure
+- globalVariables:
+    - The Logs array now contains objects with the properties logListId, logName, an ignored and a parsed flag
+- Classes
+    - Changes to classes as preparation for a future database integration
+        - Modified classes, for all classes expect the Client class new objects are now added at the end of their list arrays instead of filling the arrays with empty objects and then adding the data to this objects
+        - Added and removed several functions
+        - Renamed several variables (e.g. ID to clientID in Client.js and parseLogs.js)
+        - Modified the order of some function parameters
+- TS3-LogsDataViewer.js
+    - Renamed the column "Kicked Client ID" to "Kicked ID" and "Kicked Client Nickname" to "Kicked Nickname"
+
+Removals:
+- globalVariables
+    - parsedLogs, there is now a parsed property in the new Log objects
+- checkFunctions.js
+    - Removed the isDuplicateLog function, obsolete
+- TS3-LogDataViewer.js
+    - Removed the getChannelNameById and getServerGroupNameByID functions, obsolete, see the new lookup system.
+- miscFunctions.js
+    - Removed the resizeFill function, obsolete
+
 
 ### <a name="v2.0.3">Version 2.0.3</a> (15.03.2016)
 Additions:
