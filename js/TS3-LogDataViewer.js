@@ -1338,23 +1338,6 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
  * Builds all tables using the data from the JSON.
  */
 function buildTables() {
-    nanobar.go(50);
-    $.ajax({
-        url: "./output.json",
-        cache: false,
-        dataType: "json",
-        error: function () {
-            if (buildError)
-                addCallout("Building the JSON failed!", "alert");
-            else {
-                buildError = true;
-                addCallout("Couldn't fetch the output.json", "alert");
-            }
-        },
-        success: function(fetchedJSON) {
-            buildError = false;
-            json = fetchedJSON;
-            connectedClientsCount = 0;
   nanobar.go(50);
   $.ajax({
     url: "./output.json",
@@ -1362,63 +1345,82 @@ function buildTables() {
     dataType: "json",
     error: function () {
       if (buildError)
-        addCallout("Building the JSON failed!", "error");
+        addCallout("Building the JSON failed!", "alert");
       else {
         buildError = true;
-        buildJSON(false);
+        addCallout("Couldn't fetch the output.json", "alert");
       }
     },
     success: function (fetchedJSON) {
       buildError = false;
       json = fetchedJSON;
       connectedClientsCount = 0;
+      nanobar.go(50);
+      $.ajax({
+        url: "./output.json",
+        cache: false,
+        dataType: "json",
+        error: function () {
+          if (buildError)
+            addCallout("Building the JSON failed!", "error");
+          else {
+            buildError = true;
+            buildJSON(false);
+          }
+        },
+        success: function (fetchedJSON) {
+          buildError = false;
+          json = fetchedJSON;
+          connectedClientsCount = 0;
 
-      updateLookupObject("ClientList", "clientId");
-      updateLookupObject("ChannelList", "channelId");
-      lookup.ChannelList[0] = {
-        channelId: 0,
-        channelName: "Server",
-        deleted: false
-      };
-      updateLookupObject("ServerGroupList", "serverGroupId");
+          updateLookupObject("ClientList", "clientId");
+          updateLookupObject("ChannelList", "channelId");
+          lookup.ChannelList[0] = {
+            channelId: 0,
+            channelName: "Server",
+            deleted: false
+          };
+          updateLookupObject("ServerGroupList", "serverGroupId");
 
-      removeEventListeners();
-      for (var i = 0; i < tables.length; i++) {
-        buildTableWithAlertCheckAndLocalStorage(tables[i]);
-      }
+          removeEventListeners();
+          for (var i = 0; i < tables.length; i++) {
+            buildTableWithAlertCheckAndLocalStorage(tables[i]);
+          }
 
-      // Ban table UID state action.
-      var uidState = localStorage.getItem("uidState");
-      if (document.getElementById("banTable") != null && (uidState == null || uidState == "1")) {
-        localStorage.setItem("uidState", "0");
+          // Ban table UID state action.
+          var uidState = localStorage.getItem("uidState");
+          if (document.getElementById("banTable") != null && (uidState == null || uidState == "1")) {
+            localStorage.setItem("uidState", "0");
 
-        if (uidState == "1")
-          switchBetweenIDAndUID();
-      }
+            if (uidState == "1")
+              switchBetweenIDAndUID();
+          }
 
-      var Attributes = json.Attributes,
-        creationTime = Attributes.creationTime;
+          var Attributes = json.Attributes,
+            creationTime = Attributes.creationTime;
 
-      document.getElementById("creationTimestamp_localtime").innerHTML = creationTime.localTime;
-      document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
-      document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+          document.getElementById("creationTimestamp_localtime").innerHTML = creationTime.localTime;
+          document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
+          document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
-      clearInterval(momentInterval);
-      momentInterval = setInterval(function () {
-        document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
-      }, 1000);
+          clearInterval(momentInterval);
+          momentInterval = setInterval(function () {
+            document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+          }, 1000);
 
-      if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
-        var Client = json.ClientList;
-        for (var j = 0; j < Client.length; j++) {
-          if (Client[j].ConnectedState)
-            connectedClientsCount++;
+          if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
+            var Client = json.ClientList;
+            for (var j = 0; j < Client.length; j++) {
+              if (Client[j].ConnectedState)
+                connectedClientsCount++;
+            }
+          }
+          document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
+
+          document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+          nanobar.go(100);
         }
-      }
-      document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
-
-      document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-      nanobar.go(100);
+      });
     }
   });
 }
@@ -1511,12 +1513,12 @@ function buildControlSection() {
   buildJSONButton.innerHTML = "Update JSON";
   buildJSONWithoutBufferButton.innerHTML = "Build JSON without buffer";
   buildJSONButton.disabled = buildJSONWithoutBufferButton.disabled = true;
-        
+
   buildJSONButton.onclick = function () {
-      addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
+    addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
   };
   buildJSONWithoutBufferButton.onclick = function () {
-      addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
+    addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
   };
 
   buildSection.appendChild(buildJSONButton);
