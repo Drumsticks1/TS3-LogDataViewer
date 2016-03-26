@@ -16,6 +16,8 @@ var Channel = require("./Channel.js");
 var ServerGroup = require("./ServerGroup.js");
 var Client = require("./Client.js");
 
+// Todo: check if == beginOfParsingBlock check is only required for client connects in order to prevent query client connect mismatch.
+
 var Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
   ServerGroupList = globalVariables.ServerGroupList,
@@ -36,6 +38,7 @@ var match = {
   "complaint": "complaint added for client '",
   "serverGroupEvent": "servergroup '",
   "deleteUser1": "client '",
+  "queryClientConnect": "query client connected '",
 
   // VirtualServerBase
   "connect": "client connected '",
@@ -142,6 +145,7 @@ exports.parseLogs = function () {
 
       while (logfileData.length > 0) {
         currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
+        logfileData = logfileData.substring(currentLine.length + 1);
 
         var lineSeverType = 0,
           beginOfParsingBlock = currentLine.indexOfEndPlusOne(match.VirtualServer[logPattern]),
@@ -153,10 +157,8 @@ exports.parseLogs = function () {
         }
 
         // Skip parsing for lines that aren't relevant.
-        if (beginOfParsingBlock == -1) {
-          logfileData = logfileData.substring(currentLine.length + 1);
+        if (beginOfParsingBlock == -1)
           continue;
-        }
 
         switch (lineSeverType) {
           // VirtualSever
@@ -186,7 +188,7 @@ exports.parseLogs = function () {
               if (serverGroupObject === null)
                 ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
 
-                Client.fillArrayWithDummyClients(ClientList,clientId);
+              Client.fillArrayWithDummyClients(ClientList, clientId);
 
               if (currentLine.indexOf(match.serverGroupAssignment) != -1) {
                 if (!checkFunctions.isDuplicateServerGroup(clientId, ServerGroupID))
@@ -194,6 +196,39 @@ exports.parseLogs = function () {
               }
               else
                 ClientList[clientId].removeServerGroupByID(ServerGroupID);
+            }
+
+            // Query client connects
+            else if (currentLine.indexOf(match.queryClientConnect) != -1) {
+              boundaries.Nickname = [
+                currentLine.indexOf("query client connected '") + 24,
+                currentLine.lastIndexOf("'(id:") - 6]; // -6 for ignoring the port.
+
+              boundaries.clientId = [
+                boundaries.Nickname[1] + 11,
+                currentLine.length - 1];
+
+              boundaries.IP = [
+                currentLine.lastIndexOf(" from ") + 6,
+                boundaries.Nickname[1]];
+
+              DateTime = getSubstring("DateTime");
+              clientId = Number(getSubstring("clientId"));
+
+              Client.fillArrayWithDummyClients(ClientList, clientId);
+
+              if (ClientList[clientId].clientId == -1)
+                ClientList[clientId].updateClientId(clientId);
+
+              ClientList[clientId].addNickname(getSubstring("Nickname"));
+
+              if (globalVariables.bufferData) {
+                if (!checkFunctions.isDuplicateConnection(clientId, DateTime))
+                  ClientList[clientId].addConnection(DateTime);
+              }
+              else ClientList[clientId].addConnection(DateTime);
+
+              ClientList[clientId].addIP(getSubstring("IP"));
             }
 
             // Ban Rules
@@ -340,7 +375,7 @@ exports.parseLogs = function () {
               var DateTime = getSubstring("DateTime"),
                 clientId = Number(getSubstring("clientId"));
 
-                Client.fillArrayWithDummyClients(ClientList,clientId);
+              Client.fillArrayWithDummyClients(ClientList, clientId);
 
               if (ClientList[clientId].clientId == -1)
                 ClientList[clientId].updateClientId(clientId);
@@ -351,8 +386,7 @@ exports.parseLogs = function () {
                 if (!checkFunctions.isDuplicateConnection(clientId, DateTime))
                   ClientList[clientId].addConnection(DateTime);
               }
-              else
-                ClientList[clientId].addConnection(DateTime);
+              else ClientList[clientId].addConnection(DateTime);
 
               ClientList[clientId].addIP(getSubstring("IP"));
 
@@ -385,8 +419,8 @@ exports.parseLogs = function () {
 
               var Nickname = getSubstring("Nickname");
 
-              if (ClientList.length < clientId + 1){
-                Client.fillArrayWithDummyClients(ClientList,clientId);
+              if (ClientList.length < clientId + 1) {
+                Client.fillArrayWithDummyClients(ClientList, clientId);
                 ClientList[clientId].updateClientId(clientId);
               }
 
@@ -621,7 +655,6 @@ exports.parseLogs = function () {
               getSubstring("deletedByNickname"));
           }
         }
-        logfileData = logfileData.substring(currentLine.length + 1);
       }
 
       Logs[i].parsed = true;
