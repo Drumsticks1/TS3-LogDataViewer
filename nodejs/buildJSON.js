@@ -40,20 +40,19 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
 
   var lastModification = fs.statSync(globalVariables.logDirectory + globalVariables.Logs[globalVariables.Logs.length - 1].logName).mtime.valueOf();
 
-  if (!rebuildRequired) {
-    if (fs.existsSync(Constants.outputJSON)) {
-      if (!ignoreLastModificationCheck) {
-        if (lastModification == globalVariables.lastModificationOfTheLastLog) {
-          log.info("No modifications to the last log since the last request, stopping build process.\n");
-          return 2;
-        }
-      } else {
-        log.debug("Skipping lastModification check.");
-      }
-    } else
-      log.debug("Didn't find output.json, skipping lastModification check.");
-  } else
+  if (rebuildRequired)
     log.warn("Rebuild required, log order changed or logs were deleted, skipping lastModification check.");
+
+  else if (ignoreLastModificationCheck || globalVariables.disableLastModificationCheck)
+    log.debug("Skipping lastModification check.");
+
+  else if (!fs.existsSync(Constants.outputJSON))
+    log.debug("Didn't find output.json, skipping lastModification check.");
+
+  else if (lastModification == globalVariables.lastModificationOfTheLastLog) {
+    log.info("No modifications to the last log since the last request, stopping build process.\n");
+    return 2;
+  }
 
   globalVariables.lastModificationOfTheLastLog = lastModification;
 

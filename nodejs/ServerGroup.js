@@ -65,7 +65,7 @@ module.exports = {
       serverGroupObject.creationDateTime,
       serverGroupObject.serverGroupName
     );
-    
+
     serverGroup.deleted = serverGroupObject.deleted;
     array.push(serverGroup);
   },

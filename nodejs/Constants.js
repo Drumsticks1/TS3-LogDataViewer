@@ -25,6 +25,9 @@ module.exports = {
   // Minimum time between builds, number in milliseconds.
   timeBetweenBuilds: 2000,
 
+  // Disables the check that checks if the last log has changed since the last build, used for debugging.
+  disableLastModificationCheck: false,
+
   // Port on which the program listens.
   usedPort: 3000,
 

@@ -46,6 +46,7 @@ function resetToDefaultConfiguration() {
   globalVariables.virtualServer = Constants.virtualServer;
   globalVariables.bufferData = Constants.bufferData;
   globalVariables.timeBetweenBuilds = Constants.timeBetweenBuilds;
+  globalVariables.disableLastModificationCheck = Constants.disableLastModificationCheck;
   globalVariables.usedPort = Constants.usedPort;
   globalVariables.logLevel = Constants.logLevel;
   globalVariables.ignoredLogs.length = 0;
@@ -75,6 +76,7 @@ module.exports = {
         acquireSetting("virtualServer", "number");
         acquireSetting("bufferData", "boolean");
         acquireSetting("timeBetweenBuilds", "number");
+        acquireSetting("disableLastModificationCheck", "boolean");
         acquireSetting("usedPort", "number");
 
         if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0) {

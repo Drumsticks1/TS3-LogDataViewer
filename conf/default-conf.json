@@ -4,6 +4,7 @@
   "virtualServer": 1,
   "bufferData": true,
   "timeBetweenBuilds": 2000,
+  "disableLastModificationCheck": false,
   "usedPort": 3000,
   "logLevel": 2,
   "ignoredLogs": []

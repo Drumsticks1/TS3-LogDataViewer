@@ -56,11 +56,11 @@ function buildJSON(clearBuffer) {
 
         if (res.newJSON)
           if (res.fetchLogsError)
-            addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert");
+            addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert fetchLogsErrorCallout");
           else
             buildTables();
         else
-          addCallout("No new information!", "secondary", 2500);
+          addCallout("No new information!", "secondary noNewInformationCallout", 2500);
       }
       else {
         updateTimeBetweenBuilds(res);
@@ -74,7 +74,7 @@ function buildJSON(clearBuffer) {
   }
 
   if (buildRequestInProgress)
-    addCallout("A JSON build request has already been sent!", "warning", 1500);
+    addCallout("A JSON build request has already been sent!", "warning buildRequestInProgressCallout", 1500);
   else {
     var timeUntilNextBuild = timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime);
     addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
@@ -104,14 +104,15 @@ function updateTimeBetweenBuilds(response) {
  */
 function addCallout(message, calloutClass, duration) {
 
-  // Updates the message of the nextRequestCallout if one is already existing.
-  if (calloutClass.indexOf("nextRequestCallout") != -1) {
-    var nextRequestCallouts = document.getElementsByClassName("nextRequestCallout");
+  var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
 
-    if (nextRequestCallouts.length != 0) {
-      nextRequestCallouts[0].innerText = message;
-      return;
-    }
+  // Prevents duplicate callouts
+  if (calloutsWithTheSameClass.length != 0) {
+    // Updates the message of the nextRequestCallout if one is already existing.
+    if (calloutClass.indexOf("nextRequestCallout") != -1)
+      calloutsWithTheSameClass[0].innerText = message;
+
+    return;
   }
 
   var callout = document.createElement("div"),
@@ -1345,7 +1346,7 @@ function buildTables() {
     dataType: "json",
     error: function () {
       if (buildError)
-        addCallout("Building the JSON failed!", "error");
+        addCallout("Building the JSON failed!", "error buildErrorCallout");
       else {
         buildError = true;
         buildJSON(false);

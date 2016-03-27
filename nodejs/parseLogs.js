@@ -5,18 +5,16 @@
 "use strict";
 
 const fs = require("fs"),
-  Upload = require("./Upload.js"),
   checkFunctions = require("./checkFunctions.js"),
   globalVariables = require("./globalVariables.js"),
-  log = require("./log.js");
-var Kick = require("./Kick.js");
-var Ban = require("./Ban.js");
-var Complaint = require("./Complaint.js");
-var Channel = require("./Channel.js");
-var ServerGroup = require("./ServerGroup.js");
-var Client = require("./Client.js");
-
-// Todo: check if == beginOfParsingBlock check is only required for client connects in order to prevent query client connect mismatch.
+  log = require("./log.js"),
+  Ban = require("./Ban.js"),
+  Channel = require("./Channel.js"),
+  Client = require("./Client.js"),
+  Complaint = require("./Complaint.js"),
+  Kick = require("./Kick.js"),
+  ServerGroup = require("./ServerGroup.js"),
+  Upload = require("./Upload.js");
 
 var Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
