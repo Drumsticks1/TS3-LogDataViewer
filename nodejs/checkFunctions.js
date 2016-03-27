@@ -29,7 +29,6 @@ module.exports = {
     return false;
   },
 
-  // Todo: optimize function
   /**
    * Checks if a Connection is already existing for the current client.
    * @param {number} ID
@@ -175,7 +174,7 @@ module.exports = {
   isDuplicateUpload: function (uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
     for (var i = 0; i < UploadList.length; i++) {
       if (UploadList[i].getUploadDateTime() == uploadDateTime && UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename &&
-        UploadList[i].getUploadedByID() == uploadedByID && UploadList[i].getUploadedByNickname() == uploadedByNickname )
+        UploadList[i].getUploadedByID() == uploadedByID && UploadList[i].getUploadedByNickname() == uploadedByNickname)
         return true;
     }
     return false;

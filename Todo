@@ -26,6 +26,5 @@ maybe:
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
     - Notification if a new ban, kick, complaint or upload was added since the last visit.
 	- Add ServerGroupName history like for the nicknames in the client list.
-	- Add query clients to client list or a query client list?
-	- Make it possible to switch between the virtual servers via Webinterface.
+    - Make it possible to switch between the virtual servers via Webinterface.
 		- check what virtual servers are / were running by observing the logs filename endings.

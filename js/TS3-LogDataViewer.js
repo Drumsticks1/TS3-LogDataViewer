@@ -56,11 +56,11 @@ function buildJSON(clearBuffer) {
 
         if (res.newJSON)
           if (res.fetchLogsError)
-            addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert");
+            addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert fetchLogsErrorCallout");
           else
             buildTables();
         else
-          addCallout("No new information!", "secondary", 2500);
+          addCallout("No new information!", "secondary noNewInformationCallout", 2500);
       }
       else {
         updateTimeBetweenBuilds(res);
@@ -74,7 +74,7 @@ function buildJSON(clearBuffer) {
   }
 
   if (buildRequestInProgress)
-    addCallout("A JSON build request has already been sent!", "warning", 1500);
+    addCallout("A JSON build request has already been sent!", "warning buildRequestInProgressCallout", 1500);
   else {
     var timeUntilNextBuild = timeBetweenBuilds - (Date.now().valueOf() - lastBuildCallTime);
     addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
@@ -104,14 +104,15 @@ function updateTimeBetweenBuilds(response) {
  */
 function addCallout(message, calloutClass, duration) {
 
-  // Updates the message of the nextRequestCallout if one is already existing.
-  if (calloutClass.indexOf("nextRequestCallout") != -1) {
-    var nextRequestCallouts = document.getElementsByClassName("nextRequestCallout");
+  var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
 
-    if (nextRequestCallouts.length != 0) {
-      nextRequestCallouts[0].innerText = message;
-      return;
-    }
+  // Prevents duplicate callouts
+  if (calloutsWithTheSameClass.length != 0) {
+    // Updates the message of the nextRequestCallout if one is already existing.
+    if (calloutClass.indexOf("nextRequestCallout") != -1)
+      calloutsWithTheSameClass[0].innerText = message;
+
+    return;
   }
 
   var callout = document.createElement("div"),
@@ -1345,82 +1346,63 @@ function buildTables() {
     dataType: "json",
     error: function () {
       if (buildError)
-        addCallout("Building the JSON failed!", "alert");
+        addCallout("Building the JSON failed!", "error buildErrorCallout");
       else {
         buildError = true;
-        addCallout("Couldn't fetch the output.json", "alert");
+        buildJSON(false);
       }
     },
     success: function (fetchedJSON) {
       buildError = false;
       json = fetchedJSON;
       connectedClientsCount = 0;
-      nanobar.go(50);
-      $.ajax({
-        url: "./output.json",
-        cache: false,
-        dataType: "json",
-        error: function () {
-          if (buildError)
-            addCallout("Building the JSON failed!", "error");
-          else {
-            buildError = true;
-            buildJSON(false);
-          }
-        },
-        success: function (fetchedJSON) {
-          buildError = false;
-          json = fetchedJSON;
-          connectedClientsCount = 0;
 
-          updateLookupObject("ClientList", "clientId");
-          updateLookupObject("ChannelList", "channelId");
-          lookup.ChannelList[0] = {
-            channelId: 0,
-            channelName: "Server",
-            deleted: false
-          };
-          updateLookupObject("ServerGroupList", "serverGroupId");
+      updateLookupObject("ClientList", "clientId");
+      updateLookupObject("ChannelList", "channelId");
+      lookup.ChannelList[0] = {
+        channelId: 0,
+        channelName: "Server",
+        deleted: false
+      };
+      updateLookupObject("ServerGroupList", "serverGroupId");
 
-          removeEventListeners();
-          for (var i = 0; i < tables.length; i++) {
-            buildTableWithAlertCheckAndLocalStorage(tables[i]);
-          }
+      removeEventListeners();
+      for (var i = 0; i < tables.length; i++) {
+        buildTableWithAlertCheckAndLocalStorage(tables[i]);
+      }
 
-          // Ban table UID state action.
-          var uidState = localStorage.getItem("uidState");
-          if (document.getElementById("banTable") != null && (uidState == null || uidState == "1")) {
-            localStorage.setItem("uidState", "0");
+      // Ban table UID state action.
+      var uidState = localStorage.getItem("uidState");
+      if (document.getElementById("banTable") != null && (uidState == null || uidState == "1")) {
+        localStorage.setItem("uidState", "0");
 
-            if (uidState == "1")
-              switchBetweenIDAndUID();
-          }
+        if (uidState == "1")
+          switchBetweenIDAndUID();
+      }
 
-          var Attributes = json.Attributes,
-            creationTime = Attributes.creationTime;
+      var Attributes = json.Attributes,
+        creationTime = Attributes.creationTime;
 
-          document.getElementById("creationTimestamp_localtime").innerHTML = creationTime.localTime;
-          document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
-          document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+      document.getElementById("creationTimestamp_localtime").innerHTML = creationTime.localTime;
+      document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
+      document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
-          clearInterval(momentInterval);
-          momentInterval = setInterval(function () {
-            document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
-          }, 1000);
+      clearInterval(momentInterval);
+      momentInterval = setInterval(function () {
+        document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+      }, 1000);
 
-          if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
-            var Client = json.ClientList;
-            for (var j = 0; j < Client.length; j++) {
-              if (Client[j].ConnectedState)
-                connectedClientsCount++;
-            }
-          }
-          document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
-
-          document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-          nanobar.go(100);
+      if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
+        var Client = json.ClientList;
+        for (var j = 0; j < Client.length; j++) {
+          if (Client[j].ConnectedState)
+            connectedClientsCount++;
         }
-      });
+      }
+      document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
+
+      document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
+      nanobar.go(100);
     }
   });
 }
@@ -1515,10 +1497,10 @@ function buildControlSection() {
   buildJSONButton.disabled = buildJSONWithoutBufferButton.disabled = true;
 
   buildJSONButton.onclick = function () {
-    addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
+    addCallout("Building is disabled in the gh-pages demo!", "alert demoCallout", 7500);
   };
   buildJSONWithoutBufferButton.onclick = function () {
-    addCallout("Building is disabled in the gh-pages demo!", "alert", 7500);
+    addCallout("Building is disabled in the gh-pages demo!", "alert demoCallout", 7500);
   };
 
   buildSection.appendChild(buildJSONButton);

@@ -13,7 +13,7 @@ This demo is set up with gh-pages and shows the design as well as some features 
 <br>
 As no code can be executed on the GitHub server, this isn't a demo for the server-side part.
 <br>
-The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the nodejs application (v2.0.0)
+The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the tool (v2.0.4)
 out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/logs/ts3server_2016-03-11__15_00_44.563532_1.log).
 
 #### Teamspeak 3 server settings
@@ -45,15 +45,18 @@ Check it out yourself, start with the [demo](https://drumsticks1.github.io/TS3-L
 ## Configuration settings (server-side)
 The following options can currently be specified in conf.json:
 
-| setting           | description                                             | value type       | default value                                         |
-|-------------------|---------------------------------------------------------|------------------|-------------------------------------------------------|
-| programLogfile    | Path to which the ts3-ldv log is written to             | string           | "/var/log/ts3-ldv/ts3-ldv.log"                        |
-| logDirectory      | Path to the log directory of the ts3 server             | string           | "/home/teamspeak/teamspeak3-server_linux-amd64/logs/" |
-| virtualServer     | Virtual server that's logs are to be parsed             | number           | 1                                                     |
-| bufferData        | Whether data is buffered between builds *(much faster)* | boolean          | true                                                  |
-| timeBetweenBuilds | Minimum time allowed between requests                   | number           | 2000                                                  |
-| usedPort          | The port on which the ts3-ldv app is running            | number           | 3000                                                  |
-| ignoredLogs       | Array containing log names that are excluded            | array of strings | []                                                    |
+| setting                      | description                                             | value type       | default value                                         |
+|------------------------------|---------------------------------------------------------|------------------|-------------------------------------------------------|
+| programLogfile               | Path to which the ts3-ldv log is written to             | string           | "/var/log/ts3-ldv/ts3-ldv.log"                        |
+| logDirectory                 | Path to the log directory of the ts3 server             | string           | "/home/teamspeak/teamspeak3-server_linux-amd64/logs/" |
+| virtualServer                | Virtual server that's logs are to be parsed             | number           | 1                                                     |
+| bufferData                   | Whether data is buffered between builds *(much faster)* | boolean          | true                                                  |
+| timeBetweenBuilds            | Minimum time allowed between requests                   | number           | 2000                                                  |
+| usedPort                     | The port on which the ts3-ldv app is running            | number           | 3000                                                  |
+| disableLastModificationCheck | If the last modification check is disabled (*)          | boolean          | false                                                 |
+| ignoredLogs                  | Array containing log names that are excluded            | array of strings | []                                                    |
+
+(*) The last modification check prevents a build when the modification date of the last log has not changed since the last build (= no new data).
 
 ## Changelog
 The changelog for each release version can be found in the file `changelog.md`

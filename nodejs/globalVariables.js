@@ -18,6 +18,7 @@ var ignoredLogs = [],
   logDirectory = Constants.logDirectory,
   bufferData = Constants.bufferData,
   timeBetweenBuilds = Constants.timeBetweenBuilds,
+  disableLastModificationCheck = Constants.disableLastModificationCheck,
   usedPort = Constants.usedPort,
   logLevel = Constants.logLevel,
   lastModificationOfTheLastLog = 0;
@@ -37,6 +38,7 @@ module.exports = {
   logDirectory: logDirectory,
   bufferData: bufferData,
   timeBetweenBuilds: timeBetweenBuilds,
+  disableLastModificationCheck: disableLastModificationCheck,
   usedPort: usedPort,
   logLevel: logLevel,
   lastModificationOfTheLastLog: lastModificationOfTheLastLog

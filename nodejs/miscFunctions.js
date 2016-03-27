@@ -46,12 +46,13 @@ module.exports = {
 
   /**
    * Clears the arrays storing the parsed information.
+   * Don't reset the ignoredLogs array here!
    */
   clearGlobalArrays: function () {
     globalVariables.ClientList.length = globalVariables.ServerGroupList.length =
       globalVariables.BanList.length = globalVariables.KickList.length =
         globalVariables.ComplaintList.length = globalVariables.UploadList.length =
-          globalVariables.ignoredLogs.length = globalVariables.Logs.length = 0;
+          globalVariables.Logs.length = 0;
   },
 
   /**

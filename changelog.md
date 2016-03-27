@@ -1,5 +1,20 @@
 # Changelog
-Versions: <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+
+### <a name="v2.0.5">Version 2.0.5</a> (27.03.2016)
+Additions:
+- parseLogs.js
+    - Added parsing of query client connects
+- Configuration
+    - Added new configuration setting "disableLastModificationCheck" (boolean, default: false) that can be set to true for disabling the lastModification check
+- TS3-LogDataViewer.js
+    - Added a check in the addCallout function to prevent duplicate callouts
+
+Fixes:
+- miscFunctions.js
+    - Fixed ignoredLogs being reset by the miscFunctions.clearGlobalArrays function
+
 
 ### <a name="v2.0.4">Version 2.0.4</a> (24.03.2016)
 Additions:
