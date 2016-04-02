@@ -51,7 +51,7 @@ The following options can currently be specified in conf.json:
 | logDirectory                 | Path to the log directory of the ts3 server             | string           | "/home/teamspeak/teamspeak3-server_linux-amd64/logs/" |
 | virtualServer                | Virtual server that's logs are to be parsed             | number           | 1                                                     |
 | bufferData                   | Whether data is buffered between builds *(much faster)* | boolean          | true                                                  |
-| timeBetweenBuilds            | Minimum time allowed between requests                   | number           | 2000                                                  |
+| timeBetweenRequests          | Minimum time allowed between requests                   | number           | 2000                                                  |
 | usedPort                     | The port on which the ts3-ldv app is running            | number           | 3000                                                  |
 | disableLastModificationCheck | If the last modification check is disabled (*)          | boolean          | false                                                 |
 | ignoredLogs                  | Array containing log names that are excluded            | array of strings | []                                                    |

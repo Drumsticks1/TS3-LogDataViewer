@@ -49,10 +49,10 @@ module.exports = {
    * Don't reset the ignoredLogs array here!
    */
   clearGlobalArrays: function () {
-    globalVariables.ClientList.length = globalVariables.ServerGroupList.length =
-      globalVariables.BanList.length = globalVariables.KickList.length =
-        globalVariables.ComplaintList.length = globalVariables.UploadList.length =
-          globalVariables.Logs.length = 0;
+    globalVariables.BanList.length = globalVariables.ChannelList.length =
+      globalVariables.ClientList.length = globalVariables.ComplaintList.length =
+        globalVariables.KickList.length = globalVariables.Logs.length =
+          globalVariables.ServerGroupList.length = globalVariables.UploadList.length = 0;
   },
 
   /**

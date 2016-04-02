@@ -22,8 +22,8 @@ module.exports = {
   // Buffer data between buildJSON calls for increased performance.
   bufferData: true,
 
-  // Minimum time between builds, number in milliseconds.
-  timeBetweenBuilds: 2000,
+  // Minimum time between requests, time in milliseconds.
+  timeBetweenRequests: 2000,
 
   // Disables the check that checks if the last log has changed since the last build, used for debugging.
   disableLastModificationCheck: false,

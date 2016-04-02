@@ -17,8 +17,8 @@
   "author": "Drumsticks <drumsticks.code@gmail.com>",
   "files": [
     "conf/default-conf.json",
-	"conf/ts3.ldv.logrotate",
-	"conf/ts3-ldv.service",
+    "conf/ts3.ldv.logrotate",
+    "conf/ts3-ldv.service",
     "css",
     "img",
     "js",

@@ -43,8 +43,8 @@ function updateLookupObject(list, idIdentifier) {
  * @param {boolean} clearBuffer if true: clears the buffer before building the json.
  */
 function buildJSON(clearBuffer) {
-  /* Requests are only sent if the time span between the last two requests is bigger than timeBetweenBuilds and
-   there is no request in progress. Invalid requests are only sent when the remote timeBetweenBuilds is unknown
+  /* Requests are only sent if the time span between the last two requests is bigger than timeBetweenRequests and
+   there is no request in progress. Invalid requests are only sent when the remote timeBetweenRequests is unknown
    or has increased since the last request */
   if (!buildRequestInProgress && (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
     buildRequestInProgress = true;
@@ -85,13 +85,13 @@ function buildJSON(clearBuffer) {
 }
 
 /**
- * Updates the stored timeBetweenBuilds if necessary.
+ * Updates the stored timeBetweenRequests if necessary.
  *
  * @param {object} response response object of a request.
  */
 function updateTimeBetweenBuilds(response) {
-  if (timeBetweenBuilds != response.timeBetweenBuilds)
-    timeBetweenBuilds = response.timeBetweenBuilds;
+  if (timeBetweenBuilds != response.timeBetweenRequests)
+    timeBetweenBuilds = response.timeBetweenRequests;
 }
 
 /**

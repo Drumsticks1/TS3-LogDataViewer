@@ -33,11 +33,11 @@ app.get("/buildJSON", function (req, res) {
       "success": false,
       "fetchLogsError": false,
       "newJSON": false,
-      "timeBetweenBuilds": globalVariables.timeBetweenBuilds,
+      "timeBetweenRequests": globalVariables.timeBetweenRequests,
       "timeDifference": -1
     };
 
-  if (timeDifference > globalVariables.timeBetweenBuilds) {
+  if (timeDifference > globalVariables.timeBetweenRequests) {
     var clearBuffer = String(req.query.clearBuffer) == "true";
     if (clearBuffer)
       miscFunctions.clearGlobalArrays();
@@ -58,7 +58,7 @@ app.get("/buildJSON", function (req, res) {
         break;
     }
   } else {
-    log.debug("The last rebuild was " + timeDifference + " ms ago but timeBetweenBuilds is set to " + globalVariables.timeBetweenBuilds + " ms.");
+    log.debug("The last request was " + timeDifference + " ms ago but timeBetweenRequests is set to " + globalVariables.timeBetweenRequests + " ms.");
     response.timeDifference = timeDifference;
   }
 
