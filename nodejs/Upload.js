@@ -95,8 +95,7 @@ module.exports = {
 
     array.push(upload);
   },
-
-  // Todo: check function, maybe modify
+  
   /**
    * Adds the deletedByNickname and deletedByID data to the matching Upload in the UploadList.
    * @param {number} channelID
@@ -107,9 +106,12 @@ module.exports = {
   addDeletedBy: function (channelID, filename, deletedByID, deletedByNickname) {
     var shortFilename, UploadList = globalVariables.UploadList;
     if (filename.indexOf("//") != -1)
+    // Unix
       shortFilename = filename.substr(filename.indexOf("//") + 1);
     else
-      shortFilename = filename.substr(filename.indexOf("\\/") + 1);
+    // Windows
+    // Todo: Check if required
+      shortFilename = filename.substr(filename.indexOf("/") + 1);
 
     for (var i = 0; i < UploadList.length; i++) {
       if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename && !UploadList[i].isDeleted()) {

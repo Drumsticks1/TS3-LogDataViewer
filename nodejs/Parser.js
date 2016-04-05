@@ -38,34 +38,38 @@ var Logs = globalVariables.Logs,
 // Object containing matching patterns for parsing.
 var match = {
   // Set in parseLogs in order to use the latest globalVariables.virtualServer value.
-  "VirtualServer": [],
-  "VirtualServerBase": [],
+  VirtualServer: [],
+  VirtualServerBase: [],
 
   // VirtualServer
-  "banRule": "ban added reason='",
-  "complaint": "complaint added for client '",
-  "serverGroupEvent": "servergroup '",
-  "deleteClient1": "client '",
-  "queryClientConnect": "query client connected '",
+  banRule: "ban added reason='",
+  complaint: "complaint added for client '",
+  serverGroupEvent: "servergroup '",
+  deleteClient1: "client '",
+  queryClientConnect: "query client connected '",
 
   // VirtualServerBase
-  "connect": "client connected '",
-  "disconnect": "client disconnected '",
-  "channel": "channel '",
+  connect: "client connected '",
+  disconnect: "client disconnected '",
+  channel: "channel '",
 
   // v3.0.11.4 and before : VirtualServer
   // since v3.0.12.0      : VirtualServerBase
-  "upload": "file upload to ",
-  "uploadDeletion": "file deleted from",
+  upload: "file upload to ",
+  uploadDeletion: "file deleted from",
 
   // Additional patterns
-  "serverGroupAssignment": ") was added to servergroup '",
-  "serverGroupRemoval": ") was removed from servergroup '",
-  "deleteClient2": ") got deleted by client '",
-  "channelCreation": ") created by '",
-  "subChannelCreation": ") created as sub channel of '",
-  "channelEdit": ") edited by '",
-  "channelDeletion": ") deleted by '"
+  serverGroupAssignment: ") was added to servergroup '",
+  serverGroupRemoval: ") was removed from servergroup '",
+  deleteClient2: ") got deleted by client '",
+  channelCreation: ") created by '",
+  subChannelCreation: ") created as sub channel of '",
+  channelEdit: ") edited by '",
+  channelDeletion: ") deleted by '",
+  serverGroupCreation: ") was added by '",
+  serverGroupDeletion: ") was deleted by '",
+  serverGroupRenaming: ") was renamed to '",
+  serverGroupCopying: ") was copied by '"
 };
 
 /**
@@ -227,66 +231,62 @@ module.exports = {
               Complaint.addComplaint(ComplaintList, DateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID);
           }
 
-          // Todo: Check functionality
           // Client Deletions
-          else if (currentLine.indexOf(match.deleteClient1) == beginOfParsingBlock) {
-            // Check if the else if and the if can be combined
-            if (currentLine.indexOf(match.deleteClient2) != -1) {
-              ClientList[parsers.client.parseClientDeletion(currentLine).clientId].deleteClient();
-            }
+          else if (currentLine.indexOf(match.deleteClient1) == beginOfParsingBlock && (currentLine.indexOf(match.deleteClient2) != -1)) {
+            ClientList[parsers.client.parseClientDeletion(currentLine).clientId].deleteClient();
           }
 
-          // Servergroup additions, deletions, renaming and copying
+          // Servergroup creation, deletions, renaming and copying
           else if (currentLine.indexOf(match.serverGroupEvent) == beginOfParsingBlock) {
-            // 0 --> added
+            // 0 --> creation
             // 1 --> deleted
             // 2 --> renamed
-            // 3 --> copied // just like "added"
+            // 3 --> copied // just like 0
             var eventTypeS = -1;
 
-            // Todo: move the patterns into the match object
-            if (currentLine.indexOf(") was added by '") != -1) {
+            if (currentLine.indexOf(match.serverGroupCreation) != -1) {
               eventTypeS = 0;
               res = parsers.serverGroup.parseServerGroupCreation(currentLine);
             }
-            else if (currentLine.indexOf(") was deleted by '") != -1) {
+            else if (currentLine.indexOf(match.serverGroupDeletion) != -1) {
               eventTypeS = 1;
               res = parsers.serverGroup.parseServerGroupDeletion(currentLine);
             }
-            else if (currentLine.indexOf(") was renamed to '") != -1) {
+            else if (currentLine.indexOf(match.serverGroupRenaming) != -1) {
               eventTypeS = 2;
               res = parsers.serverGroup.parseServerGroupRenaming(currentLine);
             }
-            else if (currentLine.indexOf(") was copied by '") != -1) {
+            else if (currentLine.indexOf(match.serverGroupCopying) != -1) {
               eventTypeS = 3;
               res = parsers.serverGroup.parseServerGroupCopying(currentLine);
             }
 
             // Todo: Check if check is required
-            if (eventTypeS != -1) {
+            if (eventTypeS == -1) {
+              log.debug("Unknown error while parsing the logs (ServerGroup).");
+            }
 
-              DateTime = this.parseDateTime(currentLine);
-              ServerGroupID = res.ServerGroupID;
-              var ServerGroupName = res.ServerGroupName;
+            DateTime = this.parseDateTime(currentLine);
+            ServerGroupID = res.ServerGroupID;
+            var ServerGroupName = res.ServerGroupName;
 
-              if (eventTypeS == 1 || eventTypeS == 2) {
-                if (ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID) === null)
-                  ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
-              }
+            if (eventTypeS == 1 || eventTypeS == 2) {
+              if (ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID) === null)
+                ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
+            }
 
-              switch (eventTypeS) {
-                case 0:
-                case 3:
-                  ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, DateTime, ServerGroupName);
-                  break;
+            switch (eventTypeS) {
+              case 0:
+              case 3:
+                ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, DateTime, ServerGroupName);
+                break;
 
-                case 1:
-                  ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).deleteServerGroup();
-                  break;
+              case 1:
+                ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).deleteServerGroup();
+                break;
 
-                case 2:
-                  ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).renameServerGroup(ServerGroupName);
-              }
+              case 2:
+                ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).renameServerGroup(ServerGroupName);
             }
           }
           else checkIfUpload = true;
@@ -393,33 +393,35 @@ module.exports = {
               res = parsers.channel.parseChannelDeletion(currentLine);
             }
 
-            // Todo: Check if check is required.
-            if (eventTypeC != -1) {
-              DateTime = this.parseDateTime(currentLine);
-              var channelID = res.channelID,
-                channelName = res.channelName;
+            // Todo: Check if check is required
+            if (eventTypeC == -1) {
+              log.debug("Unknown error while parsing the logs (Channel).");
+            }
 
-              var channelObject = Channel.getChannelByChannelId(ChannelList, channelID);
+            DateTime = this.parseDateTime(currentLine);
+            var channelID = res.channelID,
+              channelName = res.channelName;
 
-              if (eventTypeC == 1 && channelObject === null)
-                eventTypeC = 2;
+            var channelObject = Channel.getChannelByChannelId(ChannelList, channelID);
 
-              switch (eventTypeC) {
-                case 2:
-                  DateTime = "Unknown";
-                // Intended fallthrough
-                case 0:
-                  if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
-                    Channel.addChannel(ChannelList, channelID, DateTime, channelName);
-                  break;
+            if (eventTypeC == 1 && channelObject === null)
+              eventTypeC = 2;
 
-                case 1:
-                  channelObject.renameChannel(channelName);
-                  break;
+            switch (eventTypeC) {
+              case 2:
+                DateTime = "Unknown";
+              // Intended fallthrough
+              case 0:
+                if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
+                  Channel.addChannel(ChannelList, channelID, DateTime, channelName);
+                break;
 
-                case 3:
-                  channelObject.deleteChannel();
-              }
+              case 1:
+                channelObject.renameChannel(channelName);
+                break;
+
+              case 3:
+                channelObject.deleteChannel();
             }
           }
           else checkIfUpload = true;
