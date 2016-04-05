@@ -37,7 +37,8 @@
     "nanobar": "latest"
   },
   "devDependencies": {
-    "node-sass": "latest"
+    "node-sass": "latest",
+    "qunit": "latest"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
