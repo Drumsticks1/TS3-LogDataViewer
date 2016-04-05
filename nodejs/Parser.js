@@ -1,4 +1,4 @@
-// Parser.js : 
+// Parser.js : Main file for controlling the parsing process.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -88,7 +88,7 @@ String.prototype.indexOfEndPlusOne = function (searchString) {
 module.exports = {
 
   /**
-   * Calls parseLog for all Logs that are neither parsed nor ignored.
+   * Calls parseLogData for all Logs that are neither parsed nor ignored.
    * Sets the parsed flag of the parsed Logs to true.
    */
   parseLogs: function () {
@@ -96,7 +96,10 @@ module.exports = {
 
     for (var i = 0; i < Logs.length; i++) {
       if (!Logs[i].parsed && !Logs[i].ignored) {
-        this.parseLog(Logs[i].logName, i + 1 == Logs.length);
+        this.parseLogData(
+          fs.readFileSync(globalVariables.logDirectory + Logs[i].logName, "utf8"),
+          i + 1 == Logs.length);
+
         Logs[i].parsed = true;
       }
     }
@@ -112,12 +115,12 @@ module.exports = {
   },
 
   /**
-   * Parses the Log with the given name.
+   * Parses the given logfileData.
    * Calls the parsers in the parsers folder.
-   * @param {string} logName name of the Log.
-   * @param {boolean} isLastLog true if the log is the last (/newest) log.
+   * @param {string} logData the data from a Log.
+   * @param {boolean} isLastLog true if the data is from the last (/newest) Log.
    */
-  parseLog: function (logName, isLastLog) {
+  parseLogData: function (logData, isLastLog) {
     /**
      * Patterns and their ts3server versions (ordered as below):
      * - v3.0.11.4 and before
@@ -133,8 +136,7 @@ module.exports = {
     ];
 
     var lastUIDBanRule = "", lastIPBanRule = "", logPattern,
-      logfileData = fs.readFileSync(globalVariables.logDirectory + logName, "utf8"),
-      currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
+      currentLine = logData.substring(0, logData.indexOf("\n"));
 
     if (currentLine.indexOf("|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| listening on") != -1)
       logPattern = 0;
@@ -142,9 +144,9 @@ module.exports = {
       logPattern = 1;
     // Todo: Add option for unknown log pattern!
 
-    while (logfileData.length > 0) {
-      currentLine = logfileData.substring(0, logfileData.indexOf("\n"));
-      logfileData = logfileData.substring(currentLine.length + 1);
+    while (logData.length > 0) {
+      currentLine = logData.substring(0, logData.indexOf("\n"));
+      logData = logData.substring(currentLine.length + 1);
 
       var lineSeverType = 0,
         beginOfParsingBlock = currentLine.indexOfEndPlusOne(match.VirtualServer[logPattern]),
@@ -262,9 +264,8 @@ module.exports = {
             }
 
             // Todo: Check if check is required
-            if (eventTypeS == -1) {
+            if (eventTypeS == -1)
               log.debug("Unknown error while parsing the logs (ServerGroup).");
-            }
 
             DateTime = this.parseDateTime(currentLine);
             ServerGroupID = res.ServerGroupID;
@@ -394,9 +395,8 @@ module.exports = {
             }
 
             // Todo: Check if check is required
-            if (eventTypeC == -1) {
+            if (eventTypeC == -1)
               log.debug("Unknown error while parsing the logs (Channel).");
-            }
 
             DateTime = this.parseDateTime(currentLine);
             var channelID = res.channelID,

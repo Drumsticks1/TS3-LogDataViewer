@@ -71,9 +71,19 @@ module.exports = {
       return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
     }
 
+    var filename = getSubstring("filename");
+
+    // A longer path is logged and needs to be removed in order to get the filename only.
+    // Unix
+    if (filename.indexOf("//") != -1)
+      filename = filename.substr(filename.indexOf("//") + 1);
+    // Windows
+    else
+      filename = filename.substr(filename.indexOf("\/"));
+
     return {
       channelID: Number(getSubstring("channelID")),
-      filename: getSubstring("filename"),
+      filename: filename,
       deletedByNickname: getSubstring("deletedByNickname"),
       deletedByID: Number(getSubstring("deletedByID"))
     };

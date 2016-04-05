@@ -104,17 +104,10 @@ module.exports = {
    * @param {string} deletedByNickname
    */
   addDeletedBy: function (channelID, filename, deletedByID, deletedByNickname) {
-    var shortFilename, UploadList = globalVariables.UploadList;
-    if (filename.indexOf("//") != -1)
-    // Unix
-      shortFilename = filename.substr(filename.indexOf("//") + 1);
-    else
-    // Windows
-    // Todo: Check if required
-      shortFilename = filename.substr(filename.indexOf("/") + 1);
+    var UploadList = globalVariables.UploadList;
 
     for (var i = 0; i < UploadList.length; i++) {
-      if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == shortFilename && !UploadList[i].isDeleted()) {
+      if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename && !UploadList[i].isDeleted()) {
         UploadList[i].deletedByID = deletedByID;
         UploadList[i].deletedByNickname = deletedByNickname;
         UploadList[i].deleted = true;
