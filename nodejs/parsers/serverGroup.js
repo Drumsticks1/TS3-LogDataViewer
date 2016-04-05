@@ -1,9 +1,16 @@
-// serverGroup.js :
+// parsers/serverGroup.js : Parsing of ServerGroup events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
+/**
+ * Parses the ServerGroup assignment or removal data from the given logLine.
+ * Requires a boundaries object containing the positions for the clientId, ServerGroupID and ServerGroupName data.
+ * @param {string} logLine
+ * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
+ * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
+ */
 function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
   boundaries.ServerGroupName[1] = logLine.lastIndexOf("'(id:", logLine.lastIndexOf(") by client '"));
 
@@ -26,6 +33,13 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
   };
 }
 
+/**
+ * Parses the ServerGroup modification data from the given logLine.
+ * Requires a boundaries object containing the positions for the ServerGroupID and ServerGroupName data.
+ * @param {string} logLine
+ * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
+ * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
+ */
 function parseServerGroupModification(logLine, boundaries) {
   boundaries.ServerGroupID[0] = logLine.indexOf("'(id:") + 5;
 
@@ -39,11 +53,12 @@ function parseServerGroupModification(logLine, boundaries) {
   };
 }
 
-/**
- *
- * @param logLine
- */
 module.exports = {
+  /**
+   * Parses the ServerGroupCreation data from the given logLine.
+   * @param {string} logLine
+   * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
+   */
   parseServerGroupCreation: function (logLine) {
     var boundaries = {};
     boundaries.ServerGroupID = [0, logLine.indexOf(") was added by '")];
@@ -55,6 +70,11 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  /**
+   * Parses the ServerGroupDeletion data from the given logLine.
+   * @param {string} logLine
+   * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
+   */
   parseServerGroupDeletion: function (logLine) {
     var boundaries = {};
     boundaries.ServerGroupID = [0, logLine.indexOf(") was deleted by '")];
@@ -66,6 +86,11 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  /**
+   * Parses the ServerGroupRenaming data from the given logLine.
+   * @param {string} logLine
+   * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
+   */
   parseServerGroupRenaming: function (logLine) {
     var boundaries = {};
 
@@ -78,6 +103,11 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  /**
+   * Parses the ServerGroupCopying data from the given logLine.
+   * @param {string} logLine
+   * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
+   */
   parseServerGroupCopying: function (logLine) {
     var boundaries = {};
 
@@ -90,11 +120,21 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  /**
+   * Parses the ServerGroupAssignment data from the given logLine.
+   * @param {string} logLine
+   * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
+   */
   parseServerGroupAssignment: function (logLine) {
     return parseServerGroupAssignmentOrRemoval(logLine,
       {ServerGroupName: [logLine.indexOf(") was added to servergroup '") + 28, 0]});
   },
 
+  /**
+   * Parses the ServerGroupRemoval data from the given logLine.
+   * @param {string} logLine
+   * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
+   */
   parseServerGroupRemoval: function (logLine) {
     return parseServerGroupAssignmentOrRemoval(logLine,
       {ServerGroupName: [logLine.indexOf(") was removed from servergroup '") + 32, 0]});

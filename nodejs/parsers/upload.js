@@ -1,11 +1,17 @@
-// upload.js :
+// parsers/upload.js : Parsing of Upload events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
+// Todo: Eliminate duplicates after the boundaries objects.
 module.exports = {
 
+  /**
+   * Parses the Upload data from the given logLine.
+   * @param {string} logLine
+   * @returns {{channelID: number, filename: string, uploadedByNickname: string, uploadedByID: number}} the extracted data.
+   */
   parseUpload: function (logLine) {
     var boundaries = {};
 
@@ -30,13 +36,18 @@ module.exports = {
     }
 
     return {
-      channelID: getSubstring("channelID"),
+      channelID: Number(getSubstring("channelID")),
       filename: getSubstring("filename"),
       uploadedByNickname: getSubstring("uploadedByNickname"),
-      uploadedByID: getSubstring("uploadedByID")
+      uploadedByID: Number(getSubstring("uploadedByID"))
     };
   },
 
+  /**
+   * Parses the UploadDeletion data from the given logLine.
+   * @param {string} logLine
+   * @returns {{channelID: number, filename: string, deletedByNickname: string, deletedByID: number}} extracted data.
+   */
   parseUploadDeletion: function (logLine) {
     var boundaries = {};
 

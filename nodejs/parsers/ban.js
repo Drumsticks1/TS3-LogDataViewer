@@ -1,4 +1,4 @@
-// parsers/ban.js :
+// parsers/ban.js : Parsing of Ban events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -8,7 +8,15 @@ const checkFunctions = require("../checkFunctions.js");
 
 module.exports = {
 
-  // Uses the boundaries from the previous parseClientDisconnect call.
+  /**
+   * Parses the Ban data from the given logLine.
+   * Requires the boundaries object from the previous client.parseClientDisconnect call.
+   * @param {string} logLine
+   * @param {object} boundaries boundaries object from the previous client.parseClientDisconnect call.
+   * @param {string} lastUIDBanRule
+   * @param {string} lastIPBanRule
+   * @returns {{bannedUID: string, bannedIP: string, bannedByID: string, bannedByNickname: string, bannedByUID: string, banReason: string, banTime: number}} the extracted data.
+   */
   parseBan: function (logLine, boundaries, lastUIDBanRule, lastIPBanRule) {
     var validUID = true;
 
@@ -76,10 +84,7 @@ module.exports = {
       return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
     }
 
-    // Todo: bannedId and bannedNickname may not be required, already parsed in parseClientDisconnect.
     return {
-      bannedId: Number(getSubstring("clientId")),
-      bannedNickname: getSubstring("Nickname"),
       bannedUID: bannedUID,
       bannedIP: bannedIP,
       bannedByID: bannedByID,

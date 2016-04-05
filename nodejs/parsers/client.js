@@ -1,9 +1,16 @@
-// client.js :
+// parsers/client.js : Parsing of Client events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
+/**
+ * Parses the Client data from the given logLine.
+ * Requires a boundaries object containing the positions for the clientId, Nickname and IP data.
+ * @param {string} logLine
+ * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
+ * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
+ */
 function parseAnyClientConnect(boundaries, logLine) {
   function getSubstring(boundariesIdentifier) {
     return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
@@ -16,11 +23,12 @@ function parseAnyClientConnect(boundaries, logLine) {
   };
 }
 
-/**
- *
- * @param logLine
- */
 module.exports = {
+  /**
+   * Parses the ClientConnect data from the given logLine.
+   * @param {string} logLine
+   * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
+   */
   parseClientConnect: function (logLine) {
     var boundaries = {};
 
@@ -39,6 +47,11 @@ module.exports = {
     return parseAnyClientConnect(boundaries, logLine);
   },
 
+  /**
+   * Parses the QueryClientConnect data from the given logLine.
+   * @param {string} logLine
+   * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
+   */
   parseQueryClientConnect: function (logLine) {
     var boundaries = {};
 
@@ -57,6 +70,11 @@ module.exports = {
     return parseAnyClientConnect(boundaries, logLine);
   },
 
+  /**
+   * Parses the ClientDisconnect data from the given logLine.
+   * @param {string} logLine
+   * @returns {{clientId: number, Nickname: string, boundaries: {}}} the extracted data and the boundaries object.
+   */
   parseClientDisconnect: function (logLine) {
     var boundaries = {};
 
@@ -83,6 +101,12 @@ module.exports = {
     };
   },
 
+
+  /**
+   * Parses the ClientDeletion data from the given logLine.
+   * @param {string} logLine
+   * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
+   */
   parseClientDeletion: function (logLine) {
     var boundaries = {};
 

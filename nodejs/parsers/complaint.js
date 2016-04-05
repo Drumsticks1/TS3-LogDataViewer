@@ -1,4 +1,4 @@
-// complaint.js :
+// parsers/complaint.js : Parsing of Complaint events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -6,6 +6,11 @@
 
 module.exports = {
 
+  /**
+   * Parses the Complaint data from the given logLine.
+   * @param {string} logLine
+   * @returns {{complaintAboutNickname: string, complaintAboutID: number, complaintReason: string, complaintByNickname: string, complaintByID: number}} the extracted data
+   */
   parseComplaint: function (logLine) {
     var boundaries = {};
 

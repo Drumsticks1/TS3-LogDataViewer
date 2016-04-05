@@ -1,4 +1,4 @@
-// kick.js :
+// parsers/kick.js : Parsing of Kick events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -6,7 +6,13 @@
 
 module.exports = {
 
-  // Uses the boundaries from the previous parseClientDisconnect call.
+  /**
+   * Parses the Kick data from the given logLine.
+   * Requires the boundaries object from the previous client.parseClientDisconnect call.
+   * @param {string} logLine
+   * @param {object} boundaries boundaries object from the previous client.parseClientDisconnect call.
+   * @returns {{kickedByNickname: string, kickedByUID: string, kickReason: string}} the extracted data.
+   */
   parseKick: function (logLine, boundaries) {
     var kickReason = "";
 
@@ -33,10 +39,7 @@ module.exports = {
     else
       boundaries.kickedByUID[1] = logLine.indexOf("reasonmsg") - 1;
 
-    // Todo: kickedId and kickedNickname may not be required, already parsed in parseClientDisconnect.
     return {
-      kickedId: getSubstring("clientId"),
-      kickedNickname: getSubstring("Nickname"),
       kickedByNickname: getSubstring("kickedByNickname"),
       kickedByUID: getSubstring("kickedByUID"),
       kickReason: kickReason
