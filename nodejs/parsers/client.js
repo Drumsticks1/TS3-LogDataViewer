@@ -80,11 +80,11 @@ module.exports = {
 
     boundaries.Nickname = [
       logLine.indexOf("client disconnected '") + 21,
-      logLine.lastIndexOf("'(id:")];
+      logLine.indexOf("'(id:")];
 
     boundaries.clientId = [boundaries.Nickname[1] + 5, 0];
 
-    // Compatible with normal disconnects as well as with bans and kicks.
+    // Compatible with regular disconnects, bans and kicks.
     if (logLine.lastIndexOf(") reason 'reasonmsg") == -1)
       boundaries.clientId[1] = logLine.lastIndexOf(") reason 'invokerid=");
     else
@@ -101,11 +101,10 @@ module.exports = {
     };
   },
 
-
   /**
    * Parses the ClientDeletion data from the given logLine.
    * @param {string} logLine
-   * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
+   * @returns {{clientId: number}} the extracted data.
    */
   parseClientDeletion: function (logLine) {
     var boundaries = {};
