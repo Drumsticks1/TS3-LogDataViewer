@@ -19,7 +19,7 @@ describe('Upload', function () {
         }, uploadParser.parseUpload("2016-05-04 00:00:00.000000|INFO    |VirtualServer |  1| file upload to (id:10), '/testFile.txt' by client 'testClient'(id:99)"));
       });
     });
-    
+
     describe('log format since ts3Server v3.0.12.0', function () {
       it('should return the specified object', function () {
         assert.deepEqual({
@@ -44,7 +44,7 @@ describe('Upload', function () {
       });
     });
 
-    describe('windows, log format since ts3Server v3.0.12.0', function () {
+    describe('windows, log format before ts3Server v3.0.12.0', function () {
       it('should return the specified object', function () {
         assert.deepEqual({
           channelID: 10,
