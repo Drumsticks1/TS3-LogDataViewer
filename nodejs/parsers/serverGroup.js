@@ -41,8 +41,6 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
  * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
  */
 function parseServerGroupModification(logLine, boundaries) {
-  boundaries.ServerGroupID[0] = logLine.indexOf("'(id:") + 5;
-
   function getSubstring(boundariesIdentifier) {
     return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
   }
@@ -61,7 +59,10 @@ module.exports = {
    */
   parseServerGroupCreation: function (logLine) {
     var boundaries = {};
-    boundaries.ServerGroupID = [0, logLine.indexOf(") was added by '")];
+
+    boundaries.ServerGroupID = [
+      logLine.indexOf("'(id:") + 5,
+      logLine.indexOf(") was added by '")];
 
     boundaries.ServerGroupName = [
       logLine.indexOf("servergroup '") + 13,
@@ -77,7 +78,10 @@ module.exports = {
    */
   parseServerGroupDeletion: function (logLine) {
     var boundaries = {};
-    boundaries.ServerGroupID = [0, logLine.indexOf(") was deleted by '")];
+
+    boundaries.ServerGroupID = [
+      logLine.indexOf("'(id:") + 5,
+      logLine.indexOf(") was deleted by '")];
 
     boundaries.ServerGroupName = [
       logLine.indexOf("servergroup '") + 13,
@@ -94,7 +98,9 @@ module.exports = {
   parseServerGroupRenaming: function (logLine) {
     var boundaries = {};
 
-    boundaries.ServerGroupID = [0, logLine.indexOf(") was renamed to '")];
+    boundaries.ServerGroupID = [
+      logLine.indexOf("'(id:") + 5,
+      logLine.indexOf(") was renamed to '")];
 
     boundaries.ServerGroupName = [
       logLine.indexOf(") was renamed to '") + 18,
@@ -111,7 +117,9 @@ module.exports = {
   parseServerGroupCopying: function (logLine) {
     var boundaries = {};
 
-    boundaries.ServerGroupID = [0, logLine.length - 1];
+    boundaries.ServerGroupID = [
+      logLine.lastIndexOf("'(id:") + 5,
+      logLine.length - 1];
 
     boundaries.ServerGroupName = [
       logLine.indexOf(") to '") + 6,

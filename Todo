@@ -17,6 +17,7 @@ Ban.js:
         - Add custom bans.
 
 maybe:
+    - Add channel groups.
     - (optional) log directory watcher for automatic parsing on log updates - only building of json required when calling buildJSON.
     - Add a ServerGroup table (maybe with rights and so on - would be long-term).
     - Notification if a new ban, kick, complaint or upload was added since the last visit.

@@ -11,11 +11,11 @@ describe('clientParser', function () {
   describe('parseClientConnect', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        clientParser.parseClientConnect("client connected ''client connected Testclient'(id:0) from localhost'(id:42) from 93.104.116.62:59618"),
+        clientParser.parseClientConnect("client connected ''client connected Testclient'(id:0) from localhost'(id:42) from 127.0.0.1:12345"),
         {
           clientId: 42,
           Nickname: "'client connected Testclient'(id:0) from localhost",
-          IP: '93.104.116.62'
+          IP: '127.0.0.1'
         });
     });
   });
@@ -80,7 +80,7 @@ describe('clientParser', function () {
   });
 
   describe('parseClientDeletion', function () {
-    it('should return the specified object', function () {
+    it('should return the id of the deleted client (1234)', function () {
       assert.equal(
         clientParser.parseClientDeletion("client 'abc'(id:1234) got deleted by client 'admin'(id:2)"),
         1234

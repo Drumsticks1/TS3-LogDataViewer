@@ -7,6 +7,8 @@
 var assert = require('assert');
 var kickParser = require("../../../nodejs/parsers/kick.js");
 
+// Todo: Add additional tests
+
 describe('kickParser', function () {
   describe('parseKick', function () {
     it('should return the specified object', function () {
@@ -24,5 +26,3 @@ describe('kickParser', function () {
     });
   });
 });
-
-// Todo: Add additional tests
