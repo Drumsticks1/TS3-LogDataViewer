@@ -263,10 +263,6 @@ module.exports = {
               res = parsers.serverGroup.parseServerGroupCopying(currentLine);
             }
 
-            // Todo: Check if check is required
-            if (eventTypeS == -1)
-              log.debug("Unknown error while parsing the logs (ServerGroup).");
-
             DateTime = this.parseDateTime(currentLine);
             ServerGroupID = res.ServerGroupID;
             var ServerGroupName = res.ServerGroupName;
@@ -393,10 +389,6 @@ module.exports = {
               eventTypeC = 3;
               res = parsers.channel.parseChannelDeletion(currentLine);
             }
-
-            // Todo: Check if check is required
-            if (eventTypeC == -1)
-              log.debug("Unknown error while parsing the logs (Channel).");
 
             DateTime = this.parseDateTime(currentLine);
             var channelID = res.channelID,

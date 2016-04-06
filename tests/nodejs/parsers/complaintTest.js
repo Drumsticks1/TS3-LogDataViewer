@@ -4,28 +4,34 @@
 
 "use strict";
 
+var assert = require('assert');
 var complaintParser = require("../../../nodejs/parsers/complaint.js");
 
-test("Complaint (log format before ts3Server v3.0.12.0)", function () {
-  assert.deepEqual(
-    complaintParser.parseComplaint("2016-05-04 00:00:00.000000|INFO    |VirtualServer |  1| complaint added for client 'trolling client'(id:666) reason 'trolling' by client 'regular client'(id:123)"),
-    {
-      complaintAboutNickname: 'trolling client',
-      complaintAboutID: 666,
-      complaintReason: 'trolling',
-      complaintByNickname: 'regular client',
-      complaintByID: 123
-    });
-});
+describe('Complaint', function () {
+  describe('parseComplaint', function () {
 
-test("Complaint (log format since ts3Server v3.0.12.0)", function () {
-  assert.deepEqual(
-    complaintParser.parseComplaint("2016-05-04 00:00:00.000000|INFO    |VirtualServer |1  |complaint added for client 'trolling client'(id:666) reason 'trolling' by client 'regular client'(id:123)"),
-    {
-      complaintAboutNickname: 'trolling client',
-      complaintAboutID: 666,
-      complaintReason: 'trolling',
-      complaintByNickname: 'regular client',
-      complaintByID: 123
+    describe('log format before ts3Server v3.0.12.0', function () {
+      it('should return the specified object', function () {
+        assert.deepEqual({
+          complaintAboutNickname: 'trolling client',
+          complaintAboutID: 666,
+          complaintReason: 'trolling',
+          complaintByNickname: 'regular client',
+          complaintByID: 123
+        }, complaintParser.parseComplaint("2016-05-04 00:00:00.000000|INFO    |VirtualServer |  1| complaint added for client 'trolling client'(id:666) reason 'trolling' by client 'regular client'(id:123)"));
+      });
     });
+
+    describe('log format since ts3Server v3.0.12.0', function () {
+      it('should return the specified object', function () {
+        assert.deepEqual({
+          complaintAboutNickname: 'trolling client',
+          complaintAboutID: 666,
+          complaintReason: 'trolling',
+          complaintByNickname: 'regular client',
+          complaintByID: 123
+        }, complaintParser.parseComplaint("2016-05-04 00:00:00.000000|INFO    |VirtualServer |1  |complaint added for client 'trolling client'(id:666) reason 'trolling' by client 'regular client'(id:123)"));
+      });
+    });
+  })
 });
