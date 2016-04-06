@@ -104,20 +104,18 @@ module.exports = {
   /**
    * Parses the ClientDeletion data from the given logLine.
    * @param {string} logLine
-   * @returns {{clientId: number}} the extracted data.
+   * @returns {number} the clientId of the deleted client.
    */
   parseClientDeletion: function (logLine) {
     var boundaries = {};
 
-    boundaries.clientId = [logLine.lastIndexOf(") got deleted by client '"), 0];
-    boundaries.clientId[1] = logLine.lastIndexOf("'(id:", boundaries.clientId[0]) + 5;
+    boundaries.clientId = [0, logLine.lastIndexOf(") got deleted by client '")];
+    boundaries.clientId[0] = logLine.lastIndexOf("'(id:", boundaries.clientId[1]) + 5;
 
     function getSubstring(boundariesIdentifier) {
       return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
     }
 
-    return {
-      clientId: Number(getSubstring("clientId"))
-    };
+    return Number(getSubstring("clientId"));
   }
 };

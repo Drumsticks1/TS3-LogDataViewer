@@ -249,7 +249,7 @@ module.exports = {
 
           // Client Deletions
           else if (currentLine.indexOf(match.deleteClient1) == beginOfParsingBlock && (currentLine.indexOf(match.deleteClient2) != -1)) {
-            ClientList[parsers.client.parseClientDeletion(currentLine).clientId].deleteClient();
+            ClientList[parsers.client.parseClientDeletion(currentLine)].deleteClient();
           }
 
           // Servergroup creation, deletions, renaming and copying
