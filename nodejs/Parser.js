@@ -115,12 +115,11 @@ module.exports = {
   },
 
   /**
-   * Parses the given logfileData.
-   * Calls the parsers in the parsers folder.
-   * @param {string} logData the data from a Log.
-   * @param {boolean} isLastLog true if the data is from the last (/newest) Log.
+   * Parses the logPattern from the logData of a Log.
+   * @param {string} logData
+   * @returns {number} The number of the logPattern, returns -1 if the log pattern is unknown or if the Log doesn't contain a valid 'listening on' line.
    */
-  parseLogData: function (logData, isLastLog) {
+  parseLogPattern: function (logData) {
     /**
      * Patterns and their ts3server versions (ordered as below):
      * - v3.0.11.4 and before
@@ -135,14 +134,29 @@ module.exports = {
       "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
     ];
 
-    var lastUIDBanRule = "", lastIPBanRule = "", logPattern,
+    if (logData.indexOf(match.VirtualServer[0] + 'listening on') != -1)
+      return 0;
+    else if (logData.indexOf(match.VirtualServer[1] + 'listening on') != -1)
+      return 1;
+
+    return -1;
+  },
+
+  /**
+   * Parses the given logfileData.
+   * Calls the parsers in the parsers folder.
+   * @param {string} logData the data from a Log.
+   * @param {boolean} isLastLog true if the data is from the last (/newest) Log.
+   */
+  parseLogData: function (logData, isLastLog) {
+    var lastUIDBanRule = "", lastIPBanRule = "",
+      logPattern = this.parseLogPattern(logData),
       currentLine = logData.substring(0, logData.indexOf("\n"));
 
-    if (currentLine.indexOf("|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| listening on") != -1)
-      logPattern = 0;
-    else if (currentLine.indexOf("|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |listening on") != -1)
-      logPattern = 1;
-    // Todo: Add option for unknown log pattern!
+    // Todo: Add debug message.
+    // Skip parsing if the log pattern is unknown.
+    if (logPattern == -1)
+      return;
 
     while (logData.length > 0) {
       currentLine = logData.substring(0, logData.indexOf("\n"));
@@ -191,7 +205,7 @@ module.exports = {
           }
 
           // Query client connects
-          else if (currentLine.indexOf(match.queryClientConnect) != -1) {
+          else if (currentLine.indexOf(match.queryClientConnect) == beginOfParsingBlock) {
             res = parsers.client.parseQueryClientConnect(currentLine);
 
             DateTime = this.parseDateTime(currentLine);
