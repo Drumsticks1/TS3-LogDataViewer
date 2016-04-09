@@ -1,0 +1,11 @@
+{
+  "programLogfile": "../ts3-ldv.log",
+  "logDirectory": "../logs/",
+  "virtualServer": 1,
+  "bufferData": true,
+  "timeBetweenRequests": 0,
+  "disableLastModificationCheck": true,
+  "usedPort": 3000,
+  "logLevel": 3,
+  "ignoredLogs": []
+}

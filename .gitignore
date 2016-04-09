@@ -7,4 +7,4 @@
 node_modules
 
 # TS3-LDV related files
-conf.json
+ts3-ldv.log
