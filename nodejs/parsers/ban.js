@@ -4,10 +4,10 @@
 
 "use strict";
 
-const checkFunctions = require("../checkFunctions.js");
+var checkFunctions = require("../checkFunctions.js"),
+  miscFunctions = require('../miscFunctions.js');
 
 module.exports = {
-
   /**
    * Parses the Ban data from the given logLine.
    * Requires the boundaries object from the previous client.parseClientDisconnect call.
@@ -46,6 +46,10 @@ module.exports = {
 
     boundaries.banTime[1] = logLine.length - 1;
 
+    var getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    };
+
     var bannedByNickname = getSubstring("bannedByNickname"),
       banReason = getSubstring("banReason"),
       banTime = Number(getSubstring("banTime")),
@@ -78,10 +82,6 @@ module.exports = {
         bannedUID = bannedIP = "Unknown";
         bannedByID = 0;
       }
-    }
-
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
     }
 
     return {

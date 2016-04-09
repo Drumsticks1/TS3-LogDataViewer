@@ -4,8 +4,9 @@
 
 "use strict";
 
-module.exports = {
+var miscFunctions = require('../miscFunctions.js');
 
+module.exports = {
   /**
    * Parses the Complaint data from the given logLine.
    * @param {string} logLine
@@ -34,9 +35,9 @@ module.exports = {
       boundaries.complaintByNickname[1] + 5,
       logLine.length - 1];
 
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-    }
+    var getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    };
 
     return {
       complaintAboutNickname: getSubstring("complaintAboutNickname"),

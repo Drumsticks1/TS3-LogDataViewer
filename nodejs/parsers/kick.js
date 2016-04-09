@@ -4,8 +4,9 @@
 
 "use strict";
 
-module.exports = {
+var miscFunctions = require('../miscFunctions.js');
 
+module.exports = {
   /**
    * Parses the Kick data from the given logLine.
    * Requires the boundaries object from the previous client.parseClientDisconnect call.
@@ -16,9 +17,9 @@ module.exports = {
   parseKick: function (logLine, boundaries) {
     var kickReason = "";
 
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-    }
+    var getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    };
 
     if (logLine.lastIndexOf(" reasonmsg=") != -1) {
       boundaries.kickReason = [
@@ -46,4 +47,3 @@ module.exports = {
     };
   }
 };
-

@@ -4,6 +4,8 @@
 
 "use strict";
 
+var miscFunctions = require('../miscFunctions.js');
+
 /**
  * Parses the ServerGroup assignment or removal data from the given logLine.
  * Requires a boundaries object containing the positions for the clientId, ServerGroupID and ServerGroupName data.
@@ -22,9 +24,10 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
     logLine.indexOf("client (id:") + 11,
     logLine.indexOf(") was ")];
 
-  function getSubstring(boundariesIdentifier) {
-    return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-  }
+
+  var getSubstring = function (boundariesIdentifier) {
+    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+  };
 
   return {
     clientId: Number(getSubstring("clientId")),
@@ -41,9 +44,9 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
  * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
  */
 function parseServerGroupModification(logLine, boundaries) {
-  function getSubstring(boundariesIdentifier) {
-    return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-  }
+  var getSubstring = function (boundariesIdentifier) {
+    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+  };
 
   return {
     ServerGroupID: Number(getSubstring("ServerGroupID")),

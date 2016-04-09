@@ -4,9 +4,10 @@
 
 "use strict";
 
+var miscFunctions = require('../miscFunctions.js');
+
 // Todo: Eliminate duplicates after the boundaries objects.
 module.exports = {
-
   /**
    * Parses the Upload data from the given logLine.
    * @param {string} logLine
@@ -31,9 +32,9 @@ module.exports = {
       boundaries.uploadedByNickname[1] + 5,
       logLine.length - 1];
 
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-    }
+    var getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    };
 
     return {
       channelID: Number(getSubstring("channelID")),
@@ -67,9 +68,9 @@ module.exports = {
       boundaries.deletedByNickname[1] + 5,
       logLine.length - 1];
 
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-    }
+    var getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    };
 
     var filename = getSubstring("filename");
 
@@ -89,4 +90,3 @@ module.exports = {
     };
   }
 };
-

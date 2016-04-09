@@ -4,6 +4,8 @@
 
 "use strict";
 
+var miscFunctions = require('../miscFunctions.js');
+
 /**
  * Parses the Channel data from the given logLine.
  * Requires a boundaries object containing the end position for the channelID.
@@ -18,9 +20,9 @@ function parseChannelModification(logLine, boundaries) {
     logLine.indexOf("channel '") + 9,
     boundaries.channelID[0] - 5];
 
-  function getSubstring(boundariesIdentifier) {
-    return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-  }
+  var getSubstring = function (boundariesIdentifier) {
+    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+  };
 
   return {
     channelID: Number(getSubstring("channelID")),

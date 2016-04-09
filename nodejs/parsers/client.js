@@ -4,6 +4,8 @@
 
 "use strict";
 
+var miscFunctions = require('../miscFunctions.js');
+
 /**
  * Parses the Client data from the given logLine.
  * Requires a boundaries object containing the positions for the clientId, Nickname and IP data.
@@ -12,9 +14,9 @@
  * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
  */
 function parseAnyClientConnect(boundaries, logLine) {
-  function getSubstring(boundariesIdentifier) {
-    return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-  }
+  var getSubstring = function (boundariesIdentifier) {
+    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+  };
 
   return {
     clientId: Number(getSubstring("clientId")),
@@ -90,9 +92,9 @@ module.exports = {
     else
       boundaries.clientId[1] = logLine.lastIndexOf(") reason 'reasonmsg");
 
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-    }
+    var getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    };
 
     return {
       clientId: Number(getSubstring("clientId")),
@@ -112,10 +114,6 @@ module.exports = {
     boundaries.clientId = [0, logLine.lastIndexOf(") got deleted by client '")];
     boundaries.clientId[0] = logLine.lastIndexOf("'(id:", boundaries.clientId[1]) + 5;
 
-    function getSubstring(boundariesIdentifier) {
-      return logLine.substring(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
-    }
-
-    return Number(getSubstring("clientId"));
+    return Number(miscFunctions.getSubstring(boundaries, logLine, "clientId"));
   }
 };
