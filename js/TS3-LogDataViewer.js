@@ -1561,7 +1561,6 @@ document.addEventListener("DOMContentLoaded", function () {
   $(document).foundation();
 
   nanobar = new Nanobar({
-    bg: "white",
     id: "nanobar"
   });
 
