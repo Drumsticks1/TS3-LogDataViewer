@@ -13,7 +13,7 @@ This demo is set up with gh-pages and shows the design as well as some features 
 <br>
 As no code can be executed on the GitHub server, this isn't a demo for the server-side part.
 <br>
-The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the tool (v2.0.4)
+The [demo JSON](https://drumsticks1.github.io/TS3-LogDataViewer/output.json) was created by the tool (v2.0.7)
 out of [this log](https://drumsticks1.github.io/TS3-LogDataViewer/logs/ts3server_2016-03-11__15_00_44.563532_1.log).
 
 #### Teamspeak 3 server settings
@@ -56,7 +56,7 @@ The following options can currently be specified in conf.json:
 | disableLastModificationCheck | If the last modification check is disabled (*)          | boolean          | false                                                 |
 | ignoredLogs                  | Array containing log names that are excluded            | array of strings | []                                                    |
 
-(*) The last modification check prevents a build when the modification date of the last log has not changed since the last build (= no new data).
+(*) The last modification check prevents a build when the modification date of the last log has not changed since the last request (= no new data).
 
 ## Changelog
 The changelog for each release version can be found in the file `changelog.md`
