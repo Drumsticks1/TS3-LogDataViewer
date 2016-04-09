@@ -1,0 +1,12 @@
+image: node
+
+stages:
+  - test
+
+before_script:
+  - npm install mocha 2> /dev/null
+
+runTests:
+  stage: test
+  script:
+    - npm test

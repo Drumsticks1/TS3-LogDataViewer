@@ -8,7 +8,7 @@ const fs = require("fs"),
   globalVariables = require("./globalVariables.js"),
   log = require("./log.js"),
   fetchLogs = require("./fetchLogs.js"),
-  parseLogs = require("./parseLogs.js"),
+  Parser = require("./Parser.js"),
   createJSON = require("./createJSON.js"),
   Constants = require("./Constants.js"),
   miscFunctions = require("./miscFunctions.js");
@@ -56,7 +56,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
 
   globalVariables.lastModificationOfTheLastLog = lastModification;
 
-  parseLogs.parseLogs();
+  Parser.parseLogs();
   createJSON.createJSON();
 
   if (!globalVariables.bufferData) {

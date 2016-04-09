@@ -1,5 +1,30 @@
 # Changelog
-Versions: <a href="#v2.0.6">2.0.6</a> |<a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+
+### <a name="v2.0.7">Version 2.0.7</a> (09.04.2016)
+Additions:
+- Added tests for the parsers, using mocha
+- Added .gitlab-ci.yml for GitLab Continuous Integration (running the tests)
+
+Changes:
+- Reworked parsing
+    - Moved the parsing blocks (that are using boundaries objects) from parseLogs.js into new files in the folder nodejs/parsers
+    - Moved the part for parsing the filename from Upload.addDeletedBy to parsers/upload.js and modified the code.
+    - parseLogs.js --> Parser.js
+       - Moved log pattern parsing to the new function parseLogPattern
+       - Moved timestamp parsing to the new function parseDateTime
+       - Moved the parsing part of the parseLog function into the parseLogData function, the function receives the data
+       from a parsed Log as first parameter, calls the parser functions in the parsers folder and uses the extracted data
+       - Moved serverGroup creation, deletion, renaming and copying patterns into the match object
+       - Updated the Client Deletion section
+- Renamed the setting timeBetweenBuilds to timeBetweenRequests
+- Updated script 'test' in package.json, now running the mocha tests
+- Updated css files for foundation for sites v6.2.1
+- Moved nanobar background color setting from TS3-LogDataViewer.js to style.scss (for nanobar v0.4.0)
+
+Fixes:
+- ChannelList not being cleared by clearGlobalArrays
 
 
 ### <a name="v2.0.6">Version 2.0.6</a> (27.03.2016)

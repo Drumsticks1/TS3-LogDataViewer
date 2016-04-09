@@ -49,10 +49,10 @@ module.exports = {
    * Don't reset the ignoredLogs array here!
    */
   clearGlobalArrays: function () {
-    globalVariables.ClientList.length = globalVariables.ServerGroupList.length =
-      globalVariables.BanList.length = globalVariables.KickList.length =
-        globalVariables.ComplaintList.length = globalVariables.UploadList.length =
-          globalVariables.Logs.length = 0;
+    globalVariables.BanList.length = globalVariables.ChannelList.length =
+      globalVariables.ClientList.length = globalVariables.ComplaintList.length =
+        globalVariables.KickList.length = globalVariables.Logs.length =
+          globalVariables.ServerGroupList.length = globalVariables.UploadList.length = 0;
   },
 
   /**
@@ -62,6 +62,19 @@ module.exports = {
     for (var i = 0; i < globalVariables.ClientList.length; i++) {
       globalVariables.ClientList[i].resetConnectedState();
     }
+  },
+
+  /**
+   * Returns the substring of the logLine with the boundary limits of the boundariesIdentifier in the boundary object.
+   * @param {object} boundaries
+   * @param {string} logLine
+   * @param {string} boundariesIdentifier
+   * @returns {string} the requested substring.
+   */
+  getSubstring: function (boundaries, logLine, boundariesIdentifier) {
+    return logLine.substring(
+      boundaries[boundariesIdentifier][0],
+      boundaries[boundariesIdentifier][1]);
   }
 };
 

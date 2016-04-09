@@ -3,7 +3,7 @@
   "logDirectory": "/home/teamspeak/teamspeak3-server_linux_amd64/logs/",
   "virtualServer": 1,
   "bufferData": true,
-  "timeBetweenBuilds": 2000,
+  "timeBetweenRequests": 2000,
   "disableLastModificationCheck": false,
   "usedPort": 3000,
   "logLevel": 2,

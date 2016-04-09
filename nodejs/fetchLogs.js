@@ -75,7 +75,7 @@ exports.fetchLogs = function () {
     if (checkFunctions.isMatchingLogOrder(newLogObjects)) {
       log.debug("Comparing new and old logs.");
 
-      // The last parsed log might contain new data, don't modify it's ignored state.
+      // The last parsed log might contain new data, don't modify it's parsed state.
       for (i = 0; i < globalVariables.Logs.length - 1; i++) {
         newLogObjects[i].parsed = globalVariables.Logs[i].parsed;
       }
