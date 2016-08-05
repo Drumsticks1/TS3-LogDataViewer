@@ -1,6 +1,11 @@
 TS3-LogDataViewer is an easy to deploy application that gathers information from the logs of a ts3 server and displays them in an interface that is accessible via your web browser.
 The interface shows detailed information about the clients and their activity on your TeamSpeak3 server.
 
+## Development Activity Update (August 2016)
+I am currently not adding features to the project, at least not actively.
+<br>
+However I will still keep ts3-ldv compatible with new ts3 server updates (as long as there isn't a ts3 server update that completely breaks ts3-ldv) and fix bugs that I find while using ts-ldv as well as bugs that are brought to my attention by issues on the GitHub project page.
+
 ## How it works
 It contains two parts:
 - server-side: a nodejs application that parses the logs of the TS3 server, stores the information and creates a JSON for further use.
