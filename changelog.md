@@ -1,6 +1,13 @@
 # Changelog
-Versions: <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.0.7.1">2.0.7.1</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
+### <a name="v2.0.7.1">Version 2.0.7.1</a> (05.08.2016)
+Changes:
+- README.md: Added a development activity notice.
+- Generated the foundation css files for foundation-sites v6.2.3.
+
+Security improvements:
+- Restricted access to the socket opened by express on port 3000 to localhost.
 
 ### <a name="v2.0.7">Version 2.0.7</a> (09.04.2016)
 Additions:
