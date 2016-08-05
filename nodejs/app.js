@@ -23,8 +23,8 @@ getConf.getConf();
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
-app.listen(globalVariables.usedPort, function () {
-  log.info("TS3-LDV is listening on port " + globalVariables.usedPort + "\n");
+app.listen(globalVariables.usedPort, 'localhost', function () {
+  log.info("TS3-LDV is listening on localhost:" + globalVariables.usedPort + "\n");
 });
 
 app.get("/buildJSON", function (req, res) {
