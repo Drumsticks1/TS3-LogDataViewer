@@ -15,6 +15,11 @@ $darker-blue: #007095;
 $light-green: #5da423;
 $darker-green: #549420;
 
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
 button, .tableheading {
   border: 1px solid rgba(0, 0, 0, .1);
 }

@@ -3,6 +3,10 @@
  * Author: Drumsticks
  * GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
  */
+table {
+  border-spacing: 0;
+  border-collapse: collapse; }
+
 button, .tableheading {
   border: 1px solid rgba(0, 0, 0, 0.1); }
 
