@@ -39,11 +39,11 @@ input[type='checkbox'], .tablesorter .filtered {
 
 label, button {
   transition: background-color 300ms ease-out;
+  cursor: pointer;
 }
 
 label {
   display: block;
-  cursor: pointer;
   border: 1px solid #898989;
   :hover {
     background-color: #898989;

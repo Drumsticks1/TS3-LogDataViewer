@@ -21,11 +21,11 @@ input[type='checkbox'], .tablesorter .filtered {
   background-color: #9f9f9f; }
 
 label, button {
-  transition: background-color 300ms ease-out; }
+  transition: background-color 300ms ease-out;
+  cursor: pointer; }
 
 label {
   display: block;
-  cursor: pointer;
   border: 1px solid #898989; }
   label :hover {
     background-color: #898989; }
