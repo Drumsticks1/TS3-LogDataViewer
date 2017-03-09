@@ -5,18 +5,22 @@
 "use strict";
 
 module.exports = {
-  // Configuration JSON:
-  confJSON: "../conf/conf.json",
+  // Configuration JSON
+  confJSON: "../local/conf.json",
 
-  // JSON output path and file name.
-  outputJSON: "../output.json",
+  // JSON output file
+  outputJSON: "../local/output.json",
 
-  // The following settings can be overwritten in the conf.json.
-  // Program log path and file name.
-  programLogfile: "/var/log/ts3-ldv/ts3-ldv.log",
+  /**
+   * USER CONFIGURABLE SETTINGS
+   * The following settings can be modified in an optional configuration json file (see confJSON above for the path)
+   **/
 
-  // Default logDirectory and virtual server.
-  logDirectory: "/home/teamspeak/teamspeak3-server_linux_amd64/logs/",
+  // Program log file
+  programLogfile: "../local/ts3-ldv.log",
+
+  // TeamSpeak3 log directory and virtual server.
+  TS3LogDirectory: "/home/teamspeak/teamspeak3-server_linux_amd64/logs/",
   virtualServer: 1,
 
   // Buffer data between buildJSON calls for increased performance.

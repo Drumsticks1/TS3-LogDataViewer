@@ -42,7 +42,7 @@ function acquireSetting(settingName, settingValueType) {
 function resetToDefaultConfiguration() {
   log.debug("Ignoring the conf.json and using default settings.");
   globalVariables.programLogfile = Constants.programLogfile;
-  globalVariables.logDirectory = Constants.logDirectory;
+  globalVariables.TS3LogDirectory = Constants.TS3LogDirectory;
   globalVariables.virtualServer = Constants.virtualServer;
   globalVariables.bufferData = Constants.bufferData;
   globalVariables.timeBetweenRequests = Constants.timeBetweenRequests;
@@ -72,7 +72,7 @@ module.exports = {
           globalVariables.logLevel = Constants.logLevel;
         }
         log.updateWriteStream();
-        acquireSetting("logDirectory", "string");
+        acquireSetting("TS3LogDirectory", "string");
         acquireSetting("virtualServer", "number");
         acquireSetting("bufferData", "boolean");
         acquireSetting("timeBetweenRequests", "number");

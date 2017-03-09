@@ -3,9 +3,15 @@ Versions: <a href="#v2.1">2.1</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0
 
 ### <a name="v2.1">Version 2.1</a> (x.x.2017)
 Changes:
+- Modified project structure:
+    - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
+- Renamed configuration settings:
+    - logDirectory --> TS3LogDirectory
 - package.json:
     - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project
 - Updated foundation-sites (6.2.3 -> 6.3.0)
+- Renamed files:
+    - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
 
 ### <a name="v2.0.8">Version 2.0.8</a> (05.08.2016)
 Changes:

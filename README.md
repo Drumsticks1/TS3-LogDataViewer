@@ -50,18 +50,18 @@ Check it out yourself, start with the [demo](https://drumsticks1.github.io/TS3-L
 ## Configuration settings (server-side)
 The following options can currently be specified in conf.json:
 
-| setting                      | description                                             | value type       | default value                                         |
-|------------------------------|---------------------------------------------------------|------------------|-------------------------------------------------------|
-| programLogfile               | Path to which the ts3-ldv log is written to             | string           | "/var/log/ts3-ldv/ts3-ldv.log"                        |
-| logDirectory                 | Path to the log directory of the ts3 server             | string           | "/home/teamspeak/teamspeak3-server_linux-amd64/logs/" |
-| virtualServer                | Virtual server that's logs are to be parsed             | number           | 1                                                     |
-| bufferData                   | Whether data is buffered between builds *(much faster)* | boolean          | true                                                  |
-| timeBetweenRequests          | Minimum time allowed between requests                   | number           | 2000                                                  |
-| usedPort                     | The port on which the ts3-ldv app is running            | number           | 3000                                                  |
-| disableLastModificationCheck | If the last modification check is disabled (*)          | boolean          | false                                                 |
-| ignoredLogs                  | Array containing log names that are excluded            | array of strings | []                                                    |
+| Setting                      | Description                                      | Type     | Default Value                                         |
+|------------------------------|--------------------------------------------------|----------|-------------------------------------------------------|
+| programLogfile               | Path to which the ts3-ldv log is written to      | string   | "../local/ts3-ldv.log"                                |
+| TS3LogDirectory              | Path to the log directory of the ts3 server      | string   | "/home/teamspeak/teamspeak3-server_linux-amd64/logs/" |
+| virtualServer                | Virtual server which logs are to be parsed       | integer  | 1                                                     |
+| bufferData                   | Whether parsed data is buffered between builds   | boolean  | true                                                  |
+| timeBetweenRequests          | Minimum time allowed between requests to the app | integer  | 2000                                                  |
+| usedPort                     | The port on which the ts3-ldv app is running     | integer  | 3000                                                  |
+| disableLastModificationCheck | Allows disabling the last modification check (*) | boolean  | false                                                 |
+| ignoredLogs                  | Array containing names of logs that are excluded | string[] | []                                                    |
 
-(*) The last modification check prevents a build when the modification date of the last log has not changed since the last request (= no new data).
+(*) The last modification check prevents a build when the modification date of the last log has not changed since the last request (= no new data was logged).
 
 ## Changelog
 The changelog for each release version can be found in the file `changelog.md`

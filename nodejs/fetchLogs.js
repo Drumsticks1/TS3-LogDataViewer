@@ -22,7 +22,7 @@ exports.fetchLogs = function () {
   var rebuildRequired = false;
 
   try {
-    if (!fs.statSync(globalVariables.logDirectory).isDirectory()) {
+    if (!fs.statSync(globalVariables.TS3LogDirectory).isDirectory()) {
       log.warn("The log directory seems not to be a directory.");
       return 0;
     }
@@ -33,7 +33,7 @@ exports.fetchLogs = function () {
   }
 
   try {
-    var logFiles = fs.readdirSync(globalVariables.logDirectory);
+    var logFiles = fs.readdirSync(globalVariables.TS3LogDirectory);
   } catch (error) {
     log.error("An error occurred while reading the directory:\n\t" + error.message);
   }

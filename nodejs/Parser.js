@@ -97,7 +97,7 @@ module.exports = {
     for (var i = 0; i < Logs.length; i++) {
       if (!Logs[i].parsed && !Logs[i].ignored) {
         this.parseLogData(
-          fs.readFileSync(globalVariables.logDirectory + Logs[i].logName, "utf8"),
+          fs.readFileSync(globalVariables.TS3LogDirectory + Logs[i].logName, "utf8"),
           i + 1 == Logs.length);
 
         Logs[i].parsed = true;

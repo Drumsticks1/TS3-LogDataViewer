@@ -1341,7 +1341,7 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
 function buildTables() {
   nanobar.go(50);
   $.ajax({
-    url: "./output.json",
+    url: "local/output.json",
     cache: false,
     dataType: "json",
     error: function () {
