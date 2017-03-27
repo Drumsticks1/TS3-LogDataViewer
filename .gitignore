@@ -10,3 +10,6 @@ node_modules
 
 # local files (conf.json, output.json, ts3-ldv.log, ...)
 local/
+
+# keep .gitkeep
+!local/.gitkeep
