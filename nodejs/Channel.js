@@ -79,7 +79,7 @@ module.exports = {
    */
   getChannelByChannelId: function (array, channelId) {
     for (var i = 0; i < array.length; i++) {
-      if (array[i].channelId == channelId)
+      if (array[i].channelId === channelId)
         return array[i];
     }
     return null;

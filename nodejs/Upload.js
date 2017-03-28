@@ -107,7 +107,7 @@ module.exports = {
     var UploadList = globalVariables.UploadList;
 
     for (var i = 0; i < UploadList.length; i++) {
-      if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename && !UploadList[i].isDeleted()) {
+      if (UploadList[i].getChannelID() === channelID && UploadList[i].getFilename() === filename && !UploadList[i].isDeleted()) {
         UploadList[i].deletedByID = deletedByID;
         UploadList[i].deletedByNickname = deletedByNickname;
         UploadList[i].deleted = true;

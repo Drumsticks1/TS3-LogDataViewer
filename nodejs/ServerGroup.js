@@ -78,7 +78,7 @@ module.exports = {
    */
   getServerGroupByServerGroupId: function (array, serverGroupId) {
     for (var i = 0; i < array.length; i++) {
-      if (array[i].serverGroupId == serverGroupId)
+      if (array[i].serverGroupId === serverGroupId)
         return array[i];
     }
     return null;

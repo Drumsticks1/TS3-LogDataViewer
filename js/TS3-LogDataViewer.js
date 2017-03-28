@@ -46,7 +46,7 @@ function buildJSON(clearBuffer) {
   /* Requests are only sent if the time span between the last two requests is bigger than timeBetweenRequests and
    there is no request in progress. Invalid requests are only sent when the remote timeBetweenRequests is unknown
    or has increased since the last request */
-  if (!buildRequestInProgress && (lastBuildCallTime == null || timeBetweenBuilds == null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
+  if (!buildRequestInProgress && (lastBuildCallTime === null || timeBetweenBuilds === null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
     buildRequestInProgress = true;
     lastBuildCallTime = Date.now().valueOf();
 
@@ -90,7 +90,7 @@ function buildJSON(clearBuffer) {
  * @param {object} response response object of a request.
  */
 function updateTimeBetweenBuilds(response) {
-  if (timeBetweenBuilds != response.timeBetweenRequests)
+  if (timeBetweenBuilds !== response.timeBetweenRequests)
     timeBetweenBuilds = response.timeBetweenRequests;
 }
 
@@ -107,9 +107,9 @@ function addCallout(message, calloutClass, duration) {
   var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
 
   // Prevents duplicate callouts
-  if (calloutsWithTheSameClass.length != 0) {
+  if (calloutsWithTheSameClass.length !== 0) {
     // Updates the message of the nextRequestCallout if one is already existing.
-    if (calloutClass.indexOf("nextRequestCallout") != -1)
+    if (calloutClass.indexOf("nextRequestCallout") !== -1)
       calloutsWithTheSameClass[0].innerText = message;
 
     return;
@@ -129,7 +129,7 @@ function addCallout(message, calloutClass, duration) {
   callout.appendChild(calloutCloseButton);
   document.getElementById("calloutDiv").appendChild(callout);
 
-  if (duration != undefined) {
+  if (duration !== undefined) {
     setTimeout(function () {
       $(callout).fadeOut(function () {
         callout.parentNode.removeChild(callout);
@@ -146,7 +146,7 @@ function addCallout(message, calloutClass, duration) {
  */
 function expandOrCollapseList(list, ID) {
   var column, collapsedCellCount;
-  if (list == "IPs") {
+  if (list === "IPs") {
     column = 3;
     collapsedCellCount = 1;
   } else
@@ -154,7 +154,7 @@ function expandOrCollapseList(list, ID) {
 
   var currentDiv = document.getElementById(list + "_" + ID + "_1");
 
-  if (currentDiv === null || currentDiv.style.display == "none")
+  if (currentDiv === null || currentDiv.style.display === "none")
     expandList(list, ID, column, collapsedCellCount);
   else
     collapseList(list, ID, column, collapsedCellCount);
@@ -183,12 +183,12 @@ function expandList(list, ID, column, collapsedCellCount) {
       var newDiv = document.createElement("div");
       newDiv.id = currentDivString;
 
-      if (collapsedCellCount == 1)
+      if (collapsedCellCount === 1)
         newDiv.innerHTML = listContent[j];
       else
         newDiv.innerHTML = UTCDateStringToLocaltimeString(listContent[j]);
 
-      if (column == 3)
+      if (column === 3)
         x.appendChild(newDiv);
       else
         x.insertBefore(newDiv, x.lastChild);
@@ -214,7 +214,7 @@ function collapseList(list, ID, column, collapsedCellCount) {
   if (document.getElementById(String(ID)) !== null) {
     var hideLength = document.getElementById(String(ID)).childNodes[column].childNodes.length;
 
-    if (column == 3)
+    if (column === 3)
       hideLength++;
 
     for (var j = 1; j < hideLength - 2; j++) {
@@ -229,10 +229,10 @@ function collapseList(list, ID, column, collapsedCellCount) {
 function collapseAll() {
   var rows = document.getElementById("clientTable").lastChild.childNodes;
   for (var j = 0; j < rows.length; j++) {
-    if (rows[j].childNodes[2].getAttribute("expanded") == "true")
+    if (rows[j].childNodes[2].getAttribute("expanded") === "true")
       collapseList("Connections", Number(rows[j].getAttribute("id")), 2, 2);
 
-    if (rows[j].childNodes[3].getAttribute("expanded") == "true")
+    if (rows[j].childNodes[3].getAttribute("expanded") === "true")
       collapseList("IPs", Number(rows[j].getAttribute("id")), 3, 1);
   }
 }
@@ -255,8 +255,8 @@ function addCustomParsers() {
   $.tablesorter.addParser({
     id: "connections",
     format: function (s, table, cell) {
-      if (localStorage.getItem("connectionsSortType") == "1") {
-        if (cell.firstChild.localName == "button")
+      if (localStorage.getItem("connectionsSortType") === "1") {
+        if (cell.firstChild.localName === "button")
           return cell.childNodes[1].innerHTML;
         else
           return cell.firstChild.innerHTML;
@@ -269,7 +269,7 @@ function addCustomParsers() {
   $.tablesorter.addParser({
     id: "ips",
     format: function (s, table, cell) {
-      if (cell.firstChild.localName == "button")
+      if (cell.firstChild.localName === "button")
         return cell.childNodes[1].innerHTML;
       else
         return cell.firstChild.innerHTML;
@@ -308,12 +308,12 @@ function switchBetweenIDAndUID() {
     var currentRowCells = document.getElementById(rowId).childNodes;
 
     if (uidState) {
-      if (currentRowCells[3].innerHTML != "Unknown")
+      if (currentRowCells[3].innerHTML !== "Unknown")
         bannedByIDOrUID = Ban[banId].bannedByID;
       else
         bannedByIDOrUID = "Unknown";
     } else {
-      if (Ban[banId].bannedByUID.length != 0)
+      if (Ban[banId].bannedByUID.length !== 0)
         bannedByIDOrUID = Ban[banId].bannedByUID;
       else
         bannedByIDOrUID = "No UID";
@@ -356,7 +356,7 @@ function addTableCheckboxListener(table) {
     if (this.checked) {
       localStorage.setItem(table, "1");
 
-      if (sessionStorage.getItem(table + "-built") == "0")
+      if (sessionStorage.getItem(table + "-built") === "0")
         buildTableWithAlertCheckAndLocalStorage(table);
 
     } else {
@@ -526,11 +526,11 @@ function buildClientTable() {
 
   if (localStorage.getItem("connectionsSortType") === null)
     localStorage.setItem("connectionsSortType", "1");
-  else if (localStorage.getItem("connectionsSortType") == "0")
+  else if (localStorage.getItem("connectionsSortType") === "0")
     connectionsSortTypeButton.innerHTML = sortStrings[0];
 
   addOnClickEvent(connectionsSortTypeButton, function () {
-    if (localStorage.getItem("connectionsSortType") == "1") {
+    if (localStorage.getItem("connectionsSortType") === "1") {
       connectionsSortTypeButton.innerHTML = sortStrings[0];
       localStorage.setItem("connectionsSortType", "0");
     } else {
@@ -604,7 +604,7 @@ function buildClientTable() {
   var clientBody = document.createElement("tbody");
   for (var i = 0; i < Client.length; i++) {
     var ID = Number(Client[i].clientId);
-    if (Client[ID].Nicknames.length != 0) {
+    if (Client[ID].Nicknames.length !== 0) {
       var Nicknames = Client[ID].Nicknames,
         Connections = Client[ID].Connections,
         IPs = Client[ID].IPs,
@@ -734,7 +734,7 @@ function buildClientTable() {
           var connections = json.ClientList[Number(data.$cells[0].innerHTML)].Connections;
 
           for (i = 0; i < connections.length; i++) {
-            if (connections[i].indexOf(data.filter) != -1)
+            if (connections[i].indexOf(data.filter) !== -1)
               return true;
           }
 
@@ -744,7 +744,7 @@ function buildClientTable() {
           var ips = json.ClientList[Number(data.$cells[0].innerHTML)].IPs;
 
           for (i = 0; i < ips.length; i++) {
-            if (ips[i].indexOf(data.filter) != -1)
+            if (ips[i].indexOf(data.filter) !== -1)
               return true;
           }
 
@@ -834,12 +834,12 @@ function buildBanTable() {
       BanReason,
       BanTime = Ban[i].banTime;
 
-    if (BannedIP != "Unknown")
+    if (BannedIP !== "Unknown")
       BannedByID = Ban[i].bannedByID;
     else
       BannedByID = "Unknown";
 
-    if (Ban[i].banReason.length != 0)
+    if (Ban[i].banReason.length !== 0)
       BanReason = Ban[i].banReason;
     else
       BanReason = "No Reason given";
@@ -969,7 +969,7 @@ function buildKickTable() {
       KickedByUID = Kick[i].kickedByUID,
       KickReason;
 
-    if (Kick[i].kickReason.length != 0)
+    if (Kick[i].kickReason.length !== 0)
       KickReason = Kick[i].kickReason;
     else KickReason = "No Reason given";
 
@@ -1291,7 +1291,7 @@ function buildUploadTable() {
  * @param {string} table - name of the table (e.g. "clientTable").
  */
 function buildTableWithAlertCheckAndLocalStorage(table) {
-  if (document.getElementById(table) != null) {
+  if (document.getElementById(table) !== null) {
     $(document.getElementById(table)).trigger("destroy");
     $(document.getElementById("ts3-" + table)).empty();
   }
@@ -1299,7 +1299,7 @@ function buildTableWithAlertCheckAndLocalStorage(table) {
   if (localStorage.getItem(table + "SortOrder") === null)
     localStorage.setItem(table + "SortOrder", "[]");
 
-  if (localStorage.getItem(table) != "0") {
+  if (localStorage.getItem(table) !== "0") {
     sessionStorage.setItem(table + "-built", "1");
 
     var leadingCapitalLetterTable = table.charAt(0).toUpperCase() + table.substring(1);
@@ -1373,10 +1373,10 @@ function buildTables() {
 
       // Ban table UID state action.
       var uidState = localStorage.getItem("uidState");
-      if (document.getElementById("banTable") != null && (uidState == null || uidState == "1")) {
+      if (document.getElementById("banTable") !== null && (uidState === null || uidState === "1")) {
         localStorage.setItem("uidState", "0");
 
-        if (uidState == "1")
+        if (uidState === "1")
           switchBetweenIDAndUID();
       }
 
@@ -1392,7 +1392,7 @@ function buildTables() {
         document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
       }, 1000);
 
-      if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display == "none") {
+      if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display === "none") {
         var Client = json.ClientList;
         for (var j = 0; j < Client.length; j++) {
           if (Client[j].ConnectedState)

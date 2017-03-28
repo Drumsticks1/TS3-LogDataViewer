@@ -5,6 +5,8 @@ Versions: <a href="#v2.1">2.1</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0
 Changes:
 - Modified project structure:
     - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
+- Javascript code:
+    - Replaced in-/equality checks with strict in-/equality checks (== --> ===, != --> !==)
 - Renamed configuration settings:
     - logDirectory --> TS3LogDirectory
 - package.json:

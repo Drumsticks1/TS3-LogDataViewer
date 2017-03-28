@@ -49,7 +49,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
   else if (!fs.existsSync(Constants.outputJSON))
     log.debug("Didn't find output.json, skipping lastModification check.");
 
-  else if (lastModification == globalVariables.lastModificationOfTheLastLog) {
+  else if (lastModification === globalVariables.lastModificationOfTheLastLog) {
     log.info("No modifications to the last log since the last request, stopping build process.\n");
     return 2;
   }

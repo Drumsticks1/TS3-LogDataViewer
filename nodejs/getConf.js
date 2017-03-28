@@ -18,9 +18,9 @@ var confJSON;
  * @param {string} settingValueType
  */
 function acquireSetting(settingName, settingValueType) {
-  if (confJSON[settingName] != undefined) {
-    if (typeof confJSON[settingName] == settingValueType) {
-      if (globalVariables[settingName] != confJSON[settingName]) {
+  if (confJSON[settingName] !== undefined) {
+    if (typeof confJSON[settingName] === settingValueType) {
+      if (globalVariables[settingName] !== confJSON[settingName]) {
         globalVariables[settingName] = confJSON[settingName];
         log.debug("Configuration variable \"" + settingName + "\" is set to \"" + confJSON[settingName] + "\".");
       } else {
@@ -67,7 +67,7 @@ module.exports = {
 
         acquireSetting("programLogfile", "string");
         acquireSetting("logLevel", "number");
-        if (globalVariables.logLevel != 0 && globalVariables.logLevel != 1 && globalVariables.logLevel != 2 && globalVariables.logLevel != 3) {
+        if (globalVariables.logLevel !== 0 && globalVariables.logLevel !== 1 && globalVariables.logLevel !== 2 && globalVariables.logLevel !== 3) {
           log.info("logLevel setting \"" + globalVariables.logLevel + "\" is invalid, setting default value.");
           globalVariables.logLevel = Constants.logLevel;
         }
@@ -79,7 +79,7 @@ module.exports = {
         acquireSetting("disableLastModificationCheck", "boolean");
         acquireSetting("usedPort", "number");
 
-        if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0) {
+        if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length !== 0) {
           for (var i = 0; i < confJSON.ignoredLogs.length; i++) {
             var ignoredLog = confJSON.ignoredLogs[i];
             globalVariables.ignoredLogs.push(ignoredLog);

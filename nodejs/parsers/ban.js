@@ -22,7 +22,7 @@ module.exports = {
 
     boundaries.bannedByNickname = [logLine.indexOf(" invokername=", boundaries.clientId[1]) + 13, 0];
 
-    if (logLine.indexOf("invokeruid=") != -1) {
+    if (logLine.indexOf("invokeruid=") !== -1) {
       boundaries.bannedByNickname[1] = logLine.indexOf(" invokeruid=", boundaries.bannedByNickname[0]);
       boundaries.bannedByUID = [
         boundaries.bannedByNickname[1] + 12,
@@ -35,7 +35,7 @@ module.exports = {
     }
 
     boundaries.banReason = [boundaries.bannedByUID[1] + 11, 0];
-    if (logLine.indexOf("reasonmsg=") != -1) {
+    if (logLine.indexOf("reasonmsg=") !== -1) {
       boundaries.banReason[1] = logLine.indexOf(" bantime=", boundaries.bannedByUID[1]);
       boundaries.banTime = [boundaries.banReason[1] + 9, 0];
     }
@@ -60,7 +60,7 @@ module.exports = {
     else
       bannedByUID = "No UID";
 
-    if (lastUIDBanRule.length != 0 && lastIPBanRule.length != 0) {
+    if (lastUIDBanRule.length !== 0 && lastIPBanRule.length !== 0) {
       if (checkFunctions.isMatchingBanRules(bannedByNickname, banReason, banTime, lastUIDBanRule, lastIPBanRule)) {
         boundaries.bannedUID = [
           lastUIDBanRule.indexOf("' cluid='") + 9,
