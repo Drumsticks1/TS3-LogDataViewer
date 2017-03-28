@@ -2,76 +2,126 @@
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-This installation instructions are intended for any linux distribution (you need to write your own init script for the ts3-ldv service if your linux distribution doesn't use systemd).
-Experienced users may also install it on other operating systems but I may not be able to help with issues regarding anything else than linux.
+This installation instructions are intended for linux distributions (you need to write your own init script for the
+ts3-ldv service if your linux distribution doesn't use systemd).
 
-- Create a directory for the LogDataViewer in a directory which can be accessed on your server via nginx (e.g.""/var/www/www.your-domain.com/teamspeak").
-    - Set the directory owner and the directory group to your webserver group (e.g. www-data) to ensure that nginx has access to it.
-- Head over to the directory you just created and execute "npm install ts3-ldv" (nodejs has to be installed).
-    - This will create the directory node_modules in the current folder, ts3-ldv and it's dependencies are packages in this directory.
-- Make the ts3-ldv user the owner of the ts3-ldv directory that npm installed (command: "chown ts3-ldv node_modules/ts3-ldv").
-- Rename the default-conf.json in the /node_modules/ts3-ldv/conf folder to conf.json and modify it according to your web server and your preferences (information about the possible settings can be found in the configuration section in README.md).
-    - If you don't change the programLog setting you will have to create a directory /var/log/ts3-ldv/ and set the directory owner to the user that will run the server-side app.
-- Follow the steps in the nginx section below before proceeding to the next step.
-- (optional, recommended) Copy the ts3-ldv.service file to your systemd service folder and modify the settings according to your installation.
-    - If the distribution doesn't use systemd you will have to write your own init script for the ts3-ldv service.
-- (optional, recommended) Copy the ts3-ldv.logrotate file for your logrotate.d config folder and rename the file to ts3-ldv (you need to change the log path if you changed the programLog setting in conf.json).
-- You should now be able to start the server-side app via "service ts3-ldv start", access the location on your domain via your browser and access the interface.
+Experienced users may also install it on other operating systems (nodejs should run on most of them).
 
-If the program fails to start, doesn't work properly or you run into any other issues:
-Check the program log first and ensure that you configured the paths right.
+Dependencies:
+- nodejs (https://nodejs.org)
+- nginx (or another web server, instructions given here are limited to nginx but you can surely create an equivalent
+  configuration if you are familiar with another web server)
+
+Soft dependencies:
+- git (for cloning the repository, you could also download it via https://github.com/Drumsticks1/TS3-LogDataViewer.git)
+
+You will require:
+    - an user & group that is running your web server and has access to the files that can be accessed online
+      (e.g. www-data)
+    - an user that is running the ts3-ldv app (e.g. ts3-ldv). This user must have read access to the logs of your
+      teamspeak3 server (e.g. "/home/teamspeak/teamspeak3-server_linux_amd64/logs/") (could be achieved by adding the
+      ts3-ldv user to a group that is running the teamspeak3 server and has access to the logs).
+
+Example creation of the ts3-ldv user as part of the teamspeak group (has access to the logs) (without a home directory):
+    useradd -M --no-user-group -g teamspeak ts3-ldv
+
+Files that are served by your (nginx) web server are stored in a directory on your server that can be read by the
+www-data user & group. This directory will be referenced to as "/var/www/www.your-domain.com" in the instructions below.
 
 
-nginx configuration:
+Installation:
 
-This section only covers the part of the nginx configuration for ts3-ldv integration.
-If you aren't familiar with nginx: Take your time and create a secure configuration before adding
-the following code to your nginx domain configuration located in the sites-enabled folder.
+Create the ts3-ldv directory in /var/www/www.your-domain.com:
+(To prevent mix-ups with the ts3-ldv user and the directory it will be named ts3-ldv-dir, you can of course rename it)
+    cd /var/www/www.your-domain.com
+    mkdir ts3-ldv-dir
 
-Security:
-Another important thing is that you secure the access to the ts3-ldv page as it contains sensitive information and
-should be considered a security risk when accessible by untrustworthy users!
-If you aren't familiar with this you should probably have a look at this part of the nginx docs:
-    http://nginx.org/en/docs/http/ngx_http_auth_basic_module.html
+Make ts3-ldv the owner user and www-data the owner group of the ts3-ldv-dir (ts3-ldv needs to write into the directory,
+www-data needs to read):
+    chown ts3-ldv:www-data ts3-ldv-dir
 
-(I also recommend something like fail2ban to prevent brute-forcing the auth, but this is only another layer of security, be sure you have at least the one described above!)
+Clone the TS3-LDV git repository into the folder:
+    git clone https://github.com/Drumsticks1/TS3-LogDataViewer.git ts3-ldv-dir
 
-The following lines are a template for the configuration that allows access to specific locations on the server only.
-If you don't use "teamspeak" as directory you will have to replace ALL occurrences of "teamspeak" in the below configuration according to your installation.
-If you modified the port setting in conf.json you have to modify the port in the proxy_pass directives.
+Enter the ts3-ldv-dir directory and install the package dependencies:
+    cd ts3-ldv-dir
+    npm install
 
-# Allow access to specific locations only - check nginx documentation for more information.
-location / {
-    try_files $uri $uri/ /index.html =404;
+Copy the default configuration to the local folder and modify it according to your installation (see README.md for more
+information about the settings):
+    cp conf/default-conf.json local/conf.json
+    nano local/conf.json
 
-    # Modify the location according to your installation.
-    location /teamspeak {
-        auth_basic "Authentication required!";
-        auth_basic_user_file /path/to/your/auth/file/.htpasswd;
+Configure the web server so that only authorized clients have access to specific files (assuming you already have a
+working nginx configuration):
+Insert the following directives into the nginx configuration file of the domain (you will have to update the directory
+name and port if you modified them in your ts3-ldv configuration):
 
-        # Ignore the node_modules directory for the rewrite after this location section.
-        location /teamspeak/node_modules {
-            # For use via your-domain.com/teamspeak/node_modules/ts3-ldv/
-            location /teamspeak/node_modules/ts3-ldv/node_modules {
-                rewrite ^/teamspeak/node_modules/ts3-ldv/(.*)$ /teamspeak/$1 last;
-            }
-        }
+location /ts3-ldv-dir {
+    auth_basic "Authentication required!";
+    auth_basic_user_file /path/to/your/auth/file/.htpasswd;
 
-        # Rewrites the urls in order to make the ts3-ldv page accessible via your-domain.com/teamspeak/
-        # and not only via your-domain.com/teamspeak/node_modules/ts3-ldv/
-        rewrite ^/teamspeak/(.*)$ /teamspeak/node_modules/ts3-ldv/$1 last;
+    # Deny access to all files not explicitly whitelisted below
+    location /ts3-ldv-dir {
+        deny all;
+    }
 
-        # For the buildJSON request when issued via your-domain.com/teamspeak/
-        location /teamspeak/express/buildJSON {
-            proxy_pass http://127.0.0.1:3000/buildJSON;
-        }
+    # Override the 'deny all' directive for files that should be accessible for clients
+    #
+    # Long version of the regex below (nginx wants a one line regex):
+    # /ts3-ldv-dir/(
+    #     css/(
+    #         foundation|
+    #         style).min.css|
+    #     img/favicon.png|
+    #     js/TS3-LogDataViewer.js|
+    #     index.html|
+    #     local/output.json|
+    #     node_modules/(
+    #         jquery/dist/jquery|
+    #         tablesorter/dist/js/(
+    #             jquery.tablesorter.combined|
+    #             extras/jquery.tablesorter.pager)|
+    #         moment/min/moment|
+    #         nanobar/nanobar|
+    #         foundation-sites/dist/js/foundation).min.js)
+    #
+    location ~ /ts3-ldv-dir/(css/(foundation|style).min.css|img/favicon.png|js/TS3-LogDataViewer.js|index.html|local/output.json|node_modules/(jquery/dist/jquery|tablesorter/dist/js/(jquery.tablesorter.combined|extras/jquery.tablesorter.pager)|moment/min/moment|nanobar/nanobar|foundation-sites/dist/js/foundation).min.js) {
 
-        # For the buildJSON request when issued via your-domain.com/teamspeak/node_modules/ts3-ldv/
-        location /teamspeak/node_modules/ts3-ldv/express/buildJSON {
-            proxy_pass http://127.0.0.1:3000/buildJSON;
-        }
+    }
+
+    # Passing the buildJSON request to the server.
+    # The port has to be the same as in your configuration.
+    location /ts3-ldv-dir/express/buildJSON {
+        proxy_pass http://127.0.0.1:3000/buildJSON;
     }
 }
 
+IMPORTANT:
+Regarding the auth_basic directives in the configuration: They are used for restricting the access to the web interface
+by adding an username & password login. See https://nginx.org/en/docs/http/ngx_http_auth_basic_module.html for more
+information. (You should really check if this is working properly: otherwise everybody can access the interface!)
 
-Feel free to open an issue on GitHub for improvement suggestions for the install instructions!
+Using an systemd service script is optional but strongly recommended:
+If you aren't using the systemd script or a script for an equivalent system of your distribution that is based on the
+system script, you will have to write your own start/stop script that runs the nodejs/app.js with nodejs.
+
+Systemd service script:
+    See conf/ts3-ldv.service for an example configuration for a systemd service script.
+
+You should now be able to start the server-side app via "service ts3-ldv start", access the location on your domain via
+your browser and access the interface.
+
+Important note: You will have to directly navigate to www.your-domain.com/ts3-ldv-dir/index.html as a result of the
+whitelisting in the nginx configuration, navigating to www.your-domain.com/ts3-ldv-dir/ should not work if your
+configuration is working as expected.
+
+In case of problems it might be helpful to take a look at the program log files.
+If the program fails to start, doesn't work properly or you run into any other issues, a look at the program log might
+be helpful, also ensure that you configured the paths correctly.
+
+Additional & Optional:
+
+Logrotate script (if you care about the ts3-ldv logs):
+    If you are using logrotate you can use the example configuration ts3-ldv.logrotate in the conf folder.
+

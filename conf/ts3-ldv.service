@@ -9,14 +9,14 @@ After=network.target
 [Service]
 # Modify the following settings according to your installation.
 
-# nodejs directory inside the ts3-ldv package, the part after /teamspeak/ must remain unmodified.
-WorkingDirectory=/var/www/www.your-domain.com/teamspeak/node_modules/ts3-ldv/nodejs
+# Path of the nodejs directory inside the ts3-ldv-dir.
+WorkingDirectory=/var/www/www.your-domain.com/ts3-ldv-dir/nodejs
 
-# Create an user for ts3-ldv - grant only the required permissions to prevent security issues.
+# The user running the nodejs ts3-ldv app, requires specific permissions (see install instructions).
 User=ts3-ldv
 
-# Set as the group which runs the teamspeak3 server or as a new group that has access to
-# the log directory in the teamspeak directory and the log files inside it.
+# The group of the user that runs the teamspeak3 server.
+# Alternatively: Group that has read access to the the teamspeak3 log directory and the contained logs.
 Group=teamspeak
 
 Type=simple
