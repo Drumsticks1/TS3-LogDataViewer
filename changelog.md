@@ -7,6 +7,7 @@ Changes:
     - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
 - Javascript code:
     - Replaced in-/equality checks with strict in-/equality checks (== --> ===, != --> !==)
+    - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
 - Renamed configuration settings:
     - logDirectory --> TS3LogDirectory
 - package.json:
@@ -14,6 +15,7 @@ Changes:
 - Updated foundation-sites (6.2.3 -> 6.3.0)
 - Renamed files:
     - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
+
 
 ### <a name="v2.0.8">Version 2.0.8</a> (05.08.2016)
 Changes:

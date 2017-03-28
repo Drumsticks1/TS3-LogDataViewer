@@ -20,21 +20,6 @@ var Client = function (clientId) {
 };
 
 /**
- * Sets the data of the current Client according to the data in the given clientObject.
- * @param {object} clientObject containing the client data.
- */
-Client.prototype.addClientViaObject = function (clientObject) {
-  this.clientId = clientObject.clientId;
-  this.Nicknames = clientObject.Nicknames.slice();
-  this.Connections = clientObject.Connections.slice();
-  this.IPs = clientObject.IPs.slice();
-  this.ConnectedState = clientObject.ConnectedState;
-  this.ServerGroupIDs = clientObject.ServerGroupIDs.slice();
-  this.ServerGroupAssignmentDateTimes = clientObject.ServerGroupAssignmentDateTimes.slice();
-  this.deleted = clientObject.deleted;
-};
-
-/**
  * Returns the count of the Connections.
  * @returns {number}
  */

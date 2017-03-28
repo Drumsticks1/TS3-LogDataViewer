@@ -96,27 +96,5 @@ module.exports = {
         banReason,
         banTime
       ));
-  },
-
-  /**
-   * Adds a new Ban containing the data of the banObject to the array.
-   * @param {Array} array
-   * @param {object} banObject containing the ban data.
-   */
-  addBanViaObject: function (array, banObject) {
-    array.push(
-      new Ban(
-        banObject.banListId,
-        banObject.banDateTime,
-        banObject.bannedID,
-        banObject.bannedNickname,
-        banObject.bannedUID,
-        banObject.bannedIP,
-        banObject.bannedByID,
-        banObject.bannedByNickname,
-        banObject.bannedByUID,
-        banObject.banReason,
-        banObject.banTime
-      ));
   }
 };

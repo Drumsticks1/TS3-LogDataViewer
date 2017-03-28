@@ -71,30 +71,6 @@ module.exports = {
         uploadedByNickname
       ));
   },
-
-  /**
-   * Adds a new Upload containing the data of the uploadObject to the array.
-   * @param {Array} array
-   * @param {object} uploadObject containing the upload data.
-   */
-  addUploadViaObject: function (array, uploadObject) {
-    var upload = new Upload(
-      uploadObject.uploadListId,
-      uploadObject.uploadDateTime,
-      uploadObject.channelID,
-      uploadObject.filename,
-      uploadObject.uploadedByID,
-      uploadObject.uploadedByNickname
-    );
-
-    if (uploadObject.deleted) {
-      upload.deletedByID = uploadObject.deletedByID;
-      upload.deletedByNickname = uploadObject.deletedByNickname;
-      upload.deleted = uploadObject.deleted;
-    }
-
-    array.push(upload);
-  },
   
   /**
    * Adds the deletedByNickname and deletedByID data to the matching Upload in the UploadList.
