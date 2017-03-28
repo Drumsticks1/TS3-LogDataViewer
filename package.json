@@ -28,12 +28,12 @@
   ],
   "main": "nodejs/app.js",
   "dependencies": {
-    "express": "4.14.0",
-    "helmet": "3.4.0",
-    "jquery": "3.1.1",
+    "express": "4.15.2",
+    "helmet": "3.5.0",
+    "jquery": "3.2.1",
     "foundation-sites": "6.3.0",
-    "tablesorter": "2.28.4",
-    "moment": "2.17.1",
+    "tablesorter": "2.28.5",
+    "moment": "2.18.1",
     "nanobar": "0.4.2"
   },
   "devDependencies": {
