@@ -9,7 +9,7 @@
 node_modules
 
 # local files (conf.json, output.json, ts3-ldv.log, ...)
-local/
+local/*
 
-# keep .gitkeep
-!local/.gitkeep
+# keep .gitkeep files
+!.gitkeep
