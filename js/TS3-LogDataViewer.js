@@ -46,7 +46,7 @@ function buildJSON(clearBuffer) {
   /* Requests are only sent if the time span between the last two requests is bigger than timeBetweenRequests and
    there is no request in progress. Invalid requests are only sent when the remote timeBetweenRequests is unknown
    or has increased since the last request */
-  if (!buildRequestInProgress && (lastBuildCallTime === null || timeBetweenBuilds === null || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
+  if (!buildRequestInProgress && (lastBuildCallTime === undefined || timeBetweenBuilds === undefined || Date.now().valueOf() - lastBuildCallTime > timeBetweenBuilds)) {
     buildRequestInProgress = true;
     lastBuildCallTime = Date.now().valueOf();
 

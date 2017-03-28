@@ -21,6 +21,7 @@ You will require:
     - an user that is running the ts3-ldv app (e.g. ts3-ldv). This user must have read access to the logs of your
       teamspeak3 server (e.g. "/home/teamspeak/teamspeak3-server_linux_amd64/logs/") (could be achieved by adding the
       ts3-ldv user to a group that is running the teamspeak3 server and has access to the logs).
+      You will also have to open a shell as this user for the installation.
 
 Example creation of the ts3-ldv user as part of the teamspeak group (has access to the logs) (without a home directory):
     useradd -M --no-user-group -g teamspeak ts3-ldv
@@ -34,30 +35,48 @@ Installation:
 Create the ts3-ldv directory in /var/www/www.your-domain.com:
 (To prevent mix-ups with the ts3-ldv user and the directory it will be named ts3-ldv-dir, you can of course rename it)
     cd /var/www/www.your-domain.com
-    mkdir ts3-ldv-dir
+    sudo mkdir ts3-ldv-dir
 
 Make ts3-ldv the owner user and www-data the owner group of the ts3-ldv-dir (ts3-ldv needs to write into the directory,
 www-data needs to read):
-    chown ts3-ldv:www-data ts3-ldv-dir
+    sudo chown ts3-ldv:www-data ts3-ldv-dir
+
+From here on you should switch to the ts3-ldv user in order to not run into permission issues:
+    sudo su ts3-ldv
 
 Clone the TS3-LDV git repository into the folder:
     git clone https://github.com/Drumsticks1/TS3-LogDataViewer.git ts3-ldv-dir
 
+(Note if you didn't already switch to the ts3-ldv user: you should not install the npm dependencies as root because this
+may result in malicious code from rogue dependencies being executed as root!)
+
 Enter the ts3-ldv-dir directory and install the package dependencies:
     cd ts3-ldv-dir
-    npm install
+
+# Explanation of the npm install options:
+#     --no-cache:     installing the package without using the npm cache because otherwise npm would try to create a cache
+#                     directory in the ts3-ldv home directory that is not existing and would cause permission errors.
+#                         NOTE: Using this option creates a directory named 'false' in the install directory, you can
+#                               delete the directory or just ignore it.
+#     --production:   only install the production dependencies and ignore the devDependencies from the package.json
+    npm install --no-cache --production
 
 Copy the default configuration to the local folder and modify it according to your installation (see README.md for more
 information about the settings):
     cp conf/default-conf.json local/conf.json
     nano local/conf.json
 
+After that you can exit the ts3-ldv shell.
+
 Configure the web server so that only authorized clients have access to specific files (assuming you already have a
 working nginx configuration):
 Insert the following directives into the nginx configuration file of the domain (you will have to update the directory
 name and port if you modified them in your ts3-ldv configuration):
 
+# If you renamed ts3-ldv-dir locally, you will have to replace all occurrences of ts3-ldv-dir in the configuration
 location /ts3-ldv-dir {
+    # If you .htpasswd lies in a directory that can be accessed by the web server you should ensure that you prevent
+    # read access to .htpasswd files in your nginx configuration!
     auth_basic "Authentication required!";
     auth_basic_user_file /path/to/your/auth/file/.htpasswd;
 
