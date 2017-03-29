@@ -91,6 +91,7 @@ Enter the <code>ts3-ldv-dir</code> directory and install the package dependencie
 
 - <code>--production</code>: only install the production dependencies and ignore devDependencies from the package.json.
 
+<br>
 
     npm install --no-cache --production
 
