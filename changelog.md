@@ -12,7 +12,8 @@ Changes:
     - logDirectory --> TS3LogDirectory
 - package.json:
     - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project
-- Updated install instructions
+    - Updated included files
+- Updated install instructions and renamed the file to INSTALL.md
 - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
 - Updated foundation-sites (6.2.3 -> 6.3.0)
 - Renamed files:

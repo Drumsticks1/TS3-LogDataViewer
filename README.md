@@ -28,7 +28,7 @@ Otherwise some parts of the application may not be available or further features
 ## Server operating systems
 I privately run it on a debian jessie distribution running nginx.
 <br>
-That's why I can only provide a template for nginx configuration settings (in the install instruction) as well as a systemd service script and not configurations for other webservers or init systems.
+That's why I can only provide a template for nginx configuration settings (see INSTALL.md) as well as a systemd service script and not configurations for other webservers or init systems.
 <br>
 
 If you use something else than nginx: make sure that you know what you are doing and restrict the access to your ts3-ldv folder!<br>
@@ -40,7 +40,7 @@ The installation is recommended via npm and needs a few additional small steps o
 <br>
 [ts3-ldv package on npm](https://www.npmjs.com/package/ts3-ldv)
 <br>
-You can find the in-depth installation instructions in the file named `install instructions`, it also contains a section for the nginx configuration.
+You can find the in-depth installation instructions in the INSTALL.md, it also contains a section for the nginx configuration.
 
 ## Features
 Would be too much to write down here.

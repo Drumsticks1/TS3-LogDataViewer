@@ -16,15 +16,17 @@
   "license": "GPL-3.0",
   "author": "Drumsticks <drumsticks.code@gmail.com>",
   "files": [
-    "conf/default-conf.json",
-    "conf/ts3.ldv.logrotate",
-    "conf/ts3-ldv.service",
+    "conf",
     "css",
     "img",
     "js",
+    "local/.gitkeep",
     "nodejs",
     "index.html",
-    "install instructions"
+    "changelog.md",
+    "INSTALL.md",
+    "LICENSE",
+    "README.md"
   ],
   "main": "nodejs/app.js",
   "dependencies": {

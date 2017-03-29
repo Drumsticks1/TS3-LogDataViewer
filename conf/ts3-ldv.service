@@ -12,7 +12,7 @@ After=network.target
 # Path of the nodejs directory inside the ts3-ldv-dir.
 WorkingDirectory=/var/www/www.your-domain.com/ts3-ldv-dir/nodejs
 
-# The user running the nodejs ts3-ldv app, requires specific permissions (see install instructions).
+# The user running the nodejs ts3-ldv app, requires specific permissions (see INSTALL.md).
 User=ts3-ldv
 
 # The group of the user that runs the teamspeak3 server.
