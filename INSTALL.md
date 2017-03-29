@@ -10,14 +10,14 @@ Experienced users may also install it on other operating systems (nodejs should 
 
 ## Table of Contents
 
-- <a href="Dependencies">Dependencies</a>
-- <a href="Preparation">Preparation</a>
-- <a href="Installation">Installation</a>
-- <a href="Web Server Configuration">Web Server Configuration</a>
-- <a href="Usage">Usage</a>
-- <a href="Optional & Recommended">Optional & Recommended</a>
-    - <a href="Systemd">Systemd</a>
-    - <a href="Logrotate">Logrotate</b>
+- <a href="#Dependencies">Dependencies</a>
+- <a href="#Preparation">Preparation</a>
+- <a href="#Installation">Installation</a>
+- <a href="#Web Server Configuration">Web Server Configuration</a>
+- <a href="#Usage">Usage</a>
+- <a href="#Optional & Recommended">Optional & Recommended</a>
+    - <a href="#Systemd">Systemd</a>
+    - <a href="#Logrotate">Logrotate</b>
 
 ## <a name="Dependencies">Dependencies</a>
 
