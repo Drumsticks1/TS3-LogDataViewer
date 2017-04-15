@@ -2,6 +2,8 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to multiple tables.
  */
@@ -14,17 +16,46 @@ ts3ldv.tables = (function (module) {
     var buildError = false;
 
     /**
+     * Lookup object, used for calling elements of some arrays via the ID of the wanted entry.
+     * Required when ID and index of entries differ in lists (ClientList, ChannelList, ServerGroupList).
+     * The lookup object is updated when the data is fetched.
+     * @type {{ClientList: {}, ChannelList: {}, ServerGroupList: {}}}
+     */
+    var lookup = {
+        ClientList: {},
+        ChannelList: {},
+        ServerGroupList: {}
+    };
+
+
+    module.lookup = lookup;
+
+    /**
+     * Updates the lookup object for the given list
+     * @param {string} list name of the list, e.g. ClientList
+     * @param {string} idIdentifier name of the id property in the list
+     */
+    function updateLookupObject(list, idIdentifier) {
+        lookup[list] = {};
+
+        var bufferObj = ts3ldv.Json[list];
+        for (var i = 0; i < bufferObj.length; i++) {
+            lookup[list][bufferObj[i][idIdentifier]] = bufferObj[i];
+        }
+    }
+
+    /**
      * Builds all tables using the data from the JSON.
      */
     module.build = function () {
-        nanobar.go(50);
+        ts3ldv.nanobar.go(50);
         $.ajax({
             url: "local/output.json",
             cache: false,
             dataType: "json",
             error: function () {
                 if (buildError)
-                    addCallout("Building the JSON failed!", "error buildErrorCallout");
+                    ts3ldv.ui.addCallout("Building the JSON failed!", "error buildErrorCallout");
                 else {
                     buildError = true;
                     ts3ldv.serverInteractions.requestJsonBuild(false);
@@ -33,7 +64,7 @@ ts3ldv.tables = (function (module) {
             success: function (fetchedJSON) {
                 buildError = false;
                 ts3ldv.Json = fetchedJSON;
-                connectedClientsCount = 0;
+                var connectedClientsCount = 0;
 
                 updateLookupObject("ClientList", "clientId");
                 updateLookupObject("ChannelList", "channelId");
@@ -44,18 +75,11 @@ ts3ldv.tables = (function (module) {
                 };
                 updateLookupObject("ServerGroupList", "serverGroupId");
 
-                removeEventListeners();
+                // Remove/Destroy onclick event listeners from eventual old tables
+                ts3ldv.event.removeOnClickEventListeners();
+
                 for (var i = 0; i < tables.length; i++) {
                     buildTableWithAlertCheckAndLocalStorage(tables[i]);
-                }
-
-                // Ban table UID state action.
-                var uidState = localStorage.getItem("uidState");
-                if (document.getElementById("banTable") !== null && (uidState === null || uidState === "1")) {
-                    localStorage.setItem("uidState", "0");
-
-                    if (uidState === "1")
-                        switchBetweenIDAndUID();
                 }
 
                 var Attributes = ts3ldv.Json.Attributes,
@@ -65,22 +89,15 @@ ts3ldv.tables = (function (module) {
                 document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
                 document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
-                clearInterval(momentInterval);
-                momentInterval = setInterval(function () {
-                    document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
-                }, 1000);
-
-                if (!document.getElementById("clientTable") || document.getElementById("ts3-clientTable").style.display === "none") {
-                    var Client = ts3ldv.Json.ClientList;
-                    for (var j = 0; j < Client.length; j++) {
-                        if (Client[j].ConnectedState)
-                            connectedClientsCount++;
-                    }
+                for (var j = 0; j < ts3ldv.Json.ClientList.length; j++) {
+                    if (ts3ldv.Json.ClientList[j].ConnectedState)
+                        connectedClientsCount++;
                 }
+
                 document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
 
                 document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-                nanobar.go(100);
+                ts3ldv.nanobar.go(100);
             }
         });
     };

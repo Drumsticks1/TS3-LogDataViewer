@@ -2,6 +2,8 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to the Complaint table.
  */
@@ -76,7 +78,7 @@ ts3ldv.tables.complaint = (function (module) {
             cell_ComplaintByNickname.setAttribute("data-title", "By Nickname");
 
             var cell_ComplaintDateTime_Div = document.createElement("div");
-            cell_ComplaintDateTime_Div.innerHTML = ts3ldv.timeFunctions.dateTimeToMomentString(ComplaintDateTime);
+            cell_ComplaintDateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(ComplaintDateTime);
             cell_ComplaintDateTime.appendChild(cell_ComplaintDateTime_Div);
             complaintBodyRow.appendChild(cell_ComplaintDateTime);
 

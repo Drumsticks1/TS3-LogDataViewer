@@ -2,6 +2,8 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to the Upload table.
  */
@@ -97,14 +99,14 @@ ts3ldv.tables.upload = (function (module) {
 
 
             var cell_UploadDateTime_Div = document.createElement("div");
-            cell_UploadDateTime_Div.innerHTML = ts3ldv.timeFunctions.dateTimeToMomentString(UploadDateTime);
+            cell_UploadDateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(UploadDateTime);
             cell_UploadDateTime.appendChild(cell_UploadDateTime_Div);
             uploadBodyRow.appendChild(cell_UploadDateTime);
 
             cell_ChannelID.innerHTML = ChannelID;
             uploadBodyRow.appendChild(cell_ChannelID);
 
-            cell_ChannelName.innerHTML = lookup.ChannelList[ChannelID].channelName;
+            cell_ChannelName.innerHTML = ts3ldv.tables.lookup.ChannelList[ChannelID].channelName;
             uploadBodyRow.appendChild(cell_ChannelName);
 
             cell_Filename.innerHTML = Filename;

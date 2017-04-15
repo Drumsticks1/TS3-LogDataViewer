@@ -2,6 +2,8 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to interactions with the server.
  */
@@ -57,17 +59,17 @@ ts3ldv.serverInteractions = (function (module) {
 
                     if (res.newJSON)
                         if (res.fetchLogsError)
-                            addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert fetchLogsErrorCallout");
+                            ts3ldv.ui.addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert fetchLogsErrorCallout");
                         else
                             ts3ldv.tables.build();
                     else
-                        addCallout("No new information!", "secondary noNewInformationCallout", 2500);
+                        ts3ldv.ui.addCallout("No new information!", "secondary noNewInformationCallout", 2500);
                 }
                 else {
                     updateTimeBetweenBuilds(res);
 
                     var timeUntilNextBuild = (timeBetweenBuilds - res.timeDifference);
-                    addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
+                    ts3ldv.ui.addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
                 }
                 buildRequestInProgress = false;
             });
@@ -75,10 +77,10 @@ ts3ldv.serverInteractions = (function (module) {
         }
 
         if (buildRequestInProgress)
-            addCallout("A JSON build request has already been sent!", "warning buildRequestInProgressCallout", 1500);
+            ts3ldv.ui.addCallout("A JSON build request has already been sent!", "warning buildRequestInProgressCallout", 1500);
         else {
             var timeUntilNextBuild = timeBetweenBuilds - (Date.now().valueOf() - lastBuildRequestTimestamp);
-            addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
+            ts3ldv.ui.addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
         }
 
         document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;

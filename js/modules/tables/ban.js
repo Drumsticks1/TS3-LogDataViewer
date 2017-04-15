@@ -2,10 +2,60 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to the Ban table.
  */
 ts3ldv.tables.ban = (function (module) {
+
+    /**
+     * Switches between the ID/UID columns in the Ban table.
+     */
+    function switchBetweenIDAndUID () {
+        var rowId, banId, idOrUid, bannedByIDOrUID, Ban = ts3ldv.Json.BanList,
+            banTableRows = document.getElementById("banTable").lastChild.childNodes,
+            headRowCells = document.getElementById("banTable").firstChild.firstChild.childNodes,
+            filterRowCells = document.getElementById("banTable").firstChild.childNodes[1].childNodes,
+            uidState = Number(localStorage.getItem("uidState"));
+
+        if (uidState) {
+            idOrUid = "ID";
+            localStorage.setItem("uidState", "0");
+        } else {
+            idOrUid = "UID";
+            localStorage.setItem("uidState", "1");
+        }
+
+        headRowCells[1].innerHTML = "Banned " + idOrUid;
+        filterRowCells[1].firstChild.setAttribute("Placeholder", "Banned " + idOrUid);
+        headRowCells[4].innerHTML = "Banned by " + idOrUid;
+        filterRowCells[4].firstChild.setAttribute("Placeholder", "Banned by " + idOrUid);
+
+        for (var j = 0; j < banTableRows.length; j++) {
+            rowId = banTableRows[j].getAttribute("id");
+            banId = rowId.substring(4, rowId.length);
+
+            var currentRowCells = document.getElementById(rowId).childNodes;
+
+            if (uidState) {
+                if (currentRowCells[3].innerHTML !== "Unknown")
+                    bannedByIDOrUID = Ban[banId].bannedByID;
+                else
+                    bannedByIDOrUID = "Unknown";
+            } else {
+                if (Ban[banId].bannedByUID.length !== 0)
+                    bannedByIDOrUID = Ban[banId].bannedByUID;
+                else
+                    bannedByIDOrUID = "No UID";
+            }
+
+            currentRowCells[1].setAttribute("data-title", "Banned " + idOrUid);
+            currentRowCells[1].innerHTML = Ban[banId]["banned" + idOrUid];
+            currentRowCells[4].setAttribute("data-title", "Banned by " + idOrUid);
+            currentRowCells[4].innerHTML = bannedByIDOrUID;
+        }
+    }
 
     /**
      * Builds the ban table.
@@ -23,7 +73,7 @@ ts3ldv.tables.ban = (function (module) {
         switchBetweenIDAndUIDButton.id = "switchBetweenIDAndUIDButton";
         switchBetweenIDAndUIDButton.innerHTML = "Switch between IDs and UIDs";
 
-        addOnClickEvent(switchBetweenIDAndUIDButton, function () {
+        ts3ldv.event.addOnClickEventListener(switchBetweenIDAndUIDButton, function () {
             switchBetweenIDAndUID();
         });
         banTableControlSection.appendChild(switchBetweenIDAndUIDButton);
@@ -109,7 +159,7 @@ ts3ldv.tables.ban = (function (module) {
             cell_BanTime.setAttribute("data-title", "BanTime");
 
             var cell_BanDateTime_Div = document.createElement("div");
-            cell_BanDateTime_Div.innerHTML = ts3ldv.timeFunctions.dateTimeToMomentString(BanDateTime);
+            cell_BanDateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(BanDateTime);
             cell_BanDateTime.appendChild(cell_BanDateTime_Div);
             banBodyRow.appendChild(cell_BanDateTime);
 
@@ -157,6 +207,16 @@ ts3ldv.tables.ban = (function (module) {
         });
 
         document.getElementById("ts3-banTable").appendChild(banTable);
+
+        // Todo: Better place for this?
+        // Ban table UID state action.
+        var uidState = localStorage.getItem("uidState");
+        if (document.getElementById("banTable") !== null && (uidState === null || uidState === "1")) {
+            localStorage.setItem("uidState", "0");
+
+            if (uidState === "1")
+                switchBetweenIDAndUID();
+        }
     };
 
     return module;

@@ -1,11 +1,13 @@
-// js/modules/timeFunctions.js
+// js/modules/time.js
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
+
+"use strict";
 
 /**
  * Module containing time related functions.
  */
-ts3ldv.timeFunctions = (function (module) {
+ts3ldv.time = (function (module) {
 
     /**
      * Returns the number x as double digit string.
@@ -68,5 +70,5 @@ ts3ldv.timeFunctions = (function (module) {
     };
 
     return module;
-}(ts3ldv.timeFunctions || {}));
+}(ts3ldv.time || {}));
 

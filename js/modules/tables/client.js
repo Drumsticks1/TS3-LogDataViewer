@@ -2,10 +2,111 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to the Client table.
  */
 ts3ldv.tables.client = (function (module) {
+
+    /**
+     * Expands or collapses the list, depending on its current state.
+     *
+     * @param {string} list - name of the list ("Connections" or "IPs").
+     * @param {number} ID - ID of the client.
+     */
+    function expandOrCollapseList(list, ID) {
+        var column, collapsedCellCount;
+        if (list === "IPs") {
+            column = 3;
+            collapsedCellCount = 1;
+        } else
+            column = collapsedCellCount = 2;
+
+        var currentDiv = document.getElementById(list + "_" + ID + "_1");
+
+        if (currentDiv === null || currentDiv.style.display === "none")
+            expandList(list, ID, column, collapsedCellCount);
+        else
+            collapseList(list, ID, column, collapsedCellCount);
+    }
+
+    /**
+     * Expands the list with the given parameters.
+     *
+     * @param {string} list - name of the list ("Connections" or "IPs").
+     * @param {number} ID - ID of the client.
+     * @param {number} column - the column ID.
+     * @param {number} collapsedCellCount - count of the cells if collapsed.
+     */
+    function expandList(list, ID, column, collapsedCellCount) {
+        var x = document.getElementById(String(ID)).childNodes[column],
+            listContent = ts3ldv.tables.lookup.ClientList[ID][list];
+
+        var currentDiv = document.getElementById(list + "Button_" + ID);
+        currentDiv.innerHTML = "- " + (listContent.length - collapsedCellCount);
+        currentDiv.parentNode.setAttribute("expanded", "true");
+
+        for (var j = 1; j < listContent.length; j++) {
+            var currentDivString = list + "_" + ID + "_" + j;
+
+            if (document.getElementById(currentDivString) === null) {
+                var newDiv = document.createElement("div");
+                newDiv.id = currentDivString;
+
+                if (collapsedCellCount === 1)
+                    newDiv.innerHTML = listContent[j];
+                else
+                    newDiv.innerHTML = ts3ldv.time.UTCDateStringToLocaltimeString(listContent[j]);
+
+                if (column === 3)
+                    x.appendChild(newDiv);
+                else
+                    x.insertBefore(newDiv, x.lastChild);
+
+            } else document.getElementById(currentDivString).style.display = "";
+        }
+    }
+
+    /**
+     * Collapses the list with the given parameters.
+     *
+     * @param {string} list - name of the list ("Connections" or "IPs").
+     * @param {number} ID - ID of the client.
+     * @param {number} column - the column ID.
+     * @param {number} collapsedCellCount - count of the cells if collapsed.
+     */
+    function collapseList(list, ID, column, collapsedCellCount) {
+        var listContent = ts3ldv.tables.lookup.ClientList[ID][list];
+
+        document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
+        document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
+
+        if (document.getElementById(String(ID)) !== null) {
+            var hideLength = document.getElementById(String(ID)).childNodes[column].childNodes.length;
+
+            if (column === 3)
+                hideLength++;
+
+            for (var j = 1; j < hideLength - 2; j++) {
+                document.getElementById(list + "_" + ID + "_" + j).style.display = "none";
+            }
+        }
+    }
+
+    /**
+     * Collapses all expanded lists.
+     */
+    function collapseAll() {
+        var rows = document.getElementById("clientTable").lastChild.childNodes;
+        for (var j = 0; j < rows.length; j++) {
+            if (rows[j].childNodes[2].getAttribute("expanded") === "true")
+                collapseList("Connections", Number(rows[j].getAttribute("id")), 2, 2);
+
+            if (rows[j].childNodes[3].getAttribute("expanded") === "true")
+                collapseList("IPs", Number(rows[j].getAttribute("id")), 3, 1);
+        }
+    }
 
     /**
      * Builds the client table.
@@ -29,7 +130,7 @@ ts3ldv.tables.client = (function (module) {
         else if (localStorage.getItem("connectionsSortType") === "0")
             connectionsSortTypeButton.innerHTML = sortStrings[0];
 
-        addOnClickEvent(connectionsSortTypeButton, function () {
+        ts3ldv.event.addOnClickEventListener(connectionsSortTypeButton, function () {
             if (localStorage.getItem("connectionsSortType") === "1") {
                 connectionsSortTypeButton.innerHTML = sortStrings[0];
                 localStorage.setItem("connectionsSortType", "0");
@@ -48,7 +149,7 @@ ts3ldv.tables.client = (function (module) {
         collapseAllButton.className = "small-12 medium-4 large-6 columns";
         collapseAllButton.innerHTML = "Collapse expanded lists";
 
-        addOnClickEvent(collapseAllButton, function () {
+        ts3ldv.event.addOnClickEventListener(collapseAllButton, function () {
             collapseAll();
         });
 
@@ -146,7 +247,7 @@ ts3ldv.tables.client = (function (module) {
                     buttonExpandCollapseConnections.innerHTML = "+ " + (Connections.length - 2);
 
                     (function (ID) {
-                        addOnClickEvent(buttonExpandCollapseConnections, function () {
+                        ts3ldv.event.addOnClickEventListener(buttonExpandCollapseConnections, function () {
                             expandOrCollapseList("Connections", ID);
                         });
                     })(ID);
@@ -155,13 +256,13 @@ ts3ldv.tables.client = (function (module) {
 
                 var divLastConnection = document.createElement("div");
                 divLastConnection.id = "Connections_" + ID + "_0";
-                divLastConnection.innerHTML = ts3ldv.timeFunctions.UTCDateStringToLocaltimeString(Connections[0]);
+                divLastConnection.innerHTML = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[0]);
                 cell_Connections.appendChild(divLastConnection);
 
                 if (Connections.length > 1) {
                     var divFirstConnection = document.createElement("div");
                     divFirstConnection.id = "Connections_" + ID + "_" + (Connections.length - 1);
-                    divFirstConnection.innerHTML = ts3ldv.timeFunctions.UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
+                    divFirstConnection.innerHTML = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
                     cell_Connections.appendChild(divFirstConnection);
                 }
                 clientBodyRow.appendChild(cell_Connections);
@@ -172,7 +273,7 @@ ts3ldv.tables.client = (function (module) {
                     buttonExpandCollapseIPs.innerHTML = "+ " + (IPs.length - 1);
 
                     (function (ID) {
-                        addOnClickEvent(buttonExpandCollapseIPs, function () {
+                        ts3ldv.event.addOnClickEventListener(buttonExpandCollapseIPs, function () {
                             expandOrCollapseList("IPs", ID);
                         });
                     })(ID);
@@ -191,10 +292,8 @@ ts3ldv.tables.client = (function (module) {
 
                 if (Client[ID].deleted)
                     clientBodyRow.className += "deleted";
-                else if (Client[ID].ConnectedState) {
+                else if (Client[ID].ConnectedState)
                     clientBodyRow.className += "connected";
-                    connectedClientsCount++;
-                }
 
                 cell_Connected.innerHTML = String(Boolean(Client[ID].ConnectedState));
                 clientBodyRow.appendChild(cell_Connected);
@@ -205,8 +304,8 @@ ts3ldv.tables.client = (function (module) {
                 for (j = 0; j < ServerGroupIDs.length; j++) {
                     var divName = document.createElement("div"),
                         divDateTime = document.createElement("div");
-                    divName.innerHTML = lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName;
-                    divDateTime.innerHTML = moment(ts3ldv.timeFunctions.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(timeFormat);
+                    divName.innerHTML = ts3ldv.tables.lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName;
+                    divDateTime.innerHTML = moment(ts3ldv.time.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(timeFormat);
 
                     cell_ServerGroupInfo.appendChild(divName);
                     cell_ServerGroupInfo.appendChild(divDateTime);

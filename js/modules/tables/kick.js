@@ -2,6 +2,8 @@
 // Author: Drumsticks
 // GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
+"use strict";
+
 /**
  * Module containing functions that are related to the Kick table.
  */
@@ -80,7 +82,7 @@ ts3ldv.tables.kick = (function (module) {
             cell_KickReason.setAttribute("data-title", "Reason");
 
             var cell_DateTime_Div = document.createElement("div");
-            cell_DateTime_Div.innerHTML = ts3ldv.timeFunctions.dateTimeToMomentString(KickDateTime);
+            cell_DateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(KickDateTime);
             cell_DateTime.appendChild(cell_DateTime_Div);
             kickBodyRow.appendChild(cell_DateTime);
 

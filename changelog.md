@@ -5,6 +5,11 @@ Versions: <a href="#v2.1">2.1</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0
 Changes:
 - Modified project structure:
     - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
+- Client-side code:
+    - Refactored code from TS3-LogDataViewer.js into multiple modules
+    - Removed the constant updating of the moment.js time difference regarding the build time of the json ("x ago"), this now only happens when the tables are build
+    - The number of connected Clients is now always calculated in buildTables regardless of the build state of the clientTable
+    -
 - Javascript code:
     - Replaced in-/equality checks with strict in-/equality checks (== --> ===, != --> !==)
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
