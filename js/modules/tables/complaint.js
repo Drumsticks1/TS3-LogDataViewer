@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to the Complaint table.
  */
-ts3ldv.tables.complaint = (function (module) {
+(function (parent) {
+    var module = parent.complaint = parent.complaint || {};
 
     /**
      * Builds the complaint table.
@@ -123,4 +124,4 @@ ts3ldv.tables.complaint = (function (module) {
     };
 
     return module;
-}(ts3ldv.tables.complaint || {}));
+}(ts3ldv.tables || {}));

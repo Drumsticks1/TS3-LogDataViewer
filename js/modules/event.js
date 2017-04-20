@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to events and their handling.
  */
-ts3ldv.event = (function (module) {
+(function (parent) {
+    var module = parent.event = parent.event || {};
 
     /**
      * Array containing all objects that have event listeners added by the addOnClickEventListener function attached to them.
@@ -30,7 +31,7 @@ ts3ldv.event = (function (module) {
     /**
      * Destroys all onclick event listeners that are attached to objects that are listed in the eventListeners array.
      */
-    module.removeOnClickEventListeners = function() {
+    module.removeOnClickEventListeners = function () {
         for (var i = eventListeners.length - 1; i >= 0; i--) {
             eventListeners[i].onclick = null;
             eventListeners.pop();
@@ -38,4 +39,4 @@ ts3ldv.event = (function (module) {
     };
 
     return module;
-}(ts3ldv.event || {}));
+}(ts3ldv || {}));

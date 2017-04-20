@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to multiple tables.
  */
-ts3ldv.tables = (function (module) {
+(function (parent) {
+    var module = parent.tables = parent.tables || {};
 
     /**
      * True if the last build request failed, false otherwise.
@@ -26,7 +27,6 @@ ts3ldv.tables = (function (module) {
         ChannelList: {},
         ServerGroupList: {}
     };
-
 
     module.lookup = lookup;
 
@@ -103,4 +103,4 @@ ts3ldv.tables = (function (module) {
     };
 
     return module;
-}(ts3ldv.tables || {}));
+}(ts3ldv || {}));

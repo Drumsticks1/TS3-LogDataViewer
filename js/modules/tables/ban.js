@@ -7,12 +7,13 @@
 /**
  * Module containing functions that are related to the Ban table.
  */
-ts3ldv.tables.ban = (function (module) {
+(function (parent) {
+    var module = parent.ban = parent.ban || {};
 
     /**
      * Switches between the ID/UID columns in the Ban table.
      */
-    function switchBetweenIDAndUID () {
+    function switchBetweenIDAndUID() {
         var rowId, banId, idOrUid, bannedByIDOrUID, Ban = ts3ldv.Json.BanList,
             banTableRows = document.getElementById("banTable").lastChild.childNodes,
             headRowCells = document.getElementById("banTable").firstChild.firstChild.childNodes,
@@ -220,4 +221,4 @@ ts3ldv.tables.ban = (function (module) {
     };
 
     return module;
-}(ts3ldv.tables.ban || {}));
+}(ts3ldv.tables || {}));

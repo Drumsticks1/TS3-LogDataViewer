@@ -7,8 +7,9 @@
 /**
  * Module containing functions that are related to the Kick table.
  */
-ts3ldv.tables.kick = (function (module) {
-
+(function (parent) {
+    var module = parent.kick = parent.kick || {};
+    
     /**
      * Builds the kick table.
      */
@@ -126,4 +127,4 @@ ts3ldv.tables.kick = (function (module) {
     };
 
     return module;
-}(ts3ldv.tables.kick || {}));
+}(ts3ldv.tables || {}));

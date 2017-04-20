@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to the Upload table.
  */
-ts3ldv.tables.upload = (function (module) {
+(function (parent) {
+    var module = parent.upload = parent.upload || {};
 
     /**
      * Builds the upload table.
@@ -150,4 +151,4 @@ ts3ldv.tables.upload = (function (module) {
     };
 
     return module;
-}(ts3ldv.tables.upload || {}));
+}(ts3ldv.tables || {}));

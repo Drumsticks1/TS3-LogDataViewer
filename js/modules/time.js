@@ -7,7 +7,8 @@
 /**
  * Module containing time related functions.
  */
-ts3ldv.time = (function (module) {
+(function (parent) {
+    var module = parent.time = parent.time || {};
 
     /**
      * Returns the number x as double digit string.
@@ -70,5 +71,5 @@ ts3ldv.time = (function (module) {
     };
 
     return module;
-}(ts3ldv.time || {}));
+}(ts3ldv || {}));
 

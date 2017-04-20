@@ -7,7 +7,8 @@
 /**
  * Module containing UI related functions.
  */
-ts3ldv.ui = (function (module) {
+(function (parent) {
+    var module = parent.ui = parent.ui || {};
 
     /**
      * Adds a removable callout.
@@ -55,5 +56,5 @@ ts3ldv.ui = (function (module) {
     };
 
     return module;
-}(ts3ldv.ui || {}));
+}(ts3ldv || {}));
 

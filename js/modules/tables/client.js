@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to the Client table.
  */
-ts3ldv.tables.client = (function (module) {
+(function (parent) {
+    var module = parent.client = parent.client || {};
 
     /**
      * Expands or collapses the list, depending on its current state.
@@ -364,4 +365,4 @@ ts3ldv.tables.client = (function (module) {
     };
 
     return module;
-}(ts3ldv.tables.client || {}));
+}(ts3ldv.tables || {}));

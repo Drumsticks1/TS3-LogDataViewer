@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to the control section.
  */
-ts3ldv.controlSection = (function (module) {
+(function (parent) {
+    var module = parent.controlSection = parent.controlSection || {};
 
     /**
      * Builds the control section.
@@ -160,4 +161,4 @@ ts3ldv.controlSection = (function (module) {
     };
 
     return module;
-}(ts3ldv.controlSection || {}));
+}(ts3ldv || {}));

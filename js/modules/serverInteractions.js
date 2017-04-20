@@ -7,7 +7,8 @@
 /**
  * Module containing functions that are related to interactions with the server.
  */
-ts3ldv.serverInteractions = (function (module) {
+(function (parent) {
+    var module = parent.serverInteractions = parent.serverInteractions || {};
 
     /**
      * The time that has to pass between two builds (is set server-side).
@@ -88,4 +89,4 @@ ts3ldv.serverInteractions = (function (module) {
     };
 
     return module;
-}(ts3ldv.serverInteractions || {}));
+}(ts3ldv || {}));
