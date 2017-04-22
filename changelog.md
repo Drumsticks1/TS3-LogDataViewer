@@ -5,24 +5,31 @@ Versions: <a href="#v2.1">2.1</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0
 Changes:
 - Modified project structure:
     - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
-- Client-side code:
-    - Refactored code from TS3-LogDataViewer.js into multiple modules
-    - Removed the constant updating of the moment.js time difference regarding the build time of the json ("x ago"), this now only happens when the tables are build
-    - The number of connected Clients is now always calculated in buildTables regardless of the build state of the clientTable
-    -
+
 - Javascript code:
     - Replaced in-/equality checks with strict in-/equality checks (== --> ===, != --> !==)
+
+- Client-Side app:
+    - Refactored code from TS3-LogDataViewer.js into multiple modules
+    - Functions are now rather working on modules and their attributes as parameters than on strings that then are modified in order to access objects
+    - Removed the constant updating of the moment.js time difference regarding the build time of the json ("x ago"), this now only happens when the tables are build
+    - The number of connected Clients is now always calculated in buildTables regardless of the build state of the clientTable
+    - Merged the localStorage and sessionStorage data into one json object for each storage type
+   
+- Server-Side app:
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
-- Renamed configuration settings:
-    - logDirectory --> TS3LogDirectory
-- package.json:
-    - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project
-    - Updated included files
-- Updated install instructions and renamed the file to INSTALL.md
-- Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
-- Updated foundation-sites (6.2.3 -> 6.3.0)
-- Renamed files:
-    - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
+    - Renamed configuration settings:
+        - logDirectory --> TS3LogDirectory
+        
+- General:
+    - package.json:
+        - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project
+        - Updated included files
+    - Updated install instructions and renamed the file to INSTALL.md
+    - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
+    - Updated foundation-sites (6.2.3 -> 6.3.0)
+    - Renamed files:
+        - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
 
 
 ### <a name="v2.0.8">Version 2.0.8</a> (05.08.2016)

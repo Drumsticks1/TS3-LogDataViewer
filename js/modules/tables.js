@@ -5,7 +5,7 @@
 "use strict";
 
 /**
- * Module containing functions that are related to multiple tables.
+ * Module containing functions that are related to stored data and access to it.
  */
 (function (parent) {
     var module = parent.tables = parent.tables || {};
@@ -78,9 +78,12 @@
                 // Remove/Destroy onclick event listeners from eventual old tables
                 ts3ldv.event.removeOnClickEventListeners();
 
-                for (var i = 0; i < tables.length; i++) {
-                    buildTableWithAlertCheckAndLocalStorage(tables[i]);
-                }
+                // TODO: update nanobar progress
+                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.ban);
+                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.client);
+                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.complaint);
+                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.kick);
+                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.upload);
 
                 var Attributes = ts3ldv.Json.Attributes,
                     creationTime = Attributes.creationTime;
@@ -100,6 +103,50 @@
                 ts3ldv.nanobar.go(100);
             }
         });
+    };
+
+    // Todo make tableControlSection parameter obsolete
+    // Improve tableName parameter (e.g. enumeration) or make id dependent on "this", maybe inherit from a dummy table class?
+    /**
+     * Adds a pager section to the given control section.
+     * @param tableControlSection the control section.
+     * @param tableName the name of the table.
+     */
+    module.addPagerSection = function (tableControlSection, tableName) {
+        var pager = document.createElement("div"),
+            first = document.createElement("div"),
+            prev = document.createElement("div"),
+            pageState = document.createElement("div"),
+            next = document.createElement("div"),
+            last = document.createElement("div"),
+            selectDiv = document.createElement("div"),
+            select = document.createElement("select"),
+            options = [document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option")];
+
+        pager.className = tableName + "Pager";
+        first.className = first.innerHTML = "first";
+        prev.className = prev.innerHTML = "prev";
+        pageState.className = "pagedisplay";
+        next.className = next.innerHTML = "next";
+        last.className = last.innerHTML = "last";
+        select.className = "pagesize";
+
+        pager.appendChild(first);
+        pager.appendChild(prev);
+        pager.appendChild(pageState);
+        pager.appendChild(next);
+        pager.appendChild(last);
+
+        var optionSizes = ["10", "25", "50", "100", "all"];
+        for (var i = 0; i < options.length; i++) {
+            options[i].value = options[i].innerHTML = optionSizes[i];
+            select.appendChild(options[i]);
+        }
+
+        selectDiv.appendChild(select);
+
+        pager.appendChild(selectDiv);
+        tableControlSection.appendChild(pager);
     };
 
     return module;

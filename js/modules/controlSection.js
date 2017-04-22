@@ -11,39 +11,110 @@
     var module = parent.controlSection = parent.controlSection || {};
 
     /**
+     * The element containing the control section.
+     * @type {Element}
+     */
+    module.div = document.getElementById("ts3-control");
+
+    // Todo: doc
+    module.navbar = {
+
+        /**
+         * The element containing the navbar.
+         * @type {Element}
+         */
+        div: document.createElement("div"),
+
+        scrollToButtons: {},
+
+        /**
+         * Adds a scrollTo button to the navbar and adds the button element to the scrollToButtons object.
+         * The button has an onclick event that scrolls the table into view.
+         * Note: the button is hidden by default. (see showScrollToButton and hideScrollToButton)
+         * @param tableModule TODO
+         */
+        addScrollToButton: function (tableModule) {
+            var button = document.createElement("button");
+            this.scrollToButtons[tableModule.name] = button;
+            button.style.display = "none";
+
+            // Todo: uppercase scrollTo innerHTML
+            button.innerHTML = tableModule.name + "s";
+
+            button.onclick = function () {
+                tableModule.div.scrollIntoView();
+            };
+
+            this.div.appendChild(button);
+        },
+
+        showScrollToButton: function (tableModule) {
+            this.scrollToButtons[tableModule.name].style.display = "";
+        },
+
+        hideScrollToButton: function (tableModule) {
+            this.scrollToButtons[tableModule.name].style.display = "none";
+        }
+    };
+
+    // Todo: doc
+    module.tableSelection = {
+
+        /**
+         * The element containing the table selection section.
+         * @type {Element}
+         */
+        div: document.createElement("div"),
+
+        addTableCheckboxDiv: function (tableModule) {
+            var div = document.createElement("div");
+
+            var checkbox = document.createElement("input");
+            checkbox.id = tableModule.name + "Checkbox";
+            checkbox.type = "checkbox";
+            tableModule.checkbox = checkbox;
+
+            var label = document.createElement("label");
+            // Todo: proper innerHTML (e.g. 'Client table', currently is 'client')
+            label.innerHTML = tableModule.name;
+            label.htmlFor = tableModule.name + "Checkbox";
+
+            // Styling of the divs
+            switch (tableModule) {
+                case ts3ldv.tables.ban:
+                    div.className = "small-12 medium-6 large-6 columns";
+                    break;
+                case ts3ldv.tables.client:
+                    div.className = "small-12 medium-12 large-6 columns";
+                    break;
+
+                default:
+                    div.className = "small-12 medium-6 large-4 columns";
+            }
+
+            div.appendChild(checkbox);
+            div.appendChild(label);
+            this.div.appendChild(div);
+        }
+    };
+
+    // Todo: split into multiple (private?) functions (e.g. one for the navbar)
+    /**
      * Builds the control section.
      */
     module.build = function () {
-        var controlSection = document.createElement("div"),
-            tableSelectionSection = document.createElement("div"),
-            tableCheckboxSections = new Array(5),
-            tableCheckboxes = new Array(5),
-            tableCheckboxLabels = new Array(5);
-
-        for (var i = 0; i < 5; i++) {
-            tableCheckboxSections[i] = document.createElement("div");
-            tableCheckboxes[i] = document.createElement("input");
-            tableCheckboxes[i].type = "checkbox";
-            tableCheckboxLabels[i] = document.createElement("label");
-        }
-
+        var controlSection = document.createElement("div");
         controlSection.id = "controlSection";
-        tableSelectionSection.id = "tableSelectionSection";
         controlSection.className = "row";
-        tableSelectionSection.className = "columns";
-        tableCheckboxSections[0].className = "small-12 medium-12 large-6 columns";
-        tableCheckboxSections[1].className = "small-12 medium-6 large-6 columns";
-        for (i = 2; i < 5; i++) {
-            tableCheckboxSections[i].className = "small-12 medium-6 large-4 columns";
-        }
 
-        for (i = 0; i < 5; i++) {
-            tableCheckboxLabels[i].htmlFor = tableCheckboxes[i].id = tableNames[i].toLowerCase() + "TableCheckbox";
-            tableCheckboxLabels[i].innerHTML = tableNames[i] + " table";
-            tableCheckboxSections[i].appendChild(tableCheckboxes[i]);
-            tableCheckboxSections[i].appendChild(tableCheckboxLabels[i]);
-            tableSelectionSection.appendChild(tableCheckboxSections[i]);
-        }
+        this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.ban);
+        this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.client);
+        this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.complaint);
+        this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.kick);
+        this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.upload);
+
+        this.tableSelection.div.id = "tableSelectionSection";
+        this.tableSelection.div.className = "columns";
 
         var creationTimestampSection = document.createElement("div"),
             creationTimestampTable = document.createElement("table"),
@@ -115,49 +186,41 @@
         miscControlSection.className = "columns";
         resetSortingButton.className = "small-12";
         resetSortingButton.innerHTML = "Reset table sorting";
+        // Todo: check if code duplication can be eliminated, check it for all the onclick events
         resetSortingButton.onclick = function () {
-            for (var i = 0; i < tables.length; i++) {
-                $(document.getElementById(tables[i])).trigger("sortReset");
-                localStorage.setItem(tables[i] + "SortOrder", "[]");
-            }
+            $(ts3ldv.tables.ban.getTableDiv()).trigger("sortReset");
+            $(ts3ldv.tables.client.getTableDiv()).trigger("sortReset");
+            $(ts3ldv.tables.complaint.getTableDiv()).trigger("sortReset");
+            $(ts3ldv.tables.kick.getTableDiv()).trigger("sortReset");
+            $(ts3ldv.tables.upload.getTableDiv()).trigger("sortReset");
+
+            ts3ldv.storage.resetTableSortOrder();
         };
 
         miscControlSection.appendChild(resetSortingButton);
 
-        var navbar = document.createElement("div"),
-            scrollBackToTopButton = document.createElement("button");
+        var scrollBackToTopButton = document.createElement("button");
 
-        navbar.id = "navbar";
+        this.navbar.div.id = "navbar";
         scrollBackToTopButton.innerHTML = "Top";
 
         scrollBackToTopButton.onclick = function () {
             scrollTo(0, 0);
         };
 
-        navbar.appendChild(scrollBackToTopButton);
+        this.navbar.div.appendChild(scrollBackToTopButton);
+        this.navbar.addScrollToButton(ts3ldv.tables.client);
+        this.navbar.addScrollToButton(ts3ldv.tables.ban);
+        this.navbar.addScrollToButton(ts3ldv.tables.kick);
+        this.navbar.addScrollToButton(ts3ldv.tables.complaint);
+        this.navbar.addScrollToButton(ts3ldv.tables.upload);
 
-        var scrollToTablesButtons = new Array(5);
-        for (var j = 0; j < 5; j++) {
-            scrollToTablesButtons[j] = document.createElement("button");
-            scrollToTablesButtons[j].style.display = "none";
-            scrollToTablesButtons[j].id = "scrollTo" + tableNames[j] + "Table";
-            scrollToTablesButtons[j].innerHTML = tableNames[j] + "s";
-
-            (function (j) {
-                scrollToTablesButtons[j].onclick = function () {
-                    document.getElementById("ts3-" + tables[j]).scrollIntoView();
-                };
-            })(j);
-
-            navbar.appendChild(scrollToTablesButtons[j]);
-        }
-
-        controlSection.appendChild(tableSelectionSection);
+        controlSection.appendChild(this.tableSelection.div);
         controlSection.appendChild(creationTimestampSection);
         controlSection.appendChild(buildSection);
         controlSection.appendChild(miscControlSection);
-        controlSection.appendChild(navbar);
-        document.getElementById("ts3-control").appendChild(controlSection);
+        controlSection.appendChild(this.navbar.div);
+        this.div.appendChild(controlSection);
     };
 
     return module;

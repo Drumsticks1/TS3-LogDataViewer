@@ -11,6 +11,12 @@
     var module = parent.time = parent.time || {};
 
     /**
+     * The time format of the timestamps in ts3 logs.
+     * @type {string}
+     */
+    module.format = "YYYY-MM-DD HH:mm:ss";
+
+    /**
      * Returns the number x as double digit string.
      *
      * @param {number} x - given number.
@@ -67,7 +73,7 @@
      */
     module.dateTimeToMomentString = function (dateTime) {
         var dateTimeObject = moment(this.UTCDateStringToDate(dateTime));
-        return dateTimeObject.format(timeFormat) + "<br />(about " + dateTimeObject.fromNow() + ")";
+        return dateTimeObject.format(this.format) + "<br />(about " + dateTimeObject.fromNow() + ")";
     };
 
     return module;

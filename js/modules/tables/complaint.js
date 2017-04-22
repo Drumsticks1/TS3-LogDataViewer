@@ -11,6 +11,29 @@
     var module = parent.complaint = parent.complaint || {};
 
     /**
+     * The name of the module
+     * @type {string}
+     */
+    module.name = "complaint";
+
+    /**
+     * The element containing the table.
+     * @type {Element}
+     */
+    module.div = document.getElementById("ts3-complaintTable");
+
+    /**
+     * Returns the table div (calls document.getElementById("tableDivId"))
+     * @returns {Element}
+     */
+    module.getTableDiv = function () {
+        return document.getElementById("complaintTable");
+    };
+
+    // Todo: doc
+    module.checkbox = module.checkbox || undefined;
+
+    /**
      * Builds the complaint table.
      */
     module.build = function () {
@@ -22,9 +45,9 @@
         complaintTableHeading.innerHTML = "Complaint table";
         complaintTableControlSection.appendChild(complaintTableHeading);
 
-        addPagerSection(complaintTableControlSection, "complaintTable");
+        ts3ldv.tables.addPagerSection(complaintTableControlSection, "complaintTable");
 
-        document.getElementById("ts3-complaintTable").appendChild(complaintTableControlSection);
+        this.div.appendChild(complaintTableControlSection);
 
         var Complaint = ts3ldv.Json.ComplaintList,
             complaintTable = document.createElement("table"),
@@ -111,16 +134,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: JSON.parse(localStorage.getItem("complaintTableSortOrder"))
+            sortList: ts3ldv.storage.getTableSortOrder(this)
         }).bind("sortEnd", function () {
-            localStorage.setItem("complaintTableSortOrder", JSON.stringify(complaintTable.config.sortList));
+            ts3ldv.storage.setTableSortOrder(this, complaintTable.config.sortList)
         }).tablesorterPager({
             container: $(".complaintTablePager"),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        document.getElementById("ts3-complaintTable").appendChild(complaintTable);
+        this.div.appendChild(complaintTable);
     };
 
     return module;

@@ -9,7 +9,30 @@
  */
 (function (parent) {
     var module = parent.kick = parent.kick || {};
-    
+
+    /**
+     * The name of the module
+     * @type {string}
+     */
+    module.name = "kick";
+
+    /**
+     * The element containing the table.
+     * @type {Element}
+     */
+    module.div = document.getElementById("ts3-kickTable");
+
+    /**
+     * Returns the table div (calls document.getElementById("tableDivId"))
+     * @returns {Element}
+     */
+    module.getTableDiv = function () {
+        return document.getElementById("kickTable");
+    };
+
+    // Todo: doc
+    module.checkbox = module.checkbox || undefined;
+
     /**
      * Builds the kick table.
      */
@@ -22,9 +45,9 @@
         kickTableHeading.innerHTML = "Kick table";
         kickTableControlSection.appendChild(kickTableHeading);
 
-        addPagerSection(kickTableControlSection, "kickTable");
+        ts3ldv.tables.addPagerSection(kickTableControlSection, "kickTable");
 
-        document.getElementById("ts3-kickTable").appendChild(kickTableControlSection);
+        this.div.appendChild(kickTableControlSection);
 
         var Kick = ts3ldv.Json.KickList,
             kickTable = document.createElement("table"),
@@ -114,16 +137,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: JSON.parse(localStorage.getItem("kickTableSortOrder"))
+            sortList: ts3ldv.storage.getTableSortOrder(this)
         }).bind("sortEnd", function () {
-            localStorage.setItem("kickTableSortOrder", JSON.stringify(kickTable.config.sortList));
+            ts3ldv.storage.setTableSortOrder(this, kickTable.config.sortList)
         }).tablesorterPager({
             container: $(".kickTablePager"),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        document.getElementById("ts3-kickTable").appendChild(kickTable);
+        this.div.appendChild(kickTable);
     };
 
     return module;

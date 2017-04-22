@@ -11,6 +11,29 @@
     var module = parent.ban = parent.ban || {};
 
     /**
+     * The name of the module
+     * @type {string}
+     */
+    module.name = "ban";
+
+    /**
+     * The element containing the table.
+     * @type {Element}
+     */
+    module.div = document.getElementById("ts3-banTable");
+
+    /**
+     * Returns the table div.
+     * @returns {Element}
+     */
+    module.getTableDiv = function () {
+        return document.getElementById("banTable");
+    };
+
+    // Todo: doc
+    module.checkbox = module.checkbox || undefined;
+
+    /**
      * Switches between the ID/UID columns in the Ban table.
      */
     function switchBetweenIDAndUID() {
@@ -79,9 +102,9 @@
         });
         banTableControlSection.appendChild(switchBetweenIDAndUIDButton);
 
-        addPagerSection(banTableControlSection, "banTable");
+        ts3ldv.tables.addPagerSection(banTableControlSection, "banTable");
 
-        document.getElementById("ts3-banTable").appendChild(banTableControlSection);
+        this.div.appendChild(banTableControlSection);
 
         var Ban = ts3ldv.Json.BanList,
             banTable = document.createElement("table"),
@@ -198,16 +221,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: JSON.parse(localStorage.getItem("banTableSortOrder"))
+            sortList: ts3ldv.storage.getTableSortOrder(this)
         }).bind("sortEnd", function () {
-            localStorage.setItem("banTableSortOrder", JSON.stringify(banTable.config.sortList));
+            ts3ldv.storage.setTableSortOrder(this, banTable.config.sortList)
         }).tablesorterPager({
             container: $(".banTablePager"),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        document.getElementById("ts3-banTable").appendChild(banTable);
+        this.div.appendChild(banTable);
 
         // Todo: Better place for this?
         // Ban table UID state action.

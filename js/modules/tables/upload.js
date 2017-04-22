@@ -11,6 +11,29 @@
     var module = parent.upload = parent.upload || {};
 
     /**
+     * The name of the module
+     * @type {string}
+     */
+    module.name = "upload";
+
+    /**
+     * The element containing the table.
+     * @type {Element}
+     */
+    module.div = document.getElementById("ts3-uploadTable");
+
+    /**
+     * Returns the table div (calls document.getElementById("tableDivId"))
+     * @returns {Element}
+     */
+    module.getTableDiv = function () {
+        return document.getElementById("kickTable");
+    };
+
+    // Todo: doc
+    module.checkbox = module.checkbox || undefined;
+
+    /**
      * Builds the upload table.
      */
     module.build = function () {
@@ -22,9 +45,9 @@
         uploadTableHeading.innerHTML = "Upload table";
         uploadTableControlSection.appendChild(uploadTableHeading);
 
-        addPagerSection(uploadTableControlSection, "uploadTable");
+        ts3ldv.tables.addPagerSection(uploadTableControlSection, "uploadTable");
 
-        document.getElementById("ts3-uploadTable").appendChild(uploadTableControlSection);
+        this.div.appendChild(uploadTableControlSection);
 
         var Upload = ts3ldv.Json.UploadList,
             uploadTable = document.createElement("table"),
@@ -138,16 +161,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: JSON.parse(localStorage.getItem("uploadTableSortOrder"))
+            sortList: ts3ldv.storage.getTableSortOrder(this)
         }).bind("sortEnd", function () {
-            localStorage.setItem("uploadTableSortOrder", JSON.stringify(uploadTable.config.sortList));
+            ts3ldv.storage.setTableSortOrder(this, uploadTable.config.sortList)
         }).tablesorterPager({
             container: $(".uploadTablePager"),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        document.getElementById("ts3-uploadTable").appendChild(uploadTable);
+        this.div.appendChild(uploadTable);
     };
 
     return module;

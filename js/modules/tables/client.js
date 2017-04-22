@@ -11,6 +11,29 @@
     var module = parent.client = parent.client || {};
 
     /**
+     * The name of the module
+     * @type {string}
+     */
+    module.name = "client";
+
+    /**
+     * The element containing the table.
+     * @type {Element}
+     */
+    module.div = document.getElementById("ts3-clientTable");
+
+    /**
+     * Returns the table div (calls document.getElementById("tableDivId"))
+     * @returns {Element}
+     */
+    module.getTableDiv = function () {
+        return document.getElementById("clientTable");
+    };
+
+    // Todo: doc
+    module.checkbox = module.checkbox || undefined;
+
+    /**
      * Expands or collapses the list, depending on its current state.
      *
      * @param {string} list - name of the list ("Connections" or "IPs").
@@ -121,22 +144,25 @@
         clientTableHeading.innerHTML = "Client table";
         clientTableControlSection.appendChild(clientTableHeading);
 
+        var connectionSortStrings = ["Currently sorting connections by the first connect",
+            "Currently sorting connections by the last connect"];
+
         var connectionsSortTypeButton = document.createElement("button");
         connectionsSortTypeButton.id = "connectionsSortTypeButton";
         connectionsSortTypeButton.className = "small-12 medium-8 large-6 columns";
-        connectionsSortTypeButton.innerHTML = sortStrings[1];
+        connectionsSortTypeButton.innerHTML = connectionSortStrings[1];
 
         if (localStorage.getItem("connectionsSortType") === null)
             localStorage.setItem("connectionsSortType", "1");
         else if (localStorage.getItem("connectionsSortType") === "0")
-            connectionsSortTypeButton.innerHTML = sortStrings[0];
+            connectionsSortTypeButton.innerHTML = connectionSortStrings[0];
 
         ts3ldv.event.addOnClickEventListener(connectionsSortTypeButton, function () {
             if (localStorage.getItem("connectionsSortType") === "1") {
-                connectionsSortTypeButton.innerHTML = sortStrings[0];
+                connectionsSortTypeButton.innerHTML = connectionSortStrings[0];
                 localStorage.setItem("connectionsSortType", "0");
             } else {
-                connectionsSortTypeButton.innerHTML = sortStrings[1];
+                connectionsSortTypeButton.innerHTML = connectionSortStrings[1];
                 localStorage.setItem("connectionsSortType", "1");
             }
 
@@ -168,9 +194,9 @@
         clientTableControlSection.appendChild(coloredRowsDescription_green);
         clientTableControlSection.appendChild(coloredRowsDescription_grey);
 
-        addPagerSection(clientTableControlSection, "clientTable");
+        ts3ldv.tables.addPagerSection(clientTableControlSection, "clientTable");
 
-        document.getElementById("ts3-clientTable").appendChild(clientTableControlSection);
+        this.div.appendChild(clientTableControlSection);
 
         var Client = ts3ldv.Json.ClientList,
             clientTable = document.createElement("table"),
@@ -306,7 +332,7 @@
                     var divName = document.createElement("div"),
                         divDateTime = document.createElement("div");
                     divName.innerHTML = ts3ldv.tables.lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName;
-                    divDateTime.innerHTML = moment(ts3ldv.time.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(timeFormat);
+                    divDateTime.innerHTML = moment(ts3ldv.time.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(ts3ldv.time.format);
 
                     cell_ServerGroupInfo.appendChild(divName);
                     cell_ServerGroupInfo.appendChild(divDateTime);
@@ -352,16 +378,16 @@
                     }
                 }
             },
-            sortList: JSON.parse(localStorage.getItem("clientTableSortOrder"))
+            sortList: ts3ldv.storage.getTableSortOrder(this)
         }).bind("sortEnd", function () {
-            localStorage.setItem("clientTableSortOrder", JSON.stringify(clientTable.config.sortList));
+            ts3ldv.storage.setTableSortOrder(this, clientTable.config.sortList)
         }).tablesorterPager({
             container: $(".clientTablePager"),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: true
         });
 
-        document.getElementById("ts3-clientTable").appendChild(clientTable);
+        this.div.appendChild(clientTable);
     };
 
     return module;
