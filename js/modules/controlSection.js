@@ -95,6 +95,33 @@
             div.appendChild(checkbox);
             div.appendChild(label);
             this.div.appendChild(div);
+        },
+
+        /**
+         * TODO: doc
+         * Adds a checkbox listener for the table and displays/hides the navbar scroll buttons for the table.
+         *
+         * @param {string} table - name of the table (e.g. "clientTable"). TODO
+         */
+        addTableCheckboxEventListener: function (tableModule) {
+            tableModule.checkbox.onclick = function () {
+                if (this.checked) {
+                    ts3ldv.storage.setTableActive(tableModule, true);
+
+                    // Build table if necessary (= not already built and only hidden)
+                    if (!ts3ldv.storage.getTableBuilt(tableModule))
+                        ts3ldv.tables.buildTableEnhanced(tableModule);
+
+                    tableModule.div.style.display = "";
+                    module.navbar.showScrollToButton(tableModule);
+                } else {
+                    ts3ldv.storage.setTableActive(tableModule, false);
+                    tableModule.div.style.display = "none";
+                    module.navbar.hideScrollToButton(tableModule);
+                }
+
+                ts3ldv.tables.setFilterPlaceholders(tableModule);
+            }
         }
     };
 
@@ -112,6 +139,12 @@
         this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.complaint);
         this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.kick);
         this.tableSelection.addTableCheckboxDiv(ts3ldv.tables.upload);
+
+        this.tableSelection.addTableCheckboxEventListener(ts3ldv.tables.ban);
+        this.tableSelection.addTableCheckboxEventListener(ts3ldv.tables.client);
+        this.tableSelection.addTableCheckboxEventListener(ts3ldv.tables.complaint);
+        this.tableSelection.addTableCheckboxEventListener(ts3ldv.tables.kick);
+        this.tableSelection.addTableCheckboxEventListener(ts3ldv.tables.upload);
 
         this.tableSelection.div.id = "tableSelectionSection";
         this.tableSelection.div.className = "columns";

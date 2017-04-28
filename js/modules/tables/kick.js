@@ -45,7 +45,7 @@
         kickTableHeading.innerHTML = "Kick table";
         kickTableControlSection.appendChild(kickTableHeading);
 
-        ts3ldv.tables.addPagerSection(kickTableControlSection, "kickTable");
+        ts3ldv.tables.addPagerSection(kickTableControlSection, this);
 
         this.div.appendChild(kickTableControlSection);
 
@@ -141,7 +141,7 @@
         }).bind("sortEnd", function () {
             ts3ldv.storage.setTableSortOrder(this, kickTable.config.sortList)
         }).tablesorterPager({
-            container: $(".kickTablePager"),
+            container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });

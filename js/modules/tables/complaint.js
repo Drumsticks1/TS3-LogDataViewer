@@ -45,7 +45,7 @@
         complaintTableHeading.innerHTML = "Complaint table";
         complaintTableControlSection.appendChild(complaintTableHeading);
 
-        ts3ldv.tables.addPagerSection(complaintTableControlSection, "complaintTable");
+        ts3ldv.tables.addPagerSection(complaintTableControlSection, this);
 
         this.div.appendChild(complaintTableControlSection);
 
@@ -138,7 +138,7 @@
         }).bind("sortEnd", function () {
             ts3ldv.storage.setTableSortOrder(this, complaintTable.config.sortList)
         }).tablesorterPager({
-            container: $(".complaintTablePager"),
+            container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });

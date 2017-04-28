@@ -66,33 +66,6 @@ function addCustomParsers() {
     });
 }
 
-/**
- * Adds a checkbox listener for the table and displays/hides the navbar scroll buttons for the table.
- *
- * @param {string} table - name of the table (e.g. "clientTable"). TODO
- */
-function addTableCheckboxListener(tableModule) {
-    tableModule.checkbox.onclick = function () {
-        var displayString = "";
-
-        if (this.checked) {
-            ts3ldv.storage.setTableActive(tableModule, true);
-
-            // Build table if necessary
-            if (!ts3ldv.storage.getTableBuilt(tableModule))
-                buildTableWithAlertCheckAndLocalStorage(tableModule);
-
-        } else {
-            ts3ldv.storage.setTableActive(tableModule, false);
-            displayString = "none";
-        }
-
-        tableModule.div.style.display = ts3ldv.controlSection.navbar.scrollToButtons[tableModule.name].style.display = displayString;
-
-        setFilterPlaceholders(tableModule);
-    }
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     $(document).foundation();
 
@@ -101,12 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ts3ldv.nanobar.go(25);
 
     ts3ldv.storage.importLocalStorage();
-
-    addTableCheckboxListener(ts3ldv.tables.ban);
-    addTableCheckboxListener(ts3ldv.tables.client);
-    addTableCheckboxListener(ts3ldv.tables.complaint);
-    addTableCheckboxListener(ts3ldv.tables.kick);
-    addTableCheckboxListener(ts3ldv.tables.upload);
 
     ts3ldv.tables.build();
 });

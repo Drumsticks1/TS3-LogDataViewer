@@ -27,7 +27,7 @@
      * @returns {Element}
      */
     module.getTableDiv = function () {
-        return document.getElementById("kickTable");
+        return document.getElementById("uploadTable");
     };
 
     // Todo: doc
@@ -45,7 +45,7 @@
         uploadTableHeading.innerHTML = "Upload table";
         uploadTableControlSection.appendChild(uploadTableHeading);
 
-        ts3ldv.tables.addPagerSection(uploadTableControlSection, "uploadTable");
+        ts3ldv.tables.addPagerSection(uploadTableControlSection, this);
 
         this.div.appendChild(uploadTableControlSection);
 
@@ -165,7 +165,7 @@
         }).bind("sortEnd", function () {
             ts3ldv.storage.setTableSortOrder(this, uploadTable.config.sortList)
         }).tablesorterPager({
-            container: $(".uploadTablePager"),
+            container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });

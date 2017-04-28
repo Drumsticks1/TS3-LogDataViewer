@@ -44,6 +44,64 @@
         }
     }
 
+    // TODO: check code for improvements
+    /**
+     * Sets the placeholder text for the tablesorter filter cells of the given table according to their column name.
+     * @param tableModule the module of the table (e.g ts3ldv.tables.client)
+     */
+    module.setFilterPlaceholders = function (tableModule) {
+        var placeholders = tableModule.div.getElementsByClassName("tablesorter-filter-row")[0].getElementsByTagName("input");
+        for (var i = 0; i < placeholders.length; i++) {
+            placeholders[i].setAttribute("placeholder",
+                placeholders[i].parentNode.parentNode.previousSibling.children[placeholders[i].getAttribute("data-column")].firstChild.innerHTML);
+        }
+    };
+
+    /**
+     * Combines multiple steps when building a table that are required for every table:
+     *
+     * - Deleting the table before building it new (if it existed before)
+     * - Checking if the table should be build (see ts3ldv.storage.getTableActive) and abort if it shouldn't
+     * - Add an alert box instead of the table if no data regarding the table was found in the output.json
+     * - Building the table for the given module
+     * - Setting the tablesorter filter placeholders
+     * - Applying sticky headers to the table
+     * - Updating the sessionStorage (see ts3ldv.storage.setTableBuilt)
+     * - Handling the visibility of the navbar buttons
+     *
+     * @param tableModule the table module
+     */
+    module.buildTableEnhanced = function (tableModule) {
+        // Check if a table for the same tableModule is already existing and delete it if it is
+        if (tableModule.getTableDiv() !== null) {
+            $(tableModule.getTableDiv()).trigger("destroy");
+            $(tableModule.div).empty();
+        }
+
+        // Check if the table should be build
+        if (ts3ldv.storage.getTableActive(tableModule)) {
+
+            // Todo (check if there is data for the requested table in the json), currently check is disabled!
+            if (true) {
+                tableModule.build();
+                this.setFilterPlaceholders(tableModule);
+                $(tableModule.getTableDiv()).trigger("applyWidgetId", ["stickyHeaders"]);
+            } else {
+                var alertBox = document.createElement("div");
+                alertBox.className = "alertBox";
+                // Todo
+                // alertBox.innerHTML = "No " + table.substring(0, table.search("Table")) + "s were found.";
+                tableModule.div.appendChild(alertBox);
+            }
+
+            ts3ldv.storage.setTableBuilt(tableModule, true);
+            ts3ldv.controlSection.navbar.showScrollToButton(tableModule);
+        } else {
+            ts3ldv.storage.setTableBuilt(tableModule, false);
+            ts3ldv.controlSection.navbar.hideScrollToButton(tableModule);
+        }
+    };
+
     /**
      * Builds all tables using the data from the JSON.
      */
@@ -79,11 +137,11 @@
                 ts3ldv.event.removeOnClickEventListeners();
 
                 // TODO: update nanobar progress
-                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.ban);
-                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.client);
-                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.complaint);
-                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.kick);
-                buildTableWithAlertCheckAndLocalStorage(ts3ldv.tables.upload);
+                module.buildTableEnhanced(ts3ldv.tables.ban);
+                module.buildTableEnhanced(ts3ldv.tables.client);
+                module.buildTableEnhanced(ts3ldv.tables.complaint);
+                module.buildTableEnhanced(ts3ldv.tables.kick);
+                module.buildTableEnhanced(ts3ldv.tables.upload);
 
                 var Attributes = ts3ldv.Json.Attributes,
                     creationTime = Attributes.creationTime;
@@ -106,13 +164,12 @@
     };
 
     // Todo make tableControlSection parameter obsolete
-    // Improve tableName parameter (e.g. enumeration) or make id dependent on "this", maybe inherit from a dummy table class?
     /**
-     * Adds a pager section to the given control section.
-     * @param tableControlSection the control section.
-     * @param tableName the name of the table.
+     * Adds a pager section to the given control section
+     * @param tableControlSection the control section of the table
+     * @param tableModule the table module
      */
-    module.addPagerSection = function (tableControlSection, tableName) {
+    module.addPagerSection = function (tableControlSection, tableModule) {
         var pager = document.createElement("div"),
             first = document.createElement("div"),
             prev = document.createElement("div"),
@@ -123,7 +180,7 @@
             select = document.createElement("select"),
             options = [document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option")];
 
-        pager.className = tableName + "Pager";
+        pager.id = tableModule.name + "Pager";
         first.className = first.innerHTML = "first";
         prev.className = prev.innerHTML = "prev";
         pageState.className = "pagedisplay";

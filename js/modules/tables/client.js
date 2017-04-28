@@ -194,7 +194,7 @@
         clientTableControlSection.appendChild(coloredRowsDescription_green);
         clientTableControlSection.appendChild(coloredRowsDescription_grey);
 
-        ts3ldv.tables.addPagerSection(clientTableControlSection, "clientTable");
+        ts3ldv.tables.addPagerSection(clientTableControlSection, this);
 
         this.div.appendChild(clientTableControlSection);
 
@@ -382,7 +382,7 @@
         }).bind("sortEnd", function () {
             ts3ldv.storage.setTableSortOrder(this, clientTable.config.sortList)
         }).tablesorterPager({
-            container: $(".clientTablePager"),
+            container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: true
         });

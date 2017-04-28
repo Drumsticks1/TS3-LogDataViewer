@@ -102,7 +102,7 @@
         });
         banTableControlSection.appendChild(switchBetweenIDAndUIDButton);
 
-        ts3ldv.tables.addPagerSection(banTableControlSection, "banTable");
+        ts3ldv.tables.addPagerSection(banTableControlSection, this);
 
         this.div.appendChild(banTableControlSection);
 
@@ -225,7 +225,7 @@
         }).bind("sortEnd", function () {
             ts3ldv.storage.setTableSortOrder(this, banTable.config.sortList)
         }).tablesorterPager({
-            container: $(".banTablePager"),
+            container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
