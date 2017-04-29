@@ -70,6 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
     $(document).foundation();
 
     ts3ldv.controlSection.build();
+    ts3ldv.navBar.build();
+
     addCustomParsers();
     ts3ldv.nanobar.go(25);
 

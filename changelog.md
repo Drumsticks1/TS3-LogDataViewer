@@ -11,11 +11,13 @@ Changes:
 
 - Client-Side app:
     - Refactored code from TS3-LogDataViewer.js into multiple modules
+    - Tables and their occurrences in control sections are now ordered alphabetically
     - Functions are now rather working on modules and their attributes as parameters than on strings that then are modified in order to access objects
     - Removed the constant updating of the moment.js time difference regarding the build time of the json ("x ago"), this now only happens when the tables are build
     - The number of connected Clients is now always calculated in buildTables regardless of the build state of the clientTable
     - Merged the localStorage and sessionStorage data into one json object for each storage type
-   
+    - Moved the navbar (now called navBar) out of the controlSection, it is now added directly to the document
+
 - Server-Side app:
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
     - Renamed configuration settings:

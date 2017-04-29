@@ -66,7 +66,7 @@ label {
   color: white;
 }
 
-#navbar, td, .tablesorter button, .connected > td > button:active, .connected > td > button:hover, .connected > td > button:focus, .nanobar > .bar {
+#navBar, td, .tablesorter button, .connected > td > button:active, .connected > td > button:hover, .connected > td > button:focus, .nanobar > .bar {
   background-color: white;
 }
 
@@ -112,7 +112,7 @@ button {
   margin-top: 20px
 }
 
-#TS3-LDV, #buildJSONWithoutBufferButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #buildJSONButton, #switchBetweenIDAndUIDButton, .row .row, .tableheading {
+#TS3-LDV, #buildJSONWithoutBufferButton, #collapseAllButton, #connectionsSortTypeButton, #navBar > button, #buildJSONButton, #switchBetweenIDAndUIDButton, .row .row, .tableheading {
   margin: 0;
 }
 
@@ -120,7 +120,7 @@ button {
   width: 100%;
 }
 
-#navbar {
+#navBar {
   display: flex;
   position: fixed;
   box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, .75);

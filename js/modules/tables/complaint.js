@@ -30,7 +30,10 @@
         return document.getElementById("complaintTable");
     };
 
-    // Todo: doc
+    /**
+     * The input object of type checkbox in the tableSelection section that toggles the table of this module.
+     * @type {Element}
+     */
     module.checkbox = module.checkbox || undefined;
 
     /**

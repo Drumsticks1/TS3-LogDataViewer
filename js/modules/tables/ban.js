@@ -30,7 +30,10 @@
         return document.getElementById("banTable");
     };
 
-    // Todo: doc
+    /**
+     * The input object of type checkbox in the tableSelection section that toggles the table of this module.
+     * @type {Element}
+     */
     module.checkbox = module.checkbox || undefined;
 
     /**
@@ -97,9 +100,7 @@
         switchBetweenIDAndUIDButton.id = "switchBetweenIDAndUIDButton";
         switchBetweenIDAndUIDButton.innerHTML = "Switch between IDs and UIDs";
 
-        ts3ldv.event.addOnClickEventListener(switchBetweenIDAndUIDButton, function () {
-            switchBetweenIDAndUID();
-        });
+        ts3ldv.event.addOnClickEventListener(switchBetweenIDAndUIDButton, switchBetweenIDAndUID);
         banTableControlSection.appendChild(switchBetweenIDAndUIDButton);
 
         ts3ldv.tables.addPagerSection(banTableControlSection, this);

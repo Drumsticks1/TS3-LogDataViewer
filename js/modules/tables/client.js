@@ -30,7 +30,10 @@
         return document.getElementById("clientTable");
     };
 
-    // Todo: doc
+    /**
+     * The input object of type checkbox in the tableSelection section that toggles the table of this module.
+     * @type {Element}
+     */
     module.checkbox = module.checkbox || undefined;
 
     /**
@@ -176,9 +179,7 @@
         collapseAllButton.className = "small-12 medium-4 large-6 columns";
         collapseAllButton.innerHTML = "Collapse expanded lists";
 
-        ts3ldv.event.addOnClickEventListener(collapseAllButton, function () {
-            collapseAll();
-        });
+        ts3ldv.event.addOnClickEventListener(collapseAllButton, collapseAll);
 
         clientTableControlSection.appendChild(collapseAllButton);
 
@@ -384,7 +385,7 @@
         }).tablesorterPager({
             container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-            savePages: true
+            savePages: false
         });
 
         this.div.appendChild(clientTable);

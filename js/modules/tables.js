@@ -30,6 +30,7 @@
 
     module.lookup = lookup;
 
+    // TODO: check if the lookup object is really necessary or how it could be improved
     /**
      * Updates the lookup object for the given list
      * @param {string} list name of the list, e.g. ClientList
@@ -67,7 +68,7 @@
      * - Setting the tablesorter filter placeholders
      * - Applying sticky headers to the table
      * - Updating the sessionStorage (see ts3ldv.storage.setTableBuilt)
-     * - Handling the visibility of the navbar buttons
+     * - Handling the visibility of the navBar buttons
      *
      * @param tableModule the table module
      */
@@ -89,16 +90,15 @@
             } else {
                 var alertBox = document.createElement("div");
                 alertBox.className = "alertBox";
-                // Todo
-                // alertBox.innerHTML = "No " + table.substring(0, table.search("Table")) + "s were found.";
+                alertBox.innerHTML = "No data was found for this table!";
                 tableModule.div.appendChild(alertBox);
             }
 
             ts3ldv.storage.setTableBuilt(tableModule, true);
-            ts3ldv.controlSection.navbar.showScrollToButton(tableModule);
+            ts3ldv.navBar.showScrollToButton(tableModule);
         } else {
             ts3ldv.storage.setTableBuilt(tableModule, false);
-            ts3ldv.controlSection.navbar.hideScrollToButton(tableModule);
+            ts3ldv.navBar.hideScrollToButton(tableModule);
         }
     };
 
