@@ -147,27 +147,27 @@
         clientTableHeading.innerHTML = "Client table";
         clientTableControlSection.appendChild(clientTableHeading);
 
-        var connectionSortStrings = ["Currently sorting connections by the first connect",
-            "Currently sorting connections by the last connect"];
+        var connectionsSortType = {
+            first: "Currently sorting connections by the first connect",
+            last: "Currently sorting connections by the last connect"
+        };
 
         var connectionsSortTypeButton = document.createElement("button");
         connectionsSortTypeButton.id = "connectionsSortTypeButton";
         connectionsSortTypeButton.className = "small-12 medium-8 large-6 columns";
-        connectionsSortTypeButton.innerHTML = connectionSortStrings[1];
 
-        if (localStorage.getItem("connectionsSortType") === null)
-            localStorage.setItem("connectionsSortType", "1");
-        else if (localStorage.getItem("connectionsSortType") === "0")
-            connectionsSortTypeButton.innerHTML = connectionSortStrings[0];
+        if (ts3ldv.storage.getClientConnectionsSortType())
+            connectionsSortTypeButton.innerHTML = connectionsSortType.last;
+        else
+            connectionsSortTypeButton.innerHTML = connectionsSortType.first;
 
         ts3ldv.event.addOnClickEventListener(connectionsSortTypeButton, function () {
-            if (localStorage.getItem("connectionsSortType") === "1") {
-                connectionsSortTypeButton.innerHTML = connectionSortStrings[0];
-                localStorage.setItem("connectionsSortType", "0");
-            } else {
-                connectionsSortTypeButton.innerHTML = connectionSortStrings[1];
-                localStorage.setItem("connectionsSortType", "1");
-            }
+            ts3ldv.storage.switchClientConnectionsSortType();
+
+            if (ts3ldv.storage.getClientConnectionsSortType())
+                connectionsSortTypeButton.innerHTML = connectionsSortType.last;
+            else
+                connectionsSortTypeButton.innerHTML = connectionsSortType.first;
 
             $.tablesorter.updateCache(clientTable.config);
             $.tablesorter.sortOn(clientTable.config, clientTable.config.sortList);
@@ -195,9 +195,9 @@
         clientTableControlSection.appendChild(coloredRowsDescription_green);
         clientTableControlSection.appendChild(coloredRowsDescription_grey);
 
-        ts3ldv.tables.addPagerSection(clientTableControlSection, this);
+        ts3ldv.tables.addPagerSection(clientTableControlSection, module);
 
-        this.div.appendChild(clientTableControlSection);
+        module.div.appendChild(clientTableControlSection);
 
         var Client = ts3ldv.Json.ClientList,
             clientTable = document.createElement("table"),
@@ -379,16 +379,16 @@
                     }
                 }
             },
-            sortList: ts3ldv.storage.getTableSortOrder(this)
+            sortList: ts3ldv.storage.getTableSortOrder(module)
         }).bind("sortEnd", function () {
-            ts3ldv.storage.setTableSortOrder(this, clientTable.config.sortList)
+            ts3ldv.storage.setTableSortOrder(module, clientTable.config.sortList)
         }).tablesorterPager({
             container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        this.div.appendChild(clientTable);
+        module.div.appendChild(clientTable);
     };
 
     return module;

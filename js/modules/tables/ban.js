@@ -40,24 +40,26 @@
      * Switches between the ID/UID columns in the Ban table.
      */
     function switchBetweenIDAndUID() {
-        var rowId, banId, idOrUid, bannedByIDOrUID, Ban = ts3ldv.Json.BanList,
-            banTableRows = document.getElementById("banTable").lastChild.childNodes,
-            headRowCells = document.getElementById("banTable").firstChild.firstChild.childNodes,
-            filterRowCells = document.getElementById("banTable").firstChild.childNodes[1].childNodes,
-            uidState = Number(localStorage.getItem("uidState"));
+        var rowId, banId, Ban = ts3ldv.Json.BanList,
+            banTableRows = module.getTableDiv().lastChild.childNodes,
+            headRowCells = module.getTableDiv().firstChild.firstChild.childNodes,
+            filterRowCells = module.getTableDiv().firstChild.childNodes[1].childNodes,
+            showUID = ts3ldv.storage.getBanShowUID();
 
-        if (uidState) {
-            idOrUid = "ID";
-            localStorage.setItem("uidState", "0");
+        var bannedString, bannedByString;
+
+        if (showUID) {
+            bannedString = "Banned UID";
+            bannedByString = "Banned by UID";
         } else {
-            idOrUid = "UID";
-            localStorage.setItem("uidState", "1");
+            bannedString = "Banned ID";
+            bannedByString = "Banned by ID";
         }
 
-        headRowCells[1].innerHTML = "Banned " + idOrUid;
-        filterRowCells[1].firstChild.setAttribute("Placeholder", "Banned " + idOrUid);
-        headRowCells[4].innerHTML = "Banned by " + idOrUid;
-        filterRowCells[4].firstChild.setAttribute("Placeholder", "Banned by " + idOrUid);
+        headRowCells[1].innerHTML = bannedString;
+        headRowCells[4].innerHTML = bannedByString;
+        filterRowCells[1].firstChild.setAttribute("Placeholder", bannedString);
+        filterRowCells[4].firstChild.setAttribute("Placeholder", bannedByString);
 
         for (var j = 0; j < banTableRows.length; j++) {
             rowId = banTableRows[j].getAttribute("id");
@@ -65,22 +67,22 @@
 
             var currentRowCells = document.getElementById(rowId).childNodes;
 
-            if (uidState) {
-                if (currentRowCells[3].innerHTML !== "Unknown")
-                    bannedByIDOrUID = Ban[banId].bannedByID;
-                else
-                    bannedByIDOrUID = "Unknown";
-            } else {
+            currentRowCells[1].innerHTML = showUID ? Ban[banId].bannedUID : Ban[banId].bannedID;
+
+            if (showUID) {
                 if (Ban[banId].bannedByUID.length !== 0)
-                    bannedByIDOrUID = Ban[banId].bannedByUID;
+                    currentRowCells[4].innerHTML = Ban[banId].bannedByUID;
                 else
-                    bannedByIDOrUID = "No UID";
+                    currentRowCells[4].innerHTML = "No UID";
+            } else {
+                if (currentRowCells[3].innerHTML !== "Unknown")
+                    currentRowCells[4].innerHTML = Ban[banId].bannedByID;
+                else
+                    currentRowCells[4].innerHTML = "Unknown";
             }
 
-            currentRowCells[1].setAttribute("data-title", "Banned " + idOrUid);
-            currentRowCells[1].innerHTML = Ban[banId]["banned" + idOrUid];
-            currentRowCells[4].setAttribute("data-title", "Banned by " + idOrUid);
-            currentRowCells[4].innerHTML = bannedByIDOrUID;
+            currentRowCells[1].setAttribute("data-title", bannedString);
+            currentRowCells[4].setAttribute("data-title", bannedByString);
         }
     }
 
@@ -100,12 +102,15 @@
         switchBetweenIDAndUIDButton.id = "switchBetweenIDAndUIDButton";
         switchBetweenIDAndUIDButton.innerHTML = "Switch between IDs and UIDs";
 
-        ts3ldv.event.addOnClickEventListener(switchBetweenIDAndUIDButton, switchBetweenIDAndUID);
+        ts3ldv.event.addOnClickEventListener(switchBetweenIDAndUIDButton, function () {
+            ts3ldv.storage.switchBanShowUID();
+            switchBetweenIDAndUID();
+        });
         banTableControlSection.appendChild(switchBetweenIDAndUIDButton);
 
-        ts3ldv.tables.addPagerSection(banTableControlSection, this);
+        ts3ldv.tables.addPagerSection(banTableControlSection, module);
 
-        this.div.appendChild(banTableControlSection);
+        module.div.appendChild(banTableControlSection);
 
         var Ban = ts3ldv.Json.BanList,
             banTable = document.createElement("table"),
@@ -222,26 +227,20 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: ts3ldv.storage.getTableSortOrder(this)
+            sortList: ts3ldv.storage.getTableSortOrder(module)
         }).bind("sortEnd", function () {
-            ts3ldv.storage.setTableSortOrder(this, banTable.config.sortList)
+            ts3ldv.storage.setTableSortOrder(module, banTable.config.sortList)
         }).tablesorterPager({
             container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        this.div.appendChild(banTable);
+        module.div.appendChild(banTable);
 
-        // Todo: Better place for this?
-        // Ban table UID state action.
-        var uidState = localStorage.getItem("uidState");
-        if (document.getElementById("banTable") !== null && (uidState === null || uidState === "1")) {
-            localStorage.setItem("uidState", "0");
-
-            if (uidState === "1")
-                switchBetweenIDAndUID();
-        }
+        // Todo: maybe instead of calling this after creation move it into the creation
+        if (ts3ldv.storage.getBanShowUID())
+            switchBetweenIDAndUID();
     };
 
     return module;

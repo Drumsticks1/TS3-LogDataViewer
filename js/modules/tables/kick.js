@@ -48,9 +48,9 @@
         kickTableHeading.innerHTML = "Kick table";
         kickTableControlSection.appendChild(kickTableHeading);
 
-        ts3ldv.tables.addPagerSection(kickTableControlSection, this);
+        ts3ldv.tables.addPagerSection(kickTableControlSection, module);
 
-        this.div.appendChild(kickTableControlSection);
+        module.div.appendChild(kickTableControlSection);
 
         var Kick = ts3ldv.Json.KickList,
             kickTable = document.createElement("table"),
@@ -140,16 +140,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: ts3ldv.storage.getTableSortOrder(this)
+            sortList: ts3ldv.storage.getTableSortOrder(module)
         }).bind("sortEnd", function () {
-            ts3ldv.storage.setTableSortOrder(this, kickTable.config.sortList)
+            ts3ldv.storage.setTableSortOrder(module, kickTable.config.sortList)
         }).tablesorterPager({
             container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        this.div.appendChild(kickTable);
+        module.div.appendChild(kickTable);
     };
 
     return module;

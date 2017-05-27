@@ -48,9 +48,9 @@
         complaintTableHeading.innerHTML = "Complaint table";
         complaintTableControlSection.appendChild(complaintTableHeading);
 
-        ts3ldv.tables.addPagerSection(complaintTableControlSection, this);
+        ts3ldv.tables.addPagerSection(complaintTableControlSection, module);
 
-        this.div.appendChild(complaintTableControlSection);
+        module.div.appendChild(complaintTableControlSection);
 
         var Complaint = ts3ldv.Json.ComplaintList,
             complaintTable = document.createElement("table"),
@@ -137,16 +137,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: ts3ldv.storage.getTableSortOrder(this)
+            sortList: ts3ldv.storage.getTableSortOrder(module)
         }).bind("sortEnd", function () {
-            ts3ldv.storage.setTableSortOrder(this, complaintTable.config.sortList)
+            ts3ldv.storage.setTableSortOrder(module, complaintTable.config.sortList)
         }).tablesorterPager({
             container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        this.div.appendChild(complaintTable);
+        module.div.appendChild(complaintTable);
     };
 
     return module;

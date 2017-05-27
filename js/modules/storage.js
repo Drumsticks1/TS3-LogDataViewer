@@ -7,14 +7,38 @@
 /**
  * Layout of the objects used in the browser storage:
  *
- * localStorage:
- *  ts3ldv -> {
- *      tableActive : {ban: true, ...}
- *      tableSortOrder : {ban: sortOrder, ...}}
+ * localStorage.getItem("ts3ldv") -->
+ *  {
+ *      ban: {
+ *          active: bool,
+ *          sortOrder: array,
+ *          showUID: bool
+ *          },
+ *      client: {
+ *          active: bool,
+ *          sortOrder: array,
+ *          connectionsSortType: bool
+ *          },
+ *      complaint: {
+ *          active: bool,
+ *          sortOrder: array
+ *          },
+ *      kick: {
+ *          active: bool,
+ *          sortOrder: array
+ *          },
+ *      upload: {
+ *          active: bool,
+ *          sortOrder: array
+ *          }
+ *  }
  *
- * sessionStorage:
- *  ts3ldv -> {
+ *
+ *
+ * sessionStorage.getItem("ts3ldv") -->
+ *  {
  *      tableBuilt : {ban: true, ...}}
+ *  }
  */
 
 
@@ -28,8 +52,7 @@
      * The key used for storing data in the localStorage and sessionStorage.
      * @type {string}
      */
-    module.storageKey = "ts3ldv";
-
+    module.key = "ts3ldv";
 
     // Todo: doc
     // local storage
@@ -41,23 +64,46 @@
      * @returns {boolean}
      */
     module.getTableActive = function (tableModule) {
-        return Boolean(JSON.parse(localStorage.getItem(this.storageKey)).tableActive[tableModule.name]);
+        return Boolean(JSON.parse(localStorage.getItem(module.key))[tableModule.name].active);
     };
 
     module.setTableActive = function (tableModule, state) {
-        var data = JSON.parse(localStorage.getItem(this.storageKey));
-        data.tableActive[tableModule.name] = state;
-        localStorage.setItem(this.storageKey, JSON.stringify(data));
+        var data = JSON.parse(localStorage.getItem(module.key));
+        data[tableModule.name].active = state;
+        localStorage.setItem(module.key, JSON.stringify(data));
     };
 
     module.getTableSortOrder = function (tableModule) {
-        return JSON.parse(localStorage.getItem(this.storageKey)).tableSortOrder[tableModule.name];
+        return JSON.parse(localStorage.getItem(module.key))[tableModule.name].sortOrder;
     };
 
     module.setTableSortOrder = function (tableModule, sortOrder) {
-        var data = JSON.parse(localStorage.getItem(this.storageKey));
-        data.tableSortOrder[tableModule.name] = sortOrder;
-        localStorage.setItem(this.storageKey, JSON.stringify(data));
+        var data = JSON.parse(localStorage.getItem(module.key));
+        data[tableModule.name].sortOrder = sortOrder;
+        localStorage.setItem(module.key, JSON.stringify(data));
+    };
+
+    module.switchBanShowUID = function () {
+        var data = JSON.parse(localStorage.getItem(module.key));
+        data.ban.showUID = !data.ban.showUID;
+        localStorage.setItem(module.key, JSON.stringify(data));
+    };
+
+    module.getBanShowUID = function () {
+        return JSON.parse(localStorage.getItem(module.key)).ban.showUID;
+    };
+
+    // Returns the resulting connectionSortType
+    module.switchClientConnectionsSortType = function () {
+        var data = JSON.parse(localStorage.getItem(module.key));
+        data.client.connectionsSortType = !data.client.connectionsSortType;
+        localStorage.setItem(module.key, JSON.stringify(data));
+        return data.client.connectionsSortType;
+    };
+
+    // 1 = sort by last connect
+    module.getClientConnectionsSortType = function () {
+        return JSON.parse(localStorage.getItem(module.key)).client.connectionsSortType;
     };
 
     /**
@@ -66,21 +112,29 @@
      */
     module.importLocalStorage = function () {
         // Case: no existing local storage
-        if (localStorage.getItem(this.storageKey) === null) {
-            localStorage.setItem(this.storageKey, JSON.stringify({
-                tableActive: {
-                    ban: true,
-                    client: true,
-                    complaint: true,
-                    kick: true,
-                    upload: true
+        if (localStorage.getItem(module.key) === null) {
+            localStorage.setItem(module.key, JSON.stringify({
+                ban: {
+                    active: true,
+                    sortOrder: [],
+                    showUID: false
                 },
-                tableSortOrder: {
-                    ban: [],
-                    client: [],
-                    complaint: [],
-                    kick: [],
-                    upload: []
+                client: {
+                    active: true,
+                    sortOrder: [],
+                    connectionsSortType: true
+                },
+                complaint: {
+                    active: true,
+                    sortOrder: []
+                },
+                kick: {
+                    active: true,
+                    sortOrder: []
+                },
+                upload: {
+                    active: true,
+                    sortOrder: []
                 }
             }));
 
@@ -93,48 +147,46 @@
 
         // Case: existing local storage
         else {
-            var settings = JSON.parse(localStorage.getItem(this.storageKey));
+            var settings = JSON.parse(localStorage.getItem(module.key));
 
             // Update checkboxes in the control section
-            ts3ldv.tables.ban.checkbox.checked = settings.tableActive.ban;
-            ts3ldv.tables.client.checkbox.checked = settings.tableActive.client;
-            ts3ldv.tables.complaint.checkbox.checked = settings.tableActive.complaint;
-            ts3ldv.tables.kick.checkbox.checked = settings.tableActive.kick;
-            ts3ldv.tables.upload.checkbox.checked = settings.tableActive.upload;
+            ts3ldv.tables.ban.checkbox.checked = settings.ban.active;
+            ts3ldv.tables.client.checkbox.checked = settings.client.active;
+            ts3ldv.tables.complaint.checkbox.checked = settings.complaint.active;
+            ts3ldv.tables.kick.checkbox.checked = settings.kick.active;
+            ts3ldv.tables.upload.checkbox.checked = settings.upload.active;
 
             // Update table visibility
-            ts3ldv.tables.ban.div.style.display = settings.tableActive.ban ? "" : "none";
-            ts3ldv.tables.client.div.style.display = settings.tableActive.client ? "" : "none";
-            ts3ldv.tables.complaint.div.style.display = settings.tableActive.complaint ? "" : "none";
-            ts3ldv.tables.kick.div.style.display = settings.tableActive.kick ? "" : "none";
-            ts3ldv.tables.upload.div.style.display = settings.tableActive.upload ? "" : "none";
+            ts3ldv.tables.ban.div.style.display = settings.ban.active ? "" : "none";
+            ts3ldv.tables.client.div.style.display = settings.client.active ? "" : "none";
+            ts3ldv.tables.complaint.div.style.display = settings.complaint.active ? "" : "none";
+            ts3ldv.tables.kick.div.style.display = settings.kick.active ? "" : "none";
+            ts3ldv.tables.upload.div.style.display = settings.upload.active ? "" : "none";
         }
     };
 
     module.resetTableSortOrder = function () {
-        var data = JSON.parse(localStorage.getItem(this.storageKey));
+        var data = JSON.parse(localStorage.getItem(module.key));
 
-        data.tableSortOrder = {
-            ban: [],
-            client: [],
-            complaint: [],
-            kick: [],
-            upload: []
-        };
+        data.ban.sortOrder = [];
+        data.client.sortOrder = [];
+        data.complaint.sortOrder = [];
+        data.kick.sortOrder = [];
+        data.upload.sortOrder = [];
 
-        localStorage.setItem(this.storageKey, JSON.stringify(data));
+        localStorage.setItem(module.key, JSON.stringify(data));
     };
 
     // session storage
     module.getTableBuilt = function (tableModule) {
-        if (sessionStorage.getItem(this.storageKey) === null)
+        if (sessionStorage.getItem(module.key) === null)
             return false;
 
-        return JSON.parse(sessionStorage.getItem(this.storageKey)).tableBuilt[tableModule.name];
+        return JSON.parse(sessionStorage.getItem(module.key)).tableBuilt[tableModule.name];
     };
 
     module.setTableBuilt = function (tableModule, state) {
-        var data = sessionStorage.getItem(this.storageKey) === null ? {
+        var data = sessionStorage.getItem(module.key) === null ? {
             tableBuilt: {
                 ban: false,
                 client: false,
@@ -142,10 +194,10 @@
                 kick: false,
                 upload: false
             }
-        } : JSON.parse(sessionStorage.getItem(this.storageKey));
+        } : JSON.parse(sessionStorage.getItem(module.key));
 
         data.tableBuilt[tableModule.name] = state;
-        sessionStorage.setItem(this.storageKey, JSON.stringify(data));
+        sessionStorage.setItem(module.key, JSON.stringify(data));
     };
 
     return module;

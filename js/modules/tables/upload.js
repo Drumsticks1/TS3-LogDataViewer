@@ -48,9 +48,9 @@
         uploadTableHeading.innerHTML = "Upload table";
         uploadTableControlSection.appendChild(uploadTableHeading);
 
-        ts3ldv.tables.addPagerSection(uploadTableControlSection, this);
+        ts3ldv.tables.addPagerSection(uploadTableControlSection, module);
 
-        this.div.appendChild(uploadTableControlSection);
+        module.div.appendChild(uploadTableControlSection);
 
         var Upload = ts3ldv.Json.UploadList,
             uploadTable = document.createElement("table"),
@@ -164,16 +164,16 @@
             },
             widgets: ["filter"],
             widgetOptions: {filter_searchDelay: 0},
-            sortList: ts3ldv.storage.getTableSortOrder(this)
+            sortList: ts3ldv.storage.getTableSortOrder(module)
         }).bind("sortEnd", function () {
-            ts3ldv.storage.setTableSortOrder(this, uploadTable.config.sortList)
+            ts3ldv.storage.setTableSortOrder(module, uploadTable.config.sortList)
         }).tablesorterPager({
             container: $(document.getElementById(module.name + "Pager")),
             output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
             savePages: false
         });
 
-        this.div.appendChild(uploadTable);
+        module.div.appendChild(uploadTable);
     };
 
     return module;

@@ -43,7 +43,7 @@ function addCustomParsers() {
     $.tablesorter.addParser({
         id: "connections",
         format: function (s, table, cell) {
-            if (localStorage.getItem("connectionsSortType") === "1") {
+            if (ts3ldv.storage.getClientConnectionsSortType()) {
                 if (cell.firstChild.localName === "button")
                     return cell.childNodes[1].innerHTML;
                 else
