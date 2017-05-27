@@ -51,7 +51,6 @@ function generateCss(inputDirectory, outputDirectory) {
       outputPathWithoutEnding = outputDirectory + "/" + scssFiles[i].substring(0, scssFiles[i].indexOf(".scss"));
 
     processScssFile(inputPath, outputPathWithoutEnding + ".css", false);
-    processScssFile(inputPath, outputPathWithoutEnding + ".min.css", true);
   }
 }
 

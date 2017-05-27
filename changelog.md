@@ -17,6 +17,7 @@ Changes:
     - The number of connected Clients is now always calculated in buildTables regardless of the build state of the clientTable
     - Merged the localStorage and sessionStorage data into one json object for each storage type
     - Moved the navbar (now called navBar) out of the controlSection, it is now added directly to the document
+    - Removed minimized css files, not really necessary for small files like they are used in this project
 
 - Server-Side app:
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
