@@ -25,57 +25,16 @@ var ts3ldv = (function (module) {
     return module;
 }(ts3ldv || {}));
 
-/**
- * Adds the custom tablesorter parsers.
- * ignoreMoment:    Ignores the moment.js timestamps ("x ago").
- * connections:     Ignores the expand/collapse buttons in the Connections column.
- * ips:             Ignores the expand/collapse buttons in the IPs column.
- */
-function addCustomParsers() {
-    $.tablesorter.addParser({
-        id: "ignoreMoment",
-        format: function (s) {
-            return s;
-        },
-        type: "text"
-    });
-
-    $.tablesorter.addParser({
-        id: "connections",
-        format: function (s, table, cell) {
-            if (ts3ldv.storage.getClientConnectionsSortType()) {
-                if (cell.firstChild.localName === "button")
-                    return cell.childNodes[1].innerHTML;
-                else
-                    return cell.firstChild.innerHTML;
-            } else
-                return cell.lastChild.innerHTML;
-        },
-        type: "text"
-    });
-
-    $.tablesorter.addParser({
-        id: "ips",
-        format: function (s, table, cell) {
-            if (cell.firstChild.localName === "button")
-                return cell.childNodes[1].innerHTML;
-            else
-                return cell.firstChild.innerHTML;
-        },
-        type: "text"
-    });
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     $(document).foundation();
 
     ts3ldv.controlSection.build();
     ts3ldv.navBar.build();
 
-    addCustomParsers();
-    ts3ldv.nanobar.go(25);
-
     ts3ldv.storage.importLocalStorage();
+
+    ts3ldv.tables.addCustomTablesorterParsers();
+    ts3ldv.nanobar.go(25);
 
     ts3ldv.tables.build();
 });

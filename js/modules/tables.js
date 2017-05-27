@@ -206,5 +206,46 @@
         tableControlSection.appendChild(pager);
     };
 
+    /**
+     * Adds the following custom tablesorter parsers:
+     * ignoreMoment:    Ignores the moment.js timestamps ("x ago")
+     * connections:     Ignores the expand/collapse buttons in the Connections column
+     * ips:             Ignores the expand/collapse buttons in the IPs column
+     */
+    module.addCustomTablesorterParsers = function () {
+        $.tablesorter.addParser({
+            id: "ignoreMoment",
+            format: function (s) {
+                return s;
+            },
+            type: "text"
+        });
+
+        $.tablesorter.addParser({
+            id: "connections",
+            format: function (s, table, cell) {
+                if (ts3ldv.storage.getClientConnectionsSortType()) {
+                    if (cell.firstChild.localName === "button")
+                        return cell.childNodes[1].innerHTML;
+                    else
+                        return cell.firstChild.innerHTML;
+                } else
+                    return cell.lastChild.innerHTML;
+            },
+            type: "text"
+        });
+
+        $.tablesorter.addParser({
+            id: "ips",
+            format: function (s, table, cell) {
+                if (cell.firstChild.localName === "button")
+                    return cell.childNodes[1].innerHTML;
+                else
+                    return cell.firstChild.innerHTML;
+            },
+            type: "text"
+        });
+    };
+
     return module;
 }(ts3ldv || {}));
