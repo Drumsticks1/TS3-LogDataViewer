@@ -81,16 +81,34 @@
 
         // Check if the table should be build
         if (ts3ldv.storage.getTableActive(tableModule)) {
+            // Todo: only temporary to ensure compatibility with the server-side output
+            var listIdentifier;
+            switch (tableModule) {
+                case ts3ldv.tables.ban:
+                    listIdentifier = "BanList";
+                    break;
+                case ts3ldv.tables.client:
+                    listIdentifier = "ClientList";
+                    break;
+                case ts3ldv.tables.complaint:
+                    listIdentifier = "ComplaintList";
+                    break;
+                case ts3ldv.tables.kick:
+                    listIdentifier = "KickList";
+                    break;
+                case ts3ldv.tables.upload:
+                    listIdentifier = "UploadList";
+            }
 
-            // Todo (check if there is data for the requested table in the json), currently check is disabled!
-            if (true) {
+            // Check if the json contains data for the tableModule
+            if (ts3ldv.Json[listIdentifier].length) {
                 tableModule.build();
                 this.setFilterPlaceholders(tableModule);
                 $(tableModule.getTableDiv()).trigger("applyWidgetId", ["stickyHeaders"]);
             } else {
                 var alertBox = document.createElement("div");
                 alertBox.className = "alertBox";
-                alertBox.innerHTML = "No data was found for this table!";
+                alertBox.innerHTML = "No " + tableModule.name + " data was found!";
                 tableModule.div.appendChild(alertBox);
             }
 
