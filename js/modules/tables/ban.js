@@ -56,8 +56,8 @@
             bannedByString = "Banned by ID";
         }
 
-        headRowCells[1].innerHTML = bannedString;
-        headRowCells[4].innerHTML = bannedByString;
+        headRowCells[1].innerText = bannedString;
+        headRowCells[4].innerText = bannedByString;
         filterRowCells[1].firstChild.setAttribute("Placeholder", bannedString);
         filterRowCells[4].firstChild.setAttribute("Placeholder", bannedByString);
 
@@ -67,18 +67,18 @@
 
             var currentRowCells = document.getElementById(rowId).childNodes;
 
-            currentRowCells[1].innerHTML = showUID ? Ban[banId].bannedUID : Ban[banId].bannedID;
+            $(currentRowCells[1]).text(showUID ? Ban[banId].bannedUID : Ban[banId].bannedID);
 
             if (showUID) {
                 if (Ban[banId].bannedByUID.length !== 0)
-                    currentRowCells[4].innerHTML = Ban[banId].bannedByUID;
+                    $(currentRowCells[4]).text(Ban[banId].bannedByUID);
                 else
-                    currentRowCells[4].innerHTML = "No UID";
+                    currentRowCells[4].innerText = "No UID";
             } else {
-                if (currentRowCells[3].innerHTML !== "Unknown")
-                    currentRowCells[4].innerHTML = Ban[banId].bannedByID;
+                if (currentRowCells[3].innerText !== "Unknown")
+                    $(currentRowCells[4]).text(Ban[banId].bannedByID);
                 else
-                    currentRowCells[4].innerHTML = "Unknown";
+                    currentRowCells[4].innerText = "Unknown";
             }
 
             currentRowCells[1].setAttribute("data-title", bannedString);
@@ -95,12 +95,12 @@
 
         var banTableHeading = document.createElement("div");
         banTableHeading.className = "tableheading large-12 columns";
-        banTableHeading.innerHTML = "Ban table";
+        banTableHeading.innerText = "Ban table";
         banTableControlSection.appendChild(banTableHeading);
 
         var switchBetweenIDAndUIDButton = document.createElement("button");
         switchBetweenIDAndUIDButton.id = "switchBetweenIDAndUIDButton";
-        switchBetweenIDAndUIDButton.innerHTML = "Switch between IDs and UIDs";
+        switchBetweenIDAndUIDButton.innerText = "Switch between IDs and UIDs";
 
         ts3ldv.event.addOnClickEventListener(switchBetweenIDAndUIDButton, function () {
             ts3ldv.storage.switchBanShowUID();
@@ -125,14 +125,14 @@
             headCell_BanReason = document.createElement("th"),
             headCell_BanTime = document.createElement("th");
 
-        headCell_BanDateTime.innerHTML = "Date and Time";
-        headCell_BannedID.innerHTML = "Banned ID";
-        headCell_BannedNickname.innerHTML = "Banned Nickname";
-        headCell_BannedIP.innerHTML = "Banned IP";
-        headCell_BannedByID.innerHTML = "Banned by ID";
-        headCell_BannedByNickname.innerHTML = "Banned by Nickname";
-        headCell_BanReason.innerHTML = "Reason";
-        headCell_BanTime.innerHTML = "BanTime";
+        headCell_BanDateTime.innerText = "Date and Time";
+        headCell_BannedID.innerText = "Banned ID";
+        headCell_BannedNickname.innerText = "Banned Nickname";
+        headCell_BannedIP.innerText = "Banned IP";
+        headCell_BannedByID.innerText = "Banned by ID";
+        headCell_BannedByNickname.innerText = "Banned by Nickname";
+        headCell_BanReason.innerText = "Reason";
+        headCell_BanTime.innerText = "BanTime";
 
         banHeadRow.appendChild(headCell_BanDateTime);
         banHeadRow.appendChild(headCell_BannedID);
@@ -193,25 +193,25 @@
             cell_BanDateTime.appendChild(cell_BanDateTime_Div);
             banBodyRow.appendChild(cell_BanDateTime);
 
-            cell_BannedID.innerHTML = BannedID;
+            $(cell_BannedID).text(BannedID);
             banBodyRow.appendChild(cell_BannedID);
 
-            cell_BannedNickname.innerHTML = BannedNickname;
+            $(cell_BannedNickname).text(BannedNickname);
             banBodyRow.appendChild(cell_BannedNickname);
 
-            cell_BannedIP.innerHTML = BannedIP;
+            $(cell_BannedIP).text(BannedIP);
             banBodyRow.appendChild(cell_BannedIP);
 
-            cell_BannedByID.innerHTML = BannedByID;
+            $(cell_BannedByID).text(BannedByID);
             banBodyRow.appendChild(cell_BannedByID);
 
-            cell_BannedByNickname.innerHTML = BannedByNickname;
+            $(cell_BannedByNickname).text(BannedByNickname);
             banBodyRow.appendChild(cell_BannedByNickname);
 
-            cell_BanReason.innerHTML = BanReason;
+            $(cell_BanReason).text(BanReason);
             banBodyRow.appendChild(cell_BanReason);
 
-            cell_BanTime.innerHTML = BanTime;
+            $(cell_BanTime).text(BanTime);
             banBodyRow.appendChild(cell_BanTime);
 
             banBody.appendChild(banBodyRow);

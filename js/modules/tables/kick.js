@@ -45,7 +45,7 @@
 
         var kickTableHeading = document.createElement("div");
         kickTableHeading.className = "tableheading large-12 columns";
-        kickTableHeading.innerHTML = "Kick table";
+        kickTableHeading.innerText = "Kick table";
         kickTableControlSection.appendChild(kickTableHeading);
 
         ts3ldv.tables.addPagerSection(kickTableControlSection, module);
@@ -63,12 +63,12 @@
             headCell_KickedByUID = document.createElement("th"),
             headCell_KickReason = document.createElement("th");
 
-        headCell_KickDateTime.innerHTML = "Date and Time";
-        headCell_KickedID.innerHTML = "Kicked ID";
-        headCell_KickedNickname.innerHTML = "Kicked Nickname";
-        headCell_KickedByNickname.innerHTML = "Kicked by Nickname";
-        headCell_KickedByUID.innerHTML = "Kicked by UID";
-        headCell_KickReason.innerHTML = "Reason";
+        headCell_KickDateTime.innerText = "Date and Time";
+        headCell_KickedID.innerText = "Kicked ID";
+        headCell_KickedNickname.innerText = "Kicked Nickname";
+        headCell_KickedByNickname.innerText = "Kicked by Nickname";
+        headCell_KickedByUID.innerText = "Kicked by UID";
+        headCell_KickReason.innerText = "Reason";
 
         kickHeadRow.appendChild(headCell_KickDateTime);
         kickHeadRow.appendChild(headCell_KickedID);
@@ -113,18 +113,19 @@
             cell_DateTime.appendChild(cell_DateTime_Div);
             kickBodyRow.appendChild(cell_DateTime);
 
-            cell_KickedID.innerHTML = KickedID;
+            $(cell_KickedID).text(KickedID);
             kickBodyRow.appendChild(cell_KickedID);
 
-            cell_KickedNickname.innerHTML = KickedNickname;
+            $(cell_KickedNickname).text(KickedNickname);
             kickBodyRow.appendChild(cell_KickedNickname);
-            cell_KickedByNickname.innerHTML = KickedByNickname;
+
+            $(cell_KickedByNickname).text(KickedByNickname);
             kickBodyRow.appendChild(cell_KickedByNickname);
 
-            cell_KickedByUID.innerHTML = KickedByUID;
+            $(cell_KickedByUID).text(KickedByUID);
             kickBodyRow.appendChild(cell_KickedByUID);
 
-            cell_KickReason.innerHTML = KickReason;
+            $(cell_KickReason).text(KickReason);
             kickBodyRow.appendChild(cell_KickReason);
 
             kickBody.appendChild(kickBodyRow);

@@ -71,7 +71,7 @@
             listContent = ts3ldv.tables.lookup.ClientList[ID][list];
 
         var currentDiv = document.getElementById(list + "Button_" + ID);
-        currentDiv.innerHTML = "- " + (listContent.length - collapsedCellCount);
+        currentDiv.innerText = "- " + (listContent.length - collapsedCellCount);
         currentDiv.parentNode.setAttribute("expanded", "true");
 
         for (var j = 1; j < listContent.length; j++) {
@@ -82,9 +82,9 @@
                 newDiv.id = currentDivString;
 
                 if (collapsedCellCount === 1)
-                    newDiv.innerHTML = listContent[j];
+                    newDiv.innerText = listContent[j];
                 else
-                    newDiv.innerHTML = ts3ldv.time.UTCDateStringToLocaltimeString(listContent[j]);
+                    newDiv.innerText = ts3ldv.time.UTCDateStringToLocaltimeString(listContent[j]);
 
                 if (column === 3)
                     x.appendChild(newDiv);
@@ -106,7 +106,7 @@
     function collapseList(list, ID, column, collapsedCellCount) {
         var listContent = ts3ldv.tables.lookup.ClientList[ID][list];
 
-        document.getElementById(list + "Button_" + ID).innerHTML = "+ " + (listContent.length - collapsedCellCount);
+        document.getElementById(list + "Button_" + ID).innerText = "+ " + (listContent.length - collapsedCellCount);
         document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
 
         if (document.getElementById(String(ID)) !== null) {
@@ -144,7 +144,7 @@
 
         var clientTableHeading = document.createElement("div");
         clientTableHeading.className = "tableheading large-12 columns";
-        clientTableHeading.innerHTML = "Client table";
+        clientTableHeading.innerText = "Client table";
         clientTableControlSection.appendChild(clientTableHeading);
 
         var connectionsSortType = {
@@ -157,17 +157,17 @@
         connectionsSortTypeButton.className = "small-12 medium-8 large-6 columns";
 
         if (ts3ldv.storage.getClientConnectionsSortType())
-            connectionsSortTypeButton.innerHTML = connectionsSortType.last;
+            connectionsSortTypeButton.innerText = connectionsSortType.last;
         else
-            connectionsSortTypeButton.innerHTML = connectionsSortType.first;
+            connectionsSortTypeButton.innerText = connectionsSortType.first;
 
         ts3ldv.event.addOnClickEventListener(connectionsSortTypeButton, function () {
             ts3ldv.storage.switchClientConnectionsSortType();
 
             if (ts3ldv.storage.getClientConnectionsSortType())
-                connectionsSortTypeButton.innerHTML = connectionsSortType.last;
+                connectionsSortTypeButton.innerText = connectionsSortType.last;
             else
-                connectionsSortTypeButton.innerHTML = connectionsSortType.first;
+                connectionsSortTypeButton.innerText = connectionsSortType.first;
 
             $.tablesorter.updateCache(clientTable.config);
             $.tablesorter.sortOn(clientTable.config, clientTable.config.sortList);
@@ -177,7 +177,7 @@
         var collapseAllButton = document.createElement("button");
         collapseAllButton.id = "collapseAllButton";
         collapseAllButton.className = "small-12 medium-4 large-6 columns";
-        collapseAllButton.innerHTML = "Collapse expanded lists";
+        collapseAllButton.innerText = "Collapse expanded lists";
 
         ts3ldv.event.addOnClickEventListener(collapseAllButton, collapseAll);
 
@@ -189,8 +189,8 @@
         coloredRowsDescription_green.id = "description_connected";
         coloredRowsDescription_grey.id = "description_deleted";
         coloredRowsDescription_green.className = coloredRowsDescription_grey.className = "small-6 columns";
-        coloredRowsDescription_green.innerHTML = "Connected clients";
-        coloredRowsDescription_grey.innerHTML = "Deleted clients";
+        coloredRowsDescription_green.innerText = "Connected clients";
+        coloredRowsDescription_grey.innerText = "Deleted clients";
 
         clientTableControlSection.appendChild(coloredRowsDescription_green);
         clientTableControlSection.appendChild(coloredRowsDescription_grey);
@@ -211,13 +211,13 @@
             headCell_Connected = document.createElement("th"),
             headCell_ServerGroupInfo = document.createElement("th");
 
-        headCell_ID.innerHTML = "ID";
-        headCell_Nicknames.innerHTML = "Nicknames";
-        headCell_Connections.innerHTML = "Connections";
-        headCell_IPs.innerHTML = "IPs";
-        headCell_Connects.innerHTML = "Connects";
-        headCell_Connected.innerHTML = "Connected";
-        headCell_ServerGroupInfo.innerHTML = "Server groups";
+        headCell_ID.innerText = "ID";
+        headCell_Nicknames.innerText = "Nicknames";
+        headCell_Connections.innerText = "Connections";
+        headCell_IPs.innerText = "IPs";
+        headCell_Connects.innerText = "Connects";
+        headCell_Connected.innerText = "Connected";
+        headCell_ServerGroupInfo.innerText = "Server groups";
 
         clientHeadRow.appendChild(headCell_ID);
         clientHeadRow.appendChild(headCell_Nicknames);
@@ -259,12 +259,12 @@
                 cell_Connected.setAttribute("data-title", "Connected");
                 cell_ServerGroupInfo.setAttribute("data-title", "Server groups");
 
-                cell_ID.innerHTML = ID;
+                cell_ID.innerText = ID;
                 clientBodyRow.appendChild(cell_ID);
 
                 for (var j = 0; j < Nicknames.length; j++) {
                     var divNicknames = document.createElement("div");
-                    divNicknames.innerHTML = Nicknames[j];
+                    $(divNicknames).text(Nicknames[j]);
                     cell_Nicknames.appendChild(divNicknames);
                 }
                 clientBodyRow.appendChild(cell_Nicknames);
@@ -272,7 +272,7 @@
                 if (Connections.length > 2) {
                     var buttonExpandCollapseConnections = document.createElement("button");
                     buttonExpandCollapseConnections.id = "ConnectionsButton_" + ID;
-                    buttonExpandCollapseConnections.innerHTML = "+ " + (Connections.length - 2);
+                    buttonExpandCollapseConnections.innerText = "+ " + (Connections.length - 2);
 
                     (function (ID) {
                         ts3ldv.event.addOnClickEventListener(buttonExpandCollapseConnections, function () {
@@ -284,13 +284,13 @@
 
                 var divLastConnection = document.createElement("div");
                 divLastConnection.id = "Connections_" + ID + "_0";
-                divLastConnection.innerHTML = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[0]);
+                divLastConnection.innerText = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[0]);
                 cell_Connections.appendChild(divLastConnection);
 
                 if (Connections.length > 1) {
                     var divFirstConnection = document.createElement("div");
                     divFirstConnection.id = "Connections_" + ID + "_" + (Connections.length - 1);
-                    divFirstConnection.innerHTML = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
+                    divFirstConnection.innerText = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
                     cell_Connections.appendChild(divFirstConnection);
                 }
                 clientBodyRow.appendChild(cell_Connections);
@@ -298,7 +298,7 @@
                 if (IPs.length > 1) {
                     var buttonExpandCollapseIPs = document.createElement("button");
                     buttonExpandCollapseIPs.id = "IPsButton_" + ID;
-                    buttonExpandCollapseIPs.innerHTML = "+ " + (IPs.length - 1);
+                    buttonExpandCollapseIPs.innerText = "+ " + (IPs.length - 1);
 
                     (function (ID) {
                         ts3ldv.event.addOnClickEventListener(buttonExpandCollapseIPs, function () {
@@ -310,12 +310,12 @@
 
                 var divLastIP = document.createElement("div");
                 divLastIP.id = "IPs_" + ID + "_0";
-                divLastIP.innerHTML = IPs[0];
+                $(divLastIP).text(IPs[0]);
                 cell_IPs.appendChild(divLastIP);
 
                 clientBodyRow.appendChild(cell_IPs);
 
-                cell_Connects.innerHTML = Connection_Count;
+                $(cell_Connects).text(Connection_Count);
                 clientBodyRow.appendChild(cell_Connects);
 
                 if (Client[ID].deleted)
@@ -323,17 +323,17 @@
                 else if (Client[ID].ConnectedState)
                     clientBodyRow.className += "connected";
 
-                cell_Connected.innerHTML = String(Boolean(Client[ID].ConnectedState));
+                $(cell_Connected).text(String(Boolean(Client[ID].ConnectedState)));
                 clientBodyRow.appendChild(cell_Connected);
 
                 if (ServerGroupIDs.length === 0)
-                    cell_ServerGroupInfo.innerHTML = "/";
+                    cell_ServerGroupInfo.innerText = "/";
 
                 for (j = 0; j < ServerGroupIDs.length; j++) {
                     var divName = document.createElement("div"),
                         divDateTime = document.createElement("div");
-                    divName.innerHTML = ts3ldv.tables.lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName;
-                    divDateTime.innerHTML = moment(ts3ldv.time.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(ts3ldv.time.format);
+                    $(divName).text(ts3ldv.tables.lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName);
+                    divDateTime.innerText = moment(ts3ldv.time.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(ts3ldv.time.format);
 
                     cell_ServerGroupInfo.appendChild(divName);
                     cell_ServerGroupInfo.appendChild(divDateTime);
@@ -358,7 +358,7 @@
                 // Filter functions for filtering with all connections / ips data from the json.
                 filter_functions: {
                     2: function (e, n, f, i, $r, c, data) {
-                        var connections = ts3ldv.Json.ClientList[Number(data.$cells[0].innerHTML)].Connections;
+                        var connections = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].Connections;
 
                         for (i = 0; i < connections.length; i++) {
                             if (connections[i].indexOf(data.filter) !== -1)
@@ -368,7 +368,7 @@
                         return false;
                     },
                     3: function (e, n, f, i, $r, c, data) {
-                        var ips = ts3ldv.Json.ClientList[Number(data.$cells[0].innerHTML)].IPs;
+                        var ips = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].IPs;
 
                         for (i = 0; i < ips.length; i++) {
                             if (ips[i].indexOf(data.filter) !== -1)

@@ -45,7 +45,7 @@
 
         var uploadTableHeading = document.createElement("div");
         uploadTableHeading.className = "tableheading large-12 columns";
-        uploadTableHeading.innerHTML = "Upload table";
+        uploadTableHeading.innerText = "Upload table";
         uploadTableControlSection.appendChild(uploadTableHeading);
 
         ts3ldv.tables.addPagerSection(uploadTableControlSection, module);
@@ -66,14 +66,14 @@
             headCell_DeletedByID = document.createElement("th"),
             headCell_DeletedByNickname = document.createElement("th");
 
-        headCell_UploadDateTime.innerHTML = "Date and Time";
-        headCell_ChannelID.innerHTML = "Channel ID";
-        headCell_ChannelName.innerHTML = "Channel Name";
-        headCell_Filename.innerHTML = "Filename";
-        headCell_UploadedByID.innerHTML = "Uploaded by ID";
-        headCell_UploadedByNickname.innerHTML = "Uploaded by Nickname";
-        headCell_DeletedByID.innerHTML = "Deleted by ID";
-        headCell_DeletedByNickname.innerHTML = "Deleted by Nickname";
+        headCell_UploadDateTime.innerText = "Date and Time";
+        headCell_ChannelID.innerText = "Channel ID";
+        headCell_ChannelName.innerText = "Channel Name";
+        headCell_Filename.innerText = "Filename";
+        headCell_UploadedByID.innerText = "Uploaded by ID";
+        headCell_UploadedByNickname.innerText = "Uploaded by Nickname";
+        headCell_DeletedByID.innerText = "Deleted by ID";
+        headCell_DeletedByNickname.innerText = "Deleted by Nickname";
 
         uploadHeadRow.appendChild(headCell_UploadDateTime);
         uploadHeadRow.appendChild(headCell_ChannelID);
@@ -130,25 +130,25 @@
             cell_UploadDateTime.appendChild(cell_UploadDateTime_Div);
             uploadBodyRow.appendChild(cell_UploadDateTime);
 
-            cell_ChannelID.innerHTML = ChannelID;
+            $(cell_ChannelID).text(ChannelID);
             uploadBodyRow.appendChild(cell_ChannelID);
 
-            cell_ChannelName.innerHTML = ts3ldv.tables.lookup.ChannelList[ChannelID].channelName;
+            $(cell_ChannelName).text(ts3ldv.tables.lookup.ChannelList[ChannelID].channelName);
             uploadBodyRow.appendChild(cell_ChannelName);
 
-            cell_Filename.innerHTML = Filename;
+            $(cell_Filename).text(Filename);
             uploadBodyRow.appendChild(cell_Filename);
 
-            cell_UploadedByID.innerHTML = UploadedByID;
+            $(cell_UploadedByID).text(UploadedByID);
             uploadBodyRow.appendChild(cell_UploadedByID);
 
-            cell_UploadedByNickname.innerHTML = UploadedByNickname;
+            $(cell_UploadedByNickname).text(UploadedByNickname);
             uploadBodyRow.appendChild(cell_UploadedByNickname);
 
-            cell_DeletedByID.innerHTML = DeletedByID;
+            $(cell_DeletedByID).text(DeletedByID);
             uploadBodyRow.appendChild(cell_DeletedByID);
 
-            cell_DeletedByNickname.innerHTML = DeletedByNickname;
+            $(cell_DeletedByNickname).text(DeletedByNickname);
             uploadBodyRow.appendChild(cell_DeletedByNickname);
 
             uploadBody.appendChild(uploadBodyRow);

@@ -45,7 +45,7 @@
 
         var complaintTableHeading = document.createElement("div");
         complaintTableHeading.className = "tableheading large-12 columns";
-        complaintTableHeading.innerHTML = "Complaint table";
+        complaintTableHeading.innerText = "Complaint table";
         complaintTableControlSection.appendChild(complaintTableHeading);
 
         ts3ldv.tables.addPagerSection(complaintTableControlSection, module);
@@ -63,12 +63,12 @@
             headCell_ComplaintByID = document.createElement("th"),
             headCell_ComplaintByNickname = document.createElement("th");
 
-        headCell_ComplaintDateTime.innerHTML = "Date and Time";
-        headCell_ComplaintAboutID.innerHTML = "About ID";
-        headCell_ComplaintAboutNickname.innerHTML = "About Nickname";
-        headCell_ComplaintReason.innerHTML = "Reason";
-        headCell_ComplaintByID.innerHTML = "By ID";
-        headCell_ComplaintByNickname.innerHTML = "By Nickname";
+        headCell_ComplaintDateTime.innerText = "Date and Time";
+        headCell_ComplaintAboutID.innerText = "About ID";
+        headCell_ComplaintAboutNickname.innerText = "About Nickname";
+        headCell_ComplaintReason.innerText = "Reason";
+        headCell_ComplaintByID.innerText = "By ID";
+        headCell_ComplaintByNickname.innerText = "By Nickname";
 
         complaintHeadRow.appendChild(headCell_ComplaintDateTime);
         complaintHeadRow.appendChild(headCell_ComplaintAboutID);
@@ -109,19 +109,19 @@
             cell_ComplaintDateTime.appendChild(cell_ComplaintDateTime_Div);
             complaintBodyRow.appendChild(cell_ComplaintDateTime);
 
-            cell_ComplaintAboutID.innerHTML = ComplaintAboutID;
+            $(cell_ComplaintAboutID).text(ComplaintAboutID);
             complaintBodyRow.appendChild(cell_ComplaintAboutID);
 
-            cell_ComplaintAboutNickname.innerHTML = ComplaintAboutNickname;
+            $(cell_ComplaintAboutNickname).text(ComplaintAboutNickname);
             complaintBodyRow.appendChild(cell_ComplaintAboutNickname);
 
-            cell_ComplaintReason.innerHTML = ComplaintReason;
+            $(cell_ComplaintReason).text(ComplaintReason);
             complaintBodyRow.appendChild(cell_ComplaintReason);
 
-            cell_ComplaintByID.innerHTML = ComplaintByID;
+            $(cell_ComplaintByID).text(ComplaintByID);
             complaintBodyRow.appendChild(cell_ComplaintByID);
 
-            cell_ComplaintByNickname.innerHTML = ComplaintByNickname;
+            $(cell_ComplaintByNickname).text(ComplaintByNickname);
             complaintBodyRow.appendChild(cell_ComplaintByNickname);
 
             complaintBody.appendChild(complaintBodyRow);

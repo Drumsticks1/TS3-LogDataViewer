@@ -18,6 +18,7 @@ Changes:
     - Merged the localStorage and sessionStorage data into one json object for each storage type
     - Moved the navbar (now called navBar) out of the controlSection, it is now added directly to the document
     - Removed minimized css files, not really necessary for small files like they are used in this project
+    - Replaced the use of .innerHTML with the jquery $(div).text(text) function or .innerText to prevent execution of malicious input
 
 - Server-Side app:
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes

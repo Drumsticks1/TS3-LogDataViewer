@@ -17,7 +17,8 @@
     module.div = document.createElement("div");
 
     /**
-     * TODO
+     * Adds a checkbox and a label div for the table module in the tableSelection section that can then be used for
+     * selecting the tables that are shown and built
      * @param tableModule the table module
      */
     module.addTableCheckboxDiv = function (tableModule) {
@@ -28,8 +29,8 @@
         tableModule.checkbox.type = "checkbox";
 
         var label = document.createElement("label");
-        // Todo: proper innerHTML (e.g. 'Client table', currently is 'client')
-        label.innerHTML = tableModule.name;
+        // Todo: proper innerText (e.g. 'Client table', currently is 'client')
+        label.innerText = tableModule.name;
         label.htmlFor = tableModule.name + "Checkbox";
 
         // Styling of the divs

@@ -53,7 +53,7 @@
      * @constructor
      */
     module.UTCDateStringToLocaltimeString = function (dateString) {
-        var dateObject = this.UTCDateStringToDate(dateString);
+        var dateObject = module.UTCDateStringToDate(dateString);
         return dateObject.getFullYear()
             + "-" + toDoubleDigit(dateObject.getMonth() + 1)
             + "-" + toDoubleDigit(dateObject.getDate())
@@ -72,8 +72,8 @@
      * @returns {string} string with the described format.
      */
     module.dateTimeToMomentString = function (dateTime) {
-        var dateTimeObject = moment(this.UTCDateStringToDate(dateTime));
-        return dateTimeObject.format(this.format) + "<br />(about " + dateTimeObject.fromNow() + ")";
+        var dateTimeObject = moment(module.UTCDateStringToDate(dateTime));
+        return dateTimeObject.format(module.format) + "<br />(about " + dateTimeObject.fromNow() + ")";
     };
 
     return module;

@@ -56,17 +56,17 @@
 
         creationTimestampSection.id = "creationTimestampSection";
         creationTimestampSection.className = "small-12 medium-8 large-8 columns";
-        creationTimestampSection.innerHTML = "Creation DateTime of the current JSON";
+        creationTimestampSection.innerText = "Creation DateTime of the current JSON";
         creationTimestampTable.id = "creationTimestampTable";
 
         ctT_localtime.id = "creationTimestamp_localtime";
         ctT_utc.id = "creationTimestamp_utc";
         ctT_moment.id = "creationTimestamp_moment";
         connectedClientsCount.id = "connectedClientsCount";
-        ctTHead_localtime.innerHTML = "Server localtime";
-        ctTHead_utc.innerHTML = "UTC";
-        ctTHead_moment.innerHTML = "moment.js";
-        ctT_localtime.innerHTML = ctT_utc.innerHTML = ctT_moment.innerHTML = connectedClientsCount.innerHTML = "Analyzing...";
+        ctTHead_localtime.innerText = "Server localtime";
+        ctTHead_utc.innerText = "UTC";
+        ctTHead_moment.innerText = "moment.js";
+        ctT_localtime.innerText = ctT_utc.innerText = ctT_moment.innerText = connectedClientsCount.innerText = "Analyzing...";
 
         ctTHeadRow.appendChild(ctTHead_localtime);
         ctTHeadRow.appendChild(ctTHead_utc);
@@ -90,8 +90,8 @@
         buildSection.className = "small-12 medium-4 large-4 columns";
         buildJSONButton.id = "buildJSONButton";
         buildJSONWithoutBufferButton.id = "buildJSONWithoutBufferButton";
-        buildJSONButton.innerHTML = "Update JSON";
-        buildJSONWithoutBufferButton.innerHTML = "Build JSON without buffer";
+        buildJSONButton.innerText = "Update JSON";
+        buildJSONWithoutBufferButton.innerText = "Build JSON without buffer";
         buildJSONButton.disabled = buildJSONWithoutBufferButton.disabled = true;
 
         buildJSONButton.onclick = function () {
@@ -109,7 +109,7 @@
 
         miscControlSection.className = "columns";
         resetSortingButton.className = "small-12";
-        resetSortingButton.innerHTML = "Reset table sorting";
+        resetSortingButton.innerText = "Reset table sorting";
         // Todo: check if code duplication can be eliminated, check it for all the onclick events
         resetSortingButton.onclick = function () {
             $(ts3ldv.tables.ban.getTableDiv()).trigger("sortReset");

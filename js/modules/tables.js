@@ -54,7 +54,7 @@
         var placeholders = tableModule.div.getElementsByClassName("tablesorter-filter-row")[0].getElementsByTagName("input");
         for (var i = 0; i < placeholders.length; i++) {
             placeholders[i].setAttribute("placeholder",
-                placeholders[i].parentNode.parentNode.previousSibling.children[placeholders[i].getAttribute("data-column")].firstChild.innerHTML);
+                placeholders[i].parentNode.parentNode.previousSibling.children[placeholders[i].getAttribute("data-column")].firstChild.innerText);
         }
     };
 
@@ -108,7 +108,7 @@
             } else {
                 var alertBox = document.createElement("div");
                 alertBox.className = "alertBox";
-                alertBox.innerHTML = "No " + tableModule.name + " data was found!";
+                alertBox.innerText = "No " + tableModule.name + " data was found!";
                 tableModule.div.appendChild(alertBox);
             }
 
@@ -164,16 +164,16 @@
                 var Attributes = ts3ldv.Json.Attributes,
                     creationTime = Attributes.creationTime;
 
-                document.getElementById("creationTimestamp_localtime").innerHTML = creationTime.localTime;
-                document.getElementById("creationTimestamp_utc").innerHTML = creationTime.UTC;
-                document.getElementById("creationTimestamp_moment").innerHTML = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
+                $(document.getElementById("creationTimestamp_localtime")).text(creationTime.localTime);
+                $(document.getElementById("creationTimestamp_utc")).text(creationTime.UTC);
+                document.getElementById("creationTimestamp_moment").innerText = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
                 for (var j = 0; j < ts3ldv.Json.ClientList.length; j++) {
                     if (ts3ldv.Json.ClientList[j].ConnectedState)
                         connectedClientsCount++;
                 }
 
-                document.getElementById("connectedClientsCount").innerHTML = "Connected clients: " + connectedClientsCount;
+                document.getElementById("connectedClientsCount").innerText = "Connected clients: " + connectedClientsCount;
 
                 document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
                 ts3ldv.nanobar.go(100);
@@ -199,11 +199,11 @@
             options = [document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option"), document.createElement("option")];
 
         pager.id = tableModule.name + "Pager";
-        first.className = first.innerHTML = "first";
-        prev.className = prev.innerHTML = "prev";
+        first.className = first.innerText = "first";
+        prev.className = prev.innerText = "prev";
         pageState.className = "pagedisplay";
-        next.className = next.innerHTML = "next";
-        last.className = last.innerHTML = "last";
+        next.className = next.innerText = "next";
+        last.className = last.innerText = "last";
         select.className = "pagesize";
 
         pager.appendChild(first);
@@ -214,7 +214,7 @@
 
         var optionSizes = ["10", "25", "50", "100", "all"];
         for (var i = 0; i < options.length; i++) {
-            options[i].value = options[i].innerHTML = optionSizes[i];
+            options[i].value = options[i].innerText = optionSizes[i];
             select.appendChild(options[i]);
         }
 

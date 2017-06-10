@@ -34,7 +34,7 @@
         button.style.display = "none";
 
         // Todo: uppercase scrollTo innerHTML
-        button.innerHTML = tableModule.name + "s";
+        button.innerText = tableModule.name + "s";
 
         button.onclick = function () {
             tableModule.div.scrollIntoView();
@@ -53,7 +53,7 @@
 
     module.build = function () {
         var scrollBackToTopButton = document.createElement("button");
-        scrollBackToTopButton.innerHTML = "Top";
+        scrollBackToTopButton.innerText = "Top";
 
         scrollBackToTopButton.onclick = function () {
             scrollTo(0, 0);
