@@ -5,7 +5,6 @@
 documentation:
     - update readme
     - check the relative location of configuration paths and add it to the documentation
-    - add documentation about the similarities between the table modules (client-side js) (.div, .getCheckbox(), ...)
     - add note about upload deletion problem between version 3.0.12.0 - 3.0.x
 
 styling:
@@ -15,7 +14,6 @@ client-side js:
     - Check filter type (e.g regex) compatibility for the Nicknames, Connections, IPs and Server Group column.
     - Outsource the creation of the control sections for the tables.
     - Check sorting possibilities for the server group data in the client table.
-    - replace nanobar with a simple popup
     - add Channel table (the data should already be part of the json)
     - maybe: optional time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer" (as it results in a higher cpu load)
     - maybe: make order of the tables configurable

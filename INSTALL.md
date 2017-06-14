@@ -132,7 +132,25 @@ and port if you modified them in your ts3-ldv configuration):
         #         foundation|
         #         style).min.css|
         #     img/favicon.png|
-        #     js/TS3-LogDataViewer.js|
+        #     js/(
+        #         ts3ldv|
+        #         modules/(
+        #             controlSection/(
+        #                 tableSelection)|
+        #         tables/(
+        #             ban|
+        #             client|
+        #             complaint|
+        #             kick|
+        #             upload)|
+        #         controlSection|
+        #         event|
+        #         navBar|
+        #         serverInteractions|
+        #         storage|
+        #         tables|
+        #         time|
+        #         ui).js|
         #     index.html|
         #     local/output.json|
         #     node_modules/(
@@ -144,7 +162,7 @@ and port if you modified them in your ts3-ldv configuration):
         #         nanobar/nanobar|
         #         foundation-sites/dist/js/foundation).min.js)
         #
-        location ~ /ts3-ldv-dir/(css/(foundation|style).min.css|img/favicon.png|js/TS3-LogDataViewer.js|index.html|local/output.json|node_modules/(jquery/dist/jquery|tablesorter/dist/js/(jquery.tablesorter.combined|extras/jquery.tablesorter.pager)|moment/min/moment|nanobar/nanobar|foundation-sites/dist/js/foundation).min.js) {
+        location ~ /ts3-ldv-dir/(css/(foundation|style).min.css|img/favicon.png|js/(ts3ldv|modules/(controlSection/(tableSelection)|tables/(ban|client|complaint|kick|upload)|controlSection|event|navBar|serverInteractions|storage|tables|time|ui).js|index.html|local/output.json|node_modules/(jquery/dist/jquery|tablesorter/dist/js/(jquery.tablesorter.combined|extras/jquery.tablesorter.pager)|moment/min/moment|nanobar/nanobar|foundation-sites/dist/js/foundation).min.js) {
 
         }
 
