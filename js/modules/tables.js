@@ -124,7 +124,15 @@
      * Builds all tables using the data from the JSON.
      */
     module.build = function () {
-        ts3ldv.nanobar.go(50);
+        var callout = ts3ldv.ui.addCallout("Building Tables ...", "secondary");
+        var calloutDestroyEvent = "destroyCallout";
+
+        callout.addEventListener(calloutDestroyEvent, function () {
+            $(callout).fadeOut(function () {
+                callout.parentNode.removeChild(callout);
+            });
+        });
+
         $.ajax({
             url: "local/output.json",
             cache: false,
@@ -174,9 +182,8 @@
                 }
 
                 document.getElementById("connectedClientsCount").innerText = "Connected clients: " + connectedClientsCount;
-
                 document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-                ts3ldv.nanobar.go(100);
+                callout.dispatchEvent(new Event(calloutDestroyEvent));
             }
         });
     };

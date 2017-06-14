@@ -10,13 +10,6 @@
 var ts3ldv = (function (module) {
 
     /**
-     * The nanobar object.
-     */
-    module.nanobar = new Nanobar({
-        id: "nanobar"
-    });
-
-    /**
      * Json object containing the data from the latest received output.json.
      * @type {{}}
      */
@@ -34,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ts3ldv.storage.importLocalStorage();
 
     ts3ldv.tables.addCustomTablesorterParsers();
-    ts3ldv.nanobar.go(25);
 
     ts3ldv.tables.build();
 });

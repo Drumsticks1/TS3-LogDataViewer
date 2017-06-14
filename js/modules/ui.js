@@ -19,6 +19,7 @@
      * @param {string} message
      * @param {string} calloutClass
      * @param {number} [duration]
+     * @returns {Element} the created callout div
      */
     module.addCallout = function (message, calloutClass, duration) {
         var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
@@ -53,6 +54,8 @@
                 });
             }, duration)
         }
+
+        return callout;
     };
 
     return module;

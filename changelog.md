@@ -19,6 +19,7 @@ Changes:
     - Moved the navbar (now called navBar) out of the controlSection, it is now added directly to the document
     - Removed minimized css files, not really necessary for small files like they are used in this project
     - Replaced the use of .innerHTML with the jquery $(div).text(text) function or .innerText to prevent execution of malicious input
+    - Replaced the use of 3rd-party package nanobar with a simple callout that is shown when ts3ldv.tables.build() is in progress
 
 - Server-Side app:
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes

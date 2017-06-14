@@ -85,7 +85,6 @@
         }
 
         document.getElementById("buildJSONButton").disabled = document.getElementById("buildJSONWithoutBufferButton").disabled = false;
-        ts3ldv.nanobar.go(100);
     };
 
     return module;
