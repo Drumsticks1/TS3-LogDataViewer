@@ -2,9 +2,6 @@
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-general:
-    - fix encoding of utf-16 and utf-32 symbols
-
 documentation:
     - update readme
     - check the relative location of configuration paths and add it to the documentation

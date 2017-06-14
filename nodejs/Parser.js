@@ -96,10 +96,15 @@ module.exports = {
 
     for (var i = 0; i < Logs.length; i++) {
       if (!Logs[i].parsed && !Logs[i].ignored) {
-        this.parseLogData(
-          fs.readFileSync(globalVariables.TS3LogDirectory + Logs[i].logName, "utf8"),
-          i + 1 === Logs.length);
+          var buff = fs.readFileSync(globalVariables.TS3LogDirectory + Logs[i].logName, "utf8");
 
+          // Replaces HTML entities with their escaped symbols.
+          // Prevents HTML entities showing up in the tables when not inserting via innerHTML.
+          buff = buff.replace(/&#[0-9]+;/g, function (x) {
+              return String.fromCodePoint(Number(x.slice(2, -1)));
+          });
+
+          this.parseLogData(buff, i + 1 === Logs.length);
         Logs[i].parsed = true;
       }
     }
