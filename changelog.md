@@ -28,11 +28,12 @@ Changes:
         
 - General:
     - package.json:
-        - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project
+        - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project (now using "^ver" instead of "latest")
+        - Updated npm dependency versions 
         - Updated included files
+        - Removed dependency nanobar
     - Updated install instructions and renamed the file to INSTALL.md
     - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
-    - Updated foundation-sites (6.2.3 -> 6.3.0)
     - Renamed files:
         - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
 
