@@ -36,10 +36,12 @@
         // Styling of the divs
         switch (tableModule) {
             case ts3ldv.tables.ban:
+            case ts3ldv.tables.client:
                 div.className = "small-12 medium-6 large-6 columns";
                 break;
-            case ts3ldv.tables.client:
-                div.className = "small-12 medium-12 large-6 columns";
+
+            case ts3ldv.tables.upload:
+                div.className = "small-12 medium-12 large-4 columns";
                 break;
 
             default:

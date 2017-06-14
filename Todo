@@ -19,7 +19,6 @@ client-side js:
     - add Channel table (the data should already be part of the json)
     - maybe: optional time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer" (as it results in a higher cpu load)
     - maybe: make order of the tables configurable
-    - fix table selection layout on medium screens
 
 Ban.js:
     - Parse Ban expiration and deletion and add it to the class.
