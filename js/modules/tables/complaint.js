@@ -45,7 +45,7 @@
 
         var complaintTableHeading = document.createElement("div");
         complaintTableHeading.className = "tableheading large-12 columns";
-        complaintTableHeading.innerText = "Complaint table";
+        complaintTableHeading.innerText = "Complaint Table";
         complaintTableControlSection.appendChild(complaintTableHeading);
 
         ts3ldv.tables.addPagerSection(complaintTableControlSection, module);

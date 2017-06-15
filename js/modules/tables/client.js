@@ -144,7 +144,7 @@
 
         var clientTableHeading = document.createElement("div");
         clientTableHeading.className = "tableheading large-12 columns";
-        clientTableHeading.innerText = "Client table";
+        clientTableHeading.innerText = "Client Table";
         clientTableControlSection.appendChild(clientTableHeading);
 
         var connectionsSortType = {
@@ -189,8 +189,8 @@
         coloredRowsDescription_green.id = "description_connected";
         coloredRowsDescription_grey.id = "description_deleted";
         coloredRowsDescription_green.className = coloredRowsDescription_grey.className = "small-6 columns";
-        coloredRowsDescription_green.innerText = "Connected clients";
-        coloredRowsDescription_grey.innerText = "Deleted clients";
+        coloredRowsDescription_green.innerText = "Connected Client";
+        coloredRowsDescription_grey.innerText = "Deleted Client";
 
         clientTableControlSection.appendChild(coloredRowsDescription_green);
         clientTableControlSection.appendChild(coloredRowsDescription_grey);
@@ -217,7 +217,7 @@
         headCell_IPs.innerText = "IPs";
         headCell_Connects.innerText = "Connects";
         headCell_Connected.innerText = "Connected";
-        headCell_ServerGroupInfo.innerText = "Server groups";
+        headCell_ServerGroupInfo.innerText = "Server Groups";
 
         clientHeadRow.appendChild(headCell_ID);
         clientHeadRow.appendChild(headCell_Nicknames);
@@ -257,7 +257,7 @@
                 cell_IPs.setAttribute("data-title", "IPs");
                 cell_Connects.setAttribute("data-title", "Connects");
                 cell_Connected.setAttribute("data-title", "Connected");
-                cell_ServerGroupInfo.setAttribute("data-title", "Server groups");
+                cell_ServerGroupInfo.setAttribute("data-title", "Server Groups");
 
                 cell_ID.innerText = ID;
                 clientBodyRow.appendChild(cell_ID);

@@ -162,7 +162,6 @@
                 // Remove/Destroy onclick event listeners from eventual old tables
                 ts3ldv.event.removeOnClickEventListeners();
 
-                // TODO: update nanobar progress
                 module.buildTableEnhanced(ts3ldv.tables.ban);
                 module.buildTableEnhanced(ts3ldv.tables.client);
                 module.buildTableEnhanced(ts3ldv.tables.complaint);

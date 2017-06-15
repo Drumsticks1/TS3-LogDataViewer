@@ -56,16 +56,16 @@
 
         creationTimestampSection.id = "creationTimestampSection";
         creationTimestampSection.className = "small-12 medium-8 large-8 columns";
-        creationTimestampSection.innerText = "Creation DateTime of the current JSON";
+        creationTimestampSection.innerText = "Creation Timestamp of the current JSON";
         creationTimestampTable.id = "creationTimestampTable";
 
         ctT_localtime.id = "creationTimestamp_localtime";
         ctT_utc.id = "creationTimestamp_utc";
         ctT_moment.id = "creationTimestamp_moment";
         connectedClientsCount.id = "connectedClientsCount";
-        ctTHead_localtime.innerText = "Server localtime";
-        ctTHead_utc.innerText = "UTC";
-        ctTHead_moment.innerText = "moment.js";
+        ctTHead_localtime.innerText = "Server Local Time";
+        ctTHead_utc.innerText = "Coordinated Universal Time (UTC)";
+        ctTHead_moment.innerText = "Relative Time (moment.js)";
         ctT_localtime.innerText = ctT_utc.innerText = ctT_moment.innerText = connectedClientsCount.innerText = "Analyzing...";
 
         ctTHeadRow.appendChild(ctTHead_localtime);
@@ -109,7 +109,7 @@
 
         miscControlSection.className = "columns";
         resetSortingButton.className = "small-12";
-        resetSortingButton.innerText = "Reset table sorting";
+        resetSortingButton.innerText = "Reset Table Sorting";
         // Todo: check if code duplication can be eliminated, check it for all the onclick events
         resetSortingButton.onclick = function () {
             $(ts3ldv.tables.ban.getTableDiv()).trigger("sortReset");

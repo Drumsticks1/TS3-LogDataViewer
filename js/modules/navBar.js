@@ -33,8 +33,7 @@
         scrollToButtons[tableModule.name] = button;
         button.style.display = "none";
 
-        // Todo: uppercase scrollTo innerHTML
-        button.innerText = tableModule.name + "s";
+        button.innerText = tableModule.name.charAt(0).toUpperCase() + tableModule.name.slice(1) + "s";
 
         button.onclick = function () {
             tableModule.div.scrollIntoView();

@@ -45,7 +45,7 @@
 
         var uploadTableHeading = document.createElement("div");
         uploadTableHeading.className = "tableheading large-12 columns";
-        uploadTableHeading.innerText = "Upload table";
+        uploadTableHeading.innerText = "Upload Table";
         uploadTableControlSection.appendChild(uploadTableHeading);
 
         ts3ldv.tables.addPagerSection(uploadTableControlSection, module);

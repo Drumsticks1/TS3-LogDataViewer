@@ -95,7 +95,7 @@
 
         var banTableHeading = document.createElement("div");
         banTableHeading.className = "tableheading large-12 columns";
-        banTableHeading.innerText = "Ban table";
+        banTableHeading.innerText = "Ban Table";
         banTableControlSection.appendChild(banTableHeading);
 
         var switchBetweenIDAndUIDButton = document.createElement("button");

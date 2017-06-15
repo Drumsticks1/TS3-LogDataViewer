@@ -45,7 +45,7 @@
 
         var kickTableHeading = document.createElement("div");
         kickTableHeading.className = "tableheading large-12 columns";
-        kickTableHeading.innerText = "Kick table";
+        kickTableHeading.innerText = "Kick Table";
         kickTableControlSection.appendChild(kickTableHeading);
 
         ts3ldv.tables.addPagerSection(kickTableControlSection, module);

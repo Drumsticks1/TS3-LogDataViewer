@@ -16,7 +16,9 @@ client-side js:
     - Check sorting possibilities for the server group data in the client table.
     - add Channel table (the data should already be part of the json)
     - maybe: optional time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer" (as it results in a higher cpu load)
-    - maybe: make order of the tables configurable
+
+server-side & client-side js:
+    - Rename class variables to be more intuitive (e.g. DateTime --> Timestamp or BanTime --> BanDuration)
 
 Ban.js:
     - Parse Ban expiration and deletion and add it to the class.
