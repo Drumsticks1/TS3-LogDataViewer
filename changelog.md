@@ -36,6 +36,7 @@ Changes:
     - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
     - Renamed files:
         - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
+    - Simplified scripts/generateCss.js
 
 
 ### <a name="v2.0.8">Version 2.0.8</a> (05.08.2016)

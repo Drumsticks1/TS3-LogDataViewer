@@ -65,7 +65,7 @@ group of the <code>ts3-ldv-dir</code>:
 
 From here on you should switch to the <code>ts3-ldv</code> user in order to not run into permission issues:
 
-    sudo su ts3-ldv
+    sudo su --shell=/bin/bash ts3-ldv
 
 Clone the TS3-LDV git repository into the created directory:
 
@@ -87,7 +87,7 @@ Enter the <code>ts3-ldv-dir</code> directory and install the package dependencie
                            cause permission errors.
 
     <b>NOTE:</b> Using the <code>--no-cache</code> option creates a directory named 'false' in the install directory,
-    you can delete the directory or just ignore it.
+    you can delete the directory or just ignore it (if nginx is configured as explained below that is no problem).
 
 - <code>--production</code>: only install the production dependencies and ignore devDependencies from the package.json.
 
@@ -130,7 +130,7 @@ and port if you modified them in your ts3-ldv configuration):
         # /ts3-ldv-dir/(
         #     css/(
         #         foundation|
-        #         style).min.css|
+        #         style).css|
         #     img/favicon.png|
         #     js/(
         #         ts3ldv|
@@ -150,7 +150,7 @@ and port if you modified them in your ts3-ldv configuration):
         #         storage|
         #         tables|
         #         time|
-        #         ui).js|
+        #         ui).js)|
         #     index.html|
         #     local/output.json|
         #     node_modules/(
@@ -162,7 +162,7 @@ and port if you modified them in your ts3-ldv configuration):
         #         nanobar/nanobar|
         #         foundation-sites/dist/js/foundation).min.js)
         #
-        location ~ /ts3-ldv-dir/(css/(foundation|style).min.css|img/favicon.png|js/(ts3ldv|modules/(controlSection/(tableSelection)|tables/(ban|client|complaint|kick|upload)|controlSection|event|navBar|serverInteractions|storage|tables|time|ui).js|index.html|local/output.json|node_modules/(jquery/dist/jquery|tablesorter/dist/js/(jquery.tablesorter.combined|extras/jquery.tablesorter.pager)|moment/min/moment|nanobar/nanobar|foundation-sites/dist/js/foundation).min.js) {
+        location ~ /ts3-ldv-dir/(css/(foundation|style).css|img/favicon.png|js/(ts3ldv|modules/(controlSection/(tableSelection)|tables/(ban|client|complaint|kick|upload)|controlSection|event|navBar|serverInteractions|storage|tables|time|ui).js)|index.html|local/output.json|node_modules/(jquery/dist/jquery|tablesorter/dist/js/(jquery.tablesorter.combined|extras/jquery.tablesorter.pager)|moment/min/moment|nanobar/nanobar|foundation-sites/dist/js/foundation).min.js) {
 
         }
 
@@ -183,7 +183,7 @@ information. (You should really check if this is working properly: otherwise eve
 
 You should now be able to start the server-side app (for testing the installation):
 
-    sudo su ts3-ldv
+    sudo su --shell=/bin/bash ts3-ldv
     cd /var/www/www.your-domain.com/ts3-ldv-dir/nodejs
     node app.js
 
