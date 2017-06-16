@@ -37,9 +37,9 @@ Changes:
         - Removed dependency nanobar
     - Updated install instructions and renamed the file to INSTALL.md
     - Updated README.md
+    - Renamed Todo to TODO.md
+    - Renamed conf/ts3.ldv.logrotate to conf/ts3-ldv.logrotate
     - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
-    - Renamed files:
-        - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
     - Simplified scripts/generateCss.js
 
 
