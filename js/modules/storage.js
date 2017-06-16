@@ -89,7 +89,7 @@
    */
   module.setTableSortOrder = function (tableModule, newSortOrder) {
     var data = JSON.parse(localStorage.getItem(module.key));
-    data[tableModule.name].newSortOrder = newSortOrder;
+    data[tableModule.name].sortOrder = newSortOrder;
     localStorage.setItem(module.key, JSON.stringify(data));
   };
 

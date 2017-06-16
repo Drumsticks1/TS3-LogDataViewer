@@ -8,6 +8,7 @@ Changes:
 
 - Javascript code:
     - Replaced in-/equality checks with strict in-/equality checks (== --> ===, != --> !==)
+    - Added .editorconfig for unified code style settings
 
 - Client-Side app:
     - Refactored code from TS3-LogDataViewer.js into multiple modules
