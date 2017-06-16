@@ -42,7 +42,7 @@ label {
 .alertBox, label, #TS3-LDV, button, .tablesorter button:active, .tablesorter button:hover, .tablesorter button:focus, .tableheading, .connected > td, .connected > td > button, #description_connected {
   color: white; }
 
-#navbar, td, .tablesorter button, .connected > td > button:active, .connected > td > button:hover, .connected > td > button:focus, .nanobar > .bar {
+#navBar, td, .tablesorter button, .connected > td > button:active, .connected > td > button:hover, .connected > td > button:focus, .nanobar > .bar {
   background-color: white; }
 
 #tableSelectionSection > div, #controlSection {
@@ -78,13 +78,13 @@ button {
 #controlSection {
   margin-top: 20px; }
 
-#TS3-LDV, #buildJSONWithoutBufferButton, #collapseAllButton, #connectionsSortTypeButton, #navbar > button, #buildJSONButton, #switchBetweenIDAndUIDButton, .row .row, .tableheading {
+#TS3-LDV, #buildJSONWithoutBufferButton, #collapseAllButton, #connectionsSortTypeButton, #navBar > button, #buildJSONButton, #switchBetweenIDAndUIDButton, .row .row, .tableheading {
   margin: 0; }
 
 #tableSelectionSection, #buildJSONWithoutBufferButton, #creationTimestampTable, #buildJSONButton, #switchBetweenIDAndUIDButton, .tablesorter, .tablesorter-filter-row > td > input {
   width: 100%; }
 
-#navbar {
+#navBar {
   display: flex;
   position: fixed;
   box-shadow: 0 -8px 10px -11px rgba(0, 0, 0, 0.75);
@@ -93,7 +93,7 @@ button {
   right: 0;
   bottom: 0;
   z-index: 100; }
-  #navbar button {
+  #navBar button {
     flex-grow: 1;
     font-size: .8rem;
     padding: .75em .5em; }
