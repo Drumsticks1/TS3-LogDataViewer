@@ -73,6 +73,12 @@ module.exports = {
         }
         log.updateWriteStream();
         acquireSetting("TS3LogDirectory", "string");
+
+        // Add trailing "/" to the log directory path (if not already existing)
+        if (!globalVariables.TS3LogDirectory.endsWith("/")) {
+          globalVariables.TS3LogDirectory = globalVariables.TS3LogDirectory + "/";
+        }
+
         acquireSetting("virtualServer", "number");
         acquireSetting("bufferData", "boolean");
         acquireSetting("timeBetweenRequests", "number");

@@ -26,6 +26,8 @@ Changes:
     - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
     - Renamed configuration settings:
         - logDirectory --> TS3LogDirectory
+    - Added: TS3LogDirectory values without trailing "/" now have a "/" appended at the end
+    - Fixed: non-empty TS3LogDirectory directory without valid logs for the selected virtual server not causing fetchLogs.fetchLogs() to log a warn message and return 0
         
 - General:
     - package.json:
