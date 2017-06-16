@@ -14,7 +14,7 @@
      * Adds a removable callout.
      * If duration is specified the created object fades out after the duration and is removed afterwards.
      *
-     * TODO add note about foundation-sites
+     * See http://foundation.zurb.com/sites/docs/callout.html
      *
      * @param {string} message
      * @param {string} calloutClass

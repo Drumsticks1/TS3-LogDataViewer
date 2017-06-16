@@ -17,8 +17,8 @@
     module.div = document.getElementById("navBar");
 
     /**
-     * TODO
-     * @type {{}}
+     * Object containing the scrollTo button elements.
+     * @type {{ban: Element, client: Element, complaint: Element, kick: Element, upload: Element}}
      */
     var scrollToButtons = {};
 
@@ -26,9 +26,9 @@
      * Adds a scrollTo button to the navBar and adds the button element to the scrollToButtons object.
      * The button has an onclick event that scrolls the table into view.
      * Note: the button is hidden by default. (see showScrollToButton and hideScrollToButton)
-     * @param tableModule TODO
+     * @param tableModule the tableModule for which to add the scrollTo button
      */
-    function addScrollToButton (tableModule) {
+    function addScrollToButton(tableModule) {
         var button = document.createElement("button");
         scrollToButtons[tableModule.name] = button;
         button.style.display = "none";

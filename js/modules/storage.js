@@ -54,12 +54,12 @@
      */
     module.key = "ts3ldv";
 
-    // Todo: doc
-    // local storage
+    ////
+    // LOCAL STORAGE
+    ////
 
     /**
-     * TODO: better doc
-     * Returns localStorage.ts3ldv.tableActive[tableModule.name]
+     * Returns localStorage.ts3ldv[tableModule.name].active
      * @param tableModule
      * @returns {boolean}
      */
@@ -67,33 +67,60 @@
         return Boolean(JSON.parse(localStorage.getItem(module.key))[tableModule.name].active);
     };
 
-    module.setTableActive = function (tableModule, state) {
+    /**
+     *
+     * @param tableModule
+     * @param {boolean} newState
+     */
+    module.setTableActive = function (tableModule, newState) {
         var data = JSON.parse(localStorage.getItem(module.key));
-        data[tableModule.name].active = state;
+        data[tableModule.name].active = newState;
         localStorage.setItem(module.key, JSON.stringify(data));
     };
 
+    /**
+     * Returns localStorage.ts3ldv[tableModule.name].sortOrder
+     * @param tableModule
+     * @returns {[]}
+     */
     module.getTableSortOrder = function (tableModule) {
         return JSON.parse(localStorage.getItem(module.key))[tableModule.name].sortOrder;
     };
 
-    module.setTableSortOrder = function (tableModule, sortOrder) {
+    /**
+     * Sets localStorage.ts3ldv[tableModule.name].sortOrder to newSortOrder
+     * @param tableModule
+     * @param {[]} newSortOrder
+     */
+    module.setTableSortOrder = function (tableModule, newSortOrder) {
         var data = JSON.parse(localStorage.getItem(module.key));
-        data[tableModule.name].sortOrder = sortOrder;
+        data[tableModule.name].newSortOrder = sortOrder;
         localStorage.setItem(module.key, JSON.stringify(data));
     };
 
+    /**
+     * Switches localStorage.ts3ldv.ban.showUID from true to false or the other way round
+     */
     module.switchBanShowUID = function () {
         var data = JSON.parse(localStorage.getItem(module.key));
         data.ban.showUID = !data.ban.showUID;
         localStorage.setItem(module.key, JSON.stringify(data));
     };
 
+    /**
+     * Returns localStorage.ts3ldv.ban.showUID
+     * @returns {boolean}
+     */
     module.getBanShowUID = function () {
         return JSON.parse(localStorage.getItem(module.key)).ban.showUID;
     };
 
-    // Returns the resulting connectionSortType
+    /**
+     * Switches localStorage.ts3ldv.client.connectionsSortType from true to false or the other way round.
+     * Returns the resulting connectionsSortType.
+     *
+     * @returns {boolean} the resulting connectionsSortType
+     */
     module.switchClientConnectionsSortType = function () {
         var data = JSON.parse(localStorage.getItem(module.key));
         data.client.connectionsSortType = !data.client.connectionsSortType;
@@ -101,14 +128,17 @@
         return data.client.connectionsSortType;
     };
 
-    // 1 = sort by last connect
+    /**
+     * Returns localStorage.ts3ldv.client.connectionsSortType
+     * @returns {boolean} false = sort by first connect, true = sort by last connect
+     */
     module.getClientConnectionsSortType = function () {
         return JSON.parse(localStorage.getItem(module.key)).client.connectionsSortType;
     };
 
     /**
-     * Todo: better doc
-     * Imports and uses the local storage data.
+     * If the local storage object exists: imports the data,
+     * else: creates local storage object with default values
      */
     module.importLocalStorage = function () {
         // Case: no existing local storage
@@ -165,6 +195,9 @@
         }
     };
 
+    /**
+     * Resets the sortOrder attributes of all tables in the local storage
+     */
     module.resetTableSortOrder = function () {
         var data = JSON.parse(localStorage.getItem(module.key));
 
@@ -177,7 +210,15 @@
         localStorage.setItem(module.key, JSON.stringify(data));
     };
 
-    // session storage
+    ////
+    // SESSION STORAGE
+    ////
+
+    /**
+     * Returns sessionStorage.ts3ldv.tableBuilt[tableModule.name]
+     * @param tableModule
+     * @returns {boolean}
+     */
     module.getTableBuilt = function (tableModule) {
         if (sessionStorage.getItem(module.key) === null)
             return false;
@@ -185,7 +226,12 @@
         return JSON.parse(sessionStorage.getItem(module.key)).tableBuilt[tableModule.name];
     };
 
-    module.setTableBuilt = function (tableModule, state) {
+    /**
+     * Sets sessionStorage.ts3ldv.tableBuilt[tableModule.name] to newState
+     * @param tableModule
+     * @param {boolean} newState
+     */
+    module.setTableBuilt = function (tableModule, newState) {
         var data = sessionStorage.getItem(module.key) === null ? {
             tableBuilt: {
                 ban: false,
@@ -196,7 +242,7 @@
             }
         } : JSON.parse(sessionStorage.getItem(module.key));
 
-        data.tableBuilt[tableModule.name] = state;
+        data.tableBuilt[tableModule.name] = newState;
         sessionStorage.setItem(module.key, JSON.stringify(data));
     };
 
