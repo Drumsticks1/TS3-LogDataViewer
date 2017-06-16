@@ -3,9 +3,8 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 documentation:
-    - update readme
-    - check the relative location of configuration paths and add it to the documentation
-    - add note about upload deletion problem between version 3.0.12.0 - 3.0.x
+    - finish missing documentation (marked with todo keyword)
+    - add js code style settings (see https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties)
 
 styling:
     - clean up style.scss
@@ -19,6 +18,9 @@ client-side js:
 
 server-side & client-side js:
     - Rename class variables to be more intuitive (e.g. DateTime --> Timestamp or BanTime --> BanDuration)
+
+server-side:
+    - improve logging and get a better distinction between the different logging options
 
 Ban.js:
     - Parse Ban expiration and deletion and add it to the class.

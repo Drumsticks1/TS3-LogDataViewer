@@ -33,6 +33,7 @@ Changes:
         - Updated included files
         - Removed dependency nanobar
     - Updated install instructions and renamed the file to INSTALL.md
+    - Updated README.md
     - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
     - Renamed files:
         - conf/ts3.ldv.logrotate --> conf/ts3-ldv.logrotate
