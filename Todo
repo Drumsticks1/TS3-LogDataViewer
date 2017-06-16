@@ -2,10 +2,6 @@
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-documentation:
-    - finish missing documentation (marked with todo keyword)
-    - add js code style settings (see https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties)
-
 styling:
     - clean up style.scss
 

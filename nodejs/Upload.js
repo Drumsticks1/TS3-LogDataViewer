@@ -71,7 +71,7 @@ module.exports = {
         uploadedByNickname
       ));
   },
-  
+
   /**
    * Adds the deletedByNickname and deletedByID data to the matching Upload in the UploadList.
    * @param {number} channelID

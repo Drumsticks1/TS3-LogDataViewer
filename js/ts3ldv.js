@@ -9,24 +9,24 @@
  */
 var ts3ldv = (function (module) {
 
-    /**
-     * Json object containing the data from the latest received output.json.
-     * @type {{}}
-     */
-    module.Json = {};
+  /**
+   * Json object containing the data from the latest received output.json.
+   * @type {{}}
+   */
+  module.Json = {};
 
-    return module;
+  return module;
 }(ts3ldv || {}));
 
 document.addEventListener("DOMContentLoaded", function () {
-    $(document).foundation();
+  $(document).foundation();
 
-    ts3ldv.controlSection.build();
-    ts3ldv.navBar.build();
+  ts3ldv.controlSection.build();
+  ts3ldv.navBar.build();
 
-    ts3ldv.storage.importLocalStorage();
+  ts3ldv.storage.importLocalStorage();
 
-    ts3ldv.tables.addCustomTablesorterParsers();
+  ts3ldv.tables.addCustomTablesorterParsers();
 
-    ts3ldv.tables.build();
+  ts3ldv.tables.build();
 });

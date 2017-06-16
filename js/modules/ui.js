@@ -8,56 +8,56 @@
  * Module containing UI related functions.
  */
 (function (parent) {
-    var module = parent.ui = parent.ui || {};
+  var module = parent.ui = parent.ui || {};
 
-    /**
-     * Adds a removable callout.
-     * If duration is specified the created object fades out after the duration and is removed afterwards.
-     *
-     * See http://foundation.zurb.com/sites/docs/callout.html
-     *
-     * @param {string} message
-     * @param {string} calloutClass
-     * @param {number} [duration]
-     * @returns {Element} the created callout div
-     */
-    module.addCallout = function (message, calloutClass, duration) {
-        var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
+  /**
+   * Adds a removable callout.
+   * If duration is specified the created object fades out after the duration and is removed afterwards.
+   *
+   * See http://foundation.zurb.com/sites/docs/callout.html
+   *
+   * @param {string} message
+   * @param {string} calloutClass
+   * @param {number} [duration]
+   * @returns {Element} the created callout div
+   */
+  module.addCallout = function (message, calloutClass, duration) {
+    var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
 
-        // Prevents duplicate callouts
-        if (calloutsWithTheSameClass.length !== 0) {
-            // Updates the message of the nextRequestCallout if one is already existing.
-            if (calloutClass.indexOf("nextRequestCallout") !== -1)
-                calloutsWithTheSameClass[0].innerText = message;
+    // Prevents duplicate callouts
+    if (calloutsWithTheSameClass.length !== 0) {
+      // Updates the message of the nextRequestCallout if one is already existing.
+      if (calloutClass.indexOf("nextRequestCallout") !== -1)
+        calloutsWithTheSameClass[0].innerText = message;
 
-            return;
-        }
+      return;
+    }
 
-        var callout = document.createElement("div"),
-            calloutCloseButton = document.createElement("button");
+    var callout = document.createElement("div"),
+      calloutCloseButton = document.createElement("button");
 
-        callout.innerText = message;
-        callout.className = "callout " + calloutClass;
-        callout.setAttribute("data-closable", "");
+    callout.innerText = message;
+    callout.className = "callout " + calloutClass;
+    callout.setAttribute("data-closable", "");
 
-        calloutCloseButton.innerHTML = "&#215;";
-        calloutCloseButton.className = "close-button";
-        calloutCloseButton.setAttribute("data-close", "");
+    calloutCloseButton.innerHTML = "&#215;";
+    calloutCloseButton.className = "close-button";
+    calloutCloseButton.setAttribute("data-close", "");
 
-        callout.appendChild(calloutCloseButton);
-        document.getElementById("calloutDiv").appendChild(callout);
+    callout.appendChild(calloutCloseButton);
+    document.getElementById("calloutDiv").appendChild(callout);
 
-        if (duration !== undefined) {
-            setTimeout(function () {
-                $(callout).fadeOut(function () {
-                    callout.parentNode.removeChild(callout);
-                });
-            }, duration)
-        }
+    if (duration !== undefined) {
+      setTimeout(function () {
+        $(callout).fadeOut(function () {
+          callout.parentNode.removeChild(callout);
+        });
+      }, duration)
+    }
 
-        return callout;
-    };
+    return callout;
+  };
 
-    return module;
+  return module;
 }(ts3ldv || {}));
 
