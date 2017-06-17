@@ -1,7 +1,7 @@
 # Changelog
-Versions: <a href="#v2.1">2.1</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.1.0">2.1.0</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
-### <a name="v2.1">Version 2.1</a> (x.x.2017)
+### <a name="v2.1.0">Version 2.1.0</a> (x.x.2017)
 Changes:
 - Modified project structure:
     - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
@@ -29,8 +29,9 @@ Changes:
         - logDirectory --> TS3LogDirectory
     - Added: TS3LogDirectory values without trailing "/" now have a "/" appended at the end
     - Fixed: non-empty TS3LogDirectory directory without valid logs for the selected virtual server not causing fetchLogs.fetchLogs() to log a warn message and return 0
-        
+
 - General:
+    - Renamed changelog.md to CHANGELOG.md
     - package.json:
         - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project (now using "^ver" instead of "latest")
         - Updated npm dependency versions 

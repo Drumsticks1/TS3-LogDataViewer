@@ -133,7 +133,7 @@ Setting Descriptions:
 
 
 ### <a name="changelog">Changelog</a>
-See <code>changelog.md</code> for the changelog for each release version
+See <code>CHANGELOG.md</code> for the changelog for each release version
 
 
 ### <a name="further_notes">Further Notes</a>

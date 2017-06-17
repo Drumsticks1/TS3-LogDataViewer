@@ -22,8 +22,8 @@
     "js",
     "local/.gitkeep",
     "nodejs",
+    "CHANGELOG.md",
     "index.html",
-    "changelog.md",
     "INSTALL.md",
     "LICENSE",
     "README.md"
