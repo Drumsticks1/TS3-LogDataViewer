@@ -13,3 +13,7 @@ local/*
 
 # keep .gitkeep files
 !.gitkeep
+
+# keep local/conf.json and local/output.json for the gh-pages demo
+!/local/conf.json
+!/local/output.json

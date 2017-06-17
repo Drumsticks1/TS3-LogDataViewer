@@ -146,7 +146,7 @@
 2016-03-11 15:34:33.646321|INFO    |VirtualServerBase|1  |client connected 'Testclient 4'(id:6) from 127.0.0.1:49514
 2016-03-11 15:34:37.764978|INFO    |VirtualServer |1  |client (id:6) was added to servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
 2016-03-11 15:34:49.637453|INFO    |VirtualServer |1  |client (id:5) was removed from servergroup 'Server Admin'(id:6) by client 'Testclient 1'(id:2)
-[NOTICE: Excluded the following four lines to show the functionality linked to connected clients by removing the "VirtualServerBase" part!]
+[NOTE: Excluded the following four lines to show the functionality linked to connected clients by removing the "VirtualServerBase" part!]
 2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 1'(id:2) reason 'reasonmsg=Server Shutdown!'
 2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 2'(id:4) reason 'reasonmsg=Server Shutdown!'
 2016-03-11 15:39:24.723208|INFO    ||1  |client disconnected 'Testclient 3'(id:5) reason 'reasonmsg=Server Shutdown!'
