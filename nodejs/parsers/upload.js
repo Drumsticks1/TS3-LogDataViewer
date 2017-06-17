@@ -76,7 +76,7 @@ module.exports = {
 
     // A longer path is logged and needs to be removed in order to get the filename only.
     // Unix
-    if (filename.indexOf("//") !== -1)
+    if (filename.includes("//") )
       filename = filename.substr(filename.indexOf("//") + 1);
     // Windows
     else

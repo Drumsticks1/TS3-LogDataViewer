@@ -87,7 +87,7 @@ module.exports = {
     boundaries.clientId = [boundaries.Nickname[1] + 5, 0];
 
     // Compatible with regular disconnects, bans and kicks.
-    if (logLine.lastIndexOf(") reason 'reasonmsg") === -1)
+    if (!logLine.includes(") reason 'reasonmsg"))
       boundaries.clientId[1] = logLine.lastIndexOf(") reason 'invokerid=");
     else
       boundaries.clientId[1] = logLine.lastIndexOf(") reason 'reasonmsg");

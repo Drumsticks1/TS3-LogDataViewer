@@ -5,9 +5,10 @@ Versions: <a href="#v2.1.1">2.1.1</a> | <a href="#v2.1.0">2.1.0</a> | <a href="#
 Changes:
 - Javascript code:
     - Migrated to ECMAScript 6
-    - Replaced occurrences of <code>string.substring(a,b)</code> with <code>string.slice(a,b)</code>
-    - Replaced occurrences of <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
-
+    - Replaced occurrences of
+      - <code>string.substring(a,b)</code> with <code>string.slice(a,b)</code>
+      - <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
+      - comparisons of <code>string.indexOf(str)</code> with <code>-1</code> with the usage of <code>string.includes(str)</code>
 
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:

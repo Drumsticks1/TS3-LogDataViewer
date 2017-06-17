@@ -362,7 +362,7 @@
             const connections = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].Connections;
 
             for (i = 0; i < connections.length; i++) {
-              if (connections[i].indexOf(data.filter) !== -1)
+              if (connections[i].includes(data.filter))
                 return true;
             }
 
@@ -372,7 +372,7 @@
             const ips = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].IPs;
 
             for (i = 0; i < ips.length; i++) {
-              if (ips[i].indexOf(data.filter) !== -1)
+              if (ips[i].includes(data.filter))
                 return true;
             }
 

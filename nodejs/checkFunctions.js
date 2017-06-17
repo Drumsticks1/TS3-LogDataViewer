@@ -88,9 +88,9 @@ module.exports = {
     if (bannedByNickname === "Server")
       bannedByNickname = "server";
 
-    if (UID.indexOf(" by client '" + bannedByNickname + "'(") !== -1 && IP.indexOf(" by client '" + bannedByNickname + "'(") !== -1) {
-      if (UID.indexOf("ban added reason='" + banReason + "' cluid='") !== -1 && IP.indexOf("ban added reason='" + banReason + "' ip='") !== -1) {
-        if (UID.indexOf("bantime=" + banTime + " ") !== -1 && IP.indexOf("bantime=" + banTime + " ") !== -1) {
+    if (UID.includes(" by client '" + bannedByNickname + "'(") && IP.includes(" by client '" + bannedByNickname + "'(")) {
+      if (UID.includes("ban added reason='" + banReason + "' cluid='") && IP.includes("ban added reason='" + banReason + "' ip='")) {
+        if (UID.includes("bantime=" + banTime + " ") && IP.includes("bantime=" + banTime + " ")) {
           return true;
         }
       }

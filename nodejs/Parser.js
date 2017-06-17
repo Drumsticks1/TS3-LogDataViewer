@@ -72,17 +72,6 @@ const match = {
   serverGroupCopying: ") was copied by '"
 };
 
-// TODO: remove
-/**
- * Returns  the end pos of the match + 1
- * @param {string} searchString
- * @returns {number} the end pos of the match + 1
- */
-String.prototype.indexOfEndPlusOne = function (searchString) {
-  const indexOf = this.indexOf(searchString);
-  return indexOf === -1 ? -1 : indexOf + searchString.length;
-};
-
 /**
  * Parses the logs.
  */
@@ -140,9 +129,9 @@ module.exports = {
       "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
     ];
 
-    if (logData.indexOf(match.VirtualServer[0] + 'listening on') !== -1)
+    if (logData.includes(match.VirtualServer[0] + 'listening on'))
       return 0;
-    else if (logData.indexOf(match.VirtualServer[1] + 'listening on') !== -1)
+    else if (logData.includes(match.VirtualServer[1] + 'listening on'))
       return 1;
 
     return -1;
@@ -164,22 +153,33 @@ module.exports = {
     if (logPattern === -1)
       return;
 
+    // TODO: check if this can be done as do ... while (to prevent the currentLine = ... code duplication)
     while (logData.length > 0) {
       currentLine = logData.slice(0, logData.indexOf("\n"));
       logData = logData.slice(currentLine.length + 1);
 
-      let lineSeverType = 0,
-        beginOfParsingBlock = currentLine.indexOfEndPlusOne(match.VirtualServer[logPattern]),
+      // Todo: doc, fix typo
+      let lineSeverType,
         checkIfUpload = false;
 
-      if (beginOfParsingBlock === -1) {
-        lineSeverType = 1;
-        beginOfParsingBlock = currentLine.indexOfEndPlusOne(match.VirtualServerBase[logPattern])
+      // Todo: doc
+      let beginOfParsingBlock;
+
+      // Check if the current log line is logged as "VirtualServer"
+      if (currentLine.includes(match.VirtualServer[logPattern])) {
+        lineSeverType = 0;
+        beginOfParsingBlock = currentLine.indexOf(match.VirtualServer[logPattern]) + match.VirtualServer[logPattern].length;
       }
 
-      // Skip parsing for lines that aren't relevant.
-      if (beginOfParsingBlock === -1)
-        continue;
+      // Check if the current log line is logged as "VirtualServerBase"
+      else if (currentLine.includes(match.VirtualServerBase[logPattern])) {
+        lineSeverType = 1;
+        beginOfParsingBlock = currentLine.indexOf(match.VirtualServerBase[logPattern]) + match.VirtualServerBase[logPattern].length;
+      }
+
+      // Current log line is neither logged as "VirtualServer" nor "VirtualServerBase"
+      // Skipping parsing, line is not relevant
+      else continue;
 
       let DateTime = this.parseDateTime(currentLine);
 
@@ -187,14 +187,14 @@ module.exports = {
         // VirtualSever
         case 0:
           // Client assignments to and client removals from a server group
-          if (currentLine.indexOf(match.serverGroupAssignment) !== -1 || currentLine.indexOf(match.serverGroupRemoval) !== -1) {
+          if (currentLine.includes(match.serverGroupAssignment) || currentLine.includes(match.serverGroupRemoval)) {
             let res;
-            if (currentLine.indexOf(match.serverGroupAssignment) !== -1)
+            if (currentLine.includes(match.serverGroupAssignment))
               res = parsers.serverGroup.parseServerGroupAssignment(currentLine);
             else
               res = parsers.serverGroup.parseServerGroupRemoval(currentLine);
 
-           let clientId = res.clientId,
+            let clientId = res.clientId,
               ServerGroupID = res.ServerGroupID;
 
             const serverGroupObject = ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID);
@@ -204,7 +204,7 @@ module.exports = {
 
             Client.fillArrayWithDummyClients(ClientList, clientId);
 
-            if (currentLine.indexOf(match.serverGroupAssignment) !== -1) {
+            if (currentLine.includes(match.serverGroupAssignment)) {
               if (!checkFunctions.isDuplicateServerGroup(clientId, ServerGroupID))
                 ClientList[clientId].addServerGroup(ServerGroupID, DateTime);
             }
@@ -236,9 +236,9 @@ module.exports = {
           // Ban Rules
           // Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
           else if (currentLine.indexOf(match.banRule) === beginOfParsingBlock) {
-            if (currentLine.indexOf("' cluid='") !== -1 && currentLine.indexOf("' ip='") === -1)
+            if (currentLine.includes("' cluid='") && !currentLine.includes("' ip='"))
               lastUIDBanRule = currentLine;
-            else if (currentLine.indexOf("' ip='") !== -1 && currentLine.indexOf("' cluid='") === -1)
+            else if (currentLine.includes("' ip='") && !currentLine.includes("' cluid='"))
               lastIPBanRule = currentLine;
           }
 
@@ -252,7 +252,7 @@ module.exports = {
           }
 
           // Client Deletions
-          else if (currentLine.indexOf(match.deleteClient1) === beginOfParsingBlock && (currentLine.indexOf(match.deleteClient2) !== -1)) {
+          else if (currentLine.indexOf(match.deleteClient1) === beginOfParsingBlock && (currentLine.includes(match.deleteClient2))) {
             ClientList[parsers.client.parseClientDeletion(currentLine)].deleteClient();
           }
 
@@ -264,19 +264,19 @@ module.exports = {
             // 3 --> copied // just like 0
             let eventTypeS = -1, res;
 
-            if (currentLine.indexOf(match.serverGroupCreation) !== -1) {
+            if (currentLine.includes(match.serverGroupCreation)) {
               eventTypeS = 0;
               res = parsers.serverGroup.parseServerGroupCreation(currentLine);
             }
-            else if (currentLine.indexOf(match.serverGroupDeletion) !== -1) {
+            else if (currentLine.includes(match.serverGroupDeletion)) {
               eventTypeS = 1;
               res = parsers.serverGroup.parseServerGroupDeletion(currentLine);
             }
-            else if (currentLine.indexOf(match.serverGroupRenaming) !== -1) {
+            else if (currentLine.includes(match.serverGroupRenaming)) {
               eventTypeS = 2;
               res = parsers.serverGroup.parseServerGroupRenaming(currentLine);
             }
-            else if (currentLine.indexOf(match.serverGroupCopying) !== -1) {
+            else if (currentLine.includes(match.serverGroupCopying)) {
               eventTypeS = 3;
               res = parsers.serverGroup.parseServerGroupCopying(currentLine);
             }
@@ -338,8 +338,8 @@ module.exports = {
             let isBan = false,
               isKick = false;
 
-            if (currentLine.lastIndexOf(") reason 'reasonmsg") === -1) {
-              if (currentLine.lastIndexOf(" bantime=") === -1)
+            if (!currentLine.includes(") reason 'reasonmsg")) {
+              if (!currentLine.includes(" bantime="))
                 isKick = true;
               else
                 isBan = true;
@@ -378,6 +378,7 @@ module.exports = {
           }
 
           // Todo: Optimize
+          // Todo: documentation
           // Channel additions, edits or deletions.
           else if (currentLine.indexOf(match.channel) === beginOfParsingBlock) {
             // 0 --> added
@@ -386,19 +387,19 @@ module.exports = {
             // 3 --> deleted
             let eventTypeC = -1, res;
 
-            if (currentLine.indexOf(match.channelEdit) !== -1) {
+            if (currentLine.includes(match.channelEdit)) {
               eventTypeC = 1;
               res = parsers.channel.parseChannelEdit(currentLine);
             }
-            else if (currentLine.indexOf(match.channelCreation) !== -1) {
+            else if (currentLine.includes(match.channelCreation)) {
               eventTypeC = 0;
               res = parsers.channel.parseChannelCreation(currentLine);
             }
-            else if (currentLine.indexOf(match.subChannelCreation) !== -1) {
+            else if (currentLine.includes(match.subChannelCreation)) {
               eventTypeC = 0;
               res = parsers.channel.parseSubChannelCreation(currentLine);
             }
-            else if (currentLine.indexOf(match.channelDeletion) !== -1) {
+            else if (currentLine.includes(match.channelDeletion)) {
               eventTypeC = 3;
               res = parsers.channel.parseChannelDeletion(currentLine);
             }
@@ -438,7 +439,7 @@ module.exports = {
         // Uploads
         if (currentLine.indexOf(match.upload) === beginOfParsingBlock) {
           let res = parsers.upload.parseUpload(currentLine),
-          channelID = res.channelID;
+            channelID = res.channelID;
 
           if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
             Channel.addChannel(ChannelList, channelID, "Unknown", "Unknown");

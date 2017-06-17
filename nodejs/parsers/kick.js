@@ -21,7 +21,7 @@ module.exports = {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 
-    if (logLine.lastIndexOf(" reasonmsg=") !== -1) {
+    if (logLine.includes(" reasonmsg=")) {
       boundaries.kickReason = [
         logLine.lastIndexOf(" reasonmsg=") + 11,
         logLine.length - 1];
@@ -35,7 +35,7 @@ module.exports = {
 
     boundaries.kickedByUID = [boundaries.kickedByNickname[1] + 12, 0];
 
-    if (logLine.indexOf("invokeruid=serveradmin") === -1)
+    if (!logLine.includes("invokeruid=serveradmin"))
       boundaries.kickedByUID[1] = logLine.indexOf("=", boundaries.kickedByUID[0]) + 1;
     else
       boundaries.kickedByUID[1] = logLine.indexOf("reasonmsg") - 1;
