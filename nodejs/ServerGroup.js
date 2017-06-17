@@ -54,23 +54,6 @@ module.exports = {
   },
 
   /**
-   * Adds a new ServerGroup containing the data of the serverGroupObject to the array.
-   * @param {Array} array
-   * @param {object} serverGroupObject containing the serverGroup data.
-   */
-  addServerGroupViaObject: function (array, serverGroupObject) {
-    var serverGroup = new ServerGroup(
-      serverGroupObject.serverGroupListId,
-      serverGroupObject.serverGroupId,
-      serverGroupObject.creationDateTime,
-      serverGroupObject.serverGroupName
-    );
-
-    serverGroup.deleted = serverGroupObject.deleted;
-    array.push(serverGroup);
-  },
-
-  /**
    * Returns the object in the array with the given serverGroupId.
    * @param {Array} array
    * @param {number} serverGroupId
@@ -78,7 +61,7 @@ module.exports = {
    */
   getServerGroupByServerGroupId: function (array, serverGroupId) {
     for (var i = 0; i < array.length; i++) {
-      if (array[i].serverGroupId == serverGroupId)
+      if (array[i].serverGroupId === serverGroupId)
         return array[i];
     }
     return null;

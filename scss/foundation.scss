@@ -3,6 +3,8 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 @import '../node_modules/foundation-sites/scss/foundation';
 
+$base-font-family: 'Open Sans', Arial, sans-serif;
+
 @include foundation-global-styles;
 @include foundation-grid;
 @include foundation-button;

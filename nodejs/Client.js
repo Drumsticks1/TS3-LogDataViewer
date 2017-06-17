@@ -20,21 +20,6 @@ var Client = function (clientId) {
 };
 
 /**
- * Sets the data of the current Client according to the data in the given clientObject.
- * @param {object} clientObject containing the client data.
- */
-Client.prototype.addClientViaObject = function (clientObject) {
-  this.clientId = clientObject.clientId;
-  this.Nicknames = clientObject.Nicknames.slice();
-  this.Connections = clientObject.Connections.slice();
-  this.IPs = clientObject.IPs.slice();
-  this.ConnectedState = clientObject.ConnectedState;
-  this.ServerGroupIDs = clientObject.ServerGroupIDs.slice();
-  this.ServerGroupAssignmentDateTimes = clientObject.ServerGroupAssignmentDateTimes.slice();
-  this.deleted = clientObject.deleted;
-};
-
-/**
  * Returns the count of the Connections.
  * @returns {number}
  */
@@ -82,7 +67,7 @@ Client.prototype.updateClientId = function (clientId) {
  */
 Client.prototype.addNickname = function (Nickname) {
   for (var i = 0; i < this.Nicknames.length; i++) {
-    if (this.Nicknames[i] == Nickname) {
+    if (this.Nicknames[i] === Nickname) {
       this.Nicknames.splice(i, 1);
     }
   }
@@ -103,7 +88,7 @@ Client.prototype.addConnection = function (Connection) {
  */
 Client.prototype.addIP = function (IP) {
   for (var i = 0; i < this.IPs.length; i++) {
-    if (this.IPs[i] == IP) {
+    if (this.IPs[i] === IP) {
       this.IPs.splice(i, 1);
     }
   }
@@ -159,7 +144,7 @@ Client.prototype.addServerGroup = function (ServerGroupID, ServerGroupAssignment
 Client.prototype.removeServerGroupByID = function (ServerGroupID) {
   var done = false;
   for (var i = 0; i < this.ServerGroupIDs.length && !done; i++) {
-    if (this.getServerGroupIDByID(i) == ServerGroupID) {
+    if (this.getServerGroupIDByID(i) === ServerGroupID) {
       this.ServerGroupIDs.splice(i, 1);
       this.ServerGroupAssignmentDateTimes.splice(i, 1);
       done = true;
@@ -169,16 +154,16 @@ Client.prototype.removeServerGroupByID = function (ServerGroupID) {
 
 /**
  * Returns the count of the ServerGroupIDs.
- * @returns {Number}
+ * @returns {number}
  */
 Client.prototype.getServerGroupIDCount = function () {
-  return this.ServerGroupIDs.length;
+  return Number(this.ServerGroupIDs.length);
 };
 
 /**
  * Returns the ServerGroupID in the ServerGroupIDsID slot.
  * @param {number} ServerGroupIDsID
- * @returns {String}
+ * @returns {number}
  */
 Client.prototype.getServerGroupIDByID = function (ServerGroupIDsID) {
   return this.ServerGroupIDs[ServerGroupIDsID];

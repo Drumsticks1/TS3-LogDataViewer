@@ -1,13 +1,13 @@
 {
   "name": "ts3-ldv",
-  "version": "2.0.8",
-  "description": "TS3-LogDataViewer is an app for teamspeak3 server admins. It contains a nodejs part for parsing the servers logfiles and a part with client-side javascript for showing the data in several sortable tables.",
+  "version": "2.1.0",
+  "description": "TS3-LogDataViewer is a tool for TeamSpeak3 server admins that extracts useful information out of the server logs and displays it in a customizable single-page application in the browser of your choice.",
   "keywords": [
-    "ts3",
-    "ts",
-    "teamspeak",
-    "admin",
-    "logs"
+    "TeamSpeak 3",
+    "TS3",
+    "log",
+    "data",
+    "viewer"
   ],
   "homepage": "https://drumsticks1.github.io/TS3-LogDataViewer/",
   "bugs": {
@@ -16,29 +16,30 @@
   "license": "GPL-3.0",
   "author": "Drumsticks <drumsticks.code@gmail.com>",
   "files": [
-    "conf/default-conf.json",
-    "conf/ts3.ldv.logrotate",
-    "conf/ts3-ldv.service",
+    "conf",
     "css",
     "img",
     "js",
+    "local/.gitkeep",
     "nodejs",
+    "CHANGELOG.md",
     "index.html",
-    "install instructions"
+    "INSTALL.md",
+    "LICENSE",
+    "README.md"
   ],
   "main": "nodejs/app.js",
   "dependencies": {
-    "express": "latest",
-    "helmet": "latest",
-    "jquery": "latest",
-    "foundation-sites": "latest",
-    "tablesorter": "latest",
-    "moment": "latest",
-    "nanobar": "latest"
+    "express": "^4.15.3",
+    "foundation-sites": "^6.3.1",
+    "helmet": "^3.6.1",
+    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
+    "tablesorter": "^2.28.14"
   },
   "devDependencies": {
-    "node-sass": "latest",
-    "mocha": "latest"
+    "mocha": "^3.4.2",
+    "node-sass": "^4.5.3"
   },
   "scripts": {
     "test": "mocha"

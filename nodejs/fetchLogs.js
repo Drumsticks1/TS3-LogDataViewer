@@ -22,7 +22,7 @@ exports.fetchLogs = function () {
   var rebuildRequired = false;
 
   try {
-    if (!fs.statSync(globalVariables.logDirectory).isDirectory()) {
+    if (!fs.statSync(globalVariables.TS3LogDirectory).isDirectory()) {
       log.warn("The log directory seems not to be a directory.");
       return 0;
     }
@@ -33,14 +33,9 @@ exports.fetchLogs = function () {
   }
 
   try {
-    var logFiles = fs.readdirSync(globalVariables.logDirectory);
+    var logFiles = fs.readdirSync(globalVariables.TS3LogDirectory);
   } catch (error) {
     log.error("An error occurred while reading the directory:\n\t" + error.message);
-  }
-
-  if (logFiles.length == 0) {
-    log.warn("The log directory contains no valid logs.");
-    return 0;
   }
 
   var newLogObjects = [];
@@ -48,8 +43,8 @@ exports.fetchLogs = function () {
   log.info("Fetching logs.");
   for (var i = 0; i < logFiles.length; i++) {
     var currentLog = logFiles[i];
-    if (currentLog.lastIndexOf(".log") == currentLog.length - 4
-      && currentLog.substring(38, currentLog.length - 4) == String(globalVariables.virtualServer)) {
+    if (currentLog.lastIndexOf(".log") === currentLog.length - 4
+      && currentLog.substring(38, currentLog.length - 4) === String(globalVariables.virtualServer)) {
       newLogObjects.push({
         logListId: newLogObjects.length + 1,
         logName: currentLog,
@@ -57,6 +52,11 @@ exports.fetchLogs = function () {
         parsed: false
       });
     }
+  }
+
+  if (newLogObjects.length === 0) {
+    log.warn("The log directory contains no valid logs for the specified virtual server.");
+    return 0;
   }
 
   log.info("Sorting logs.");

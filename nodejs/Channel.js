@@ -55,23 +55,6 @@ module.exports = {
   },
 
   /**
-   * Adds a new Channel containing the data of the channelObject to the array.
-   * @param {Array} array
-   * @param {object} channelObject containing the channel data.
-   */
-  addChannelViaObject: function (array, channelObject) {
-    var channel = new Channel(
-      channelObject.channelListId,
-      channelObject.channelId,
-      channelObject.creationDateTime,
-      channelObject.channelName
-    );
-
-    channel.deleted = channelObject.deleted;
-    array.push(channel);
-  },
-
-  /**
    * Returns the object in the array with the given channelId.
    * @param {Array} array
    * @param {number} channelId
@@ -79,7 +62,7 @@ module.exports = {
    */
   getChannelByChannelId: function (array, channelId) {
     for (var i = 0; i < array.length; i++) {
-      if (array[i].channelId == channelId)
+      if (array[i].channelId === channelId)
         return array[i];
     }
     return null;

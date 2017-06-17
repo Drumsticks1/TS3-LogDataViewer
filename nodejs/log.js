@@ -20,8 +20,8 @@ module.exports = {
    */
   updateWriteStream: function () {
     programLogfile = fs.createWriteStream(globalVariables.programLogfile, {flags: 'a'});
-    if (logBuffer.length != 0) {
-      while (logBuffer.length != 0) {
+    if (logBuffer.length !== 0) {
+      while (logBuffer.length !== 0) {
         var logBufferObject = logBuffer.shift();
         log(logBufferObject[0], logBufferObject[1], true);
       }
@@ -66,7 +66,7 @@ function log(message, logLevel, alreadyProcessed) {
   if (!alreadyProcessed)
     processedMessage = "[" + miscFunctions.getCurrentUTC() + "|" + logLevelString[logLevel] + "] " + message + "\n";
 
-  if (programLogfile == undefined)
+  if (programLogfile === undefined)
     logBuffer.push([processedMessage, logLevel]);
   else if (logLevel <= globalVariables.logLevel)
     programLogfile.write(processedMessage);

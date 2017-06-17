@@ -68,23 +68,5 @@ module.exports = {
         complaintByNickname,
         complaintByID
       ));
-  },
-
-  /**
-   * Adds a new Complaint containing the data of the complaintObject to the array.
-   * @param {Array} array
-   * @param {object} complaintObject containing the complaint data.
-   */
-  addComplaintViaObject: function (array, complaintObject) {
-    array.push(
-      new Complaint(
-        complaintObject.complaintListId,
-        complaintObject.complaintDateTime,
-        complaintObject.complaintAboutNickname,
-        complaintObject.complaintAboutID,
-        complaintObject.complaintReason,
-        complaintObject.complaintByNickname,
-        complaintObject.complaintByID
-      ));
   }
 };

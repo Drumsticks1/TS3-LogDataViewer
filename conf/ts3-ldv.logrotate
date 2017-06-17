@@ -2,7 +2,9 @@
 # Author: Drumsticks
 # GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
-/var/log/ts3-ldv/ts3-ldv.log {
+# You could also change this to /var/log/ts3-ldv/ts3-ldv.log and
+# change the programLogfile setting to /var/log/ts3-ldv/ts3-ldv.log
+/var/www/www.your-domain.com/ts3-ldv-dir/ts3-ldv.log {
     rotate 7
     weekly
     compress

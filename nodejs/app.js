@@ -38,7 +38,7 @@ app.get("/buildJSON", function (req, res) {
     };
 
   if (timeDifference > globalVariables.timeBetweenRequests) {
-    var clearBuffer = String(req.query.clearBuffer) == "true";
+    var clearBuffer = String(req.query.clearBuffer) === "true";
     if (clearBuffer)
       miscFunctions.clearGlobalArrays();
 

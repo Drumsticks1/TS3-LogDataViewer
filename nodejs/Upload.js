@@ -73,30 +73,6 @@ module.exports = {
   },
 
   /**
-   * Adds a new Upload containing the data of the uploadObject to the array.
-   * @param {Array} array
-   * @param {object} uploadObject containing the upload data.
-   */
-  addUploadViaObject: function (array, uploadObject) {
-    var upload = new Upload(
-      uploadObject.uploadListId,
-      uploadObject.uploadDateTime,
-      uploadObject.channelID,
-      uploadObject.filename,
-      uploadObject.uploadedByID,
-      uploadObject.uploadedByNickname
-    );
-
-    if (uploadObject.deleted) {
-      upload.deletedByID = uploadObject.deletedByID;
-      upload.deletedByNickname = uploadObject.deletedByNickname;
-      upload.deleted = uploadObject.deleted;
-    }
-
-    array.push(upload);
-  },
-  
-  /**
    * Adds the deletedByNickname and deletedByID data to the matching Upload in the UploadList.
    * @param {number} channelID
    * @param {string} filename
@@ -107,7 +83,7 @@ module.exports = {
     var UploadList = globalVariables.UploadList;
 
     for (var i = 0; i < UploadList.length; i++) {
-      if (UploadList[i].getChannelID() == channelID && UploadList[i].getFilename() == filename && !UploadList[i].isDeleted()) {
+      if (UploadList[i].getChannelID() === channelID && UploadList[i].getFilename() === filename && !UploadList[i].isDeleted()) {
         UploadList[i].deletedByID = deletedByID;
         UploadList[i].deletedByNickname = deletedByNickname;
         UploadList[i].deleted = true;

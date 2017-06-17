@@ -1,5 +1,49 @@
 # Changelog
-Versions: <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+Versions: <a href="#v2.1.0">2.1.0</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
+
+### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
+Changes:
+- Modified project structure:
+    - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
+
+- Javascript code:
+    - Replaced in-/equality checks with strict in-/equality checks (== --> ===, != --> !==)
+    - Added .editorconfig for unified code style settings
+
+- Client-Side app:
+    - Refactored code from TS3-LogDataViewer.js into multiple modules
+    - Tables and their occurrences in control sections are now ordered alphabetically
+    - Functions are now rather working on modules and their attributes as parameters than on strings that then are modified in order to access objects
+    - Removed the constant updating of the moment.js time difference regarding the build time of the json ("x ago"), this now only happens when the tables are build
+    - The number of connected Clients is now always calculated in buildTables regardless of the build state of the clientTable
+    - Merged the localStorage and sessionStorage data into one json object for each storage type
+    - Moved the navbar (now called navBar) out of the controlSection, it is now added directly to the document
+    - Removed minimized css files, not really necessary for small files like they are used in this project
+    - Replaced the use of .innerHTML with the jquery $(div).text(text) function or .innerText to prevent execution of malicious input
+    - Replaced the use of 3rd-party package nanobar with a simple callout that is shown when ts3ldv.tables.build() is in progress
+    - Updated foundation.css and style.css for the release
+
+- Server-Side app:
+    - Removed obsolete addViaObject methods from the Ban, Channel, Client, Complaint, Kick, ServerGroup and Upload classes
+    - Renamed configuration settings:
+        - logDirectory --> TS3LogDirectory
+    - Added: TS3LogDirectory values without trailing "/" now have a "/" appended at the end
+    - Fixed: non-empty TS3LogDirectory directory without valid logs for the selected virtual server not causing fetchLogs.fetchLogs() to log a warn message and return 0
+
+- General:
+    - Renamed changelog.md to CHANGELOG.md
+    - package.json:
+        - Added version restrictions to dependencies and devDependencies for preventing installation of future versions of third party packages that may break parts of this project (now using "^ver" instead of "latest")
+        - Updated npm dependency versions 
+        - Updated included files
+        - Removed dependency nanobar
+    - Updated install instructions and renamed the file to INSTALL.md
+    - Updated README.md
+    - Renamed Todo to TODO.md
+    - Renamed conf/ts3.ldv.logrotate to conf/ts3-ldv.logrotate
+    - Updated conf/ts3-ldv.logrotate and conf/ts3-ldv.service for better use with the updated install instructions
+    - Simplified scripts/generateCss.js
+
 
 ### <a name="v2.0.8">Version 2.0.8</a> (05.08.2016)
 Changes:
@@ -8,6 +52,7 @@ Changes:
 
 Security improvements:
 - Restricted access to the socket opened by express on port 3000 to localhost.
+
 
 ### <a name="v2.0.7">Version 2.0.7</a> (09.04.2016)
 Additions:

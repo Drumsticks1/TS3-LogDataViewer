@@ -18,9 +18,9 @@ var confJSON;
  * @param {string} settingValueType
  */
 function acquireSetting(settingName, settingValueType) {
-  if (confJSON[settingName] != undefined) {
-    if (typeof confJSON[settingName] == settingValueType) {
-      if (globalVariables[settingName] != confJSON[settingName]) {
+  if (confJSON[settingName] !== undefined) {
+    if (typeof confJSON[settingName] === settingValueType) {
+      if (globalVariables[settingName] !== confJSON[settingName]) {
         globalVariables[settingName] = confJSON[settingName];
         log.debug("Configuration variable \"" + settingName + "\" is set to \"" + confJSON[settingName] + "\".");
       } else {
@@ -42,7 +42,7 @@ function acquireSetting(settingName, settingValueType) {
 function resetToDefaultConfiguration() {
   log.debug("Ignoring the conf.json and using default settings.");
   globalVariables.programLogfile = Constants.programLogfile;
-  globalVariables.logDirectory = Constants.logDirectory;
+  globalVariables.TS3LogDirectory = Constants.TS3LogDirectory;
   globalVariables.virtualServer = Constants.virtualServer;
   globalVariables.bufferData = Constants.bufferData;
   globalVariables.timeBetweenRequests = Constants.timeBetweenRequests;
@@ -67,19 +67,25 @@ module.exports = {
 
         acquireSetting("programLogfile", "string");
         acquireSetting("logLevel", "number");
-        if (globalVariables.logLevel != 0 && globalVariables.logLevel != 1 && globalVariables.logLevel != 2 && globalVariables.logLevel != 3) {
+        if (globalVariables.logLevel !== 0 && globalVariables.logLevel !== 1 && globalVariables.logLevel !== 2 && globalVariables.logLevel !== 3) {
           log.info("logLevel setting \"" + globalVariables.logLevel + "\" is invalid, setting default value.");
           globalVariables.logLevel = Constants.logLevel;
         }
         log.updateWriteStream();
-        acquireSetting("logDirectory", "string");
+        acquireSetting("TS3LogDirectory", "string");
+
+        // Add trailing "/" to the log directory path (if not already existing)
+        if (!globalVariables.TS3LogDirectory.endsWith("/")) {
+          globalVariables.TS3LogDirectory = globalVariables.TS3LogDirectory + "/";
+        }
+
         acquireSetting("virtualServer", "number");
         acquireSetting("bufferData", "boolean");
         acquireSetting("timeBetweenRequests", "number");
         acquireSetting("disableLastModificationCheck", "boolean");
         acquireSetting("usedPort", "number");
 
-        if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length != 0) {
+        if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length !== 0) {
           for (var i = 0; i < confJSON.ignoredLogs.length; i++) {
             var ignoredLog = confJSON.ignoredLogs[i];
             globalVariables.ignoredLogs.push(ignoredLog);

@@ -68,23 +68,5 @@ module.exports = {
         kickedByUID,
         kickReason
       ));
-  },
-
-  /**
-   * Adds a new Kick containing the data of the kickObject to the array.
-   * @param {Array} array
-   * @param {object} kickObject containing the kick data.
-   */
-  addKickViaObject: function (array, kickObject) {
-    array.push(
-      new Kick(
-        kickObject.kickListId,
-        kickObject.kickDateTime,
-        kickObject.kickedID,
-        kickObject.kickedNickname,
-        kickObject.kickedByNickname,
-        kickObject.kickedByUID,
-        kickObject.kickReason
-      ));
   }
 };

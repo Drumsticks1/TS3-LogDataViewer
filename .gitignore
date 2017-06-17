@@ -1,10 +1,15 @@
-# gitignore put together by Drumsticks.
+# .gitignore
+# Author: Drumsticks
+# GitHub: https://github.com/Drumsticks1/TS3-LogDataViewer
 
-# WebStorm directory-based project format:
+# WebStorm directory-based project format
 .idea/
 
-# node_modules folder:
+# node_modules folder
 node_modules
 
-# TS3-LDV related files
-ts3-ldv.log
+# local files (conf.json, output.json, ts3-ldv.log, ...)
+local/*
+
+# keep .gitkeep files
+!.gitkeep
