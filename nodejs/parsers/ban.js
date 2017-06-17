@@ -4,7 +4,7 @@
 
 "use strict";
 
-var checkFunctions = require("../checkFunctions.js"),
+const checkFunctions = require("../checkFunctions.js"),
   miscFunctions = require('../miscFunctions.js');
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
    * @returns {{bannedUID: string, bannedIP: string, bannedByID: string, bannedByNickname: string, bannedByUID: string, banReason: string, banTime: number}} the extracted data.
    */
   parseBan: function (logLine, boundaries, lastUIDBanRule, lastIPBanRule) {
-    var validUID = true;
+    let validUID = true;
 
     boundaries.bannedByNickname = [logLine.indexOf(" invokername=", boundaries.clientId[1]) + 13, 0];
 
@@ -46,19 +46,15 @@ module.exports = {
 
     boundaries.banTime[1] = logLine.length - 1;
 
-    var getSubstring = function (boundariesIdentifier) {
+    const getSubstring = function (boundariesIdentifier) {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 
-    var bannedByNickname = getSubstring("bannedByNickname"),
+    const bannedByNickname = getSubstring("bannedByNickname"),
       banReason = getSubstring("banReason"),
-      banTime = Number(getSubstring("banTime")),
-      bannedByUID, bannedUID, bannedIP, bannedByID;
-
-    if (validUID)
-      bannedByUID = getSubstring("bannedByUID");
-    else
-      bannedByUID = "No UID";
+      banTime = Number(getSubstring("banTime"));
+    let bannedByUID = validUID ? getSubstring("bannedByUID") : "No UID",
+      bannedUID, bannedIP, bannedByID;
 
     if (lastUIDBanRule.length !== 0 && lastIPBanRule.length !== 0) {
       if (checkFunctions.isMatchingBanRules(bannedByNickname, banReason, banTime, lastUIDBanRule, lastIPBanRule)) {

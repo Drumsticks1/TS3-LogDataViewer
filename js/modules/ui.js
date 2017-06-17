@@ -8,7 +8,7 @@
  * Module containing UI related functions.
  */
 (function (parent) {
-  var module = parent.ui = parent.ui || {};
+  const module = parent.ui = parent.ui || {};
 
   /**
    * Adds a removable callout.
@@ -22,7 +22,7 @@
    * @returns {Element} the created callout div
    */
   module.addCallout = function (message, calloutClass, duration) {
-    var calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
+    const calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
 
     // Prevents duplicate callouts
     if (calloutsWithTheSameClass.length !== 0) {
@@ -34,7 +34,7 @@
       return;
     }
 
-    var callout = document.createElement("div"),
+    const callout = document.createElement("div"),
       calloutCloseButton = document.createElement("button");
 
     callout.innerText = message;

@@ -4,8 +4,8 @@
 
 "use strict";
 
-var assert = require('assert');
-var uploadParser = require('../../../nodejs/parsers/upload.js');
+const assert = require('assert');
+const uploadParser = require('../../../nodejs/parsers/upload.js');
 
 // Todo: Add tests for upload deletions with the log format since ts3Server v3.0.12.x when the logging of upload deletions is fixed and if the log message is affected.
 

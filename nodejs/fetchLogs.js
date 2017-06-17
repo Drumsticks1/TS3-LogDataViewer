@@ -18,8 +18,9 @@ const fs = require("fs"),
  * 2 --> Rebuild required, isMatchingLogOrder failed
  */
 exports.fetchLogs = function () {
+  let i;
   log.info("Checking log directory.");
-  var rebuildRequired = false;
+  let rebuildRequired = false;
 
   try {
     if (!fs.statSync(globalVariables.TS3LogDirectory).isDirectory()) {
@@ -32,23 +33,23 @@ exports.fetchLogs = function () {
     return 0;
   }
 
+  let logFiles;
   try {
-    var logFiles = fs.readdirSync(globalVariables.TS3LogDirectory);
+    logFiles = fs.readdirSync(globalVariables.TS3LogDirectory);
   } catch (error) {
     log.error("An error occurred while reading the directory:\n\t" + error.message);
   }
 
-  var newLogObjects = [];
+  const newLogObjects = [];
 
   log.info("Fetching logs.");
-  for (var i = 0; i < logFiles.length; i++) {
-    var currentLog = logFiles[i];
-    if (currentLog.lastIndexOf(".log") === currentLog.length - 4
-      && currentLog.slice(38, -4) === String(globalVariables.virtualServer)) {
+  for (i = 0; i < logFiles.length; i++) {
+    if (logFiles[i].lastIndexOf(".log") === logFiles[i].length - 4
+      && logFiles[i].slice(38, -4) === String(globalVariables.virtualServer)) {
       newLogObjects.push({
         logListId: newLogObjects.length + 1,
-        logName: currentLog,
-        ignored: checkFunctions.isIgnoredLog(currentLog),
+        logName: logFiles[i],
+        ignored: checkFunctions.isIgnoredLog(logFiles[i]),
         parsed: false
       });
     }

@@ -5,7 +5,7 @@
 "use strict";
 const globalVariables = require("./globalVariables.js");
 
-var ClientList = globalVariables.ClientList,
+const ClientList = globalVariables.ClientList,
   BanList = globalVariables.BanList,
   KickList = globalVariables.KickList,
   ComplaintList = globalVariables.ComplaintList,
@@ -21,7 +21,7 @@ module.exports = {
    * @returns {boolean}
    */
   isDuplicateServerGroup: function (clientID, serverGroupID) {
-    for (var i = 0; i < ClientList[clientID].getServerGroupIDCount(); i++) {
+    for (let i = 0; i < ClientList[clientID].getServerGroupIDCount(); i++) {
       if (ClientList[clientID].getServerGroupIDByID(i) === serverGroupID) {
         return true;
       }
@@ -36,7 +36,7 @@ module.exports = {
    * @returns {boolean}
    */
   isDuplicateConnection: function (ID, Connection) {
-    for (var i = 0; i < ClientList[ID].getConnectionCount(); i++) {
+    for (let i = 0; i < ClientList[ID].getConnectionCount(); i++) {
       if (ClientList[ID].getConnectionByID(i) === Connection) {
         return true;
       }
@@ -50,7 +50,7 @@ module.exports = {
    * @returns {boolean}
    */
   isIgnoredLog: function (log) {
-    for (var i = 0; i < ignoredLogs.length; i++) {
+    for (let i = 0; i < ignoredLogs.length; i++) {
       if (log === ignoredLogs[i])
         return true;
     }
@@ -63,7 +63,7 @@ module.exports = {
    * @returns {boolean}
    */
   isMatchingLogOrder: function (newLogObjects) {
-    for (var i = 0; i < Logs.length; i++) {
+    for (let i = 0; i < Logs.length; i++) {
       if (i < newLogObjects.length) {
         if (Logs[i].logName !== newLogObjects[i].logName || Logs[i].ignored !== this.isIgnoredLog(newLogObjects[i].logName)) {
           return false;
@@ -84,7 +84,7 @@ module.exports = {
    * @returns {boolean}
    */
   isMatchingBanRules: function (bannedByNickname, banReason, banTime, lastUIDBanRule, lastIPBanRule) {
-    var UID = lastUIDBanRule, IP = lastIPBanRule;
+    const UID = lastUIDBanRule, IP = lastIPBanRule;
     if (bannedByNickname === "Server")
       bannedByNickname = "server";
 
@@ -113,7 +113,7 @@ module.exports = {
    * @returns {boolean}
    */
   isDuplicateBan: function (banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
-    for (var i = 0; i < BanList.length; i++) {
+    for (let i = 0; i < BanList.length; i++) {
       if (BanList[i].getBanDateTime() === banDateTime && BanList[i].getBannedID() === bannedID && BanList[i].getBannedNickname() === bannedNickname &&
         BanList[i].getBannedUID() === bannedUID && BanList[i].getBannedIP() === bannedIP && BanList[i].getBannedByID() === bannedByID &&
         BanList[i].getBannedByNickname() === bannedByNickname && BanList[i].getBannedByUID() === bannedByUID && BanList[i].getBanReason() === banReason &&
@@ -134,7 +134,7 @@ module.exports = {
    * @returns {boolean}
    */
   isDuplicateKick: function (kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
-    for (var i = 0; i < KickList.length; i++) {
+    for (let i = 0; i < KickList.length; i++) {
       if (KickList[i].getKickDateTime() === kickDateTime && KickList[i].getKickedID() === kickedID && KickList[i].getKickedNickname() === kickedNickname &&
         KickList[i].getKickedByNickname() === kickedByNickname && KickList[i].getKickedByUID() === kickedByUID && KickList[i].getKickReason() === kickReason)
         return true;
@@ -153,7 +153,7 @@ module.exports = {
    * @returns {boolean}
    */
   isDuplicateComplaint: function (complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
-    for (var i = 0; i < ComplaintList.length; i++) {
+    for (let i = 0; i < ComplaintList.length; i++) {
       if (ComplaintList[i].getComplaintDateTime() === complaintDateTime && ComplaintList[i].getComplaintAboutNickname() === complaintAboutNickname &&
         ComplaintList[i].getComplaintAboutID() === complaintAboutID && ComplaintList[i].getComplaintReason() === complaintReason &&
         ComplaintList[i].getComplaintByNickname() === complaintByNickname && ComplaintList[i].getComplaintByID() === complaintByID)
@@ -172,7 +172,7 @@ module.exports = {
    * @returns {boolean}
    */
   isDuplicateUpload: function (uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
-    for (var i = 0; i < UploadList.length; i++) {
+    for (let i = 0; i < UploadList.length; i++) {
       if (UploadList[i].getUploadDateTime() === uploadDateTime && UploadList[i].getChannelID() === channelID && UploadList[i].getFilename() === filename &&
         UploadList[i].getUploadedByID() === uploadedByID && UploadList[i].getUploadedByNickname() === uploadedByNickname)
         return true;

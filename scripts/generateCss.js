@@ -6,7 +6,7 @@
 
 // This script is designed to be executed from the scripts folder
 
-var fs = require("fs"),
+const fs = require("fs"),
   sass = require("node-sass");
 
 // Generate css directory if not already existing.
@@ -21,10 +21,10 @@ if (!fs.existsSync("../css")) {
  * @param {string} outputDirectory - the path of the directory the css files are written to.
  */
 function generateCss(inputDirectory, outputDirectory) {
-  var inputFiles = fs.readdirSync(inputDirectory);
+  const inputFiles = fs.readdirSync(inputDirectory);
 
   console.log("Processing scss files...");
-  for (var i = 0; i < inputFiles.length; i++) {
+  for (let i = 0; i < inputFiles.length; i++) {
     (function (i) {
       sass.render({
         file: inputDirectory + "/" + inputFiles[i],

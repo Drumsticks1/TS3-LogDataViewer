@@ -8,7 +8,7 @@
  * @param {number} clientId
  * @constructor
  */
-var Client = function (clientId) {
+const Client = function (clientId) {
   this.clientId = clientId;
   this.Nicknames = [];
   this.Connections = [];
@@ -66,7 +66,7 @@ Client.prototype.updateClientId = function (clientId) {
  * @param {string} Nickname the given Nickname.
  */
 Client.prototype.addNickname = function (Nickname) {
-  for (var i = 0; i < this.Nicknames.length; i++) {
+  for (let i = 0; i < this.Nicknames.length; i++) {
     if (this.Nicknames[i] === Nickname) {
       this.Nicknames.splice(i, 1);
     }
@@ -87,7 +87,7 @@ Client.prototype.addConnection = function (Connection) {
  * @param {string} IP the given IP.
  */
 Client.prototype.addIP = function (IP) {
-  for (var i = 0; i < this.IPs.length; i++) {
+  for (let i = 0; i < this.IPs.length; i++) {
     if (this.IPs[i] === IP) {
       this.IPs.splice(i, 1);
     }
@@ -142,12 +142,11 @@ Client.prototype.addServerGroup = function (ServerGroupID, ServerGroupAssignment
  * @param {number} ServerGroupID
  */
 Client.prototype.removeServerGroupByID = function (ServerGroupID) {
-  var done = false;
-  for (var i = 0; i < this.ServerGroupIDs.length && !done; i++) {
+  for (let i = 0; i < this.ServerGroupIDs.length; i++) {
     if (this.getServerGroupIDByID(i) === ServerGroupID) {
       this.ServerGroupIDs.splice(i, 1);
       this.ServerGroupAssignmentDateTimes.splice(i, 1);
-      done = true;
+      break;
     }
   }
 };

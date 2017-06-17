@@ -4,7 +4,7 @@
 
 const Constants = require("./Constants.js");
 
-var ignoredLogs = [],
+const ignoredLogs = [],
   Logs = [],
   ClientList = [],
   ServerGroupList = [],

@@ -8,7 +8,7 @@
  * Module containing functions that are related to the Upload table.
  */
 (function (parent) {
-  var module = parent.upload = parent.upload || {};
+  const module = parent.upload = parent.upload || {};
 
   /**
    * The name of the module
@@ -40,10 +40,10 @@
    * Builds the upload table.
    */
   module.build = function () {
-    var uploadTableControlSection = document.createElement("div");
+    const uploadTableControlSection = document.createElement("div");
     uploadTableControlSection.className = "row";
 
-    var uploadTableHeading = document.createElement("div");
+    const uploadTableHeading = document.createElement("div");
     uploadTableHeading.className = "tableheading large-12 columns";
     uploadTableHeading.innerText = "Upload Table";
     uploadTableControlSection.appendChild(uploadTableHeading);
@@ -52,7 +52,7 @@
 
     module.div.appendChild(uploadTableControlSection);
 
-    var Upload = ts3ldv.Json.UploadList,
+    const Upload = ts3ldv.Json.UploadList,
       uploadTable = document.createElement("table"),
       uploadHead = document.createElement("thead"),
       uploadHeadRow = document.createElement("tr"),
@@ -87,17 +87,16 @@
     uploadHead.appendChild(uploadHeadRow);
     uploadTable.appendChild(uploadHead);
 
-    var uploadBody = document.createElement("tbody");
-    for (var i = 0; i < Upload.length; i++) {
-      var UploadDateTime = Upload[i].uploadDateTime,
+    const uploadBody = document.createElement("tbody");
+    for (let i = 0; i < Upload.length; i++) {
+      const UploadDateTime = Upload[i].uploadDateTime,
         ChannelID = Upload[i].channelID,
         Filename = Upload[i].filename,
         UploadedByID = Upload[i].uploadedByID,
-        UploadedByNickname = Upload[i].uploadedByNickname,
-        DeletedByID, DeletedByNickname;
+        UploadedByNickname = Upload[i].uploadedByNickname;
 
-      var uploadBodyRow = document.createElement("tr");
-
+      const uploadBodyRow = document.createElement("tr");
+      let DeletedByID, DeletedByNickname;
       if (Upload[i].deleted) {
         uploadBodyRow.className += "deleted";
         DeletedByID = Upload[i].deletedByID;
@@ -106,7 +105,7 @@
         DeletedByID = DeletedByNickname = "/";
       }
 
-      var cell_UploadDateTime = document.createElement("td"),
+      const cell_UploadDateTime = document.createElement("td"),
         cell_ChannelID = document.createElement("td"),
         cell_ChannelName = document.createElement("td"),
         cell_Filename = document.createElement("td"),
@@ -125,7 +124,7 @@
       cell_DeletedByNickname.setAttribute("data-title", "Deleted by Nickname");
 
 
-      var cell_UploadDateTime_Div = document.createElement("div");
+      const cell_UploadDateTime_Div = document.createElement("div");
       cell_UploadDateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(UploadDateTime);
       cell_UploadDateTime.appendChild(cell_UploadDateTime_Div);
       uploadBodyRow.appendChild(cell_UploadDateTime);

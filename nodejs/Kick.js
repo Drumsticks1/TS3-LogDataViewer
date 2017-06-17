@@ -14,7 +14,7 @@
  * @param {string} kickReason
  * @constructor
  */
-var Kick = function (kickListId, kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
+const Kick = function (kickListId, kickDateTime, kickedID, kickedNickname, kickedByNickname, kickedByUID, kickReason) {
   this.kickListId = kickListId;
   this.kickDateTime = kickDateTime;
   this.kickedID = kickedID;

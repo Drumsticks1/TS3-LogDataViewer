@@ -11,7 +11,7 @@
  * @param {string} channelName
  * @constructor
  */
-var Channel = function (channelListId, channelId, creationDateTime, channelName) {
+const Channel = function (channelListId, channelId, creationDateTime, channelName) {
   this.channelListId = channelListId;
   this.channelId = channelId;
   this.creationDateTime = creationDateTime;
@@ -61,7 +61,7 @@ module.exports = {
    * @returns {object}
    */
   getChannelByChannelId: function (array, channelId) {
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
       if (array[i].channelId === channelId)
         return array[i];
     }

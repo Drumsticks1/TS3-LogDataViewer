@@ -14,7 +14,7 @@
  * @param {number} complaintByID
  * @constructor
  */
-var Complaint = function (complaintListId, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
+const Complaint = function (complaintListId, complaintDateTime, complaintAboutNickname, complaintAboutID, complaintReason, complaintByNickname, complaintByID) {
   this.complaintListId = complaintListId;
   this.complaintDateTime = complaintDateTime;
   this.complaintAboutID = complaintAboutID;

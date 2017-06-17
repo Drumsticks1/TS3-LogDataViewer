@@ -8,7 +8,7 @@
  * Module containing functions that are related to the Client table.
  */
 (function (parent) {
-  var module = parent.client = parent.client || {};
+  const module = parent.client = parent.client || {};
 
   /**
    * The name of the module
@@ -43,14 +43,14 @@
    * @param {number} ID - ID of the client.
    */
   function expandOrCollapseList(list, ID) {
-    var column, collapsedCellCount;
+    let column, collapsedCellCount;
     if (list === "IPs") {
       column = 3;
       collapsedCellCount = 1;
     } else
       column = collapsedCellCount = 2;
 
-    var currentDiv = document.getElementById(list + "_" + ID + "_1");
+    const currentDiv = document.getElementById(list + "_" + ID + "_1");
 
     if (currentDiv === null || currentDiv.style.display === "none")
       expandList(list, ID, column, collapsedCellCount);
@@ -67,18 +67,18 @@
    * @param {number} collapsedCellCount - count of the cells if collapsed.
    */
   function expandList(list, ID, column, collapsedCellCount) {
-    var x = document.getElementById(String(ID)).childNodes[column],
+    const x = document.getElementById(String(ID)).childNodes[column],
       listContent = ts3ldv.tables.lookup.ClientList[ID][list];
 
-    var currentDiv = document.getElementById(list + "Button_" + ID);
+    const currentDiv = document.getElementById(list + "Button_" + ID);
     currentDiv.innerText = "- " + (listContent.length - collapsedCellCount);
     currentDiv.parentNode.setAttribute("expanded", "true");
 
-    for (var j = 1; j < listContent.length; j++) {
-      var currentDivString = list + "_" + ID + "_" + j;
+    for (let j = 1; j < listContent.length; j++) {
+      const currentDivString = list + "_" + ID + "_" + j;
 
       if (document.getElementById(currentDivString) === null) {
-        var newDiv = document.createElement("div");
+        const newDiv = document.createElement("div");
         newDiv.id = currentDivString;
 
         if (collapsedCellCount === 1)
@@ -104,18 +104,18 @@
    * @param {number} collapsedCellCount - count of the cells if collapsed.
    */
   function collapseList(list, ID, column, collapsedCellCount) {
-    var listContent = ts3ldv.tables.lookup.ClientList[ID][list];
+    const listContent = ts3ldv.tables.lookup.ClientList[ID][list];
 
     document.getElementById(list + "Button_" + ID).innerText = "+ " + (listContent.length - collapsedCellCount);
     document.getElementById(list + "Button_" + ID).parentNode.setAttribute("expanded", "false");
 
     if (document.getElementById(String(ID)) !== null) {
-      var hideLength = document.getElementById(String(ID)).childNodes[column].childNodes.length;
+      let hideLength = document.getElementById(String(ID)).childNodes[column].childNodes.length;
 
       if (column === 3)
         hideLength++;
 
-      for (var j = 1; j < hideLength - 2; j++) {
+      for (let j = 1; j < hideLength - 2; j++) {
         document.getElementById(list + "_" + ID + "_" + j).style.display = "none";
       }
     }
@@ -125,8 +125,8 @@
    * Collapses all expanded lists.
    */
   function collapseAll() {
-    var rows = document.getElementById("clientTable").lastChild.childNodes;
-    for (var j = 0; j < rows.length; j++) {
+    const rows = document.getElementById("clientTable").lastChild.childNodes;
+    for (let j = 0; j < rows.length; j++) {
       if (rows[j].childNodes[2].getAttribute("expanded") === "true")
         collapseList("Connections", Number(rows[j].getAttribute("id")), 2, 2);
 
@@ -139,20 +139,20 @@
    * Builds the client table.
    */
   module.build = function () {
-    var clientTableControlSection = document.createElement("div");
+    const clientTableControlSection = document.createElement("div");
     clientTableControlSection.className = "row";
 
-    var clientTableHeading = document.createElement("div");
+    const clientTableHeading = document.createElement("div");
     clientTableHeading.className = "tableheading large-12 columns";
     clientTableHeading.innerText = "Client Table";
     clientTableControlSection.appendChild(clientTableHeading);
 
-    var connectionsSortType = {
+    const connectionsSortType = {
       first: "Currently sorting connections by the first connect",
       last: "Currently sorting connections by the last connect"
     };
 
-    var connectionsSortTypeButton = document.createElement("button");
+    const connectionsSortTypeButton = document.createElement("button");
     connectionsSortTypeButton.id = "connectionsSortTypeButton";
     connectionsSortTypeButton.className = "small-12 medium-8 large-6 columns";
 
@@ -174,7 +174,7 @@
     });
     clientTableControlSection.appendChild(connectionsSortTypeButton);
 
-    var collapseAllButton = document.createElement("button");
+    const collapseAllButton = document.createElement("button");
     collapseAllButton.id = "collapseAllButton";
     collapseAllButton.className = "small-12 medium-4 large-6 columns";
     collapseAllButton.innerText = "Collapse expanded lists";
@@ -183,7 +183,7 @@
 
     clientTableControlSection.appendChild(collapseAllButton);
 
-    var coloredRowsDescription_green = document.createElement("div"),
+    const coloredRowsDescription_green = document.createElement("div"),
       coloredRowsDescription_grey = document.createElement("div");
 
     coloredRowsDescription_green.id = "description_connected";
@@ -199,7 +199,7 @@
 
     module.div.appendChild(clientTableControlSection);
 
-    var Client = ts3ldv.Json.ClientList,
+    const Client = ts3ldv.Json.ClientList,
       clientTable = document.createElement("table"),
       clientHead = document.createElement("thead"),
       clientHeadRow = document.createElement("tr"),
@@ -230,18 +230,19 @@
     clientHead.appendChild(clientHeadRow);
     clientTable.appendChild(clientHead);
 
-    var clientBody = document.createElement("tbody");
-    for (var i = 0; i < Client.length; i++) {
-      var ID = Number(Client[i].clientId);
+    const clientBody = document.createElement("tbody");
+    for (let i = 0; i < Client.length; i++) {
+      const ID = Number(Client[i].clientId);
+
       if (Client[ID].Nicknames.length !== 0) {
-        var Nicknames = Client[ID].Nicknames,
+        const Nicknames = Client[ID].Nicknames,
           Connections = Client[ID].Connections,
           IPs = Client[ID].IPs,
           Connection_Count = Connections.length,
           ServerGroupIDs = Client[ID].ServerGroupIDs,
           ServerGroupAssignmentDateTimes = Client[ID].ServerGroupAssignmentDateTimes;
 
-        var clientBodyRow = document.createElement("tr"),
+        const clientBodyRow = document.createElement("tr"),
           cell_ID = document.createElement("td"),
           cell_Nicknames = document.createElement("td"),
           cell_Connections = document.createElement("td"),
@@ -262,15 +263,15 @@
         cell_ID.innerText = ID;
         clientBodyRow.appendChild(cell_ID);
 
-        for (var j = 0; j < Nicknames.length; j++) {
-          var divNicknames = document.createElement("div");
+        for (let j = 0; j < Nicknames.length; j++) {
+          const divNicknames = document.createElement("div");
           $(divNicknames).text(Nicknames[j]);
           cell_Nicknames.appendChild(divNicknames);
         }
         clientBodyRow.appendChild(cell_Nicknames);
 
         if (Connections.length > 2) {
-          var buttonExpandCollapseConnections = document.createElement("button");
+          const buttonExpandCollapseConnections = document.createElement("button");
           buttonExpandCollapseConnections.id = "ConnectionsButton_" + ID;
           buttonExpandCollapseConnections.innerText = "+ " + (Connections.length - 2);
 
@@ -282,13 +283,13 @@
           cell_Connections.appendChild(buttonExpandCollapseConnections);
         }
 
-        var divLastConnection = document.createElement("div");
+        const divLastConnection = document.createElement("div");
         divLastConnection.id = "Connections_" + ID + "_0";
         divLastConnection.innerText = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[0]);
         cell_Connections.appendChild(divLastConnection);
 
         if (Connections.length > 1) {
-          var divFirstConnection = document.createElement("div");
+          const divFirstConnection = document.createElement("div");
           divFirstConnection.id = "Connections_" + ID + "_" + (Connections.length - 1);
           divFirstConnection.innerText = ts3ldv.time.UTCDateStringToLocaltimeString(Connections[Connections.length - 1]);
           cell_Connections.appendChild(divFirstConnection);
@@ -296,7 +297,7 @@
         clientBodyRow.appendChild(cell_Connections);
 
         if (IPs.length > 1) {
-          var buttonExpandCollapseIPs = document.createElement("button");
+          const buttonExpandCollapseIPs = document.createElement("button");
           buttonExpandCollapseIPs.id = "IPsButton_" + ID;
           buttonExpandCollapseIPs.innerText = "+ " + (IPs.length - 1);
 
@@ -308,7 +309,7 @@
           cell_IPs.appendChild(buttonExpandCollapseIPs);
         }
 
-        var divLastIP = document.createElement("div");
+        const divLastIP = document.createElement("div");
         divLastIP.id = "IPs_" + ID + "_0";
         $(divLastIP).text(IPs[0]);
         cell_IPs.appendChild(divLastIP);
@@ -329,8 +330,8 @@
         if (ServerGroupIDs.length === 0)
           cell_ServerGroupInfo.innerText = "/";
 
-        for (j = 0; j < ServerGroupIDs.length; j++) {
-          var divName = document.createElement("div"),
+        for (let j = 0; j < ServerGroupIDs.length; j++) {
+          const divName = document.createElement("div"),
             divDateTime = document.createElement("div");
           $(divName).text(ts3ldv.tables.lookup.ServerGroupList[ServerGroupIDs[j]].serverGroupName);
           divDateTime.innerText = moment(ts3ldv.time.UTCDateStringToDate(ServerGroupAssignmentDateTimes[j])).format(ts3ldv.time.format);
@@ -358,7 +359,7 @@
         // Filter functions for filtering with all connections / ips data from the json.
         filter_functions: {
           2: function (e, n, f, i, $r, c, data) {
-            var connections = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].Connections;
+            const connections = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].Connections;
 
             for (i = 0; i < connections.length; i++) {
               if (connections[i].indexOf(data.filter) !== -1)
@@ -368,7 +369,7 @@
             return false;
           },
           3: function (e, n, f, i, $r, c, data) {
-            var ips = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].IPs;
+            const ips = ts3ldv.Json.ClientList[Number(data.$cells[0].innerText)].IPs;
 
             for (i = 0; i < ips.length; i++) {
               if (ips[i].indexOf(data.filter) !== -1)

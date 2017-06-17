@@ -6,7 +6,7 @@
 
 const globalVariables = require("./globalVariables.js");
 
-var programStartDate;
+let programStartDate;
 
 module.exports = {
   /**
@@ -37,7 +37,7 @@ module.exports = {
    * @returns {{local: string, utc: string}}
    */
   getCurrentTimestamps: function () {
-    var currentDate = new Date();
+    const currentDate = new Date();
     return {
       "local": dateToString(currentDate),
       "utc": dateToUTCString(currentDate)
@@ -59,7 +59,7 @@ module.exports = {
    * Resets the connectedState variable of all Clients.
    */
   resetConnectedStates: function () {
-    for (var i = 0; i < globalVariables.ClientList.length; i++) {
+    for (let i = 0; i < globalVariables.ClientList.length; i++) {
       globalVariables.ClientList[i].resetConnectedState();
     }
   },
@@ -82,7 +82,7 @@ module.exports = {
  * @returns {string} double digit string.
  */
 function toDoubleDigit(x) {
-  var y = String(x);
+  let y = String(x);
   if (x < 10) y = "0" + String(x);
   return y;
 }

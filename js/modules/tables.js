@@ -8,13 +8,13 @@
  * Module containing functions that are related to stored data and access to it.
  */
 (function (parent) {
-  var module = parent.tables = parent.tables || {};
+  const module = parent.tables = parent.tables || {};
 
   /**
    * True if the last build request failed, false otherwise.
    * @type {boolean}
    */
-  var buildError = false;
+  let buildError = false;
 
   /**
    * Lookup object, used for calling elements of some arrays via the ID of the wanted entry.
@@ -22,7 +22,7 @@
    * The lookup object is updated when the data is fetched.
    * @type {{ClientList: {}, ChannelList: {}, ServerGroupList: {}}}
    */
-  var lookup = {
+  const lookup = {
     ClientList: {},
     ChannelList: {},
     ServerGroupList: {}
@@ -39,8 +39,8 @@
   function updateLookupObject(list, idIdentifier) {
     lookup[list] = {};
 
-    var bufferObj = ts3ldv.Json[list];
-    for (var i = 0; i < bufferObj.length; i++) {
+    const bufferObj = ts3ldv.Json[list];
+    for (let i = 0; i < bufferObj.length; i++) {
       lookup[list][bufferObj[i][idIdentifier]] = bufferObj[i];
     }
   }
@@ -51,8 +51,8 @@
    * @param tableModule the module of the table (e.g ts3ldv.tables.client)
    */
   module.setFilterPlaceholders = function (tableModule) {
-    var placeholders = tableModule.div.getElementsByClassName("tablesorter-filter-row")[0].getElementsByTagName("input");
-    for (var i = 0; i < placeholders.length; i++) {
+    const placeholders = tableModule.div.getElementsByClassName("tablesorter-filter-row")[0].getElementsByTagName("input");
+    for (let i = 0; i < placeholders.length; i++) {
       placeholders[i].setAttribute("placeholder",
         placeholders[i].parentNode.parentNode.previousSibling.children[placeholders[i].getAttribute("data-column")].firstChild.innerText);
     }
@@ -82,7 +82,7 @@
     // Check if the table should be build
     if (ts3ldv.storage.getTableActive(tableModule)) {
       // Todo: only temporary to ensure compatibility with the server-side output
-      var listIdentifier;
+      let listIdentifier;
       switch (tableModule) {
         case ts3ldv.tables.ban:
           listIdentifier = "BanList";
@@ -106,7 +106,7 @@
         this.setFilterPlaceholders(tableModule);
         $(tableModule.getTableDiv()).trigger("applyWidgetId", ["stickyHeaders"]);
       } else {
-        var alertBox = document.createElement("div");
+        const alertBox = document.createElement("div");
         alertBox.className = "alertBox";
         alertBox.innerText = "No " + tableModule.name + " data was found!";
         tableModule.div.appendChild(alertBox);
@@ -124,8 +124,8 @@
    * Builds all tables using the data from the JSON.
    */
   module.build = function () {
-    var callout = ts3ldv.ui.addCallout("Building Tables ...", "secondary");
-    var calloutDestroyEvent = "destroyCallout";
+    const callout = ts3ldv.ui.addCallout("Building Tables ...", "secondary");
+    const calloutDestroyEvent = "destroyCallout";
 
     callout.addEventListener(calloutDestroyEvent, function () {
       $(callout).fadeOut(function () {
@@ -148,7 +148,7 @@
       success: function (fetchedJSON) {
         buildError = false;
         ts3ldv.Json = fetchedJSON;
-        var connectedClientsCount = 0;
+        let connectedClientsCount = 0;
 
         updateLookupObject("ClientList", "clientId");
         updateLookupObject("ChannelList", "channelId");
@@ -168,14 +168,14 @@
         module.buildTableEnhanced(ts3ldv.tables.kick);
         module.buildTableEnhanced(ts3ldv.tables.upload);
 
-        var Attributes = ts3ldv.Json.Attributes,
+        const Attributes = ts3ldv.Json.Attributes,
           creationTime = Attributes.creationTime;
 
         $(document.getElementById("creationTimestamp_localtime")).text(creationTime.localTime);
         $(document.getElementById("creationTimestamp_utc")).text(creationTime.UTC);
         document.getElementById("creationTimestamp_moment").innerText = moment(creationTime.UTC + " +0000", "DD.MM.YYYY HH:mm:ss Z").fromNow();
 
-        for (var j = 0; j < ts3ldv.Json.ClientList.length; j++) {
+        for (let j = 0; j < ts3ldv.Json.ClientList.length; j++) {
           if (ts3ldv.Json.ClientList[j].ConnectedState)
             connectedClientsCount++;
         }
@@ -194,7 +194,7 @@
    * @param tableModule the table module
    */
   module.addPagerSection = function (tableControlSection, tableModule) {
-    var pager = document.createElement("div"),
+    const pager = document.createElement("div"),
       first = document.createElement("div"),
       prev = document.createElement("div"),
       pageState = document.createElement("div"),
@@ -218,8 +218,8 @@
     pager.appendChild(next);
     pager.appendChild(last);
 
-    var optionSizes = ["10", "25", "50", "100", "all"];
-    for (var i = 0; i < options.length; i++) {
+    const optionSizes = ["10", "25", "50", "100", "all"];
+    for (let i = 0; i < options.length; i++) {
       options[i].value = options[i].innerText = optionSizes[i];
       select.appendChild(options[i]);
     }

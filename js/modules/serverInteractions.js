@@ -8,25 +8,25 @@
  * Module containing functions that are related to interactions with the server.
  */
 (function (parent) {
-  var module = parent.serverInteractions = parent.serverInteractions || {};
+  const module = parent.serverInteractions = parent.serverInteractions || {};
 
   /**
    * The time that has to pass between two builds (is set server-side).
    * @type {number}
    */
-  var timeBetweenBuilds = -1;
+  let timeBetweenBuilds = -1;
 
   /**
    * True if there is currently a build request in progress, false otherwise.
    * @type {boolean}
    */
-  var buildRequestInProgress = false;
+  let buildRequestInProgress = false;
 
   /**
    * Contains the value that Date.now().valueOf() returned when the last build request was sent.
    * @type {number}
    */
-  var lastBuildRequestTimestamp = -1;
+  let lastBuildRequestTimestamp = -1;
 
   /**
    * Updates the stored timeBetweenBuilds variable if necessary.
@@ -69,7 +69,7 @@
         else {
           updateTimeBetweenBuilds(res);
 
-          var timeUntilNextBuild = (timeBetweenBuilds - res.timeDifference);
+          const timeUntilNextBuild = (timeBetweenBuilds - res.timeDifference);
           ts3ldv.ui.addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
         }
         buildRequestInProgress = false;
@@ -80,7 +80,7 @@
     if (buildRequestInProgress)
       ts3ldv.ui.addCallout("A JSON build request has already been sent!", "warning buildRequestInProgressCallout", 1500);
     else {
-      var timeUntilNextBuild = timeBetweenBuilds - (Date.now().valueOf() - lastBuildRequestTimestamp);
+      const timeUntilNextBuild = timeBetweenBuilds - (Date.now().valueOf() - lastBuildRequestTimestamp);
       ts3ldv.ui.addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
     }
 

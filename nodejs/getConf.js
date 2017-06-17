@@ -9,7 +9,8 @@ const fs = require("fs"),
   globalVariables = require("./globalVariables.js"),
   log = require("./log.js");
 
-var confJSON;
+// TODO: maybe make local
+let confJSON;
 
 /**
  * Checks if a setting with the given name is part of the conf.json and saves the value of the setting in the
@@ -61,7 +62,7 @@ module.exports = {
   getConf: function () {
     log.info("Fetching and checking configuration file.");
     try {
-      var fileStats = fs.statSync(Constants.confJSON);
+      const fileStats = fs.statSync(Constants.confJSON);
       if (fileStats.isFile()) {
         confJSON = require(Constants.confJSON);
 
@@ -86,10 +87,9 @@ module.exports = {
         acquireSetting("usedPort", "number");
 
         if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length !== 0) {
-          for (var i = 0; i < confJSON.ignoredLogs.length; i++) {
-            var ignoredLog = confJSON.ignoredLogs[i];
-            globalVariables.ignoredLogs.push(ignoredLog);
-            log.debug("Added ignored log: \"" + ignoredLog + "\".");
+          for (let i = 0; i < confJSON.ignoredLogs.length; i++) {
+            globalVariables.ignoredLogs.push(confJSON.ignoredLogs[i]);
+            log.debug("Added ignored log: \"" + confJSON.ignoredLogs[i] + "\".");
           }
         }
         else {

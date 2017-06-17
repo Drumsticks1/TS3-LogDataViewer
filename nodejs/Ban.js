@@ -18,7 +18,7 @@
  * @param {number} banTime
  * @constructor
  */
-var Ban = function (banListId, banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
+const Ban = function (banListId, banDateTime, bannedID, bannedNickname, bannedUID, bannedIP, bannedByID, bannedByNickname, bannedByUID, banReason, banTime) {
   this.banListId = banListId;
   this.banDateTime = banDateTime;
   this.bannedID = bannedID;

@@ -25,7 +25,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
   miscFunctions.setProgramStartDate();
   log.info("Processing build request.");
 
-  var rebuildRequired = false;
+  let rebuildRequired = false;
   switch (fetchLogs.fetchLogs()) {
     case 0:
       log.info("The build function will now exit!\n");
@@ -38,7 +38,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
       rebuildRequired = true;
   }
 
-  var lastModification = fs.statSync(globalVariables.TS3LogDirectory + globalVariables.Logs[globalVariables.Logs.length - 1].logName).mtime.valueOf();
+  const lastModification = fs.statSync(globalVariables.TS3LogDirectory + globalVariables.Logs[globalVariables.Logs.length - 1].logName).mtime.valueOf();
 
   if (rebuildRequired)
     log.warn("Rebuild required, log order changed or logs were deleted, skipping lastModification check.");

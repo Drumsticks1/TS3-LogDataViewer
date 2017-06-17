@@ -16,8 +16,8 @@ const fs = require("fs"),
 exports.createJSON = function () {
   log.info("Starting JSON creation.");
 
-  var timestamps = miscFunctions.getCurrentTimestamps();
-  var json = {
+  const timestamps = miscFunctions.getCurrentTimestamps();
+  const json = {
     "ProgramInfo": {
       "Name": "TS3-LogDataViewer",
       "Author": "Drumsticks",
@@ -47,6 +47,5 @@ exports.createJSON = function () {
     return 0;
   }
 
-  json = null;
   log.info("JSON creation completed.");
 };

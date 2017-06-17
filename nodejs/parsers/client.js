@@ -4,7 +4,7 @@
 
 "use strict";
 
-var miscFunctions = require('../miscFunctions.js');
+const miscFunctions = require('../miscFunctions.js');
 
 /**
  * Parses the Client data from the given logLine.
@@ -14,7 +14,7 @@ var miscFunctions = require('../miscFunctions.js');
  * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
  */
 function parseAnyClientConnect(boundaries, logLine) {
-  var getSubstring = function (boundariesIdentifier) {
+  const getSubstring = function (boundariesIdentifier) {
     return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
   };
 
@@ -32,7 +32,7 @@ module.exports = {
    * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
    */
   parseClientConnect: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.IP = [
       logLine.lastIndexOf(" ") + 1,
@@ -55,7 +55,7 @@ module.exports = {
    * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
    */
   parseQueryClientConnect: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.Nickname = [
       logLine.indexOf("query client connected '") + 24,
@@ -78,7 +78,7 @@ module.exports = {
    * @returns {{clientId: number, Nickname: string, boundaries: {}}} the extracted data and the boundaries object.
    */
   parseClientDisconnect: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.Nickname = [
       logLine.indexOf("client disconnected '") + 21,
@@ -92,7 +92,7 @@ module.exports = {
     else
       boundaries.clientId[1] = logLine.lastIndexOf(") reason 'reasonmsg");
 
-    var getSubstring = function (boundariesIdentifier) {
+    const getSubstring = function (boundariesIdentifier) {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 
@@ -109,7 +109,7 @@ module.exports = {
    * @returns {number} the clientId of the deleted client.
    */
   parseClientDeletion: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.clientId = [0, logLine.lastIndexOf(") got deleted by client '")];
     boundaries.clientId[0] = logLine.lastIndexOf("'(id:", boundaries.clientId[1]) + 5;

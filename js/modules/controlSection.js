@@ -8,7 +8,7 @@
  * Module containing functions that are related to the control section.
  */
 (function (parent) {
-  var module = parent.controlSection = parent.controlSection || {};
+  const module = parent.controlSection = parent.controlSection || {};
 
   /**
    * The element containing the control section.
@@ -21,7 +21,7 @@
    * Builds the control section.
    */
   module.build = function () {
-    var controlSection = document.createElement("div");
+    const controlSection = document.createElement("div");
     controlSection.id = "controlSection";
     controlSection.className = "row";
 
@@ -40,7 +40,7 @@
     this.tableSelection.div.id = "tableSelectionSection";
     this.tableSelection.div.className = "columns";
 
-    var creationTimestampSection = document.createElement("div"),
+    const creationTimestampSection = document.createElement("div"),
       creationTimestampTable = document.createElement("table"),
       ctTHead = document.createElement("thead"),
       ctTHeadRow = document.createElement("tr"),
@@ -82,7 +82,7 @@
     creationTimestampSection.appendChild(creationTimestampTable);
     creationTimestampSection.appendChild(connectedClientsCount);
 
-    var buildSection = document.createElement("div"),
+    const buildSection = document.createElement("div"),
       buildJSONButton = document.createElement("button"),
       buildJSONWithoutBufferButton = document.createElement("button");
 
@@ -104,7 +104,7 @@
     buildSection.appendChild(buildJSONButton);
     buildSection.appendChild(buildJSONWithoutBufferButton);
 
-    var miscControlSection = document.createElement("div"),
+    const miscControlSection = document.createElement("div"),
       resetSortingButton = document.createElement("button");
 
     miscControlSection.className = "columns";

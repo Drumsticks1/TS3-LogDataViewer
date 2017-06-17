@@ -4,6 +4,7 @@ Versions: <a href="#v2.1.1">2.1.1</a> | <a href="#v2.1.0">2.1.0</a> | <a href="#
 ### <a name="v2.1.1">Version 2.1.1</a> (next release)
 Changes:
 - Javascript code:
+    - Migrated to ECMAScript 6
     - Replaced occurrences of <code>string.substring(a,b)</code> with <code>string.slice(a,b)</code>
     - Replaced occurrences of <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
 

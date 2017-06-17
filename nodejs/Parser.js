@@ -16,7 +16,7 @@ const fs = require("fs"),
   ServerGroup = require("./ServerGroup.js"),
   Upload = require("./Upload.js");
 
-var parsers = {
+const parsers = {
   ban: require("./parsers/ban.js"),
   channel: require("./parsers/channel.js"),
   client: require("./parsers/client.js"),
@@ -26,7 +26,7 @@ var parsers = {
   upload: require("./parsers/upload.js")
 };
 
-var Logs = globalVariables.Logs,
+const Logs = globalVariables.Logs,
   ClientList = globalVariables.ClientList,
   ServerGroupList = globalVariables.ServerGroupList,
   BanList = globalVariables.BanList,
@@ -36,7 +36,7 @@ var Logs = globalVariables.Logs,
   ChannelList = globalVariables.ChannelList;
 
 // Object containing matching patterns for parsing.
-var match = {
+const match = {
   // Set in parseLogs in order to use the latest globalVariables.virtualServer value.
   VirtualServer: [],
   VirtualServerBase: [],
@@ -72,13 +72,14 @@ var match = {
   serverGroupCopying: ") was copied by '"
 };
 
+// TODO: remove
 /**
  * Returns  the end pos of the match + 1
  * @param {string} searchString
  * @returns {number} the end pos of the match + 1
  */
 String.prototype.indexOfEndPlusOne = function (searchString) {
-  var indexOf = this.indexOf(searchString);
+  const indexOf = this.indexOf(searchString);
   return indexOf === -1 ? -1 : indexOf + searchString.length;
 };
 
@@ -94,9 +95,9 @@ module.exports = {
   parseLogs: function () {
     log.info("Starting log parsing.");
 
-    for (var i = 0; i < Logs.length; i++) {
+    for (let i = 0; i < Logs.length; i++) {
       if (!Logs[i].parsed && !Logs[i].ignored) {
-        var buff = fs.readFileSync(globalVariables.TS3LogDirectory + Logs[i].logName, "utf8");
+        let buff = fs.readFileSync(globalVariables.TS3LogDirectory + Logs[i].logName, "utf8");
 
         // Replaces HTML entities with their escaped symbols.
         // Prevents HTML entities showing up in the tables when not inserting via innerHTML.
@@ -154,8 +155,8 @@ module.exports = {
    * @param {boolean} isLastLog true if the data is from the last (/newest) Log.
    */
   parseLogData: function (logData, isLastLog) {
-    var lastUIDBanRule = "", lastIPBanRule = "",
-      logPattern = this.parseLogPattern(logData),
+    const logPattern = this.parseLogPattern(logData);
+    let lastUIDBanRule = "", lastIPBanRule = "",
       currentLine = logData.slice(0, logData.indexOf("\n"));
 
     // Todo: Add debug message.
@@ -167,7 +168,7 @@ module.exports = {
       currentLine = logData.slice(0, logData.indexOf("\n"));
       logData = logData.slice(currentLine.length + 1);
 
-      var lineSeverType = 0,
+      let lineSeverType = 0,
         beginOfParsingBlock = currentLine.indexOfEndPlusOne(match.VirtualServer[logPattern]),
         checkIfUpload = false;
 
@@ -180,21 +181,23 @@ module.exports = {
       if (beginOfParsingBlock === -1)
         continue;
 
+      let DateTime = this.parseDateTime(currentLine);
+
       switch (lineSeverType) {
         // VirtualSever
         case 0:
           // Client assignments to and client removals from a server group
           if (currentLine.indexOf(match.serverGroupAssignment) !== -1 || currentLine.indexOf(match.serverGroupRemoval) !== -1) {
+            let res;
             if (currentLine.indexOf(match.serverGroupAssignment) !== -1)
               res = parsers.serverGroup.parseServerGroupAssignment(currentLine);
             else
               res = parsers.serverGroup.parseServerGroupRemoval(currentLine);
 
-            var DateTime = this.parseDateTime(currentLine),
-              clientId = res.clientId,
+           let clientId = res.clientId,
               ServerGroupID = res.ServerGroupID;
 
-            var serverGroupObject = ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID);
+            const serverGroupObject = ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID);
 
             if (serverGroupObject === null)
               ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", res.ServerGroupName);
@@ -211,10 +214,8 @@ module.exports = {
 
           // Query client connects
           else if (currentLine.indexOf(match.queryClientConnect) === beginOfParsingBlock) {
-            res = parsers.client.parseQueryClientConnect(currentLine);
-
-            DateTime = this.parseDateTime(currentLine);
-            clientId = res.clientId;
+            let res = parsers.client.parseQueryClientConnect(currentLine),
+              clientId = res.clientId;
 
             Client.fillArrayWithDummyClients(ClientList, clientId);
 
@@ -243,9 +244,7 @@ module.exports = {
 
           // Complaints
           else if (currentLine.indexOf(match.complaint) === beginOfParsingBlock) {
-            var res = parsers.complaint.parseComplaint(currentLine);
-
-            DateTime = this.parseDateTime(currentLine);
+            let res = parsers.complaint.parseComplaint(currentLine);
 
             // Todo: Modify check functions so that they accept objects, maybe also change the addObject functions.
             if (!checkFunctions.isDuplicateComplaint(DateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID))
@@ -263,7 +262,7 @@ module.exports = {
             // 1 --> deleted
             // 2 --> renamed
             // 3 --> copied // just like 0
-            var eventTypeS = -1;
+            let eventTypeS = -1, res;
 
             if (currentLine.indexOf(match.serverGroupCreation) !== -1) {
               eventTypeS = 0;
@@ -282,9 +281,8 @@ module.exports = {
               res = parsers.serverGroup.parseServerGroupCopying(currentLine);
             }
 
-            DateTime = this.parseDateTime(currentLine);
-            ServerGroupID = res.ServerGroupID;
-            var ServerGroupName = res.ServerGroupName;
+            let ServerGroupID = res.ServerGroupID;
+            const ServerGroupName = res.ServerGroupName;
 
             if (eventTypeS === 1 || eventTypeS === 2) {
               if (ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID) === null)
@@ -313,10 +311,8 @@ module.exports = {
         case 1:
           // Connects
           if (currentLine.indexOf(match.connect) === beginOfParsingBlock) {
-            res = parsers.client.parseClientConnect(currentLine);
-
-            DateTime = this.parseDateTime(currentLine);
-            clientId = res.clientId;
+            let res = parsers.client.parseClientConnect(currentLine),
+              clientId = res.clientId;
 
             Client.fillArrayWithDummyClients(ClientList, clientId);
 
@@ -339,7 +335,7 @@ module.exports = {
 
           // Disconnects (including kicks and bans)
           else if (currentLine.indexOf(match.disconnect) === beginOfParsingBlock) {
-            var isBan = false,
+            let isBan = false,
               isKick = false;
 
             if (currentLine.lastIndexOf(") reason 'reasonmsg") === -1) {
@@ -349,11 +345,9 @@ module.exports = {
                 isBan = true;
             }
 
-            res = parsers.client.parseClientDisconnect(currentLine);
-
-            DateTime = this.parseDateTime(currentLine);
-            clientId = res.clientId;
-            var Nickname = res.Nickname;
+            let res = parsers.client.parseClientDisconnect(currentLine),
+              clientId = res.clientId;
+            const Nickname = res.Nickname;
 
             if (ClientList.length < clientId + 1) {
               Client.fillArrayWithDummyClients(ClientList, clientId);
@@ -390,7 +384,7 @@ module.exports = {
             // 1 --> edited
             // 2 --> edited undefined --> added
             // 3 --> deleted
-            var eventTypeC = -1;
+            let eventTypeC = -1, res;
 
             if (currentLine.indexOf(match.channelEdit) !== -1) {
               eventTypeC = 1;
@@ -409,11 +403,10 @@ module.exports = {
               res = parsers.channel.parseChannelDeletion(currentLine);
             }
 
-            DateTime = this.parseDateTime(currentLine);
-            var channelID = res.channelID,
+            let channelID = res.channelID,
               channelName = res.channelName;
 
-            var channelObject = Channel.getChannelByChannelId(ChannelList, channelID);
+            const channelObject = Channel.getChannelByChannelId(ChannelList, channelID);
 
             if (eventTypeC === 1 && channelObject === null)
               eventTypeC = 2;
@@ -444,7 +437,7 @@ module.exports = {
       if (checkIfUpload) {
         // Uploads
         if (currentLine.indexOf(match.upload) === beginOfParsingBlock) {
-          res = parsers.upload.parseUpload(currentLine);
+          let res = parsers.upload.parseUpload(currentLine),
           channelID = res.channelID;
 
           if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
@@ -456,7 +449,7 @@ module.exports = {
 
         // Upload Deletions
         else if (currentLine.indexOf(match.uploadDeletion) === beginOfParsingBlock) {
-          res = parsers.upload.parseUploadDeletion(currentLine);
+          let res = parsers.upload.parseUploadDeletion(currentLine);
 
           Upload.addDeletedBy(res.channelID, res.filename, res.deletedByID, res.deletedByNickname);
         }

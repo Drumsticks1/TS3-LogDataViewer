@@ -10,7 +10,8 @@ const fs = require('fs'),
 
 const logLevelString = ["ERROR", "WARN", "INFO", "DEBUG"];
 
-var programLogfile, logBuffer = [];
+let programLogfile;
+const logBuffer = [];
 
 module.exports = {
   /**
@@ -22,7 +23,7 @@ module.exports = {
     programLogfile = fs.createWriteStream(globalVariables.programLogfile, {flags: 'a'});
     if (logBuffer.length !== 0) {
       while (logBuffer.length !== 0) {
-        var logBufferObject = logBuffer.shift();
+        const logBufferObject = logBuffer.shift();
         log(logBufferObject[0], logBufferObject[1], true);
       }
     }
@@ -62,9 +63,8 @@ module.exports = {
  * @param {boolean} alreadyProcessed
  */
 function log(message, logLevel, alreadyProcessed) {
-  var processedMessage = message;
-  if (!alreadyProcessed)
-    processedMessage = "[" + miscFunctions.getCurrentUTC() + "|" + logLevelString[logLevel] + "] " + message + "\n";
+  const processedMessage = alreadyProcessed ?
+    message : "[" + miscFunctions.getCurrentUTC() + "|" + logLevelString[logLevel] + "] " + message + "\n";
 
   if (programLogfile === undefined)
     logBuffer.push([processedMessage, logLevel]);

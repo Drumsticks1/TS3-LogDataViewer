@@ -11,7 +11,7 @@
  * @param {string} serverGroupName
  * @constructor
  */
-var ServerGroup = function (serverGroupListId, serverGroupId, creationDateTime, serverGroupName) {
+const ServerGroup = function (serverGroupListId, serverGroupId, creationDateTime, serverGroupName) {
   this.serverGroupListId = serverGroupListId;
   this.serverGroupId = serverGroupId;
   this.creationDateTime = creationDateTime;
@@ -60,7 +60,7 @@ module.exports = {
    * @returns {object}
    */
   getServerGroupByServerGroupId: function (array, serverGroupId) {
-    for (var i = 0; i < array.length; i++) {
+    for (let i = 0; i < array.length; i++) {
       if (array[i].serverGroupId === serverGroupId)
         return array[i];
     }

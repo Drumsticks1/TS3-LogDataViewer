@@ -41,7 +41,7 @@
  * Module containing functions that are related to interactions with the localStorage and the sessionStorage.
  */
 (function (parent) {
-  var module = parent.storage = parent.storage || {};
+  const module = parent.storage = parent.storage || {};
 
   /**
    * The key used for storing data in the localStorage and sessionStorage.
@@ -68,7 +68,7 @@
    * @param {boolean} newState
    */
   module.setTableActive = function (tableModule, newState) {
-    var data = JSON.parse(localStorage.getItem(module.key));
+    const data = JSON.parse(localStorage.getItem(module.key));
     data[tableModule.name].active = newState;
     localStorage.setItem(module.key, JSON.stringify(data));
   };
@@ -88,7 +88,7 @@
    * @param {[]} newSortOrder
    */
   module.setTableSortOrder = function (tableModule, newSortOrder) {
-    var data = JSON.parse(localStorage.getItem(module.key));
+    const data = JSON.parse(localStorage.getItem(module.key));
     data[tableModule.name].sortOrder = newSortOrder;
     localStorage.setItem(module.key, JSON.stringify(data));
   };
@@ -97,7 +97,7 @@
    * Switches localStorage.ts3ldv.ban.showUID from true to false or the other way round
    */
   module.switchBanShowUID = function () {
-    var data = JSON.parse(localStorage.getItem(module.key));
+    const data = JSON.parse(localStorage.getItem(module.key));
     data.ban.showUID = !data.ban.showUID;
     localStorage.setItem(module.key, JSON.stringify(data));
   };
@@ -117,7 +117,7 @@
    * @returns {boolean} the resulting connectionsSortType
    */
   module.switchClientConnectionsSortType = function () {
-    var data = JSON.parse(localStorage.getItem(module.key));
+    const data = JSON.parse(localStorage.getItem(module.key));
     data.client.connectionsSortType = !data.client.connectionsSortType;
     localStorage.setItem(module.key, JSON.stringify(data));
     return data.client.connectionsSortType;
@@ -172,7 +172,7 @@
 
     // Case: existing local storage
     else {
-      var settings = JSON.parse(localStorage.getItem(module.key));
+      const settings = JSON.parse(localStorage.getItem(module.key));
 
       // Update checkboxes in the control section
       ts3ldv.tables.ban.checkbox.checked = settings.ban.active;
@@ -194,7 +194,7 @@
    * Resets the sortOrder attributes of all tables in the local storage
    */
   module.resetTableSortOrder = function () {
-    var data = JSON.parse(localStorage.getItem(module.key));
+    const data = JSON.parse(localStorage.getItem(module.key));
 
     data.ban.sortOrder = [];
     data.client.sortOrder = [];
@@ -227,7 +227,7 @@
    * @param {boolean} newState
    */
   module.setTableBuilt = function (tableModule, newState) {
-    var data = sessionStorage.getItem(module.key) === null ? {
+    const data = sessionStorage.getItem(module.key) === null ? {
       tableBuilt: {
         ban: false,
         client: false,

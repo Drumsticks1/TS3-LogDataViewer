@@ -8,7 +8,7 @@
  * Module containing functions that are related to the Complaint table.
  */
 (function (parent) {
-  var module = parent.complaint = parent.complaint || {};
+  const module = parent.complaint = parent.complaint || {};
 
   /**
    * The name of the module
@@ -40,10 +40,10 @@
    * Builds the complaint table.
    */
   module.build = function () {
-    var complaintTableControlSection = document.createElement("div");
+    const complaintTableControlSection = document.createElement("div");
     complaintTableControlSection.className = "row";
 
-    var complaintTableHeading = document.createElement("div");
+    const complaintTableHeading = document.createElement("div");
     complaintTableHeading.className = "tableheading large-12 columns";
     complaintTableHeading.innerText = "Complaint Table";
     complaintTableControlSection.appendChild(complaintTableHeading);
@@ -52,7 +52,7 @@
 
     module.div.appendChild(complaintTableControlSection);
 
-    var Complaint = ts3ldv.Json.ComplaintList,
+    const Complaint = ts3ldv.Json.ComplaintList,
       complaintTable = document.createElement("table"),
       complaintHead = document.createElement("thead"),
       complaintHeadRow = document.createElement("tr"),
@@ -80,16 +80,16 @@
     complaintHead.appendChild(complaintHeadRow);
     complaintTable.appendChild(complaintHead);
 
-    var complaintBody = document.createElement("tbody");
-    for (var i = 0; i < Complaint.length; i++) {
-      var ComplaintDateTime = Complaint[i].complaintDateTime,
+    const complaintBody = document.createElement("tbody");
+    for (let i = 0; i < Complaint.length; i++) {
+      const ComplaintDateTime = Complaint[i].complaintDateTime,
         ComplaintAboutID = Complaint[i].complaintAboutID,
         ComplaintAboutNickname = Complaint[i].complaintAboutNickname,
         ComplaintReason = Complaint[i].complaintReason,
         ComplaintByID = Complaint[i].complaintByID,
         ComplaintByNickname = Complaint[i].complaintByNickname;
 
-      var complaintBodyRow = document.createElement("tr"),
+      const complaintBodyRow = document.createElement("tr"),
         cell_ComplaintDateTime = document.createElement("td"),
         cell_ComplaintAboutID = document.createElement("td"),
         cell_ComplaintAboutNickname = document.createElement("td"),
@@ -104,7 +104,7 @@
       cell_ComplaintByID.setAttribute("data-title", "By ID");
       cell_ComplaintByNickname.setAttribute("data-title", "By Nickname");
 
-      var cell_ComplaintDateTime_Div = document.createElement("div");
+      const cell_ComplaintDateTime_Div = document.createElement("div");
       cell_ComplaintDateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(ComplaintDateTime);
       cell_ComplaintDateTime.appendChild(cell_ComplaintDateTime_Div);
       complaintBodyRow.appendChild(cell_ComplaintDateTime);

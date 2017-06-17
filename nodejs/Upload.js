@@ -15,7 +15,7 @@ const globalVariables = require("./globalVariables.js");
  * @param {string} uploadedByNickname
  * @constructor
  */
-var Upload = function (uploadListId, uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
+const Upload = function (uploadListId, uploadDateTime, channelID, filename, uploadedByID, uploadedByNickname) {
   this.uploadListId = uploadListId;
   this.uploadDateTime = uploadDateTime;
   this.channelID = channelID;
@@ -80,9 +80,9 @@ module.exports = {
    * @param {string} deletedByNickname
    */
   addDeletedBy: function (channelID, filename, deletedByID, deletedByNickname) {
-    var UploadList = globalVariables.UploadList;
+    const UploadList = globalVariables.UploadList;
 
-    for (var i = 0; i < UploadList.length; i++) {
+    for (let i = 0; i < UploadList.length; i++) {
       if (UploadList[i].getChannelID() === channelID && UploadList[i].getFilename() === filename && !UploadList[i].isDeleted()) {
         UploadList[i].deletedByID = deletedByID;
         UploadList[i].deletedByNickname = deletedByNickname;

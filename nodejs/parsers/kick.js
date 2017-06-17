@@ -4,7 +4,7 @@
 
 "use strict";
 
-var miscFunctions = require('../miscFunctions.js');
+const miscFunctions = require('../miscFunctions.js');
 
 module.exports = {
   /**
@@ -15,9 +15,9 @@ module.exports = {
    * @returns {{kickedByNickname: string, kickedByUID: string, kickReason: string}} the extracted data.
    */
   parseKick: function (logLine, boundaries) {
-    var kickReason = "";
+    let kickReason = "";
 
-    var getSubstring = function (boundariesIdentifier) {
+    const getSubstring = function (boundariesIdentifier) {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 

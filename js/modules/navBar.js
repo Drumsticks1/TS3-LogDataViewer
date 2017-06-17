@@ -8,7 +8,7 @@
  * Module containing functions and attributes that are related to the navBar
  */
 (function (parent) {
-  var module = parent.navBar = parent.navBar || {};
+  const module = parent.navBar = parent.navBar || {};
 
   /**
    * The element containing the navBar.
@@ -20,7 +20,7 @@
    * Object containing the scrollTo button elements.
    * @type {{ban: Element, client: Element, complaint: Element, kick: Element, upload: Element}}
    */
-  var scrollToButtons = {};
+  const scrollToButtons = {};
 
   /**
    * Adds a scrollTo button to the navBar and adds the button element to the scrollToButtons object.
@@ -29,7 +29,7 @@
    * @param tableModule the tableModule for which to add the scrollTo button
    */
   function addScrollToButton(tableModule) {
-    var button = document.createElement("button");
+    const button = document.createElement("button");
     scrollToButtons[tableModule.name] = button;
     button.style.display = "none";
 
@@ -51,7 +51,7 @@
   };
 
   module.build = function () {
-    var scrollBackToTopButton = document.createElement("button");
+    const scrollBackToTopButton = document.createElement("button");
     scrollBackToTopButton.innerText = "Top";
 
     scrollBackToTopButton.onclick = function () {

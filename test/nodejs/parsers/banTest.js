@@ -4,8 +4,8 @@
 
 "use strict";
 
-var assert = require('assert');
-var banParser = require("../../../nodejs/parsers/ban.js");
+const assert = require('assert');
+const banParser = require("../../../nodejs/parsers/ban.js");
 
 // Todo: Add additional tests
 

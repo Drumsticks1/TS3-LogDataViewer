@@ -8,7 +8,7 @@
  * Module containing functions that are related to the Ban table.
  */
 (function (parent) {
-  var module = parent.ban = parent.ban || {};
+  const module = parent.ban = parent.ban || {};
 
   /**
    * The name of the module
@@ -40,14 +40,13 @@
    * Switches between the ID/UID columns in the Ban table.
    */
   function switchBetweenIDAndUID() {
-    var rowId, banId, Ban = ts3ldv.Json.BanList,
+    const Ban = ts3ldv.Json.BanList,
       banTableRows = module.getTableDiv().lastChild.childNodes,
       headRowCells = module.getTableDiv().firstChild.firstChild.childNodes,
       filterRowCells = module.getTableDiv().firstChild.childNodes[1].childNodes,
       showUID = ts3ldv.storage.getBanShowUID();
 
-    var bannedString, bannedByString;
-
+    let bannedString, bannedByString;
     if (showUID) {
       bannedString = "Banned UID";
       bannedByString = "Banned by UID";
@@ -61,11 +60,11 @@
     filterRowCells[1].firstChild.setAttribute("Placeholder", bannedString);
     filterRowCells[4].firstChild.setAttribute("Placeholder", bannedByString);
 
-    for (var j = 0; j < banTableRows.length; j++) {
-      rowId = banTableRows[j].getAttribute("id");
-      banId = rowId.slice(4, rowId.length);
+    for (let j = 0; j < banTableRows.length; j++) {
+      let rowId = banTableRows[j].getAttribute("id"),
+        banId = rowId.slice(4, rowId.length);
 
-      var currentRowCells = document.getElementById(rowId).childNodes;
+      const currentRowCells = document.getElementById(rowId).childNodes;
 
       $(currentRowCells[1]).text(showUID ? Ban[banId].bannedUID : Ban[banId].bannedID);
 
@@ -90,15 +89,15 @@
    * Builds the ban table.
    */
   module.build = function () {
-    var banTableControlSection = document.createElement("div");
+    const banTableControlSection = document.createElement("div");
     banTableControlSection.className = "row";
 
-    var banTableHeading = document.createElement("div");
+    const banTableHeading = document.createElement("div");
     banTableHeading.className = "tableheading large-12 columns";
     banTableHeading.innerText = "Ban Table";
     banTableControlSection.appendChild(banTableHeading);
 
-    var switchBetweenIDAndUIDButton = document.createElement("button");
+    const switchBetweenIDAndUIDButton = document.createElement("button");
     switchBetweenIDAndUIDButton.id = "switchBetweenIDAndUIDButton";
     switchBetweenIDAndUIDButton.innerText = "Switch between IDs and UIDs";
 
@@ -112,7 +111,7 @@
 
     module.div.appendChild(banTableControlSection);
 
-    var Ban = ts3ldv.Json.BanList,
+    const Ban = ts3ldv.Json.BanList,
       banTable = document.createElement("table"),
       banHead = document.createElement("thead"),
       banHeadRow = document.createElement("tr"),
@@ -146,31 +145,21 @@
     banHead.appendChild(banHeadRow);
     banTable.appendChild(banHead);
 
-    var banBody = document.createElement("tbody");
-    for (var i = 0; i < Ban.length; i++) {
-      var BanDateTime = Ban[i].banDateTime,
+    const banBody = document.createElement("tbody");
+    for (let i = 0; i < Ban.length; i++) {
+      const BanDateTime = Ban[i].banDateTime,
         BannedID = Ban[i].bannedID,
         BannedNickname = Ban[i].bannedNickname,
         BannedIP = Ban[i].bannedIP,
-        BannedByID,
         BannedByNickname = Ban[i].bannedByNickname,
-        BanReason,
         BanTime = Ban[i].banTime;
+      let BannedByID = BannedIP === "Unknown" ? "Unknown" : Ban[i].bannedByID,
+        BanReason = Ban[i].banReason.length === 0 ? "No Reason given" : Ban[i].banReason;
 
-      if (BannedIP !== "Unknown")
-        BannedByID = Ban[i].bannedByID;
-      else
-        BannedByID = "Unknown";
-
-      if (Ban[i].banReason.length !== 0)
-        BanReason = Ban[i].banReason;
-      else
-        BanReason = "No Reason given";
-
-      var banBodyRow = document.createElement("tr");
+      const banBodyRow = document.createElement("tr");
       banBodyRow.id = "ban_" + i;
 
-      var cell_BanDateTime = document.createElement("td"),
+      const cell_BanDateTime = document.createElement("td"),
         cell_BannedID = document.createElement("td"),
         cell_BannedNickname = document.createElement("td"),
         cell_BannedIP = document.createElement("td"),
@@ -188,7 +177,7 @@
       cell_BanReason.setAttribute("data-title", "Reason");
       cell_BanTime.setAttribute("data-title", "BanTime");
 
-      var cell_BanDateTime_Div = document.createElement("div");
+      const cell_BanDateTime_Div = document.createElement("div");
       cell_BanDateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(BanDateTime);
       cell_BanDateTime.appendChild(cell_BanDateTime_Div);
       banBodyRow.appendChild(cell_BanDateTime);

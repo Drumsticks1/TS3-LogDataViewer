@@ -4,8 +4,8 @@
 
 "use strict";
 
-var assert = require('assert');
-var complaintParser = require("../../../nodejs/parsers/complaint.js");
+const assert = require('assert');
+const complaintParser = require("../../../nodejs/parsers/complaint.js");
 
 describe('complaintParser', function () {
   describe('parseComplaint', function () {

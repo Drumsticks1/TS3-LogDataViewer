@@ -4,8 +4,8 @@
 
 'use strict';
 
-var assert = require('assert');
-var Parser = require('../../nodejs/Parser.js');
+const assert = require('assert');
+const Parser = require('../../nodejs/Parser.js');
 
 describe('Parser', function () {
   describe('parseDateTime', function () {

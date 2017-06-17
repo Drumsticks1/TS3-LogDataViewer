@@ -13,7 +13,7 @@ const express = require("express"),
   miscFunctions = require("./miscFunctions.js"),
   buildJSON = require("./buildJSON.js");
 
-var lastBuild = 0;
+let lastBuild = 0;
 
 log.info("Program startup");
 
@@ -28,7 +28,7 @@ app.listen(globalVariables.usedPort, 'localhost', function () {
 });
 
 app.get("/buildJSON", function (req, res) {
-  var timeDifference = Date.now().valueOf() - lastBuild,
+  const timeDifference = Date.now().valueOf() - lastBuild,
     response = {
       "success": false,
       "fetchLogsError": false,
@@ -38,7 +38,7 @@ app.get("/buildJSON", function (req, res) {
     };
 
   if (timeDifference > globalVariables.timeBetweenRequests) {
-    var clearBuffer = String(req.query.clearBuffer) === "true";
+    const clearBuffer = String(req.query.clearBuffer) === "true";
     if (clearBuffer)
       miscFunctions.clearGlobalArrays();
 

@@ -8,7 +8,7 @@
  * Module containing time related functions.
  */
 (function (parent) {
-  var module = parent.time = parent.time || {};
+  const module = parent.time = parent.time || {};
 
   /**
    * The time format of the timestamps in ts3 logs.
@@ -23,7 +23,7 @@
    * @returns {string} - double digit string.
    */
   function toDoubleDigit(x) {
-    var y = String(x);
+    let y = String(x);
     if (x < 10) y = "0" + y;
     return y;
   }
@@ -53,7 +53,7 @@
    * @constructor
    */
   module.UTCDateStringToLocaltimeString = function (dateString) {
-    var dateObject = module.UTCDateStringToDate(dateString);
+    const dateObject = module.UTCDateStringToDate(dateString);
     return dateObject.getFullYear()
       + "-" + toDoubleDigit(dateObject.getMonth() + 1)
       + "-" + toDoubleDigit(dateObject.getDate())
@@ -72,7 +72,7 @@
    * @returns {string} string with the described format.
    */
   module.dateTimeToMomentString = function (dateTime) {
-    var dateTimeObject = moment(module.UTCDateStringToDate(dateTime));
+    const dateTimeObject = moment(module.UTCDateStringToDate(dateTime));
     return dateTimeObject.format(module.format) + "<br />(about " + dateTimeObject.fromNow() + ")";
   };
 

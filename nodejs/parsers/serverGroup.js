@@ -4,7 +4,7 @@
 
 "use strict";
 
-var miscFunctions = require('../miscFunctions.js');
+const miscFunctions = require('../miscFunctions.js');
 
 /**
  * Parses the ServerGroup assignment or removal data from the given logLine.
@@ -25,7 +25,7 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
     logLine.indexOf(") was ")];
 
 
-  var getSubstring = function (boundariesIdentifier) {
+  const getSubstring = function (boundariesIdentifier) {
     return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
   };
 
@@ -44,7 +44,7 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
  * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
  */
 function parseServerGroupModification(logLine, boundaries) {
-  var getSubstring = function (boundariesIdentifier) {
+  const getSubstring = function (boundariesIdentifier) {
     return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
   };
 
@@ -61,7 +61,7 @@ module.exports = {
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
   parseServerGroupCreation: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.ServerGroupID = [
       logLine.indexOf("'(id:") + 5,
@@ -80,7 +80,7 @@ module.exports = {
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
   parseServerGroupDeletion: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.ServerGroupID = [
       logLine.indexOf("'(id:") + 5,
@@ -99,7 +99,7 @@ module.exports = {
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
   parseServerGroupRenaming: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.ServerGroupID = [
       logLine.indexOf("'(id:") + 5,
@@ -118,7 +118,7 @@ module.exports = {
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
   parseServerGroupCopying: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.ServerGroupID = [
       logLine.lastIndexOf("'(id:") + 5,

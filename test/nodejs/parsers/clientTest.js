@@ -4,8 +4,8 @@
 
 "use strict";
 
-var assert = require('assert');
-var clientParser = require("../../../nodejs/parsers/client.js");
+const assert = require('assert');
+const clientParser = require("../../../nodejs/parsers/client.js");
 
 describe('clientParser', function () {
   describe('parseClientConnect', function () {

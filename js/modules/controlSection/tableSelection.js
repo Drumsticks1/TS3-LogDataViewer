@@ -8,7 +8,7 @@
  * Module containing functions and attributes that are related to the table selection section in the control section
  */
 (function (parent) {
-  var module = parent.tableSelection = parent.tableSelection || {};
+  const module = parent.tableSelection = parent.tableSelection || {};
 
   /**
    * The element containing the table selection section.
@@ -22,13 +22,13 @@
    * @param tableModule the table module
    */
   module.addTableCheckboxDiv = function (tableModule) {
-    var div = document.createElement("div");
+    const div = document.createElement("div");
 
     tableModule.checkbox = document.createElement("input");
     tableModule.checkbox.id = tableModule.name + "Checkbox";
     tableModule.checkbox.type = "checkbox";
 
-    var label = document.createElement("label");
+    const label = document.createElement("label");
     label.innerText = tableModule.name[0].toUpperCase() + tableModule.name.slice(1) + "s";
     label.htmlFor = tableModule.name + "Checkbox";
 

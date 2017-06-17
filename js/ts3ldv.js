@@ -7,16 +7,13 @@
 /**
  * Main module.
  */
-var ts3ldv = (function (module) {
-
+const ts3ldv = {
   /**
    * Json object containing the data from the latest received output.json.
    * @type {{}}
    */
-  module.Json = {};
-
-  return module;
-}(ts3ldv || {}));
+  Json: {}
+};
 
 document.addEventListener("DOMContentLoaded", function () {
   $(document).foundation();

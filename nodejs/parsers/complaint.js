@@ -4,7 +4,7 @@
 
 "use strict";
 
-var miscFunctions = require('../miscFunctions.js');
+const miscFunctions = require('../miscFunctions.js');
 
 module.exports = {
   /**
@@ -13,7 +13,7 @@ module.exports = {
    * @returns {{complaintAboutNickname: string, complaintAboutID: number, complaintReason: string, complaintByNickname: string, complaintByID: number}} the extracted data
    */
   parseComplaint: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.complaintAboutNickname = [
       logLine.indexOf("complaint added for client '") + 28,
@@ -35,7 +35,7 @@ module.exports = {
       boundaries.complaintByNickname[1] + 5,
       logLine.length - 1];
 
-    var getSubstring = function (boundariesIdentifier) {
+    const getSubstring = function (boundariesIdentifier) {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 

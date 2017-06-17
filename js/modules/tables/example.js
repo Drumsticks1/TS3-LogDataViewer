@@ -9,7 +9,7 @@
  * Doesn't have any usage in the project and isn't included in index.html
  */
 (function (parent) {
-  var module = parent.client = parent.client || {};
+  const module = parent.client = parent.client || {};
 
   /**
    * The name of the module

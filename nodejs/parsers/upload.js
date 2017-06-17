@@ -4,7 +4,7 @@
 
 "use strict";
 
-var miscFunctions = require('../miscFunctions.js');
+const miscFunctions = require('../miscFunctions.js');
 
 // Todo: Eliminate duplicates after the boundaries objects.
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
    * @returns {{channelID: number, filename: string, uploadedByNickname: string, uploadedByID: number}} the extracted data.
    */
   parseUpload: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.channelID = [
       logLine.indexOf("file upload to (id:") + 19,
@@ -32,7 +32,7 @@ module.exports = {
       boundaries.uploadedByNickname[1] + 5,
       logLine.length - 1];
 
-    var getSubstring = function (boundariesIdentifier) {
+    const getSubstring = function (boundariesIdentifier) {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 
@@ -50,7 +50,7 @@ module.exports = {
    * @returns {{channelID: number, filename: string, deletedByNickname: string, deletedByID: number}} extracted data.
    */
   parseUploadDeletion: function (logLine) {
-    var boundaries = {};
+    const boundaries = {};
 
     boundaries.channelID = [
       logLine.indexOf("file deleted from (id:") + 22,
@@ -68,11 +68,11 @@ module.exports = {
       boundaries.deletedByNickname[1] + 5,
       logLine.length - 1];
 
-    var getSubstring = function (boundariesIdentifier) {
+    const getSubstring = function (boundariesIdentifier) {
       return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
     };
 
-    var filename = getSubstring("filename");
+    let filename = getSubstring("filename");
 
     // A longer path is logged and needs to be removed in order to get the filename only.
     // Unix

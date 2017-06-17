@@ -4,7 +4,7 @@
 
 "use strict";
 
-var miscFunctions = require('../miscFunctions.js');
+const miscFunctions = require('../miscFunctions.js');
 
 /**
  * Parses the Channel data from the given logLine.
@@ -20,7 +20,7 @@ function parseChannelModification(logLine, boundaries) {
     logLine.indexOf("channel '") + 9,
     boundaries.channelID[0] - 5];
 
-  var getSubstring = function (boundariesIdentifier) {
+  const getSubstring = function (boundariesIdentifier) {
     return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
   };
 
@@ -31,7 +31,7 @@ function parseChannelModification(logLine, boundaries) {
 }
 
 // Todo: use the match object in Parser instead of the local object.
-var match = {
+const match = {
   "channelCreation": ") created by '",
   "subChannelCreation": ") created as sub channel of '",
   "channelEdit": ") edited by '",

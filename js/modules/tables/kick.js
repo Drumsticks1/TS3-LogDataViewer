@@ -8,7 +8,7 @@
  * Module containing functions that are related to the Kick table.
  */
 (function (parent) {
-  var module = parent.kick = parent.kick || {};
+  const module = parent.kick = parent.kick || {};
 
   /**
    * The name of the module
@@ -40,10 +40,10 @@
    * Builds the kick table.
    */
   module.build = function () {
-    var kickTableControlSection = document.createElement("div");
+    const kickTableControlSection = document.createElement("div");
     kickTableControlSection.className = "row";
 
-    var kickTableHeading = document.createElement("div");
+    const kickTableHeading = document.createElement("div");
     kickTableHeading.className = "tableheading large-12 columns";
     kickTableHeading.innerText = "Kick Table";
     kickTableControlSection.appendChild(kickTableHeading);
@@ -52,7 +52,7 @@
 
     module.div.appendChild(kickTableControlSection);
 
-    var Kick = ts3ldv.Json.KickList,
+    const Kick = ts3ldv.Json.KickList,
       kickTable = document.createElement("table"),
       kickHead = document.createElement("thead"),
       kickHeadRow = document.createElement("tr"),
@@ -80,20 +80,16 @@
     kickHead.appendChild(kickHeadRow);
     kickTable.appendChild(kickHead);
 
-    var kickBody = document.createElement("tbody");
-    for (var i = 0; i < Kick.length; i++) {
-      var KickDateTime = Kick[i].kickDateTime,
+    const kickBody = document.createElement("tbody");
+    for (let i = 0; i < Kick.length; i++) {
+      const KickDateTime = Kick[i].kickDateTime,
         KickedID = Kick[i].kickedID,
         KickedNickname = Kick[i].kickedNickname,
         KickedByNickname = Kick[i].kickedByNickname,
-        KickedByUID = Kick[i].kickedByUID,
-        KickReason;
+        KickedByUID = Kick[i].kickedByUID;
+      let KickReason = Kick[i].kickReason.length === 0 ? "No Reason given" : Kick[i].kickReason;
 
-      if (Kick[i].kickReason.length !== 0)
-        KickReason = Kick[i].kickReason;
-      else KickReason = "No Reason given";
-
-      var kickBodyRow = document.createElement("tr"),
+      const kickBodyRow = document.createElement("tr"),
         cell_DateTime = document.createElement("td"),
         cell_KickedID = document.createElement("td"),
         cell_KickedNickname = document.createElement("td"),
@@ -108,7 +104,7 @@
       cell_KickedByUID.setAttribute("data-title", "Kicked by UID");
       cell_KickReason.setAttribute("data-title", "Reason");
 
-      var cell_DateTime_Div = document.createElement("div");
+      const cell_DateTime_Div = document.createElement("div");
       cell_DateTime_Div.innerHTML = ts3ldv.time.dateTimeToMomentString(KickDateTime);
       cell_DateTime.appendChild(cell_DateTime_Div);
       kickBodyRow.appendChild(cell_DateTime);
