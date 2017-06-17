@@ -29,7 +29,7 @@
     tableModule.checkbox.type = "checkbox";
 
     var label = document.createElement("label");
-    label.innerText = tableModule.name.charAt(0).toUpperCase() + tableModule.name.slice(1) + "s";
+    label.innerText = tableModule.name[0].toUpperCase() + tableModule.name.slice(1) + "s";
     label.htmlFor = tableModule.name + "Checkbox";
 
     // Styling of the divs

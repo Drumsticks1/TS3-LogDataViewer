@@ -44,7 +44,7 @@ exports.fetchLogs = function () {
   for (var i = 0; i < logFiles.length; i++) {
     var currentLog = logFiles[i];
     if (currentLog.lastIndexOf(".log") === currentLog.length - 4
-      && currentLog.substring(38, currentLog.length - 4) === String(globalVariables.virtualServer)) {
+      && currentLog.slice(38, -4) === String(globalVariables.virtualServer)) {
       newLogObjects.push({
         logListId: newLogObjects.length + 1,
         logName: currentLog,

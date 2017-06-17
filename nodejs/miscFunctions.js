@@ -72,9 +72,7 @@ module.exports = {
    * @returns {string} the requested substring.
    */
   getSubstring: function (boundaries, logLine, boundariesIdentifier) {
-    return logLine.substring(
-      boundaries[boundariesIdentifier][0],
-      boundaries[boundariesIdentifier][1]);
+    return logLine.slice(boundaries[boundariesIdentifier][0], boundaries[boundariesIdentifier][1]);
   }
 };
 

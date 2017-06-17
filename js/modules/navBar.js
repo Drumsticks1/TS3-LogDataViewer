@@ -33,7 +33,7 @@
     scrollToButtons[tableModule.name] = button;
     button.style.display = "none";
 
-    button.innerText = tableModule.name.charAt(0).toUpperCase() + tableModule.name.slice(1) + "s";
+    button.innerText = tableModule.name[0].toUpperCase() + tableModule.name.slice(1) + "s";
 
     button.onclick = function () {
       tableModule.div.scrollIntoView();

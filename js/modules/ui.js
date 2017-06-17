@@ -26,6 +26,7 @@
 
     // Prevents duplicate callouts
     if (calloutsWithTheSameClass.length !== 0) {
+      // Todo: check what this is
       // Updates the message of the nextRequestCallout if one is already existing.
       if (calloutClass.indexOf("nextRequestCallout") !== -1)
         calloutsWithTheSameClass[0].innerText = message;

@@ -63,7 +63,7 @@
 
     for (var j = 0; j < banTableRows.length; j++) {
       rowId = banTableRows[j].getAttribute("id");
-      banId = rowId.substring(4, rowId.length);
+      banId = rowId.slice(4, rowId.length);
 
       var currentRowCells = document.getElementById(rowId).childNodes;
 

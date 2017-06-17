@@ -116,7 +116,7 @@ module.exports = {
    * @returns {string} dateTime of the logLine.
    */
   parseDateTime: function (logLine) {
-    return logLine.substring(0, 19);
+    return logLine.slice(0, 19);
   },
 
   /**
@@ -156,7 +156,7 @@ module.exports = {
   parseLogData: function (logData, isLastLog) {
     var lastUIDBanRule = "", lastIPBanRule = "",
       logPattern = this.parseLogPattern(logData),
-      currentLine = logData.substring(0, logData.indexOf("\n"));
+      currentLine = logData.slice(0, logData.indexOf("\n"));
 
     // Todo: Add debug message.
     // Skip parsing if the log pattern is unknown.
@@ -164,8 +164,8 @@ module.exports = {
       return;
 
     while (logData.length > 0) {
-      currentLine = logData.substring(0, logData.indexOf("\n"));
-      logData = logData.substring(currentLine.length + 1);
+      currentLine = logData.slice(0, logData.indexOf("\n"));
+      logData = logData.slice(currentLine.length + 1);
 
       var lineSeverType = 0,
         beginOfParsingBlock = currentLine.indexOfEndPlusOne(match.VirtualServer[logPattern]),

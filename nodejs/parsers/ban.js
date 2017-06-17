@@ -74,9 +74,9 @@ module.exports = {
           lastIPBanRule.lastIndexOf("'(id:") + 5,
           lastIPBanRule.length - 1];
 
-        bannedUID = lastUIDBanRule.substring(boundaries.bannedUID[0], boundaries.bannedUID[1]);
-        bannedIP = lastIPBanRule.substring(boundaries.bannedIP[0], boundaries.bannedIP[1]);
-        bannedByID = Number(lastIPBanRule.substring(boundaries.bannedByID[0], boundaries.bannedByID[1]));
+        bannedUID = lastUIDBanRule.slice(boundaries.bannedUID[0], boundaries.bannedUID[1]);
+        bannedIP = lastIPBanRule.slice(boundaries.bannedIP[0], boundaries.bannedIP[1]);
+        bannedByID = Number(lastIPBanRule.slice(boundaries.bannedByID[0], boundaries.bannedByID[1]));
       }
       else {
         bannedUID = bannedIP = "Unknown";
