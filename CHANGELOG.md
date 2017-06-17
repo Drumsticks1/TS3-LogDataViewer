@@ -1,7 +1,7 @@
 # Changelog
 Versions: <a href="#v2.1.0">2.1.0</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
-### <a name="v2.1.0">Version 2.1.0</a> (x.x.2017)
+### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:
 - Modified project structure:
     - Local files (conf.json, output.json, ts3-ldv logs (unless specified otherwise)) are now stored in the TS3-LogDataViewer/local folder
