@@ -10,10 +10,10 @@ const uploadParser = require('../../../nodejs/parsers/upload.js');
 // Todo: Add tests for upload deletions with the log format since ts3Server v3.0.12.x when the logging of upload deletions is fixed and if the log message is affected.
 
 describe('uploadParser', function () {
-  describe('parseUpload', function () {
+  describe('parseMessageUpload', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        uploadParser.parseUpload("file upload to (id:10), '/testFile.txt' by client 'testClient'(id:99)"),
+        uploadParser.parseMessageUpload("file upload to (id:10), '/testFile.txt' by client 'testClient'(id:99)"),
         {
           channelID: 10,
           filename: '/testFile.txt',
@@ -23,11 +23,11 @@ describe('uploadParser', function () {
     });
   });
 
-  describe('parseUploadDeletion', function () {
+  describe('parseMessageUploadDeletion', function () {
     describe('unix, log format before ts3Server v3.0.12.0', function () {
       it('should return the specified object', function () {
         assert.deepEqual(
-          uploadParser.parseUploadDeletion("file deleted from (id:10), 'files/virtualserver_1/channel_10//testFile.txt' by client 'testClient'(id:99)"),
+          uploadParser.parseMessageUploadDeletion("file deleted from (id:10), 'files/virtualserver_1/channel_10//testFile.txt' by client 'testClient'(id:99)"),
           {
             channelID: 10,
             filename: '/testFile.txt',
@@ -40,7 +40,7 @@ describe('uploadParser', function () {
     describe('windows, log format before ts3Server v3.0.12.0', function () {
       it('should return the specified object', function () {
         assert.deepEqual(
-          uploadParser.parseUploadDeletion("file deleted from (id:10), 'files\virtualserver_1\channel_10\/testFile.txt' by client 'testClient'(id:99)"),
+          uploadParser.parseMessageUploadDeletion("file deleted from (id:10), 'files\virtualserver_1\channel_10\/testFile.txt' by client 'testClient'(id:99)"),
           {
             channelID: 10,
             filename: '/testFile.txt',

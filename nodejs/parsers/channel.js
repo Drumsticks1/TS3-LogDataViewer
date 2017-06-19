@@ -3,8 +3,10 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-
+// TODO: doc
 const miscFunctions = require('../miscFunctions.js');
+var Channel = require("../Channel.js");
+var globalVariables = require("../globalVariables.js");
 
 /**
  * Parses the Channel data from the given logLine.
@@ -39,14 +41,34 @@ const match = {
 };
 
 module.exports = {
+
+  parseChannelCreation: function (message) {
+    const res = this.parseMessageChannelCreation(message);
+
+    if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null) {
+      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", res.channelName);
+    }
+  },
+
   /**
    * Parses the ChannelCreation data from the given logLine.
    * @param {string} logLine
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseChannelCreation: function (logLine) {
+  parseMessageChannelCreation: function (logLine) {
     return parseChannelModification(logLine,
       {channelID: [0, logLine.indexOf(match.channelCreation)]});
+  },
+
+  parseChannelEdit: function (message) {
+    const res = this.parseMessageChannelEdit(message),
+      channelObject = Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID);
+
+    if (channelObject !== null) {
+      channelObject.renameChannel(res.channelName);
+    } else if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null) {
+      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", res.channelName);
+    }
   },
 
   /**
@@ -54,9 +76,17 @@ module.exports = {
    * @param {string} logLine
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseChannelEdit: function (logLine) {
+  parseMessageChannelEdit: function (logLine) {
     return parseChannelModification(logLine,
       {channelID: [0, logLine.indexOf(match.channelEdit)]});
+  },
+
+  parseSubChannelCreation: function (message) {
+    const res = this.parseMessageSubChannelCreation(message);
+
+    if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null) {
+      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", res.channelName);
+    }
   },
 
   /**
@@ -64,9 +94,15 @@ module.exports = {
    * @param {string} logLine
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseSubChannelCreation: function (logLine) {
+  parseMessageSubChannelCreation: function (logLine) {
     return parseChannelModification(logLine,
       {channelID: [0, logLine.indexOf(match.subChannelCreation)]});
+  },
+
+  parseChannelDeletion: function (message) {
+    const res = this.parseMessageChannelDeletion(message);
+
+    Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID).deleteChannel()
   },
 
   /**
@@ -74,7 +110,7 @@ module.exports = {
    * @param {string} logLine
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseChannelDeletion: function (logLine) {
+  parseMessageChannelDeletion: function (logLine) {
     return parseChannelModification(logLine,
       {channelID: [0, logLine.indexOf(match.channelDeletion)]});
   }

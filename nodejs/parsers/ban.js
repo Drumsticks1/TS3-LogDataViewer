@@ -3,21 +3,32 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-
+// TODO: doc
 const checkFunctions = require("../checkFunctions.js"),
   miscFunctions = require('../miscFunctions.js');
+var Ban = require("../Ban.js");
+var globalVariables = require("../globalVariables.js");
 
 module.exports = {
+
+  parseBan: function (message, dateTime, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP) {
+    let res = this.parseMessageBan(message, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP);
+
+    // Todo: check res.bannedByID casting options
+    if (!checkFunctions.isDuplicateBan(dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime))
+      Ban.addBan(globalVariables.BanList, dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime);
+  },
+
   /**
    * Parses the Ban data from the given logLine.
-   * Requires the boundaries object from the previous client.parseClientDisconnect call.
+   * Requires the boundaries object from the previous client.parseMessageClientDisconnect call.
    * @param {string} logLine
-   * @param {object} boundaries boundaries object from the previous client.parseClientDisconnect call.
+   * @param {object} boundaries boundaries object from the previous client.parseMessageClientDisconnect call.
    * @param {string} lastUIDBanRule
    * @param {string} lastIPBanRule
    * @returns {{bannedUID: string, bannedIP: string, bannedByID: string, bannedByNickname: string, bannedByUID: string, banReason: string, banTime: number}} the extracted data.
    */
-  parseBan: function (logLine, boundaries, lastUIDBanRule, lastIPBanRule) {
+  parseMessageBan: function (logLine, boundaries, lastUIDBanRule, lastIPBanRule) {
     let validUID = true;
 
     boundaries.bannedByNickname = [logLine.indexOf(" invokername=", boundaries.clientId[1]) + 13, 0];

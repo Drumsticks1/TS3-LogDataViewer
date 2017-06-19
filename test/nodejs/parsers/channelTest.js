@@ -10,10 +10,10 @@ const channelParser = require("../../../nodejs/parsers/channel.js");
 // Todo: Add additional tests
 
 describe('channelParser', function () {
-  describe('parseChannelCreation', function () {
+  describe('parseMessageChannelCreation', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        channelParser.parseChannelCreation("channel 'new channel'(id:7) created by 'admin'(id:2)"),
+        channelParser.parseMessageChannelCreation("channel 'new channel'(id:7) created by 'admin'(id:2)"),
         {
           channelID: 7,
           channelName: "new channel"
@@ -21,10 +21,10 @@ describe('channelParser', function () {
     });
   });
 
-  describe('parseChannelEdit', function () {
+  describe('parseMessageChannelEdit', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        channelParser.parseChannelEdit("channel 'new channel'(id:7) edited by 'admin'(id:2)"),
+        channelParser.parseMessageChannelEdit("channel 'new channel'(id:7) edited by 'admin'(id:2)"),
         {
           channelID: 7,
           channelName: "new channel"
@@ -32,10 +32,10 @@ describe('channelParser', function () {
     });
   });
 
-  describe('parseSubChannelCreation', function () {
+  describe('parseMessageSubChannelCreation', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        channelParser.parseSubChannelCreation("channel 'new sub channel'(id:8) created as sub channel of 'new channel'(id:7) by 'admin'(id:2)"),
+        channelParser.parseMessageSubChannelCreation("channel 'new sub channel'(id:8) created as sub channel of 'new channel'(id:7) by 'admin'(id:2)"),
         {
           channelID: 8,
           channelName: "new sub channel"
@@ -43,10 +43,10 @@ describe('channelParser', function () {
     });
   });
 
-  describe('parseChannelDeletion', function () {
+  describe('parseMessageChannelDeletion', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        channelParser.parseChannelDeletion("channel 'new sub channel'(id:8) deleted by 'admin'(id:2)"),
+        channelParser.parseMessageChannelDeletion("channel 'new sub channel'(id:8) deleted by 'admin'(id:2)"),
         {
           channelID: 8,
           channelName: "new sub channel"

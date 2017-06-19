@@ -3,18 +3,29 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-
+// TODO: doc
 const miscFunctions = require('../miscFunctions.js');
+var checkFunctions = require("../checkFunctions.js");
+var Kick = require("../Kick.js");
+var globalVariables = require("../globalVariables.js");
 
 module.exports = {
+
+  parseKick: function(message, dateTime, disconnectBoundaries) {
+    let res = this.parseMessageKick(message, disconnectBoundaries);
+
+    if (!checkFunctions.isDuplicateKick(dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason))
+      Kick.addKick(globalVariables.KickList, dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason);
+  },
+
   /**
    * Parses the Kick data from the given logLine.
-   * Requires the boundaries object from the previous client.parseClientDisconnect call.
+   * Requires the boundaries object from the previous client.parseMessageClientDisconnect call.
    * @param {string} logLine
-   * @param {object} boundaries boundaries object from the previous client.parseClientDisconnect call.
+   * @param {object} boundaries boundaries object from the previous client.parseMessageClientDisconnect call.
    * @returns {{kickedByNickname: string, kickedByUID: string, kickReason: string}} the extracted data.
    */
-  parseKick: function (logLine, boundaries) {
+  parseMessageKick: function (logLine, boundaries) {
     let kickReason = "";
 
     const getSubstring = function (boundariesIdentifier) {

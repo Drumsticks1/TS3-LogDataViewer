@@ -8,10 +8,10 @@ const assert = require('assert');
 const complaintParser = require("../../../nodejs/parsers/complaint.js");
 
 describe('complaintParser', function () {
-  describe('parseComplaint', function () {
+  describe('parseMessageComplaint', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        complaintParser.parseComplaint("complaint added for client 'trolling client'(id:666) reason 'trolling' by client 'regular client'(id:123)"),
+        complaintParser.parseMessageComplaint("complaint added for client 'trolling client'(id:666) reason 'trolling' by client 'regular client'(id:123)"),
         {
           complaintAboutNickname: 'trolling client',
           complaintAboutID: 666,

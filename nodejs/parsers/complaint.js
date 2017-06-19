@@ -3,16 +3,28 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-
+// TODO: doc
 const miscFunctions = require('../miscFunctions.js');
+var checkFunctions = require("../checkFunctions.js");
+var Complaint = require("../Complaint.js");
+var globalVariables = require("../globalVariables.js");
 
 module.exports = {
+
+  parseComplaint: function (message, dateTime) {
+    let res = this.parseMessageComplaint(message);
+
+    // Todo: Modify check functions so that they accept objects, maybe also change the addObject functions.
+    if (!checkFunctions.isDuplicateComplaint(dateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID))
+      Complaint.addComplaint(globalVariables.ComplaintList, dateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID);
+  },
+
   /**
    * Parses the Complaint data from the given logLine.
    * @param {string} logLine
    * @returns {{complaintAboutNickname: string, complaintAboutID: number, complaintReason: string, complaintByNickname: string, complaintByID: number}} the extracted data
    */
-  parseComplaint: function (logLine) {
+  parseMessageComplaint: function (logLine) {
     const boundaries = {};
 
     boundaries.complaintAboutNickname = [

@@ -9,6 +9,10 @@ Changes:
       - <code>string.substring(a,b)</code> with <code>string.slice(a,b)</code>
       - <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
       - comparisons of <code>string.indexOf(str)</code> with <code>-1</code> with the usage of <code>string.includes(str)</code>
+    - Server-Side:
+      - Renamed the old parser methods in nodejs/parsers/*.js that extract and return the parsed data from the message of a log line from parseX() to parseMessageX()
+      - Moved the parser actions from nodejs/Parser.js into the nodejs/parsers files, naming example of the methods: parsers.client.parseConnect()
+
 
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:

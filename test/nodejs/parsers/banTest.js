@@ -10,10 +10,10 @@ const banParser = require("../../../nodejs/parsers/ban.js");
 // Todo: Add additional tests
 
 describe('banParser', function () {
-  describe('parseBan', function () {
+  describe('parseMessageBan', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        banParser.parseBan(
+        banParser.parseMessageBan(
           "client disconnected 'TestClient'(id:15) reason 'invokerid=2 invokername=admin invokeruid=OIqF4sKapFgSlTeIZOL5U7x2Yq4= reasonmsg=It's just a test bantime=10'", {
             Nickname: [21, 31],
             clientId: [36, 38]

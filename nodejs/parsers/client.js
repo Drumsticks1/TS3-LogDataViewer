@@ -3,8 +3,11 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-
+// TODO: doc
 const miscFunctions = require('../miscFunctions.js');
+var Client = require("../Client.js");
+var globalVariables = require("../globalVariables.js");
+var checkFunctions = require("../checkFunctions.js");
 
 /**
  * Parses the Client data from the given logLine.
@@ -26,12 +29,35 @@ function parseAnyClientConnect(boundaries, logLine) {
 }
 
 module.exports = {
+
+  parseClientConnect: function (message, dateTime, isLastLog) {
+    let res = this.parseMessageClientConnect(message);
+
+    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+
+    if (globalVariables.ClientList[res.clientId].clientId === -1)
+      globalVariables.ClientList[res.clientId].updateClientId(res.clientId);
+
+    globalVariables.ClientList[res.clientId].addNickname(res.Nickname);
+
+    if (globalVariables.bufferData) {
+      if (!checkFunctions.isDuplicateConnection(res.clientId, dateTime))
+        globalVariables.ClientList[res.clientId].addConnection(dateTime);
+    }
+    else globalVariables.ClientList[res.clientId].addConnection(dateTime);
+
+    globalVariables.ClientList[res.clientId].addIP(res.IP);
+
+    if (isLastLog)
+      globalVariables.ClientList[res.clientId].connect();
+  },
+
   /**
    * Parses the ClientConnect data from the given logLine.
    * @param {string} logLine
    * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
    */
-  parseClientConnect: function (logLine) {
+  parseMessageClientConnect: function (logLine) {
     const boundaries = {};
 
     boundaries.IP = [
@@ -49,12 +75,31 @@ module.exports = {
     return parseAnyClientConnect(boundaries, logLine);
   },
 
+  parseQueryClientConnect: function (message, dateTime) {
+    let res = this.parseMessageQueryClientConnect(message);
+
+    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+
+    if (globalVariables.ClientList[res.clientId].clientId === -1)
+      globalVariables.ClientList[res.clientId].updateClientId(res.clientId);
+
+    globalVariables.ClientList[res.clientId].addNickname(res.Nickname);
+
+    if (globalVariables.bufferData) {
+      if (!checkFunctions.isDuplicateConnection(res.clientId, dateTime))
+        globalVariables.ClientList[res.clientId].addConnection(dateTime);
+    }
+    else globalVariables.ClientList[res.clientId].addConnection(dateTime);
+
+    globalVariables.ClientList[res.clientId].addIP(res.IP);
+  },
+
   /**
    * Parses the QueryClientConnect data from the given logLine.
    * @param {string} logLine
    * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
    */
-  parseQueryClientConnect: function (logLine) {
+  parseMessageQueryClientConnect: function (logLine) {
     const boundaries = {};
 
     boundaries.Nickname = [
@@ -72,12 +117,29 @@ module.exports = {
     return parseAnyClientConnect(boundaries, logLine);
   },
 
+  parseClientDisconnect: function (message, dateTime, isLastLog) {
+    let res = this.parseMessageClientDisconnect(message);
+
+    if (globalVariables.ClientList.length < res.clientId + 1) {
+      Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+      globalVariables.ClientList[res.clientId].updateClientId(res.clientId);
+    }
+
+    if (globalVariables.ClientList[res.clientId].getNicknameCount() === 0 || globalVariables.ClientList[res.clientId].getNicknameByID(0) !== res.Nickname)
+      globalVariables.ClientList[res.clientId].addNickname(res.Nickname);
+
+    if (isLastLog)
+      globalVariables.ClientList[res.clientId].disconnect();
+
+    return res.boundaries;
+  },
+
   /**
    * Parses the ClientDisconnect data from the given logLine.
    * @param {string} logLine
    * @returns {{clientId: number, Nickname: string, boundaries: {}}} the extracted data and the boundaries object.
    */
-  parseClientDisconnect: function (logLine) {
+  parseMessageClientDisconnect: function (logLine) {
     const boundaries = {};
 
     boundaries.Nickname = [
@@ -103,12 +165,16 @@ module.exports = {
     };
   },
 
+  parseClientDeletion: function (message) {
+    globalVariables.ClientList[this.parseMessageClientDeletion(message)].deleteClient();
+  },
+
   /**
    * Parses the ClientDeletion data from the given logLine.
    * @param {string} logLine
    * @returns {number} the clientId of the deleted client.
    */
-  parseClientDeletion: function (logLine) {
+  parseMessageClientDeletion: function (logLine) {
     const boundaries = {};
 
     boundaries.clientId = [0, logLine.lastIndexOf(") got deleted by client '")];

@@ -7,14 +7,7 @@
 const fs = require("fs"),
   checkFunctions = require("./checkFunctions.js"),
   globalVariables = require("./globalVariables.js"),
-  log = require("./log.js"),
-  Ban = require("./Ban.js"),
-  Channel = require("./Channel.js"),
-  Client = require("./Client.js"),
-  Complaint = require("./Complaint.js"),
-  Kick = require("./Kick.js"),
-  ServerGroup = require("./ServerGroup.js"),
-  Upload = require("./Upload.js");
+  log = require("./log.js");
 
 const parsers = {
   ban: require("./parsers/ban.js"),
@@ -25,15 +18,6 @@ const parsers = {
   serverGroup: require("./parsers/serverGroup.js"),
   upload: require("./parsers/upload.js")
 };
-
-const Logs = globalVariables.Logs,
-  ClientList = globalVariables.ClientList,
-  ServerGroupList = globalVariables.ServerGroupList,
-  BanList = globalVariables.BanList,
-  KickList = globalVariables.KickList,
-  ComplaintList = globalVariables.ComplaintList,
-  UploadList = globalVariables.UploadList,
-  ChannelList = globalVariables.ChannelList;
 
 // Object containing matching patterns for parsing.
 const match = {
@@ -58,6 +42,7 @@ const match = {
   upload: "file upload to ",
   uploadDeletion: "file deleted from",
 
+  // TODO: rename serverGroupAssignment/Removal to clientServerGroup...
   // Additional patterns
   serverGroupAssignment: ") was added to servergroup '",
   serverGroupRemoval: ") was removed from servergroup '",
@@ -84,9 +69,9 @@ module.exports = {
   parseLogs: function () {
     log.info("Starting log parsing.");
 
-    for (let i = 0; i < Logs.length; i++) {
-      if (!Logs[i].parsed && !Logs[i].ignored) {
-        let buff = fs.readFileSync(globalVariables.TS3LogDirectory + Logs[i].logName, "utf8");
+    for (let i = 0; i < globalVariables.Logs.length; i++) {
+      if (!globalVariables.Logs[i].parsed && !globalVariables.Logs[i].ignored) {
+        let buff = fs.readFileSync(globalVariables.TS3LogDirectory + globalVariables.Logs[i].logName, "utf8");
 
         // Replaces HTML entities with their escaped symbols.
         // Prevents HTML entities showing up in the tables when not inserting via innerHTML.
@@ -94,8 +79,8 @@ module.exports = {
           return String.fromCodePoint(Number(x.slice(2, -1)));
         });
 
-        this.parseLogData(buff, i + 1 === Logs.length);
-        Logs[i].parsed = true;
+        this.parseLogData(buff, i + 1 === globalVariables.Logs.length);
+        globalVariables.Logs[i].parsed = true;
       }
     }
   },
@@ -137,323 +122,173 @@ module.exports = {
     return -1;
   },
 
+  /** The possible server types for log lines (used as enum) */
+  serverTypes: {VIRTUAL_SERVER: 0, VIRTUAL_SERVER_BASE: 1},
+
+  lastBanRuleUID: "",
+  lastBanRuleIP: "",
+
   /**
+   * TODO: rename to parseLog
    * Parses the given logfileData.
    * Calls the parsers in the parsers folder.
    * @param {string} logData the data from a Log.
    * @param {boolean} isLastLog true if the data is from the last (/newest) Log.
    */
   parseLogData: function (logData, isLastLog) {
-    const logPattern = this.parseLogPattern(logData);
-    let lastUIDBanRule = "", lastIPBanRule = "",
-      currentLine = logData.slice(0, logData.indexOf("\n"));
+    let logPattern = this.parseLogPattern(logData);
+    this.lastBanRuleUID = "";
+    this.lastBanRuleIP = "";
 
     // Todo: Add debug message.
     // Skip parsing if the log pattern is unknown.
     if (logPattern === -1)
       return;
 
-    // TODO: check if this can be done as do ... while (to prevent the currentLine = ... code duplication)
     while (logData.length > 0) {
-      currentLine = logData.slice(0, logData.indexOf("\n"));
-      logData = logData.slice(currentLine.length + 1);
+      let lineLength = logData.indexOf("\n");
+      let currentLine = logData.slice(0, lineLength);
+      logData = logData.slice(lineLength + 1);
 
-      // Todo: doc, fix typo
-      let lineSeverType,
-        checkIfUpload = false;
+      this.parseLogLine(currentLine, logPattern, isLastLog, this.lastBanRuleUID, this.lastBanRuleIP);
+    }
+  },
 
-      // Todo: doc
-      let beginOfParsingBlock;
+  // Todo: doc
+  parseLogLine: function (line, logPattern, isLastLog, lastBanRuleUID, lastBanRuleIP) {
+    let serverType, messageOffset;
 
-      // Check if the current log line is logged as "VirtualServer"
-      if (currentLine.includes(match.VirtualServer[logPattern])) {
-        lineSeverType = 0;
-        beginOfParsingBlock = currentLine.indexOf(match.VirtualServer[logPattern]) + match.VirtualServer[logPattern].length;
+    // Check if the current log line is logged as "VirtualServer"
+    if (line.includes(match.VirtualServer[logPattern])) {
+      serverType = this.serverTypes.VIRTUAL_SERVER;
+      messageOffset = line.indexOf(match.VirtualServer[logPattern]) + match.VirtualServer[logPattern].length;
+    }
+
+    // Check if the current log line is logged as "VirtualServerBase"
+    else if (line.includes(match.VirtualServerBase[logPattern])) {
+      serverType = this.serverTypes.VIRTUAL_SERVER_BASE;
+      messageOffset = line.indexOf(match.VirtualServerBase[logPattern]) + match.VirtualServerBase[logPattern].length;
+    }
+
+    // Current log line is neither logged as "VirtualServer" nor "VirtualServerBase"
+    // Skipping parsing, line is not relevant
+    else return;
+
+    let dateTime = this.parseDateTime(line),
+      message = line.slice(messageOffset);
+
+    // VirtualSever
+    if (serverType === this.serverTypes.VIRTUAL_SERVER) {
+
+      // Client assignments to a server group
+      if (message.includes(match.serverGroupAssignment)) {
+        parsers.serverGroup.parseServerGroupAssignment(message, dateTime);
       }
 
-      // Check if the current log line is logged as "VirtualServerBase"
-      else if (currentLine.includes(match.VirtualServerBase[logPattern])) {
-        lineSeverType = 1;
-        beginOfParsingBlock = currentLine.indexOf(match.VirtualServerBase[logPattern]) + match.VirtualServerBase[logPattern].length;
+      // Client removals from a server group
+      else if (message.includes(match.serverGroupRemoval)) {
+        parsers.serverGroup.parseServerGroupRemoval(message);
       }
 
-      // Current log line is neither logged as "VirtualServer" nor "VirtualServerBase"
-      // Skipping parsing, line is not relevant
-      else continue;
+      // Query client connects
+      else if (message.startsWith(match.queryClientConnect)) {
+        parsers.client.parseQueryClientConnect(message, dateTime);
+      }
 
-      let DateTime = this.parseDateTime(currentLine);
+      // Todo: move to the ban parser?
+      // Ban Rules
+      // Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
+      else if (message.startsWith(match.banRule)) {
+        if (message.includes("' cluid='") && !message.includes("' ip='"))
+          this.lastBanRuleUID = message;
+        else if (message.includes("' ip='") && !message.includes("' cluid='"))
+          this.lastBanRuleIP = message;
+      }
 
-      switch (lineSeverType) {
-        // VirtualSever
-        case 0:
-          // Client assignments to and client removals from a server group
-          if (currentLine.includes(match.serverGroupAssignment) || currentLine.includes(match.serverGroupRemoval)) {
-            let res;
-            if (currentLine.includes(match.serverGroupAssignment))
-              res = parsers.serverGroup.parseServerGroupAssignment(currentLine);
-            else
-              res = parsers.serverGroup.parseServerGroupRemoval(currentLine);
+      // Complaints
+      else if (message.startsWith(match.complaint)) {
+        parsers.complaint.parseComplaint(message, dateTime);
+      }
 
-            let clientId = res.clientId,
-              ServerGroupID = res.ServerGroupID;
+      // Client Deletions
+      else if (message.startsWith(match.deleteClient1) && (message.includes(match.deleteClient2))) {
+        parsers.client.parseClientDeletion(message);
+      }
 
-            const serverGroupObject = ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID);
-
-            if (serverGroupObject === null)
-              ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", res.ServerGroupName);
-
-            Client.fillArrayWithDummyClients(ClientList, clientId);
-
-            if (currentLine.includes(match.serverGroupAssignment)) {
-              if (!checkFunctions.isDuplicateServerGroup(clientId, ServerGroupID))
-                ClientList[clientId].addServerGroup(ServerGroupID, DateTime);
-            }
-            else
-              ClientList[clientId].removeServerGroupByID(ServerGroupID);
-          }
-
-          // Query client connects
-          else if (currentLine.indexOf(match.queryClientConnect) === beginOfParsingBlock) {
-            let res = parsers.client.parseQueryClientConnect(currentLine),
-              clientId = res.clientId;
-
-            Client.fillArrayWithDummyClients(ClientList, clientId);
-
-            if (ClientList[clientId].clientId === -1)
-              ClientList[clientId].updateClientId(clientId);
-
-            ClientList[clientId].addNickname(res.Nickname);
-
-            if (globalVariables.bufferData) {
-              if (!checkFunctions.isDuplicateConnection(clientId, DateTime))
-                ClientList[clientId].addConnection(DateTime);
-            }
-            else ClientList[clientId].addConnection(DateTime);
-
-            ClientList[clientId].addIP(res.IP);
-          }
-
-          // Ban Rules
-          // Currently only used for rules of 'direct' (= right click on client and "ban client") bans.
-          else if (currentLine.indexOf(match.banRule) === beginOfParsingBlock) {
-            if (currentLine.includes("' cluid='") && !currentLine.includes("' ip='"))
-              lastUIDBanRule = currentLine;
-            else if (currentLine.includes("' ip='") && !currentLine.includes("' cluid='"))
-              lastIPBanRule = currentLine;
-          }
-
-          // Complaints
-          else if (currentLine.indexOf(match.complaint) === beginOfParsingBlock) {
-            let res = parsers.complaint.parseComplaint(currentLine);
-
-            // Todo: Modify check functions so that they accept objects, maybe also change the addObject functions.
-            if (!checkFunctions.isDuplicateComplaint(DateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID))
-              Complaint.addComplaint(ComplaintList, DateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID);
-          }
-
-          // Client Deletions
-          else if (currentLine.indexOf(match.deleteClient1) === beginOfParsingBlock && (currentLine.includes(match.deleteClient2))) {
-            ClientList[parsers.client.parseClientDeletion(currentLine)].deleteClient();
-          }
-
-          // Servergroup creation, deletions, renaming and copying
-          else if (currentLine.indexOf(match.serverGroupEvent) === beginOfParsingBlock) {
-            // 0 --> creation
-            // 1 --> deleted
-            // 2 --> renamed
-            // 3 --> copied // just like 0
-            let eventTypeS = -1, res;
-
-            if (currentLine.includes(match.serverGroupCreation)) {
-              eventTypeS = 0;
-              res = parsers.serverGroup.parseServerGroupCreation(currentLine);
-            }
-            else if (currentLine.includes(match.serverGroupDeletion)) {
-              eventTypeS = 1;
-              res = parsers.serverGroup.parseServerGroupDeletion(currentLine);
-            }
-            else if (currentLine.includes(match.serverGroupRenaming)) {
-              eventTypeS = 2;
-              res = parsers.serverGroup.parseServerGroupRenaming(currentLine);
-            }
-            else if (currentLine.includes(match.serverGroupCopying)) {
-              eventTypeS = 3;
-              res = parsers.serverGroup.parseServerGroupCopying(currentLine);
-            }
-
-            let ServerGroupID = res.ServerGroupID;
-            const ServerGroupName = res.ServerGroupName;
-
-            if (eventTypeS === 1 || eventTypeS === 2) {
-              if (ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID) === null)
-                ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, "Unknown", ServerGroupName);
-            }
-
-            switch (eventTypeS) {
-              case 0:
-              case 3:
-                ServerGroup.addServerGroup(ServerGroupList, ServerGroupID, DateTime, ServerGroupName);
-                break;
-
-              case 1:
-                ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).deleteServerGroup();
-                break;
-
-              case 2:
-                ServerGroup.getServerGroupByServerGroupId(ServerGroupList, ServerGroupID).renameServerGroup(ServerGroupName);
-            }
-          }
-          else checkIfUpload = true;
-
-          break;
-
-        // VirtualServerBase
-        case 1:
-          // Connects
-          if (currentLine.indexOf(match.connect) === beginOfParsingBlock) {
-            let res = parsers.client.parseClientConnect(currentLine),
-              clientId = res.clientId;
-
-            Client.fillArrayWithDummyClients(ClientList, clientId);
-
-            if (ClientList[clientId].clientId === -1)
-              ClientList[clientId].updateClientId(clientId);
-
-            ClientList[clientId].addNickname(res.Nickname);
-
-            if (globalVariables.bufferData) {
-              if (!checkFunctions.isDuplicateConnection(clientId, DateTime))
-                ClientList[clientId].addConnection(DateTime);
-            }
-            else ClientList[clientId].addConnection(DateTime);
-
-            ClientList[clientId].addIP(res.IP);
-
-            if (isLastLog)
-              ClientList[clientId].connect();
-          }
-
-          // Disconnects (including kicks and bans)
-          else if (currentLine.indexOf(match.disconnect) === beginOfParsingBlock) {
-            let isBan = false,
-              isKick = false;
-
-            if (!currentLine.includes(") reason 'reasonmsg")) {
-              if (!currentLine.includes(" bantime="))
-                isKick = true;
-              else
-                isBan = true;
-            }
-
-            let res = parsers.client.parseClientDisconnect(currentLine),
-              clientId = res.clientId;
-            const Nickname = res.Nickname;
-
-            if (ClientList.length < clientId + 1) {
-              Client.fillArrayWithDummyClients(ClientList, clientId);
-              ClientList[clientId].updateClientId(clientId);
-            }
-
-            if (ClientList[clientId].getNicknameCount() === 0 || ClientList[clientId].getNicknameByID(0) !== Nickname)
-              ClientList[clientId].addNickname(Nickname);
-
-            if (isLastLog)
-              ClientList[clientId].disconnect();
-
-            // Bans
-            if (isBan) {
-              res = parsers.ban.parseBan(currentLine, res.boundaries, lastUIDBanRule, lastIPBanRule);
-
-              if (!checkFunctions.isDuplicateBan(DateTime, clientId, Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime))
-                Ban.addBan(BanList, DateTime, clientId, Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime);
-            }
-
-            // Kicks
-            else if (isKick) {
-              res = parsers.kick.parseKick(currentLine, res.boundaries);
-
-              if (!checkFunctions.isDuplicateKick(DateTime, clientId, Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason))
-                Kick.addKick(KickList, DateTime, clientId, Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason);
-            }
-          }
-
-          // Todo: Optimize
-          // Todo: documentation
-          // Channel additions, edits or deletions.
-          else if (currentLine.indexOf(match.channel) === beginOfParsingBlock) {
-            // 0 --> added
-            // 1 --> edited
-            // 2 --> edited undefined --> added
-            // 3 --> deleted
-            let eventTypeC = -1, res;
-
-            if (currentLine.includes(match.channelEdit)) {
-              eventTypeC = 1;
-              res = parsers.channel.parseChannelEdit(currentLine);
-            }
-            else if (currentLine.includes(match.channelCreation)) {
-              eventTypeC = 0;
-              res = parsers.channel.parseChannelCreation(currentLine);
-            }
-            else if (currentLine.includes(match.subChannelCreation)) {
-              eventTypeC = 0;
-              res = parsers.channel.parseSubChannelCreation(currentLine);
-            }
-            else if (currentLine.includes(match.channelDeletion)) {
-              eventTypeC = 3;
-              res = parsers.channel.parseChannelDeletion(currentLine);
-            }
-
-            let channelID = res.channelID,
-              channelName = res.channelName;
-
-            const channelObject = Channel.getChannelByChannelId(ChannelList, channelID);
-
-            if (eventTypeC === 1 && channelObject === null)
-              eventTypeC = 2;
-
-            switch (eventTypeC) {
-              case 2:
-                DateTime = "Unknown";
-              // Intended fallthrough
-              case 0:
-                if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
-                  Channel.addChannel(ChannelList, channelID, DateTime, channelName);
-                break;
-
-              case 1:
-                channelObject.renameChannel(channelName);
-                break;
-
-              case 3:
-                channelObject.deleteChannel();
-            }
-          }
-          else checkIfUpload = true;
+      // Server group creation, deletions, renaming and copying
+      else if (message.startsWith(match.serverGroupEvent)) {
+        if (message.includes(match.serverGroupCreation)) {
+          parsers.serverGroup.parseServerGroupCreation(message, dateTime);
+        } else if (message.includes(match.serverGroupDeletion)) {
+          parsers.serverGroup.parseServerGroupDeletion(message);
+        } else if (message.includes(match.serverGroupRenaming)) {
+          parsers.serverGroup.parseServerGroupRenaming(message);
+        } else if (message.includes(match.serverGroupCopying)) {
+          parsers.serverGroup.parseServerGroupCopying(message, dateTime);
+        }
       }
 
       // Upload / file system events
       // VirtualServer for version 3.0.11.4 and before
       // VirtualServerBase since version 3.0.12.0
-      if (checkIfUpload) {
-        // Uploads
-        if (currentLine.indexOf(match.upload) === beginOfParsingBlock) {
-          let res = parsers.upload.parseUpload(currentLine),
-            channelID = res.channelID;
+      // Uploads
+      if (message.startsWith(match.upload)) {
+        parsers.upload.parseUpload(message, dateTime);
+      }
 
-          if (Channel.getChannelByChannelId(ChannelList, channelID) === null)
-            Channel.addChannel(ChannelList, channelID, "Unknown", "Unknown");
+      // Upload Deletions
+      else if (message.startsWith(match.uploadDeletion)) {
+        parsers.upload.parseUploadDeletion(message);
+      }
+    }
 
-          if (!checkFunctions.isDuplicateUpload(DateTime, channelID, res.filename, res.uploadedByID, res.uploadedByNickname))
-            Upload.addUpload(UploadList, DateTime, channelID, res.filename, res.uploadedByID, res.uploadedByNickname);
+    // VirtualServerBase
+    else if (serverType === this.serverTypes.VIRTUAL_SERVER_BASE) {
+      // Connects
+      if (message.startsWith(match.connect)) {
+        parsers.client.parseClientConnect(message, dateTime, isLastLog);
+      }
+
+      // Disconnects (including kicks and bans)
+      else if (message.startsWith(match.disconnect)) {
+        let disconnectBoundaries = parsers.client.parseClientDisconnect(message, dateTime, isLastLog);
+
+        if (!message.includes(") reason 'reasonmsg")) {
+          // Kicks
+          if (!message.includes(" bantime=")) {
+            parsers.kick.parseKick(message, dateTime, disconnectBoundaries);
+          }
+          // Bans
+          else {
+            parsers.ban.parseBan(message, dateTime, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP);
+          }
         }
+      }
 
-        // Upload Deletions
-        else if (currentLine.indexOf(match.uploadDeletion) === beginOfParsingBlock) {
-          let res = parsers.upload.parseUploadDeletion(currentLine);
-
-          Upload.addDeletedBy(res.channelID, res.filename, res.deletedByID, res.deletedByNickname);
+      // Channel additions, edits or deletions.
+      else if (message.startsWith(match.channel)) {
+        if (message.includes(match.channelCreation)) {
+          parsers.channel.parseChannelCreation(message);
+        } else if (message.includes(match.channelEdit)) {
+          parsers.channel.parseChannelEdit(message);
+        } else if (message.includes(match.subChannelCreation)) {
+          parsers.channel.parseSubChannelCreation(message);
+        } else if (message.includes(match.channelDeletion)) {
+          parsers.channel.parseChannelDeletion(message);
         }
+      }
+
+      // Upload / file system events
+      // VirtualServer for version 3.0.11.4 and before
+      // VirtualServerBase since version 3.0.12.0
+      // Uploads
+      if (message.startsWith(match.upload)) {
+        parsers.upload.parseUpload(message, dateTime);
+      }
+
+      // Upload Deletions
+      else if (message.startsWith(match.uploadDeletion)) {
+        parsers.upload.parseUploadDeletion(message);
       }
     }
   }

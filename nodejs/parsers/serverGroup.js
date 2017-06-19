@@ -3,8 +3,12 @@
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-
+// TODO: doc
 const miscFunctions = require('../miscFunctions.js');
+var ServerGroup = require("../ServerGroup.js");
+var Client = require("../Client.js");
+var checkFunctions = require("../checkFunctions.js");
+var globalVariables = require("../globalVariables.js");
 
 /**
  * Parses the ServerGroup assignment or removal data from the given logLine.
@@ -55,12 +59,19 @@ function parseServerGroupModification(logLine, boundaries) {
 }
 
 module.exports = {
+
+  parseServerGroupCreation: function (message, dateTime) {
+    const res = this.parseMessageServerGroupCreation(message);
+
+    ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, dateTime, res.ServerGroupName);
+  },
+
   /**
    * Parses the ServerGroupCreation data from the given logLine.
    * @param {string} logLine
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseServerGroupCreation: function (logLine) {
+  parseMessageServerGroupCreation: function (logLine) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
@@ -74,12 +85,22 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  parseServerGroupDeletion: function (message) {
+    const res = this.parseMessageServerGroupDeletion(message);
+
+    if (ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID) === null)
+      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+
+    ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID).deleteServerGroup();
+
+  },
+
   /**
    * Parses the ServerGroupDeletion data from the given logLine.
    * @param {string} logLine
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseServerGroupDeletion: function (logLine) {
+  parseMessageServerGroupDeletion: function (logLine) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
@@ -93,12 +114,21 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  parseServerGroupRenaming: function (message) {
+    const res = this.parseMessageServerGroupRenaming(message);
+
+    if (ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID) === null)
+      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+
+    ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID).renameServerGroup(res.ServerGroupName);
+  },
+
   /**
    * Parses the ServerGroupRenaming data from the given logLine.
    * @param {string} logLine
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseServerGroupRenaming: function (logLine) {
+  parseMessageServerGroupRenaming: function (logLine) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
@@ -112,12 +142,18 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  parseServerGroupCopying: function (message, dateTime) {
+    const res = this.parseMessageServerGroupCopying(message);
+
+    ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, dateTime, res.ServerGroupName);
+  },
+
   /**
    * Parses the ServerGroupCopying data from the given logLine.
    * @param {string} logLine
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseServerGroupCopying: function (logLine) {
+  parseMessageServerGroupCopying: function (logLine) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
@@ -131,22 +167,51 @@ module.exports = {
     return parseServerGroupModification(logLine, boundaries);
   },
 
+  parseServerGroupAssignment: function (message, dateTime) {
+    let res = this.parseMessageServerGroupAssignment(message);
+
+    // Checks if the server group exists and if not, ... TODO
+    if (ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID) === null)
+      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+
+    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+
+    if (!checkFunctions.isDuplicateServerGroup(res.clientId, res.ServerGroupID))
+      globalVariables.ClientList[res.clientId].addServerGroup(res.ServerGroupID, dateTime);
+  },
+
+  // todo: add test case
   /**
    * Parses the ServerGroupAssignment data from the given logLine.
    * @param {string} logLine
    * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseServerGroupAssignment: function (logLine) {
+  parseMessageServerGroupAssignment: function (logLine) {
     return parseServerGroupAssignmentOrRemoval(logLine,
       {ServerGroupName: [logLine.indexOf(") was added to servergroup '") + 28, 0]});
   },
 
+  parseServerGroupRemoval: function (message) {
+    let res = this.parseMessageServerGroupRemoval(message);
+
+    // Checks if the server group exists and if not, ... TODO
+    const serverGroupObject = ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID);
+
+    if (serverGroupObject === null)
+      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+
+    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+
+    globalVariables.ClientList[res.clientId].removeServerGroupByID(res.ServerGroupID);
+  },
+
+  // todo: add test case
   /**
    * Parses the ServerGroupRemoval data from the given logLine.
    * @param {string} logLine
    * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseServerGroupRemoval: function (logLine) {
+  parseMessageServerGroupRemoval: function (logLine) {
     return parseServerGroupAssignmentOrRemoval(logLine,
       {ServerGroupName: [logLine.indexOf(") was removed from servergroup '") + 32, 0]});
   }

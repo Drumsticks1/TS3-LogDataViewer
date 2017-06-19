@@ -10,10 +10,10 @@ const kickParser = require("../../../nodejs/parsers/kick.js");
 // Todo: Add additional tests
 
 describe('kickParser', function () {
-  describe('parseKick', function () {
+  describe('parseMessageKick', function () {
     it('should return the specified object', function () {
       assert.deepEqual(
-        kickParser.parseKick(
+        kickParser.parseMessageKick(
           "client disconnected 'TestClient'(id:15) reason 'invokerid=2 invokername=admin invokeruid=OIqF4sKapFgSlTeIZOL5U7x2Yq4= reasonmsg=It's just a test'", {
             Nickname: [21, 31],
             clientId: [36, 38]
