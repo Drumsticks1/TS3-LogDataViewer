@@ -2,6 +2,9 @@
 Versions: <a href="#v2.1.1">2.1.1</a> | <a href="#v2.1.0">2.1.0</a> | <a href="#v2.0.8">2.0.8</a> | <a href="#v2.0.7">2.0.7</a> | <a href="#v2.0.6">2.0.6</a> | <a href="#v2.0.5">2.0.5</a> | <a href="#v2.0.4">2.0.4</a> | <a href="#v2.0.3">2.0.3</a> | <a href="#v2.0.2">2.0.2</a> | <a href="#v2.0.1">2.0.1</a> | <a href="#v2.0.0">2.0.0</a> | <a href="#v1.x.x">1.0.0 - 1.7.3.1</a>
 
 ### <a name="v2.1.1">Version 2.1.1</a> (next release)
+
+The changes in this release are focused on code maintenance, especially of the server-side code.
+
 Changes:
 - Javascript code:
     - Migrated to ECMAScript 6
@@ -10,6 +13,7 @@ Changes:
       - <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
       - comparisons of <code>string.indexOf(str)</code> with <code>-1</code> with the usage of <code>string.includes(str)</code>
     - Server-Side:
+      - Code maintenance
       - Replaced the methods Parser.parseLogs and Parser.parseLogData with the methods Parser.parseLogs, Parser.parseLog and Parser.parseLogLine for a more clear parsing structure
       - Renamed the old parser methods in nodejs/parsers/*.js that extract and return the parsed data from the message of a log line from parseX() to parseMessageX()
       - Moved the parser actions from nodejs/Parser.js into the nodejs/parsers files, naming example of the methods: parsers.client.parseConnect()

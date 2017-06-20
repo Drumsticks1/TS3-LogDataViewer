@@ -26,7 +26,7 @@ module.exports = {
    * @param {object} boundaries boundaries object from the previous client.parseMessageClientDisconnect call.
    * @param {string} lastUIDBanRule
    * @param {string} lastIPBanRule
-   * @returns {{bannedUID: string, bannedIP: string, bannedByID: string, bannedByNickname: string, bannedByUID: string, banReason: string, banTime: number}} the extracted data.
+   * @returns {{bannedUID: string, bannedIP: string, bannedByID: number, bannedByNickname: string, bannedByUID: string, banReason: string, banTime: number}} the extracted data.
    */
   parseMessageBan: function (message, boundaries, lastUIDBanRule, lastIPBanRule) {
     let validUID = true;
@@ -94,7 +94,7 @@ module.exports = {
     return {
       bannedUID: bannedUID,
       bannedIP: bannedIP,
-      bannedByID: bannedByID,
+      bannedByID: Number(bannedByID),
       bannedByNickname: bannedByNickname,
       bannedByUID: bannedByUID,
       banReason: banReason,

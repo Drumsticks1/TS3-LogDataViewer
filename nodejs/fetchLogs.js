@@ -18,7 +18,6 @@ const fs = require("fs"),
  * 2 --> Rebuild required, isMatchingLogOrder failed
  */
 exports.fetchLogs = function () {
-  let i;
   log.info("Checking log directory.");
   let rebuildRequired = false;
 
@@ -43,11 +42,9 @@ exports.fetchLogs = function () {
   const newLogObjects = [];
 
   log.info("Fetching logs.");
-  for (i = 0; i < logFiles.length; i++) {
-    if (logFiles[i].lastIndexOf(".log") === logFiles[i].length - 4
-      && logFiles[i].slice(38, -4) === String(globalVariables.virtualServer)) {
+  for (let i = 0; i < logFiles.length; i++) {
+    if (logFiles[i].endsWith(String(globalVariables.virtualServer) + ".log")) {
       newLogObjects.push({
-        logListId: newLogObjects.length + 1,
         logName: logFiles[i],
         ignored: checkFunctions.isIgnoredLog(logFiles[i]),
         parsed: false
@@ -77,7 +74,7 @@ exports.fetchLogs = function () {
       log.debug("Comparing new and old logs.");
 
       // The last parsed log might contain new data, don't modify it's parsed state.
-      for (i = 0; i < globalVariables.Logs.length - 1; i++) {
+      for (let i = 0; i < globalVariables.Logs.length - 1; i++) {
         newLogObjects[i].parsed = globalVariables.Logs[i].parsed;
       }
     }
@@ -88,10 +85,7 @@ exports.fetchLogs = function () {
     }
   }
 
-  globalVariables.Logs.length = 0;
-  for (i = 0; i < newLogObjects.length; i++) {
-    globalVariables.Logs.push(newLogObjects[i]);
-  }
+  globalVariables.Logs = newLogObjects;
 
   return rebuildRequired ? 2 : 1;
 };

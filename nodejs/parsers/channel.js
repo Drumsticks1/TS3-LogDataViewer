@@ -56,8 +56,7 @@ module.exports = {
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
   parseMessageChannelCreation: function (message) {
-    return parseChannelModification(message,
-      {channelID: [0, message.indexOf(match.channelCreation)]});
+    return parseChannelModification(message, {channelID: [0, message.indexOf(match.channelCreation)]});
   },
 
   parseChannelEdit: function (message) {
@@ -77,8 +76,7 @@ module.exports = {
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
   parseMessageChannelEdit: function (message) {
-    return parseChannelModification(message,
-      {channelID: [0, message.indexOf(match.channelEdit)]});
+    return parseChannelModification(message, {channelID: [0, message.indexOf(match.channelEdit)]});
   },
 
   parseSubChannelCreation: function (message) {

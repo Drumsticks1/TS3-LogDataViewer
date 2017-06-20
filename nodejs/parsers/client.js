@@ -9,25 +9,6 @@ var Client = require("../Client.js");
 var globalVariables = require("../globalVariables.js");
 var checkFunctions = require("../checkFunctions.js");
 
-/**
- * Parses the Client data from the given message.
- * Requires a boundaries object containing the positions for the clientId, Nickname and IP data.
- * @param {string} message
- * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
- * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
- */
-function parseAnyClientConnect(boundaries, message) {
-  const getSubstring = function (boundariesIdentifier) {
-    return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
-  };
-
-  return {
-    clientId: Number(getSubstring("clientId")),
-    Nickname: getSubstring("Nickname"),
-    IP: getSubstring("IP")
-  };
-}
-
 module.exports = {
 
   parseClientConnect: function (message, dateTime, isLastLog) {
@@ -72,7 +53,15 @@ module.exports = {
       boundaries.Nickname[1] + 5,
       boundaries.IP[0] - 7];
 
-    return parseAnyClientConnect(boundaries, message);
+    const getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
+    };
+
+    return {
+      clientId: Number(getSubstring("clientId")),
+      Nickname: getSubstring("Nickname"),
+      IP: getSubstring("IP")
+    };
   },
 
   parseQueryClientConnect: function (message, dateTime) {
@@ -114,7 +103,15 @@ module.exports = {
       message.lastIndexOf(" from ") + 6,
       boundaries.Nickname[1]];
 
-    return parseAnyClientConnect(boundaries, message);
+    const getSubstring = function (boundariesIdentifier) {
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
+    };
+
+    return {
+      clientId: Number(getSubstring("clientId")),
+      Nickname: getSubstring("Nickname"),
+      IP: getSubstring("IP")
+    };
   },
 
   parseClientDisconnect: function (message, dateTime, isLastLog) {

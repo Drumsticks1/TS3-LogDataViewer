@@ -8,7 +8,6 @@ This todo list is not a binding list of things that will be done, but more a lit
 <i>(Italic entries will likely require more time and have a low priority)</i>
 
 - general / server- & client-side
-  - check older javascript code for constructs than can be replaced with easier standard methods (e.g. <code>x.substr(a,x.indexOf(b))</code> --> <code>x.slice(a, -4)</code> if always <code>x.indexOf(b) === x.length - 4</code>)
   - rename class variables to be more intuitive (e.g. DateTime --> Timestamp or BanTime --> BanDuration) (includes client-side because of the div names (e.g. cell_BanTime))
   - <i>add ServerGroupName history like for the nicknames in the client list</i>
   - <i>add ServerGroup table (maybe with rights and so on)</i>
@@ -16,6 +15,8 @@ This todo list is not a binding list of things that will be done, but more a lit
   - <i>check options regarding multiple virtual servers</i>
 
 - server-side code
+  - check for improvements regarding the duplicate check functions in checkFunctions.js
+    - check for duplicates when parsing logs that have been parsed partially or not at all before
   - improve logging (define boundaries for the different logging levels, add more logging)
   - parse Ban expiration and deletion and add it to the Ban class
     - currently only includes the bans that kicked the banned client (= the banned client had to be online when he got banned)
@@ -28,3 +29,6 @@ This todo list is not a binding list of things that will be done, but more a lit
   - clean up style.scss
   - check filter type (e.g regex) compatibility for the Nicknames, Connections, IPs and Server Group column
   - check sorting possibilities for the server group data in the client table
+
+- gh-pages
+  - create new logs
