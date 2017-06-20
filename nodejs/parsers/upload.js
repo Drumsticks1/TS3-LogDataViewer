@@ -24,31 +24,31 @@ module.exports = {
   },
 
   /**
-   * Parses the Upload data from the given logLine.
-   * @param {string} logLine
+   * Parses the Upload data from the given message.
+   * @param {string} message
    * @returns {{channelID: number, filename: string, uploadedByNickname: string, uploadedByID: number}} the extracted data.
    */
-  parseMessageUpload: function (logLine) {
+  parseMessageUpload: function (message) {
     const boundaries = {};
 
     boundaries.channelID = [
-      logLine.indexOf("file upload to (id:") + 19,
-      logLine.indexOf(")")];
+      message.indexOf("file upload to (id:") + 19,
+      message.indexOf(")")];
 
     boundaries.filename = [
       boundaries.channelID[1] + 4,
-      logLine.lastIndexOf("' by client '")];
+      message.lastIndexOf("' by client '")];
 
     boundaries.uploadedByNickname = [
       boundaries.filename[1] + 13,
-      logLine.lastIndexOf("'(id:")];
+      message.lastIndexOf("'(id:")];
 
     boundaries.uploadedByID = [
       boundaries.uploadedByNickname[1] + 5,
-      logLine.length - 1];
+      message.length - 1];
 
     const getSubstring = function (boundariesIdentifier) {
-      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
     return {
@@ -66,31 +66,31 @@ module.exports = {
   },
 
   /**
-   * Parses the UploadDeletion data from the given logLine.
-   * @param {string} logLine
+   * Parses the UploadDeletion data from the given message.
+   * @param {string} message
    * @returns {{channelID: number, filename: string, deletedByNickname: string, deletedByID: number}} extracted data.
    */
-  parseMessageUploadDeletion: function (logLine) {
+  parseMessageUploadDeletion: function (message) {
     const boundaries = {};
 
     boundaries.channelID = [
-      logLine.indexOf("file deleted from (id:") + 22,
-      logLine.indexOf(")")];
+      message.indexOf("file deleted from (id:") + 22,
+      message.indexOf(")")];
 
     boundaries.filename = [
       boundaries.channelID[1] + 4,
-      logLine.lastIndexOf("' by client '")];
+      message.lastIndexOf("' by client '")];
 
     boundaries.deletedByNickname = [
       boundaries.filename[1] + 13,
-      logLine.lastIndexOf("'(id:")];
+      message.lastIndexOf("'(id:")];
 
     boundaries.deletedByID = [
       boundaries.deletedByNickname[1] + 5,
-      logLine.length - 1];
+      message.length - 1];
 
     const getSubstring = function (boundariesIdentifier) {
-      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
     let filename = getSubstring("filename");

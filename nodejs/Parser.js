@@ -63,23 +63,14 @@ const match = {
 module.exports = {
 
   /**
-   * Calls parseLogData for all Logs that are neither parsed nor ignored.
-   * Sets the parsed flag of the parsed Logs to true.
+   * Calls parseLog for all Logs that are neither parsed nor ignored.
    */
   parseLogs: function () {
     log.info("Starting log parsing.");
 
     for (let i = 0; i < globalVariables.Logs.length; i++) {
       if (!globalVariables.Logs[i].parsed && !globalVariables.Logs[i].ignored) {
-        let buff = fs.readFileSync(globalVariables.TS3LogDirectory + globalVariables.Logs[i].logName, "utf8");
-
-        // Replaces HTML entities with their escaped symbols.
-        // Prevents HTML entities showing up in the tables when not inserting via innerHTML.
-        buff = buff.replace(/&#[0-9]+;/g, function (x) {
-          return String.fromCodePoint(Number(x.slice(2, -1)));
-        });
-
-        this.parseLogData(buff, i + 1 === globalVariables.Logs.length);
+        this.parseLog(globalVariables.TS3LogDirectory + globalVariables.Logs[i].logName, i + 1 === globalVariables.Logs.length);
         globalVariables.Logs[i].parsed = true;
       }
     }
@@ -125,17 +116,28 @@ module.exports = {
   /** The possible server types for log lines (used as enum) */
   serverTypes: {VIRTUAL_SERVER: 0, VIRTUAL_SERVER_BASE: 1},
 
+  // Todo: doc
   lastBanRuleUID: "",
   lastBanRuleIP: "",
 
   /**
-   * TODO: rename to parseLog
-   * Parses the given logfileData.
-   * Calls the parsers in the parsers folder.
-   * @param {string} logData the data from a Log.
-   * @param {boolean} isLastLog true if the data is from the last (/newest) Log.
+   * Parses the log with the given logPath.
+   * Sets the parsed flag of the parsed log to true.
+   *
+   * Calls this.parseLogLine for each line
+   *
+   * @param {string} logPath the path to the log
+   * @param {boolean} isLastLog true if the log is the last log in the directory, false otherwise
    */
-  parseLogData: function (logData, isLastLog) {
+  parseLog: function (logPath, isLastLog) {
+    let logData = fs.readFileSync(logPath, "utf8");
+
+    // Replaces HTML entities with their escaped symbols.
+    // Prevents HTML entities showing up in the tables when not inserting via innerHTML.
+    logData = logData.replace(/&#[0-9]+;/g, function (x) {
+      return String.fromCodePoint(Number(x.slice(2, -1)));
+    });
+
     let logPattern = this.parseLogPattern(logData);
     this.lastBanRuleUID = "";
     this.lastBanRuleIP = "";
@@ -154,7 +156,15 @@ module.exports = {
     }
   },
 
-  // Todo: doc
+  /**
+   * Parses the given log line
+   *
+   * @param line the log line that will be parsed
+   * @param logPattern the log pattern of the log line
+   * @param isLastLog true if the log is the last log in the directory, false otherwise
+   * @param lastBanRuleUID see this.lastBanRuleUID
+   * @param lastBanRuleIP see this.lastBanRuleIP
+   */
   parseLogLine: function (line, logPattern, isLastLog, lastBanRuleUID, lastBanRuleIP) {
     let serverType, messageOffset;
 

@@ -11,26 +11,26 @@ var checkFunctions = require("../checkFunctions.js");
 var globalVariables = require("../globalVariables.js");
 
 /**
- * Parses the ServerGroup assignment or removal data from the given logLine.
+ * Parses the ServerGroup assignment or removal data from the given message.
  * Requires a boundaries object containing the positions for the clientId, ServerGroupID and ServerGroupName data.
- * @param {string} logLine
+ * @param {string} message
  * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
  * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
  */
-function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
-  boundaries.ServerGroupName[1] = logLine.lastIndexOf("'(id:", logLine.lastIndexOf(") by client '"));
+function parseServerGroupAssignmentOrRemoval(message, boundaries) {
+  boundaries.ServerGroupName[1] = message.lastIndexOf("'(id:", message.lastIndexOf(") by client '"));
 
   boundaries.ServerGroupID = [
     boundaries.ServerGroupName[1] + 5,
-    logLine.indexOf(")", boundaries.ServerGroupName[0])];
+    message.indexOf(")", boundaries.ServerGroupName[0])];
 
   boundaries.clientId = [
-    logLine.indexOf("client (id:") + 11,
-    logLine.indexOf(") was ")];
+    message.indexOf("client (id:") + 11,
+    message.indexOf(") was ")];
 
 
   const getSubstring = function (boundariesIdentifier) {
-    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
   };
 
   return {
@@ -41,15 +41,15 @@ function parseServerGroupAssignmentOrRemoval(logLine, boundaries) {
 }
 
 /**
- * Parses the ServerGroup modification data from the given logLine.
+ * Parses the ServerGroup modification data from the given message.
  * Requires a boundaries object containing the positions for the ServerGroupID and ServerGroupName data.
- * @param {string} logLine
+ * @param {string} message
  * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
  * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
  */
-function parseServerGroupModification(logLine, boundaries) {
+function parseServerGroupModification(message, boundaries) {
   const getSubstring = function (boundariesIdentifier) {
-    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
   };
 
   return {
@@ -67,22 +67,22 @@ module.exports = {
   },
 
   /**
-   * Parses the ServerGroupCreation data from the given logLine.
-   * @param {string} logLine
+   * Parses the ServerGroupCreation data from the given message.
+   * @param {string} message
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseMessageServerGroupCreation: function (logLine) {
+  parseMessageServerGroupCreation: function (message) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
-      logLine.indexOf("'(id:") + 5,
-      logLine.indexOf(") was added by '")];
+      message.indexOf("'(id:") + 5,
+      message.indexOf(") was added by '")];
 
     boundaries.ServerGroupName = [
-      logLine.indexOf("servergroup '") + 13,
+      message.indexOf("servergroup '") + 13,
       boundaries.ServerGroupID[0] - 5];
 
-    return parseServerGroupModification(logLine, boundaries);
+    return parseServerGroupModification(message, boundaries);
   },
 
   parseServerGroupDeletion: function (message) {
@@ -96,22 +96,22 @@ module.exports = {
   },
 
   /**
-   * Parses the ServerGroupDeletion data from the given logLine.
-   * @param {string} logLine
+   * Parses the ServerGroupDeletion data from the given message.
+   * @param {string} message
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseMessageServerGroupDeletion: function (logLine) {
+  parseMessageServerGroupDeletion: function (message) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
-      logLine.indexOf("'(id:") + 5,
-      logLine.indexOf(") was deleted by '")];
+      message.indexOf("'(id:") + 5,
+      message.indexOf(") was deleted by '")];
 
     boundaries.ServerGroupName = [
-      logLine.indexOf("servergroup '") + 13,
+      message.indexOf("servergroup '") + 13,
       boundaries.ServerGroupID[0] - 5];
 
-    return parseServerGroupModification(logLine, boundaries);
+    return parseServerGroupModification(message, boundaries);
   },
 
   parseServerGroupRenaming: function (message) {
@@ -124,22 +124,22 @@ module.exports = {
   },
 
   /**
-   * Parses the ServerGroupRenaming data from the given logLine.
-   * @param {string} logLine
+   * Parses the ServerGroupRenaming data from the given message.
+   * @param {string} message
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseMessageServerGroupRenaming: function (logLine) {
+  parseMessageServerGroupRenaming: function (message) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
-      logLine.indexOf("'(id:") + 5,
-      logLine.indexOf(") was renamed to '")];
+      message.indexOf("'(id:") + 5,
+      message.indexOf(") was renamed to '")];
 
     boundaries.ServerGroupName = [
-      logLine.indexOf(") was renamed to '") + 18,
-      logLine.lastIndexOf("' by '", logLine.length - 1)];
+      message.indexOf(") was renamed to '") + 18,
+      message.lastIndexOf("' by '", message.length - 1)];
 
-    return parseServerGroupModification(logLine, boundaries);
+    return parseServerGroupModification(message, boundaries);
   },
 
   parseServerGroupCopying: function (message, dateTime) {
@@ -149,22 +149,22 @@ module.exports = {
   },
 
   /**
-   * Parses the ServerGroupCopying data from the given logLine.
-   * @param {string} logLine
+   * Parses the ServerGroupCopying data from the given message.
+   * @param {string} message
    * @returns {{ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseMessageServerGroupCopying: function (logLine) {
+  parseMessageServerGroupCopying: function (message) {
     const boundaries = {};
 
     boundaries.ServerGroupID = [
-      logLine.lastIndexOf("'(id:") + 5,
-      logLine.length - 1];
+      message.lastIndexOf("'(id:") + 5,
+      message.length - 1];
 
     boundaries.ServerGroupName = [
-      logLine.indexOf(") to '") + 6,
+      message.indexOf(") to '") + 6,
       boundaries.ServerGroupID[0] - 5];
 
-    return parseServerGroupModification(logLine, boundaries);
+    return parseServerGroupModification(message, boundaries);
   },
 
   parseServerGroupAssignment: function (message, dateTime) {
@@ -182,13 +182,13 @@ module.exports = {
 
   // todo: add test case
   /**
-   * Parses the ServerGroupAssignment data from the given logLine.
-   * @param {string} logLine
+   * Parses the ServerGroupAssignment data from the given message.
+   * @param {string} message
    * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseMessageServerGroupAssignment: function (logLine) {
-    return parseServerGroupAssignmentOrRemoval(logLine,
-      {ServerGroupName: [logLine.indexOf(") was added to servergroup '") + 28, 0]});
+  parseMessageServerGroupAssignment: function (message) {
+    return parseServerGroupAssignmentOrRemoval(message,
+      {ServerGroupName: [message.indexOf(") was added to servergroup '") + 28, 0]});
   },
 
   parseServerGroupRemoval: function (message) {
@@ -207,12 +207,12 @@ module.exports = {
 
   // todo: add test case
   /**
-   * Parses the ServerGroupRemoval data from the given logLine.
-   * @param {string} logLine
+   * Parses the ServerGroupRemoval data from the given message.
+   * @param {string} message
    * @returns {{clientId: number, ServerGroupID: number, ServerGroupName: string}} the extracted data.
    */
-  parseMessageServerGroupRemoval: function (logLine) {
-    return parseServerGroupAssignmentOrRemoval(logLine,
-      {ServerGroupName: [logLine.indexOf(") was removed from servergroup '") + 32, 0]});
+  parseMessageServerGroupRemoval: function (message) {
+    return parseServerGroupAssignmentOrRemoval(message,
+      {ServerGroupName: [message.indexOf(") was removed from servergroup '") + 32, 0]});
   }
 };

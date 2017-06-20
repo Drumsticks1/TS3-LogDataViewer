@@ -19,37 +19,37 @@ module.exports = {
   },
 
   /**
-   * Parses the Kick data from the given logLine.
+   * Parses the Kick data from the given message.
    * Requires the boundaries object from the previous client.parseMessageClientDisconnect call.
-   * @param {string} logLine
+   * @param {string} message
    * @param {object} boundaries boundaries object from the previous client.parseMessageClientDisconnect call.
    * @returns {{kickedByNickname: string, kickedByUID: string, kickReason: string}} the extracted data.
    */
-  parseMessageKick: function (logLine, boundaries) {
+  parseMessageKick: function (message, boundaries) {
     let kickReason = "";
 
     const getSubstring = function (boundariesIdentifier) {
-      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
-    if (logLine.includes(" reasonmsg=")) {
+    if (message.includes(" reasonmsg=")) {
       boundaries.kickReason = [
-        logLine.lastIndexOf(" reasonmsg=") + 11,
-        logLine.length - 1];
+        message.lastIndexOf(" reasonmsg=") + 11,
+        message.length - 1];
 
       kickReason = getSubstring("kickReason");
     }
 
     boundaries.kickedByNickname = [
-      logLine.lastIndexOf(" invokername=") + 13,
-      logLine.lastIndexOf(" invokeruid=")];
+      message.lastIndexOf(" invokername=") + 13,
+      message.lastIndexOf(" invokeruid=")];
 
     boundaries.kickedByUID = [boundaries.kickedByNickname[1] + 12, 0];
 
-    if (!logLine.includes("invokeruid=serveradmin"))
-      boundaries.kickedByUID[1] = logLine.indexOf("=", boundaries.kickedByUID[0]) + 1;
+    if (!message.includes("invokeruid=serveradmin"))
+      boundaries.kickedByUID[1] = message.indexOf("=", boundaries.kickedByUID[0]) + 1;
     else
-      boundaries.kickedByUID[1] = logLine.indexOf("reasonmsg") - 1;
+      boundaries.kickedByUID[1] = message.indexOf("reasonmsg") - 1;
 
     return {
       kickedByNickname: getSubstring("kickedByNickname"),

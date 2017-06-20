@@ -51,13 +51,13 @@ module.exports = {
   },
 
   /**
-   * Parses the ChannelCreation data from the given logLine.
-   * @param {string} logLine
+   * Parses the ChannelCreation data from the given message.
+   * @param {string} message
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseMessageChannelCreation: function (logLine) {
-    return parseChannelModification(logLine,
-      {channelID: [0, logLine.indexOf(match.channelCreation)]});
+  parseMessageChannelCreation: function (message) {
+    return parseChannelModification(message,
+      {channelID: [0, message.indexOf(match.channelCreation)]});
   },
 
   parseChannelEdit: function (message) {
@@ -72,13 +72,13 @@ module.exports = {
   },
 
   /**
-   * Parses the ChannelEdit data from the given logLine.
-   * @param {string} logLine
+   * Parses the ChannelEdit data from the given message.
+   * @param {string} message
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseMessageChannelEdit: function (logLine) {
-    return parseChannelModification(logLine,
-      {channelID: [0, logLine.indexOf(match.channelEdit)]});
+  parseMessageChannelEdit: function (message) {
+    return parseChannelModification(message,
+      {channelID: [0, message.indexOf(match.channelEdit)]});
   },
 
   parseSubChannelCreation: function (message) {
@@ -90,13 +90,13 @@ module.exports = {
   },
 
   /**
-   * Parses the SubChannelCreation data from the given logLine.
-   * @param {string} logLine
+   * Parses the SubChannelCreation data from the given message.
+   * @param {string} message
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseMessageSubChannelCreation: function (logLine) {
-    return parseChannelModification(logLine,
-      {channelID: [0, logLine.indexOf(match.subChannelCreation)]});
+  parseMessageSubChannelCreation: function (message) {
+    return parseChannelModification(message,
+      {channelID: [0, message.indexOf(match.subChannelCreation)]});
   },
 
   parseChannelDeletion: function (message) {
@@ -106,12 +106,12 @@ module.exports = {
   },
 
   /**
-   * Parses the ChannelDeletion data from the given logLine.
-   * @param {string} logLine
+   * Parses the ChannelDeletion data from the given message.
+   * @param {string} message
    * @returns {{channelID: number, channelName: string}} the extracted data.
    */
-  parseMessageChannelDeletion: function (logLine) {
-    return parseChannelModification(logLine,
-      {channelID: [0, logLine.indexOf(match.channelDeletion)]});
+  parseMessageChannelDeletion: function (message) {
+    return parseChannelModification(message,
+      {channelID: [0, message.indexOf(match.channelDeletion)]});
   }
 };

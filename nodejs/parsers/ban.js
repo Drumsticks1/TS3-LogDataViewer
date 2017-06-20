@@ -20,34 +20,34 @@ module.exports = {
   },
 
   /**
-   * Parses the Ban data from the given logLine.
+   * Parses the Ban data from the given message.
    * Requires the boundaries object from the previous client.parseMessageClientDisconnect call.
-   * @param {string} logLine
+   * @param {string} message
    * @param {object} boundaries boundaries object from the previous client.parseMessageClientDisconnect call.
    * @param {string} lastUIDBanRule
    * @param {string} lastIPBanRule
    * @returns {{bannedUID: string, bannedIP: string, bannedByID: string, bannedByNickname: string, bannedByUID: string, banReason: string, banTime: number}} the extracted data.
    */
-  parseMessageBan: function (logLine, boundaries, lastUIDBanRule, lastIPBanRule) {
+  parseMessageBan: function (message, boundaries, lastUIDBanRule, lastIPBanRule) {
     let validUID = true;
 
-    boundaries.bannedByNickname = [logLine.indexOf(" invokername=", boundaries.clientId[1]) + 13, 0];
+    boundaries.bannedByNickname = [message.indexOf(" invokername=", boundaries.clientId[1]) + 13, 0];
 
-    if (logLine.includes("invokeruid=")) {
-      boundaries.bannedByNickname[1] = logLine.indexOf(" invokeruid=", boundaries.bannedByNickname[0]);
+    if (message.includes("invokeruid=")) {
+      boundaries.bannedByNickname[1] = message.indexOf(" invokeruid=", boundaries.bannedByNickname[0]);
       boundaries.bannedByUID = [
         boundaries.bannedByNickname[1] + 12,
-        logLine.indexOf(" reasonmsg", boundaries.bannedByNickname[1])];
+        message.indexOf(" reasonmsg", boundaries.bannedByNickname[1])];
     }
     else {
-      boundaries.bannedByNickname[1] = logLine.indexOf(" reasonmsg");
-      boundaries.bannedByUID = [0, logLine.indexOf(" reasonmsg")];
+      boundaries.bannedByNickname[1] = message.indexOf(" reasonmsg");
+      boundaries.bannedByUID = [0, message.indexOf(" reasonmsg")];
       validUID = false;
     }
 
     boundaries.banReason = [boundaries.bannedByUID[1] + 11, 0];
-    if (logLine.includes("reasonmsg=")) {
-      boundaries.banReason[1] = logLine.indexOf(" bantime=", boundaries.bannedByUID[1]);
+    if (message.includes("reasonmsg=")) {
+      boundaries.banReason[1] = message.indexOf(" bantime=", boundaries.bannedByUID[1]);
       boundaries.banTime = [boundaries.banReason[1] + 9, 0];
     }
     else {
@@ -55,10 +55,10 @@ module.exports = {
       boundaries.banTime = [boundaries.banReason[1] + 8, 0];
     }
 
-    boundaries.banTime[1] = logLine.length - 1;
+    boundaries.banTime[1] = message.length - 1;
 
     const getSubstring = function (boundariesIdentifier) {
-      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
     const bannedByNickname = getSubstring("bannedByNickname"),

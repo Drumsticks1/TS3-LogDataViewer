@@ -20,35 +20,35 @@ module.exports = {
   },
 
   /**
-   * Parses the Complaint data from the given logLine.
-   * @param {string} logLine
+   * Parses the Complaint data from the given message.
+   * @param {string} message
    * @returns {{complaintAboutNickname: string, complaintAboutID: number, complaintReason: string, complaintByNickname: string, complaintByID: number}} the extracted data
    */
-  parseMessageComplaint: function (logLine) {
+  parseMessageComplaint: function (message) {
     const boundaries = {};
 
     boundaries.complaintAboutNickname = [
-      logLine.indexOf("complaint added for client '") + 28,
-      logLine.indexOf("'(id:")];
+      message.indexOf("complaint added for client '") + 28,
+      message.indexOf("'(id:")];
 
     boundaries.complaintAboutID = [
       boundaries.complaintAboutNickname[1] + 5,
-      logLine.indexOf(") reason '")];
+      message.indexOf(") reason '")];
 
     boundaries.complaintReason = [
       boundaries.complaintAboutID[1] + 10,
-      logLine.lastIndexOf("' by client '")];
+      message.lastIndexOf("' by client '")];
 
     boundaries.complaintByNickname = [
       boundaries.complaintReason[1] + 13,
-      logLine.lastIndexOf("'(id:")];
+      message.lastIndexOf("'(id:")];
 
     boundaries.complaintByID = [
       boundaries.complaintByNickname[1] + 5,
-      logLine.length - 1];
+      message.length - 1];
 
     const getSubstring = function (boundariesIdentifier) {
-      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
     return {

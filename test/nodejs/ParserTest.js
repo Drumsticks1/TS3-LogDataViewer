@@ -47,4 +47,4 @@ describe('Parser', function () {
   });
 });
 
-// Todo: Add tests for the parseLogData function.
+// Todo: Add tests for the parseLog function.

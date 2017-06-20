@@ -10,15 +10,15 @@ var globalVariables = require("../globalVariables.js");
 var checkFunctions = require("../checkFunctions.js");
 
 /**
- * Parses the Client data from the given logLine.
+ * Parses the Client data from the given message.
  * Requires a boundaries object containing the positions for the clientId, Nickname and IP data.
- * @param {string} logLine
+ * @param {string} message
  * @param {object} boundaries boundaries object containing the positions for the clientId, Nickname and IP data.
  * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
  */
-function parseAnyClientConnect(boundaries, logLine) {
+function parseAnyClientConnect(boundaries, message) {
   const getSubstring = function (boundariesIdentifier) {
-    return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+    return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
   };
 
   return {
@@ -53,26 +53,26 @@ module.exports = {
   },
 
   /**
-   * Parses the ClientConnect data from the given logLine.
-   * @param {string} logLine
+   * Parses the ClientConnect data from the given message.
+   * @param {string} message
    * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
    */
-  parseMessageClientConnect: function (logLine) {
+  parseMessageClientConnect: function (message) {
     const boundaries = {};
 
     boundaries.IP = [
-      logLine.lastIndexOf(" ") + 1,
-      logLine.length - 6]; // -6 for ignoring the port.
+      message.lastIndexOf(" ") + 1,
+      message.length - 6]; // -6 for ignoring the port.
 
     boundaries.Nickname = [
-      logLine.indexOf("client connected '") + 18,
-      logLine.lastIndexOf("'(id:")];
+      message.indexOf("client connected '") + 18,
+      message.lastIndexOf("'(id:")];
 
     boundaries.clientId = [
       boundaries.Nickname[1] + 5,
       boundaries.IP[0] - 7];
 
-    return parseAnyClientConnect(boundaries, logLine);
+    return parseAnyClientConnect(boundaries, message);
   },
 
   parseQueryClientConnect: function (message, dateTime) {
@@ -95,26 +95,26 @@ module.exports = {
   },
 
   /**
-   * Parses the QueryClientConnect data from the given logLine.
-   * @param {string} logLine
+   * Parses the QueryClientConnect data from the given message.
+   * @param {string} message
    * @returns {{clientId: number, Nickname: string, IP: string}} the extracted data.
    */
-  parseMessageQueryClientConnect: function (logLine) {
+  parseMessageQueryClientConnect: function (message) {
     const boundaries = {};
 
     boundaries.Nickname = [
-      logLine.indexOf("query client connected '") + 24,
-      logLine.lastIndexOf("'(id:") - 6]; // -6 for ignoring the port.
+      message.indexOf("query client connected '") + 24,
+      message.lastIndexOf("'(id:") - 6]; // -6 for ignoring the port.
 
     boundaries.clientId = [
       boundaries.Nickname[1] + 11,
-      logLine.length - 1];
+      message.length - 1];
 
     boundaries.IP = [
-      logLine.lastIndexOf(" from ") + 6,
+      message.lastIndexOf(" from ") + 6,
       boundaries.Nickname[1]];
 
-    return parseAnyClientConnect(boundaries, logLine);
+    return parseAnyClientConnect(boundaries, message);
   },
 
   parseClientDisconnect: function (message, dateTime, isLastLog) {
@@ -135,27 +135,27 @@ module.exports = {
   },
 
   /**
-   * Parses the ClientDisconnect data from the given logLine.
-   * @param {string} logLine
+   * Parses the ClientDisconnect data from the given message.
+   * @param {string} message
    * @returns {{clientId: number, Nickname: string, boundaries: {}}} the extracted data and the boundaries object.
    */
-  parseMessageClientDisconnect: function (logLine) {
+  parseMessageClientDisconnect: function (message) {
     const boundaries = {};
 
     boundaries.Nickname = [
-      logLine.indexOf("client disconnected '") + 21,
-      logLine.indexOf("'(id:")];
+      message.indexOf("client disconnected '") + 21,
+      message.indexOf("'(id:")];
 
     boundaries.clientId = [boundaries.Nickname[1] + 5, 0];
 
     // Compatible with regular disconnects, bans and kicks.
-    if (!logLine.includes(") reason 'reasonmsg"))
-      boundaries.clientId[1] = logLine.lastIndexOf(") reason 'invokerid=");
+    if (!message.includes(") reason 'reasonmsg"))
+      boundaries.clientId[1] = message.lastIndexOf(") reason 'invokerid=");
     else
-      boundaries.clientId[1] = logLine.lastIndexOf(") reason 'reasonmsg");
+      boundaries.clientId[1] = message.lastIndexOf(") reason 'reasonmsg");
 
     const getSubstring = function (boundariesIdentifier) {
-      return miscFunctions.getSubstring(boundaries, logLine, boundariesIdentifier);
+      return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
     return {
@@ -170,16 +170,16 @@ module.exports = {
   },
 
   /**
-   * Parses the ClientDeletion data from the given logLine.
-   * @param {string} logLine
+   * Parses the ClientDeletion data from the given message.
+   * @param {string} message
    * @returns {number} the clientId of the deleted client.
    */
-  parseMessageClientDeletion: function (logLine) {
+  parseMessageClientDeletion: function (message) {
     const boundaries = {};
 
-    boundaries.clientId = [0, logLine.lastIndexOf(") got deleted by client '")];
-    boundaries.clientId[0] = logLine.lastIndexOf("'(id:", boundaries.clientId[1]) + 5;
+    boundaries.clientId = [0, message.lastIndexOf(") got deleted by client '")];
+    boundaries.clientId[0] = message.lastIndexOf("'(id:", boundaries.clientId[1]) + 5;
 
-    return Number(miscFunctions.getSubstring(boundaries, logLine, "clientId"));
+    return Number(miscFunctions.getSubstring(boundaries, message, "clientId"));
   }
 };
