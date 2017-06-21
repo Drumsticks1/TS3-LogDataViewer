@@ -14,7 +14,7 @@ const fs = require("fs"),
  * Creates a json containing the data extracted from the logs.
  */
 exports.createJSON = function () {
-  log.info("Starting JSON creation.");
+  log.debug(module, "Starting JSON creation.");
 
   const timestamps = miscFunctions.getCurrentTimestamps();
   const json = {
@@ -43,9 +43,9 @@ exports.createJSON = function () {
     fs.writeFileSync(Constants.outputJSON, JSON.stringify(json), 'utf8');
   }
   catch (error) {
-    log.error("An error occurred while creating the JSON:\n\t" + error.message);
+    log.error(module, "An error occurred while creating the JSON:\n\t" + error.message);
     return 0;
   }
 
-  log.info("JSON creation completed.");
+  log.debug(module, "JSON creation completed.");
 };

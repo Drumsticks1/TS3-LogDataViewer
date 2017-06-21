@@ -66,7 +66,7 @@ module.exports = {
    * Calls parseLog for all Logs that are neither parsed nor ignored.
    */
   parseLogs: function () {
-    log.info("Starting log parsing.");
+    log.debug(module, "Starting log parsing.");
 
     for (let i = 0; i < globalVariables.Logs.length; i++) {
       if (!globalVariables.Logs[i].parsed && !globalVariables.Logs[i].ignored) {

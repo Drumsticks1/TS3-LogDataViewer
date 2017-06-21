@@ -15,7 +15,7 @@ const express = require("express"),
 
 let lastBuild = 0;
 
-log.info("Program startup");
+log.info(module, "Program Startup");
 
 // Fetch the config file and import the settings on program startup.
 getConf.getConf();
@@ -24,7 +24,7 @@ getConf.getConf();
 app.use(helmet());
 
 app.listen(globalVariables.usedPort, 'localhost', function () {
-  log.info("TS3-LDV is listening on localhost:" + globalVariables.usedPort + "\n");
+  log.info(module, "Listening on localhost:" + globalVariables.usedPort);
 });
 
 app.get("/buildJSON", function (req, res) {
@@ -58,7 +58,7 @@ app.get("/buildJSON", function (req, res) {
         break;
     }
   } else {
-    log.debug("The last request was " + timeDifference + " ms ago but timeBetweenRequests is set to " + globalVariables.timeBetweenRequests + " ms.");
+    log.debug(module, "The last request was " + timeDifference + " ms ago but timeBetweenRequests is set to " + globalVariables.timeBetweenRequests + " ms.");
     response.timeDifference = timeDifference;
   }
 

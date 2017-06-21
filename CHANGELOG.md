@@ -17,6 +17,11 @@ Changes:
       - Replaced the methods Parser.parseLogs and Parser.parseLogData with the methods Parser.parseLogs, Parser.parseLog and Parser.parseLogLine for a more clear parsing structure
       - Renamed the old parser methods in nodejs/parsers/*.js that extract and return the parsed data from the message of a log line from parseX() to parseMessageX()
       - Moved the parser actions from nodejs/Parser.js into the nodejs/parsers files, naming example of the methods: parsers.client.parseConnect()
+      - Logging:
+        - Updated logging format, included the name of the module in which the log call was made
+        - Set clearer rules by which is decided which logLevel is appropriate for a log message
+        - Updated existing log calls according to the changes mentioned above and added new log calls
+
 
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:

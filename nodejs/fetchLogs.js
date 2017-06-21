@@ -18,17 +18,17 @@ const fs = require("fs"),
  * 2 --> Rebuild required, isMatchingLogOrder failed
  */
 exports.fetchLogs = function () {
-  log.info("Checking log directory.");
+  log.debug(module, "Checking log directory.");
   let rebuildRequired = false;
 
   try {
     if (!fs.statSync(globalVariables.TS3LogDirectory).isDirectory()) {
-      log.warn("The log directory seems not to be a directory.");
+      log.warn(module, "The log directory seems not to be a directory!");
       return 0;
     }
   }
   catch (error) {
-    log.error("An error occurred while fetching the logs:\n\t" + error.message);
+    log.error(module, "An error occurred while fetching the logs:\n\t" + error.message);
     return 0;
   }
 
@@ -36,12 +36,12 @@ exports.fetchLogs = function () {
   try {
     logFiles = fs.readdirSync(globalVariables.TS3LogDirectory);
   } catch (error) {
-    log.error("An error occurred while reading the directory:\n\t" + error.message);
+    log.error(module, "An error occurred while reading the directory:\n\t" + error.message);
   }
 
   const newLogObjects = [];
 
-  log.info("Fetching logs.");
+  log.debug(module, "Fetching logs.");
   for (let i = 0; i < logFiles.length; i++) {
     if (logFiles[i].endsWith(String(globalVariables.virtualServer) + ".log")) {
       newLogObjects.push({
@@ -53,11 +53,11 @@ exports.fetchLogs = function () {
   }
 
   if (newLogObjects.length === 0) {
-    log.warn("The log directory contains no valid logs for the specified virtual server.");
+    log.warn(module, "The log directory contains no valid logs for the specified virtual server.");
     return 0;
   }
 
-  log.info("Sorting logs.");
+  log.debug(module, "Sorting logs.");
   newLogObjects.sort(
     /**
      * Custom sort function for the newLogObjects array, using logNames for sorting.
@@ -71,7 +71,7 @@ exports.fetchLogs = function () {
 
   if (globalVariables.bufferData) {
     if (checkFunctions.isMatchingLogOrder(newLogObjects)) {
-      log.debug("Comparing new and old logs.");
+      log.debug(module, "Comparing new and old logs.");
 
       // The last parsed log might contain new data, don't modify it's parsed state.
       for (let i = 0; i < globalVariables.Logs.length - 1; i++) {
@@ -79,7 +79,7 @@ exports.fetchLogs = function () {
       }
     }
     else {
-      log.warn("Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
+      log.warn(module, "Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
       rebuildRequired = true;
       miscFunctions.clearGlobalArrays();
     }

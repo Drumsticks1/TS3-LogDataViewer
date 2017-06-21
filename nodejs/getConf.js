@@ -23,16 +23,16 @@ function acquireSetting(settingName, settingValueType) {
     if (typeof confJSON[settingName] === settingValueType) {
       if (globalVariables[settingName] !== confJSON[settingName]) {
         globalVariables[settingName] = confJSON[settingName];
-        log.debug("Configuration variable \"" + settingName + "\" is set to \"" + confJSON[settingName] + "\".");
+        log.debug(module, "Configuration variable \"" + settingName + "\" is set to \"" + confJSON[settingName] + "\".");
       } else {
-        log.debug("Configuration variable \"" + settingName + "\" already equals the default value.");
+        log.debug(module, "Configuration variable \"" + settingName + "\" already equals the default value.");
       }
     } else {
-      log.debug("Configuration variable \"" + settingName + "\" is not specified as a valid " + settingValueType + ", using default value.");
+      log.debug(module, "Configuration variable \"" + settingName + "\" is not specified as a valid " + settingValueType + ", using default value.");
       globalVariables[settingName] = Constants[settingName];
     }
   } else {
-    log.debug("Configuration variable \"" + settingName + "\" is not specified, using default value.");
+    log.debug(module, "Configuration variable \"" + settingName + "\" is not specified, using default value.");
     globalVariables[settingName] = Constants[settingName];
   }
 }
@@ -41,7 +41,7 @@ function acquireSetting(settingName, settingValueType) {
  * Resets the configuration to the default values set in Constants.js.
  */
 function resetToDefaultConfiguration() {
-  log.debug("Ignoring the conf.json and using default settings.");
+  log.debug(module, "Ignoring the conf.json and using default settings.");
   globalVariables.programLogfile = Constants.programLogfile;
   globalVariables.TS3LogDirectory = Constants.TS3LogDirectory;
   globalVariables.virtualServer = Constants.virtualServer;
@@ -60,7 +60,7 @@ module.exports = {
    * @returns {boolean} true if no error occurs.
    */
   getConf: function () {
-    log.info("Fetching and checking configuration file.");
+    log.debug(module, "Fetching and checking configuration file.");
     try {
       const fileStats = fs.statSync(Constants.confJSON);
       if (fileStats.isFile()) {
@@ -69,7 +69,7 @@ module.exports = {
         acquireSetting("programLogfile", "string");
         acquireSetting("logLevel", "number");
         if (globalVariables.logLevel !== 0 && globalVariables.logLevel !== 1 && globalVariables.logLevel !== 2 && globalVariables.logLevel !== 3) {
-          log.info("logLevel setting \"" + globalVariables.logLevel + "\" is invalid, setting default value.");
+          log.warn(module, "logLevel setting \"" + globalVariables.logLevel + "\" is invalid, using default value!");
           globalVariables.logLevel = Constants.logLevel;
         }
         log.updateWriteStream();
@@ -89,19 +89,20 @@ module.exports = {
         if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length !== 0) {
           for (let i = 0; i < confJSON.ignoredLogs.length; i++) {
             globalVariables.ignoredLogs.push(confJSON.ignoredLogs[i]);
-            log.debug("Added ignored log: \"" + confJSON.ignoredLogs[i] + "\".");
+            log.debug(module, "Added ignored log: \"" + confJSON.ignoredLogs[i] + "\".");
           }
         }
         else {
-          log.debug("No ignored logs specified.");
+          log.debug(module, "No ignored logs specified.");
           globalVariables.ignoredLogs.length = 0;
         }
       } else {
-        log.info("conf.json is not a file, using default values for the settings!");
+        log.warn(module, "conf.json is not a file, using default values for the settings!");
         resetToDefaultConfiguration();
       }
     } catch (error) {
-      log.warn("An error occurred while fetching and parsing conf.json:\n\t" + error.message);
+      log.warn(module, "An error occurred while fetching and parsing conf.json:\n\t" + error.message);
+      log.warn(module, "Falling back to the default configuration!");
       resetToDefaultConfiguration();
     }
   }
