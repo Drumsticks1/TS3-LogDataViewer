@@ -1,4 +1,4 @@
-// Complaint.js: Complaint class.
+// classes/complaint.js: Complaint class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

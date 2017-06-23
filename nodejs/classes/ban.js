@@ -1,4 +1,4 @@
-// Ban.js: Ban class.
+// classes/ban.js: Ban class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

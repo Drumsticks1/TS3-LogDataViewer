@@ -5,7 +5,7 @@
 "use strict";
 
 const assert = require('assert');
-const complaintParser = require("../../../nodejs/parsers/complaint.js");
+const complaintParser = require("../../../nodejs/parsers/parser-complaint.js");
 
 describe('complaintParser', function () {
   describe('parseMessageComplaint', function () {

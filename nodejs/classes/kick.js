@@ -1,4 +1,4 @@
-// Kick.js: Kick class.
+// classes/kick.js: Kick class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

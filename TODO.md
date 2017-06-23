@@ -25,6 +25,10 @@ This todo list is not a binding list of things that will be done, but more a lit
   - (optional) time timeBetweenBuildsWithoutBuffer for "Build JSON without buffer" (as it results in a higher cpu load)
   
 - client-side code
+  - filename conversion
+      - all lowercase
+      - in a pattern like multiple-words instead of multipleWords
+  - improve styling in tables for small displays
   - outsource the creation of the control sections for the tables
   - clean up style.scss
   - check filter type (e.g regex) compatibility for the Nicknames, Connections, IPs and Server Group column

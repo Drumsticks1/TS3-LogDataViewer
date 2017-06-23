@@ -1,13 +1,13 @@
-// parsers/kick.js : Parsing of Kick events.
+// parsers/parser-kick.js : Parsing of Kick events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const miscFunctions = require('../miscFunctions.js');
-var checkFunctions = require("../checkFunctions.js");
-var Kick = require("../Kick.js");
-var globalVariables = require("../globalVariables.js");
+const miscFunctions = require('../misc-functions.js');
+var checkFunctions = require("../check-functions.js");
+var Kick = require("../classes/kick.js");
+var data = require("../data.js");
 
 module.exports = {
 
@@ -15,7 +15,7 @@ module.exports = {
     let res = this.parseMessageKick(message, disconnectBoundaries);
 
     if (!checkFunctions.isDuplicateKick(dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason))
-      Kick.addKick(globalVariables.KickList, dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason);
+      Kick.addKick(data.KickList, dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason);
   },
 
   /**

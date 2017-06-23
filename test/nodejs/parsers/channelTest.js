@@ -5,7 +5,7 @@
 "use strict";
 
 const assert = require('assert');
-const channelParser = require("../../../nodejs/parsers/channel.js");
+const channelParser = require("../../../nodejs/parsers/parser-channel.js");
 
 // Todo: Add additional tests
 

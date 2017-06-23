@@ -1,36 +1,36 @@
-// parsers/client.js : Parsing of Client events.
+// parsers/parser-client.js : Parsing of Client events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const miscFunctions = require('../miscFunctions.js');
-var Client = require("../Client.js");
-var globalVariables = require("../globalVariables.js");
-var checkFunctions = require("../checkFunctions.js");
+const miscFunctions = require('../misc-functions.js');
+var Client = require("../classes/client.js");
+var data = require("../data.js");
+var checkFunctions = require("../check-functions.js");
 
 module.exports = {
 
   parseClientConnect: function (message, dateTime, isLastLog) {
     let res = this.parseMessageClientConnect(message);
 
-    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+    Client.fillArrayWithDummyClients(data.ClientList, res.clientId);
 
-    if (globalVariables.ClientList[res.clientId].clientId === -1)
-      globalVariables.ClientList[res.clientId].updateClientId(res.clientId);
+    if (data.ClientList[res.clientId].clientId === -1)
+      data.ClientList[res.clientId].updateClientId(res.clientId);
 
-    globalVariables.ClientList[res.clientId].addNickname(res.Nickname);
+    data.ClientList[res.clientId].addNickname(res.Nickname);
 
-    if (globalVariables.bufferData) {
+    if (data.bufferData) {
       if (!checkFunctions.isDuplicateConnection(res.clientId, dateTime))
-        globalVariables.ClientList[res.clientId].addConnection(dateTime);
+        data.ClientList[res.clientId].addConnection(dateTime);
     }
-    else globalVariables.ClientList[res.clientId].addConnection(dateTime);
+    else data.ClientList[res.clientId].addConnection(dateTime);
 
-    globalVariables.ClientList[res.clientId].addIP(res.IP);
+    data.ClientList[res.clientId].addIP(res.IP);
 
     if (isLastLog)
-      globalVariables.ClientList[res.clientId].connect();
+      data.ClientList[res.clientId].connect();
   },
 
   /**
@@ -67,20 +67,20 @@ module.exports = {
   parseQueryClientConnect: function (message, dateTime) {
     let res = this.parseMessageQueryClientConnect(message);
 
-    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+    Client.fillArrayWithDummyClients(data.ClientList, res.clientId);
 
-    if (globalVariables.ClientList[res.clientId].clientId === -1)
-      globalVariables.ClientList[res.clientId].updateClientId(res.clientId);
+    if (data.ClientList[res.clientId].clientId === -1)
+      data.ClientList[res.clientId].updateClientId(res.clientId);
 
-    globalVariables.ClientList[res.clientId].addNickname(res.Nickname);
+    data.ClientList[res.clientId].addNickname(res.Nickname);
 
-    if (globalVariables.bufferData) {
+    if (data.bufferData) {
       if (!checkFunctions.isDuplicateConnection(res.clientId, dateTime))
-        globalVariables.ClientList[res.clientId].addConnection(dateTime);
+        data.ClientList[res.clientId].addConnection(dateTime);
     }
-    else globalVariables.ClientList[res.clientId].addConnection(dateTime);
+    else data.ClientList[res.clientId].addConnection(dateTime);
 
-    globalVariables.ClientList[res.clientId].addIP(res.IP);
+    data.ClientList[res.clientId].addIP(res.IP);
   },
 
   /**
@@ -117,16 +117,16 @@ module.exports = {
   parseClientDisconnect: function (message, dateTime, isLastLog) {
     let res = this.parseMessageClientDisconnect(message);
 
-    if (globalVariables.ClientList.length < res.clientId + 1) {
-      Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
-      globalVariables.ClientList[res.clientId].updateClientId(res.clientId);
+    if (data.ClientList.length < res.clientId + 1) {
+      Client.fillArrayWithDummyClients(data.ClientList, res.clientId);
+      data.ClientList[res.clientId].updateClientId(res.clientId);
     }
 
-    if (globalVariables.ClientList[res.clientId].getNicknameCount() === 0 || globalVariables.ClientList[res.clientId].getNicknameByID(0) !== res.Nickname)
-      globalVariables.ClientList[res.clientId].addNickname(res.Nickname);
+    if (data.ClientList[res.clientId].getNicknameCount() === 0 || data.ClientList[res.clientId].getNicknameByID(0) !== res.Nickname)
+      data.ClientList[res.clientId].addNickname(res.Nickname);
 
     if (isLastLog)
-      globalVariables.ClientList[res.clientId].disconnect();
+      data.ClientList[res.clientId].disconnect();
 
     return res.boundaries;
   },
@@ -163,7 +163,7 @@ module.exports = {
   },
 
   parseClientDeletion: function (message) {
-    globalVariables.ClientList[this.parseMessageClientDeletion(message)].deleteClient();
+    data.ClientList[this.parseMessageClientDeletion(message)].deleteClient();
   },
 
   /**

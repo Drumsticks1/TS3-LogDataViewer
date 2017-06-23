@@ -1,17 +1,17 @@
-// checkFunctions.js: Control Functions.
+// check-functions.js: Control Functions.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
-const globalVariables = require("./globalVariables.js");
+const data = require("./data.js");
 
-const ClientList = globalVariables.ClientList,
-  BanList = globalVariables.BanList,
-  KickList = globalVariables.KickList,
-  ComplaintList = globalVariables.ComplaintList,
-  UploadList = globalVariables.UploadList,
-  Logs = globalVariables.Logs,
-  ignoredLogs = globalVariables.ignoredLogs;
+const ClientList = data.ClientList,
+  BanList = data.BanList,
+  KickList = data.KickList,
+  ComplaintList = data.ComplaintList,
+  UploadList = data.UploadList,
+  Logs = data.Logs,
+  ignoredLogs = data.ignoredLogs;
 
 module.exports = {
   /**

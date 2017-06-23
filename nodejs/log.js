@@ -5,8 +5,8 @@
 "use strict";
 
 const fs = require('fs'),
-  globalVariables = require("./globalVariables.js"),
-  miscFunctions = require("./miscFunctions.js"),
+  data = require("./data.js"),
+  miscFunctions = require("./misc-functions.js"),
   path = require("path");
 
 let programLogfile;
@@ -63,7 +63,7 @@ function log(timestamp, level, module, message) {
   }
 
   // Only log if above the minim
-  if (level > globalVariables.logLevel)
+  if (level > data.logLevel)
     return;
 
   let logLevelString;
@@ -95,7 +95,7 @@ module.exports = {
    * Required when the log file get deleted while the process is running or when the programLogfile paths changed.
    */
   updateWriteStream: function () {
-    programLogfile = fs.createWriteStream(globalVariables.programLogfile, {flags: 'a'});
+    programLogfile = fs.createWriteStream(data.programLogfile, {flags: 'a'});
 
     while (logBuffer.length > 0) {
       const buff = logBuffer.shift();

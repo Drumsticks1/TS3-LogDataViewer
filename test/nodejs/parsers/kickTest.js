@@ -5,7 +5,7 @@
 "use strict";
 
 const assert = require('assert');
-const kickParser = require("../../../nodejs/parsers/kick.js");
+const kickParser = require("../../../nodejs/parsers/parser-kick.js");
 
 // Todo: Add additional tests
 

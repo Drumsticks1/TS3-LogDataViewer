@@ -1,8 +1,8 @@
-// globalVariables.js
+// data.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
-const Constants = require("./Constants.js");
+const Constants = require("./constants.js");
 
 const ignoredLogs = [],
   Logs = [],
@@ -12,8 +12,9 @@ const ignoredLogs = [],
   KickList = [],
   ComplaintList = [],
   UploadList = [],
-  ChannelList = [],
-  programLogfile = Constants.programLogfile,
+  ChannelList = [];
+
+let programLogfile = Constants.programLogfile,
   virtualServer = Constants.virtualServer,
   TS3LogDirectory = Constants.TS3LogDirectory,
   bufferData = Constants.bufferData,

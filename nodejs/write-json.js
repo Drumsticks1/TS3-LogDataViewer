@@ -1,13 +1,13 @@
-// createJSON.js
+// write-json.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
 const fs = require("fs"),
-  Constants = require("./Constants.js"),
-  globalVariables = require("./globalVariables.js"),
-  miscFunctions = require("./miscFunctions.js"),
+  Constants = require("./constants.js"),
+  data = require("./data.js"),
+  miscFunctions = require("./misc-functions.js"),
   log = require("./log.js");
 
 /**
@@ -24,19 +24,19 @@ exports.createJSON = function () {
       "GitHub": "https://github.com/Drumsticks1/TS3-LogDataViewer"
     },
     "Attributes": {
-      "virtualServer": globalVariables.virtualServer,
+      "virtualServer": data.virtualServer,
       "creationTime": {
         "localTime": timestamps.local,
         "UTC": timestamps.utc
       }
     },
-    "ClientList": globalVariables.ClientList,
-    "ServerGroupList": globalVariables.ServerGroupList,
-    "BanList": globalVariables.BanList,
-    "KickList": globalVariables.KickList,
-    "ComplaintList": globalVariables.ComplaintList,
-    "UploadList": globalVariables.UploadList,
-    "ChannelList": globalVariables.ChannelList
+    "ClientList": data.ClientList,
+    "ServerGroupList": data.ServerGroupList,
+    "BanList": data.BanList,
+    "KickList": data.KickList,
+    "ComplaintList": data.ComplaintList,
+    "UploadList": data.UploadList,
+    "ChannelList": data.ChannelList
   };
 
   try {

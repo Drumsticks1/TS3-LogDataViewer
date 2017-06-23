@@ -1,22 +1,21 @@
-// parsers/ban.js : Parsing of Ban events.
+// parsers/parser-ban.js : Parsing of Ban events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const checkFunctions = require("../checkFunctions.js"),
-  miscFunctions = require('../miscFunctions.js');
-var Ban = require("../Ban.js");
-var globalVariables = require("../globalVariables.js");
+const checkFunctions = require("../check-functions.js"),
+  miscFunctions = require('../misc-functions.js');
+var Ban = require("../classes/ban.js");
+var data = require("../data.js");
 
 module.exports = {
 
   parseBan: function (message, dateTime, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP) {
     let res = this.parseMessageBan(message, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP);
 
-    // Todo: check res.bannedByID casting options
     if (!checkFunctions.isDuplicateBan(dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime))
-      Ban.addBan(globalVariables.BanList, dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime);
+      Ban.addBan(data.BanList, dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime);
   },
 
   /**

@@ -1,14 +1,14 @@
-// parsers/upload.js : Parsing of Upload events.
+// parsers/parser-upload.js : Parsing of Upload events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const miscFunctions = require('../miscFunctions.js');
-var Channel = require("../Channel.js");
-var Upload = require("../Upload.js");
-var checkFunctions = require("../checkFunctions.js");
-var globalVariables = require("../globalVariables.js");
+const miscFunctions = require('../misc-functions.js');
+var Channel = require("../classes/channel.js");
+var Upload = require("../classes/upload.js");
+var checkFunctions = require("../check-functions.js");
+var data = require("../data.js");
 
 // Todo: Eliminate duplicates after the boundaries objects.
 module.exports = {
@@ -16,11 +16,11 @@ module.exports = {
   parseUpload: function (message, dateTime) {
     let res = this.parseMessageUpload(message);
 
-    if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null)
-      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", "Unknown");
+    if (Channel.getChannelByChannelId(data.ChannelList, res.channelID) === null)
+      Channel.addChannel(data.ChannelList, res.channelID, "Unknown", "Unknown");
 
     if (!checkFunctions.isDuplicateUpload(dateTime, res.channelID, res.filename, res.uploadedByID, res.uploadedByNickname))
-      Upload.addUpload(globalVariables.UploadList, dateTime, res.channelID, res.filename, res.uploadedByID, res.uploadedByNickname);
+      Upload.addUpload(data.UploadList, dateTime, res.channelID, res.filename, res.uploadedByID, res.uploadedByNickname);
   },
 
   /**

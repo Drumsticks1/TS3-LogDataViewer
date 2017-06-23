@@ -1,13 +1,13 @@
-// parsers/complaint.js : Parsing of Complaint events.
+// parsers/parser-complaint.js : Parsing of Complaint events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const miscFunctions = require('../miscFunctions.js');
-var checkFunctions = require("../checkFunctions.js");
-var Complaint = require("../Complaint.js");
-var globalVariables = require("../globalVariables.js");
+const miscFunctions = require('../misc-functions.js');
+var checkFunctions = require("../check-functions.js");
+var Complaint = require("../classes/complaint.js");
+var data = require("../data.js");
 
 module.exports = {
 
@@ -16,7 +16,7 @@ module.exports = {
 
     // Todo: Modify check functions so that they accept objects, maybe also change the addObject functions.
     if (!checkFunctions.isDuplicateComplaint(dateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID))
-      Complaint.addComplaint(globalVariables.ComplaintList, dateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID);
+      Complaint.addComplaint(data.ComplaintList, dateTime, res.complaintAboutNickname, res.complaintAboutID, res.complaintReason, res.complaintByNickname, res.complaintByID);
   },
 
   /**

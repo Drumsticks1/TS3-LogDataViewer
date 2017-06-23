@@ -7,11 +7,11 @@
 const express = require("express"),
   app = express(),
   helmet = require("helmet"),
-  globalVariables = require("./globalVariables.js"),
-  getConf = require("./getConf.js"),
+  data = require("./data.js"),
+  getConf = require("./configuration.js"),
   log = require("./log.js"),
-  miscFunctions = require("./miscFunctions.js"),
-  buildJSON = require("./buildJSON.js");
+  miscFunctions = require("./misc-functions.js"),
+  buildJSON = require("./build-json.js");
 
 let lastBuild = 0;
 
@@ -23,8 +23,8 @@ getConf.getConf();
 // Improves security by setting various HTTP headers.
 app.use(helmet());
 
-app.listen(globalVariables.usedPort, 'localhost', function () {
-  log.info(module, "Listening on localhost:" + globalVariables.usedPort);
+app.listen(data.usedPort, 'localhost', function () {
+  log.info(module, "Listening on localhost:" + data.usedPort);
 });
 
 app.get("/buildJSON", function (req, res) {
@@ -33,11 +33,11 @@ app.get("/buildJSON", function (req, res) {
       "success": false,
       "fetchLogsError": false,
       "newJSON": false,
-      "timeBetweenRequests": globalVariables.timeBetweenRequests,
+      "timeBetweenRequests": data.timeBetweenRequests,
       "timeDifference": -1
     };
 
-  if (timeDifference > globalVariables.timeBetweenRequests) {
+  if (timeDifference > data.timeBetweenRequests) {
     const clearBuffer = String(req.query.clearBuffer) === "true";
     if (clearBuffer)
       miscFunctions.clearGlobalArrays();
@@ -58,7 +58,7 @@ app.get("/buildJSON", function (req, res) {
         break;
     }
   } else {
-    log.debug(module, "The last request was " + timeDifference + " ms ago but timeBetweenRequests is set to " + globalVariables.timeBetweenRequests + " ms.");
+    log.debug(module, "The last request was " + timeDifference + " ms ago but timeBetweenRequests is set to " + data.timeBetweenRequests + " ms.");
     response.timeDifference = timeDifference;
   }
 

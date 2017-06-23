@@ -1,14 +1,14 @@
-// parsers/serverGroup.js : Parsing of ServerGroup events.
+// parsers/parser-server-group.js : Parsing of ServerGroup events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const miscFunctions = require('../miscFunctions.js');
-var ServerGroup = require("../ServerGroup.js");
-var Client = require("../Client.js");
-var checkFunctions = require("../checkFunctions.js");
-var globalVariables = require("../globalVariables.js");
+const miscFunctions = require('../misc-functions.js');
+var ServerGroup = require("../classes/server-group.js");
+var Client = require("../classes/client.js");
+var checkFunctions = require("../check-functions.js");
+var data = require("../data.js");
 
 /**
  * Parses the ServerGroup assignment or removal data from the given message.
@@ -63,7 +63,7 @@ module.exports = {
   parseServerGroupCreation: function (message, dateTime) {
     const res = this.parseMessageServerGroupCreation(message);
 
-    ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, dateTime, res.ServerGroupName);
+    ServerGroup.addServerGroup(data.ServerGroupList, res.ServerGroupID, dateTime, res.ServerGroupName);
   },
 
   /**
@@ -88,10 +88,10 @@ module.exports = {
   parseServerGroupDeletion: function (message) {
     const res = this.parseMessageServerGroupDeletion(message);
 
-    if (ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID) === null)
-      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+    if (ServerGroup.getServerGroupByServerGroupId(data.ServerGroupList, res.ServerGroupID) === null)
+      ServerGroup.addServerGroup(data.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
 
-    ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID).deleteServerGroup();
+    ServerGroup.getServerGroupByServerGroupId(data.ServerGroupList, res.ServerGroupID).deleteServerGroup();
 
   },
 
@@ -117,10 +117,10 @@ module.exports = {
   parseServerGroupRenaming: function (message) {
     const res = this.parseMessageServerGroupRenaming(message);
 
-    if (ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID) === null)
-      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+    if (ServerGroup.getServerGroupByServerGroupId(data.ServerGroupList, res.ServerGroupID) === null)
+      ServerGroup.addServerGroup(data.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
 
-    ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID).renameServerGroup(res.ServerGroupName);
+    ServerGroup.getServerGroupByServerGroupId(data.ServerGroupList, res.ServerGroupID).renameServerGroup(res.ServerGroupName);
   },
 
   /**
@@ -145,7 +145,7 @@ module.exports = {
   parseServerGroupCopying: function (message, dateTime) {
     const res = this.parseMessageServerGroupCopying(message);
 
-    ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, dateTime, res.ServerGroupName);
+    ServerGroup.addServerGroup(data.ServerGroupList, res.ServerGroupID, dateTime, res.ServerGroupName);
   },
 
   /**
@@ -171,13 +171,13 @@ module.exports = {
     let res = this.parseMessageServerGroupAssignment(message);
 
     // Checks if the server group exists and if not, ... TODO
-    if (ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID) === null)
-      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+    if (ServerGroup.getServerGroupByServerGroupId(data.ServerGroupList, res.ServerGroupID) === null)
+      ServerGroup.addServerGroup(data.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
 
-    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+    Client.fillArrayWithDummyClients(data.ClientList, res.clientId);
 
     if (!checkFunctions.isDuplicateServerGroup(res.clientId, res.ServerGroupID))
-      globalVariables.ClientList[res.clientId].addServerGroup(res.ServerGroupID, dateTime);
+      data.ClientList[res.clientId].addServerGroup(res.ServerGroupID, dateTime);
   },
 
   // todo: add test case
@@ -195,14 +195,14 @@ module.exports = {
     let res = this.parseMessageServerGroupRemoval(message);
 
     // Checks if the server group exists and if not, ... TODO
-    const serverGroupObject = ServerGroup.getServerGroupByServerGroupId(globalVariables.ServerGroupList, res.ServerGroupID);
+    const serverGroupObject = ServerGroup.getServerGroupByServerGroupId(data.ServerGroupList, res.ServerGroupID);
 
     if (serverGroupObject === null)
-      ServerGroup.addServerGroup(globalVariables.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
+      ServerGroup.addServerGroup(data.ServerGroupList, res.ServerGroupID, "Unknown", res.ServerGroupName);
 
-    Client.fillArrayWithDummyClients(globalVariables.ClientList, res.clientId);
+    Client.fillArrayWithDummyClients(data.ClientList, res.clientId);
 
-    globalVariables.ClientList[res.clientId].removeServerGroupByID(res.ServerGroupID);
+    data.ClientList[res.clientId].removeServerGroupByID(res.ServerGroupID);
   },
 
   // todo: add test case

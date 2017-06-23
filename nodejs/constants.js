@@ -1,4 +1,4 @@
-// Constants.js
+// constants.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

@@ -1,12 +1,12 @@
-// parsers/channel.js : Parsing of Channel events.
+// parsers/parser-channel.js : Parsing of Channel events.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 // TODO: doc
-const miscFunctions = require('../miscFunctions.js');
-var Channel = require("../Channel.js");
-var globalVariables = require("../globalVariables.js");
+const miscFunctions = require('../misc-functions.js');
+var Channel = require("../classes/channel.js");
+var data = require("../data.js");
 
 /**
  * Parses the Channel data from the given logLine.
@@ -45,8 +45,8 @@ module.exports = {
   parseChannelCreation: function (message) {
     const res = this.parseMessageChannelCreation(message);
 
-    if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null) {
-      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", res.channelName);
+    if (Channel.getChannelByChannelId(data.ChannelList, res.channelID) === null) {
+      Channel.addChannel(data.ChannelList, res.channelID, "Unknown", res.channelName);
     }
   },
 
@@ -61,12 +61,12 @@ module.exports = {
 
   parseChannelEdit: function (message) {
     const res = this.parseMessageChannelEdit(message),
-      channelObject = Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID);
+      channelObject = Channel.getChannelByChannelId(data.ChannelList, res.channelID);
 
     if (channelObject !== null) {
       channelObject.renameChannel(res.channelName);
-    } else if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null) {
-      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", res.channelName);
+    } else if (Channel.getChannelByChannelId(data.ChannelList, res.channelID) === null) {
+      Channel.addChannel(data.ChannelList, res.channelID, "Unknown", res.channelName);
     }
   },
 
@@ -82,8 +82,8 @@ module.exports = {
   parseSubChannelCreation: function (message) {
     const res = this.parseMessageSubChannelCreation(message);
 
-    if (Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID) === null) {
-      Channel.addChannel(globalVariables.ChannelList, res.channelID, "Unknown", res.channelName);
+    if (Channel.getChannelByChannelId(data.ChannelList, res.channelID) === null) {
+      Channel.addChannel(data.ChannelList, res.channelID, "Unknown", res.channelName);
     }
   },
 
@@ -100,7 +100,7 @@ module.exports = {
   parseChannelDeletion: function (message) {
     const res = this.parseMessageChannelDeletion(message);
 
-    Channel.getChannelByChannelId(globalVariables.ChannelList, res.channelID).deleteChannel()
+    Channel.getChannelByChannelId(data.ChannelList, res.channelID).deleteChannel()
   },
 
   /**

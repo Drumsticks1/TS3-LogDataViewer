@@ -5,7 +5,7 @@
 "use strict";
 
 const assert = require('assert');
-const serverGroupParser = require("../../../nodejs/parsers/serverGroup.js");
+const serverGroupParser = require("../../../nodejs/parsers/parser-server-group.js");
 
 // Todo: Add additional tests
 

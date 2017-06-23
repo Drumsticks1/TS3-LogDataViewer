@@ -1,4 +1,4 @@
-// Channel.js: Channel class.
+// classes/channel.js: Channel class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

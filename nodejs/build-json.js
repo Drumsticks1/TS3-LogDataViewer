@@ -1,17 +1,17 @@
-// main.js
+// build-json.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
 const fs = require("fs"),
-  globalVariables = require("./globalVariables.js"),
+  data = require("./data.js"),
   log = require("./log.js"),
-  fetchLogs = require("./fetchLogs.js"),
-  Parser = require("./Parser.js"),
-  createJSON = require("./createJSON.js"),
-  Constants = require("./Constants.js"),
-  miscFunctions = require("./miscFunctions.js");
+  fetchLogs = require("./fetch-logs.js"),
+  Parser = require("./parser.js"),
+  createJSON = require("./write-json.js"),
+  Constants = require("./constants.js"),
+  miscFunctions = require("./misc-functions.js");
 
 /**
  * Builds the JSON.
@@ -38,28 +38,28 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
       rebuildRequired = true;
   }
 
-  const lastModification = fs.statSync(globalVariables.TS3LogDirectory + globalVariables.Logs[globalVariables.Logs.length - 1].logName).mtime.valueOf();
+  const lastModification = fs.statSync(data.TS3LogDirectory + data.Logs[data.Logs.length - 1].logName).mtime.valueOf();
 
   if (rebuildRequired)
     log.warn(module, "Rebuild required, log order changed or logs were deleted, skipping lastModification check.");
 
-  else if (ignoreLastModificationCheck || globalVariables.disableLastModificationCheck)
+  else if (ignoreLastModificationCheck || data.disableLastModificationCheck)
     log.debug(module, "Skipping lastModification check.");
 
   else if (!fs.existsSync(Constants.outputJSON))
     log.debug(module, "Didn't find output.json, skipping lastModification check.");
 
-  else if (lastModification === globalVariables.lastModificationOfTheLastLog) {
+  else if (lastModification === data.lastModificationOfTheLastLog) {
     log.info(module, "No modifications to the last log since the last request, stopping build process.");
     return 2;
   }
 
-  globalVariables.lastModificationOfTheLastLog = lastModification;
+  data.lastModificationOfTheLastLog = lastModification;
 
   Parser.parseLogs();
   createJSON.createJSON();
 
-  if (!globalVariables.bufferData) {
+  if (!data.bufferData) {
     miscFunctions.clearGlobalArrays();
     log.debug(module, "Cleared buffer arrays.");
   }

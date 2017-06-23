@@ -1,10 +1,10 @@
-// miscFunctions.js
+// misc-functions.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
-const globalVariables = require("./globalVariables.js");
+const data = require("./data.js");
 
 let programStartDate;
 
@@ -49,18 +49,18 @@ module.exports = {
    * Don't reset the ignoredLogs array here!
    */
   clearGlobalArrays: function () {
-    globalVariables.BanList.length = globalVariables.ChannelList.length =
-      globalVariables.ClientList.length = globalVariables.ComplaintList.length =
-        globalVariables.KickList.length = globalVariables.Logs.length =
-          globalVariables.ServerGroupList.length = globalVariables.UploadList.length = 0;
+    data.BanList.length = data.ChannelList.length =
+      data.ClientList.length = data.ComplaintList.length =
+        data.KickList.length = data.Logs.length =
+          data.ServerGroupList.length = data.UploadList.length = 0;
   },
 
   /**
    * Resets the connectedState variable of all Clients.
    */
   resetConnectedStates: function () {
-    for (let i = 0; i < globalVariables.ClientList.length; i++) {
-      globalVariables.ClientList[i].resetConnectedState();
+    for (let i = 0; i < data.ClientList.length; i++) {
+      data.ClientList[i].resetConnectedState();
     }
   },
 

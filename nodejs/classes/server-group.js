@@ -1,4 +1,4 @@
-// ServerGroup.js: ServerGroup class.
+// classes/server-group.js: ServerGroup class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

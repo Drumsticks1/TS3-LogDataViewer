@@ -1,10 +1,10 @@
-// Upload.js: Upload class.
+// classes/upload.js: Upload class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
-const globalVariables = require("./globalVariables.js");
+const data = require("../data.js");
 
 /**
  * @param {number} uploadListId
@@ -80,7 +80,7 @@ module.exports = {
    * @param {string} deletedByNickname
    */
   addDeletedBy: function (channelID, filename, deletedByID, deletedByNickname) {
-    const UploadList = globalVariables.UploadList;
+    const UploadList = data.UploadList;
 
     for (let i = 0; i < UploadList.length; i++) {
       if (UploadList[i].getChannelID() === channelID && UploadList[i].getFilename() === filename && !UploadList[i].isDeleted()) {

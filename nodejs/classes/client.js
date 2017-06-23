@@ -1,4 +1,4 @@
-// Client.js : Client class.
+// classes/client.js : Client class.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 

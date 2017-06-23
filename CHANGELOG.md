@@ -8,6 +8,9 @@ The changes in this release are focused on code maintenance, especially of the s
 Changes:
 - Javascript code:
     - Migrated to ECMAScript 6
+    - Modified directories and file names to be
+      - all lowercase
+      - in a pattern like multiple-words instead of multipleWords
     - Replaced occurrences of
       - <code>string.substring(a,b)</code> with <code>string.slice(a,b)</code>
       - <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
@@ -21,7 +24,12 @@ Changes:
         - Updated logging format, included the name of the module in which the log call was made
         - Set clearer rules by which is decided which logLevel is appropriate for a log message
         - Updated existing log calls according to the changes mentioned above and added new log calls
-
+      - Added subdirectories for similar files:
+        - nodejs/classes (contains ban.js, channel.js, client.js, complaint.js, kick.js, server-group.js and upload.js)
+      - Renamed scripts in nodejs/parsers by including the leading string "parser-" (e.g. nodejs/parsers/parser-ban.js) 
+      - Renamed nodejs/createJSON.js to nodejs/write-json.js
+      - Renamed nodejs/globalVariables.js to nodejs/data.js
+      - Renamed nodejs/getConf.js to nodejs/configuration.js
 
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:

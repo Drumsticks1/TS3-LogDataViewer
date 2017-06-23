@@ -1,27 +1,26 @@
-// Parser.js : Main file for controlling the parsing process.
+// parser.js : Main file for controlling the parsing process.
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
 const fs = require("fs"),
-  checkFunctions = require("./checkFunctions.js"),
-  globalVariables = require("./globalVariables.js"),
+  data = require("./data.js"),
   log = require("./log.js");
 
 const parsers = {
-  ban: require("./parsers/ban.js"),
-  channel: require("./parsers/channel.js"),
-  client: require("./parsers/client.js"),
-  complaint: require("./parsers/complaint.js"),
-  kick: require("./parsers/kick.js"),
-  serverGroup: require("./parsers/serverGroup.js"),
-  upload: require("./parsers/upload.js")
+  ban: require("./parsers/parser-ban.js"),
+  channel: require("./parsers/parser-channel.js"),
+  client: require("./parsers/parser-client.js"),
+  complaint: require("./parsers/parser-complaint.js"),
+  kick: require("./parsers/parser-kick.js"),
+  serverGroup: require("./parsers/parser-server-group.js"),
+  upload: require("./parsers/parser-upload.js")
 };
 
 // Object containing matching patterns for parsing.
 const match = {
-  // Set in parseLogs in order to use the latest globalVariables.virtualServer value.
+  // Set in parseLogs in order to use the latest data.virtualServer value.
   VirtualServer: [],
   VirtualServerBase: [],
 
@@ -68,10 +67,10 @@ module.exports = {
   parseLogs: function () {
     log.debug(module, "Starting log parsing.");
 
-    for (let i = 0; i < globalVariables.Logs.length; i++) {
-      if (!globalVariables.Logs[i].parsed && !globalVariables.Logs[i].ignored) {
-        this.parseLog(globalVariables.TS3LogDirectory + globalVariables.Logs[i].logName, i + 1 === globalVariables.Logs.length);
-        globalVariables.Logs[i].parsed = true;
+    for (let i = 0; i < data.Logs.length; i++) {
+      if (!data.Logs[i].parsed && !data.Logs[i].ignored) {
+        this.parseLog(data.TS3LogDirectory + data.Logs[i].logName, i + 1 === data.Logs.length);
+        data.Logs[i].parsed = true;
       }
     }
   },
@@ -97,12 +96,12 @@ module.exports = {
      * - since v3.0.12.0
      */
     match.VirtualServer = [
-      "|INFO    |VirtualServer |  " + globalVariables.virtualServer + "| ",
-      "|INFO    |VirtualServer |" + globalVariables.virtualServer + "  |"
+      "|INFO    |VirtualServer |  " + data.virtualServer + "| ",
+      "|INFO    |VirtualServer |" + data.virtualServer + "  |"
     ];
     match.VirtualServerBase = [
-      "|INFO    |VirtualServerBase|  " + globalVariables.virtualServer + "| ",
-      "|INFO    |VirtualServerBase|" + globalVariables.virtualServer + "  |"
+      "|INFO    |VirtualServerBase|  " + data.virtualServer + "| ",
+      "|INFO    |VirtualServerBase|" + data.virtualServer + "  |"
     ];
 
     if (logData.includes(match.VirtualServer[0] + 'listening on'))

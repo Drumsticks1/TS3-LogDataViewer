@@ -1,12 +1,12 @@
-// getConf.js
+// configuration.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
 "use strict";
 
 const fs = require("fs"),
-  Constants = require("./Constants.js"),
-  globalVariables = require("./globalVariables.js"),
+  Constants = require("./constants.js"),
+  data = require("./data.js"),
   log = require("./log.js");
 
 // TODO: maybe make local
@@ -14,43 +14,43 @@ let confJSON;
 
 /**
  * Checks if a setting with the given name is part of the conf.json and saves the value of the setting in the
- * globalVariables array if it's value has the same type as settingValueType.
+ * data array if it's value has the same type as settingValueType.
  * @param {string} settingName
  * @param {string} settingValueType
  */
 function acquireSetting(settingName, settingValueType) {
   if (confJSON[settingName] !== undefined) {
     if (typeof confJSON[settingName] === settingValueType) {
-      if (globalVariables[settingName] !== confJSON[settingName]) {
-        globalVariables[settingName] = confJSON[settingName];
+      if (data[settingName] !== confJSON[settingName]) {
+        data[settingName] = confJSON[settingName];
         log.debug(module, "Configuration variable \"" + settingName + "\" is set to \"" + confJSON[settingName] + "\".");
       } else {
         log.debug(module, "Configuration variable \"" + settingName + "\" already equals the default value.");
       }
     } else {
       log.debug(module, "Configuration variable \"" + settingName + "\" is not specified as a valid " + settingValueType + ", using default value.");
-      globalVariables[settingName] = Constants[settingName];
+      data[settingName] = Constants[settingName];
     }
   } else {
     log.debug(module, "Configuration variable \"" + settingName + "\" is not specified, using default value.");
-    globalVariables[settingName] = Constants[settingName];
+    data[settingName] = Constants[settingName];
   }
 }
 
 /**
- * Resets the configuration to the default values set in Constants.js.
+ * Resets the configuration to the default values set in constants.js.
  */
 function resetToDefaultConfiguration() {
   log.debug(module, "Ignoring the conf.json and using default settings.");
-  globalVariables.programLogfile = Constants.programLogfile;
-  globalVariables.TS3LogDirectory = Constants.TS3LogDirectory;
-  globalVariables.virtualServer = Constants.virtualServer;
-  globalVariables.bufferData = Constants.bufferData;
-  globalVariables.timeBetweenRequests = Constants.timeBetweenRequests;
-  globalVariables.disableLastModificationCheck = Constants.disableLastModificationCheck;
-  globalVariables.usedPort = Constants.usedPort;
-  globalVariables.logLevel = Constants.logLevel;
-  globalVariables.ignoredLogs.length = 0;
+  data.programLogfile = Constants.programLogfile;
+  data.TS3LogDirectory = Constants.TS3LogDirectory;
+  data.virtualServer = Constants.virtualServer;
+  data.bufferData = Constants.bufferData;
+  data.timeBetweenRequests = Constants.timeBetweenRequests;
+  data.disableLastModificationCheck = Constants.disableLastModificationCheck;
+  data.usedPort = Constants.usedPort;
+  data.logLevel = Constants.logLevel;
+  data.ignoredLogs.length = 0;
   log.updateWriteStream();
 }
 
@@ -68,16 +68,16 @@ module.exports = {
 
         acquireSetting("programLogfile", "string");
         acquireSetting("logLevel", "number");
-        if (globalVariables.logLevel !== 0 && globalVariables.logLevel !== 1 && globalVariables.logLevel !== 2 && globalVariables.logLevel !== 3) {
-          log.warn(module, "logLevel setting \"" + globalVariables.logLevel + "\" is invalid, using default value!");
-          globalVariables.logLevel = Constants.logLevel;
+        if (data.logLevel !== 0 && data.logLevel !== 1 && data.logLevel !== 2 && data.logLevel !== 3) {
+          log.warn(module, "logLevel setting \"" + data.logLevel + "\" is invalid, using default value!");
+          data.logLevel = Constants.logLevel;
         }
         log.updateWriteStream();
         acquireSetting("TS3LogDirectory", "string");
 
         // Add trailing "/" to the log directory path (if not already existing)
-        if (!globalVariables.TS3LogDirectory.endsWith("/")) {
-          globalVariables.TS3LogDirectory = globalVariables.TS3LogDirectory + "/";
+        if (!data.TS3LogDirectory.endsWith("/")) {
+          data.TS3LogDirectory = data.TS3LogDirectory + "/";
         }
 
         acquireSetting("virtualServer", "number");
@@ -88,13 +88,13 @@ module.exports = {
 
         if (Array.isArray(confJSON.ignoredLogs) && confJSON.ignoredLogs.length !== 0) {
           for (let i = 0; i < confJSON.ignoredLogs.length; i++) {
-            globalVariables.ignoredLogs.push(confJSON.ignoredLogs[i]);
+            data.ignoredLogs.push(confJSON.ignoredLogs[i]);
             log.debug(module, "Added ignored log: \"" + confJSON.ignoredLogs[i] + "\".");
           }
         }
         else {
           log.debug(module, "No ignored logs specified.");
-          globalVariables.ignoredLogs.length = 0;
+          data.ignoredLogs.length = 0;
         }
       } else {
         log.warn(module, "conf.json is not a file, using default values for the settings!");
