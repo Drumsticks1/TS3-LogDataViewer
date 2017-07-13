@@ -7,7 +7,8 @@
 const fs = require("fs"),
   data = require("./data.js"),
   log = require("./log.js"),
-  checkFunctions = require("./check-functions.js");
+  checkFunctions = require("./check-functions.js"),
+  miscFunctions = require("./misc-functions.js");
 
 /**
  * Fetches the logs.
@@ -16,7 +17,7 @@ const fs = require("fs"),
  * 1 --> No rebuild needed, no logs deleted, no changed log order
  * 2 --> Rebuild required, isMatchingLogOrder failed
  */
-exports.fetchLogs = function () {
+module.exports.fetch = function () {
   log.debug(module, "Checking log directory.");
   let rebuildRequired = false;
 
@@ -80,7 +81,7 @@ exports.fetchLogs = function () {
     else {
       log.warn(module, "Logs parsed for the last json build were deleted or the log order changed, clearing buffered data.");
       rebuildRequired = true;
-      clearGlobalArrays();
+      miscFunctions.clearGlobalArrays();
     }
   }
 

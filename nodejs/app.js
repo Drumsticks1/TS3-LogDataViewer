@@ -10,7 +10,6 @@ const express = require("express"),
   data = require("./data.js"),
   getConf = require("./configuration.js"),
   log = require("./log.js"),
-  miscFunctions = require("./misc-functions.js"),
   buildJSON = require("./build-json.js");
 
 let lastBuild = 0;
@@ -38,12 +37,8 @@ app.get("/buildJSON", function (req, res) {
     };
 
   if (timeDifference > data.timeBetweenRequests) {
-    const clearBuffer = String(req.query.clearBuffer) === "true";
-    if (clearBuffer)
-      miscFunctions.clearGlobalArrays();
-
     lastBuild = Date.now().valueOf();
-    switch (buildJSON.buildJSON(clearBuffer)) {
+    switch (buildJSON(String(req.query.clearBuffer) === "true")) {
       case 0:
         response.fetchLogsError = true;
         break;

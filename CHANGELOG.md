@@ -30,6 +30,8 @@ Changes:
       - Renamed nodejs/createJSON.js to nodejs/write-json.js
       - Renamed nodejs/globalVariables.js to nodejs/data.js
       - Renamed nodejs/getConf.js to nodejs/configuration.js
+      - Modified module structure:
+        - build-json.js, fetch-logs.js and write-json.js are now directly exporting their single function instead of a module containing the single function
 
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:

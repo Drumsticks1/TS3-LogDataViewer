@@ -1,4 +1,4 @@
-// build-json.js
+// build.js
 // Author : Drumsticks
 // GitHub : https://github.com/Drumsticks1/TS3-LogDataViewer
 
@@ -9,24 +9,27 @@ const fs = require("fs"),
   log = require("./log.js"),
   fetchLogs = require("./fetch-logs.js"),
   Parser = require("./parser.js"),
-  createJSON = require("./write-json.js"),
+  writeJSON = require("./write-json.js"),
   Constants = require("./constants.js"),
   miscFunctions = require("./misc-functions.js");
 
 /**
  * Builds the JSON.
- * @param {boolean} ignoreLastModificationCheck the lastModification check is ignored if true
+ * @param {boolean} clearBuffer if true: the buffer is cleared before the build
  * @returns {number}
  *      0 if fetching the logs fails.
  *      1 if building the json completes successfully.
  *      2 if building wasn't necessary because there are no new log lines.
  */
-exports.buildJSON = function (ignoreLastModificationCheck) {
+module.exports = function (clearBuffer) {
+  if (clearBuffer)
+    miscFunctions.clearGlobalArrays();
+
   log.info(module, "Starting JSON build.");
   miscFunctions.setProgramStartDate();
 
   let rebuildRequired = false;
-  switch (fetchLogs.fetchLogs()) {
+  switch (fetchLogs()) {
     case 0:
       log.info(module, "The build function will now exit!\n");
       return 0;
@@ -43,7 +46,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
   if (rebuildRequired)
     log.warn(module, "Rebuild required, log order changed or logs were deleted, skipping lastModification check.");
 
-  else if (ignoreLastModificationCheck || data.disableLastModificationCheck)
+  else if (clearBuffer || data.disableLastModificationCheck)
     log.debug(module, "Skipping lastModification check.");
 
   else if (!fs.existsSync(Constants.outputJSON))
@@ -57,7 +60,7 @@ exports.buildJSON = function (ignoreLastModificationCheck) {
   data.lastModificationOfTheLastLog = lastModification;
 
   Parser.parseLogs();
-  createJSON.createJSON();
+  writeJSON();
 
   if (!data.bufferData) {
     miscFunctions.clearGlobalArrays();

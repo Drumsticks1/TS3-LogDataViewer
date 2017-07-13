@@ -13,7 +13,7 @@ const fs = require("fs"),
 /**
  * Creates a json containing the data extracted from the logs.
  */
-exports.createJSON = function () {
+module.exports = function () {
   log.debug(module, "Starting JSON creation.");
 
   const timestamps = miscFunctions.getCurrentTimestamps();
