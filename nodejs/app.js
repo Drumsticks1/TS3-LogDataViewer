@@ -7,6 +7,7 @@
 const express = require("express"),
   app = express(),
   helmet = require("helmet"),
+  constants = require("./constants"),
   data = require("./data.js"),
   getConf = require("./configuration.js"),
   log = require("./log.js"),
@@ -39,16 +40,16 @@ app.get("/buildJSON", function (req, res) {
   if (timeDifference > data.timeBetweenRequests) {
     lastBuild = Date.now().valueOf();
     switch (buildJSON(String(req.query.clearBuffer) === "true")) {
-      case 0:
+      case constants.tokens.build_json.ERROR_LOG_FETCHING:
         response.fetchLogsError = true;
         break;
 
-      case 1:
+      case constants.tokens.build_json.SUCCESS:
         response.success = true;
         response.newJSON = true;
         break;
 
-      case 2:
+      case constants.tokens.build_json.NOT_NECESSARY:
         response.success = true;
         break;
     }

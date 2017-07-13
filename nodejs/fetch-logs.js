@@ -5,6 +5,7 @@
 "use strict";
 
 const fs = require("fs"),
+  constants = require("./constants.js"),
   data = require("./data.js"),
   log = require("./log.js"),
   checkFunctions = require("./check-functions.js"),
@@ -12,24 +13,21 @@ const fs = require("fs"),
 
 /**
  * Fetches the logs.
- * @returns {number}
- * 0 --> error occurred
- * 1 --> No rebuild needed, no logs deleted, no changed log order
- * 2 --> Rebuild required, isMatchingLogOrder failed
+ * @returns {number} the according constants.tokens.fetch_logs constant (see constants.js)
  */
-module.exports.fetch = function () {
+module.exports = function () {
   log.debug(module, "Checking log directory.");
   let rebuildRequired = false;
 
   try {
     if (!fs.statSync(data.TS3LogDirectory).isDirectory()) {
       log.warn(module, "The log directory seems not to be a directory!");
-      return 0;
+      return constants.tokens.fetch_logs.ERROR_LOG_FETCHING;
     }
   }
   catch (error) {
     log.error(module, "An error occurred while fetching the logs:\n\t" + error.message);
-    return 0;
+    return constants.tokens.fetch_logs.ERROR_LOG_FETCHING;
   }
 
   let logFiles;
@@ -54,7 +52,7 @@ module.exports.fetch = function () {
 
   if (newLogObjects.length === 0) {
     log.warn(module, "The log directory contains no valid logs for the specified virtual server.");
-    return 0;
+    return constants.tokens.fetch_logs.ERROR_LOG_FETCHING;
   }
 
   log.debug(module, "Sorting logs.");
@@ -87,5 +85,8 @@ module.exports.fetch = function () {
 
   data.Logs = newLogObjects;
 
-  return rebuildRequired ? 2 : 1;
+  if (rebuildRequired)
+    return constants.tokens.fetch_logs.REBUILD_REQUIRED;
+  else
+    return constants.tokens.fetch_logs.SUCCESS;
 };

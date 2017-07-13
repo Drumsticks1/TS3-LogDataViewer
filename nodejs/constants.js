@@ -11,8 +11,27 @@ module.exports = {
   // JSON output file
   outputJSON: "../local/output.json",
 
+  // Communication tokens used for human-readable communication between methods
+  tokens: {
+    build_json: {
+      // the json build was successful
+      SUCCESS: 0,
+      // building was not necessary (no new log lines since the last build)
+      NOT_NECESSARY: 1,
+      // fetching the logs in fetch-logs.js failed
+      ERROR_LOG_FETCHING: 2
+    }, fetch_logs: {
+      // the log fetching was successful
+      SUCCESS: 0,
+      // the log fetching was successful but a rebuild is required
+      REBUILD_REQUIRED: 1,
+      // fetching the logs failed
+      ERROR_LOG_FETCHING: 2,
+    }
+  },
+
   /**
-   * USER CONFIGURABLE SETTINGS
+   * OVERWRITABLE SETTINGS
    * The following settings can be modified in an optional configuration json file (see confJSON above for the path)
    **/
 

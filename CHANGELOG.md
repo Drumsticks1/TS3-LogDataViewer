@@ -32,7 +32,7 @@ Changes:
       - Renamed nodejs/getConf.js to nodejs/configuration.js
       - Modified module structure:
         - build-json.js, fetch-logs.js and write-json.js are now directly exporting their single function instead of a module containing the single function
-
+      - Replaced hardly human-readable integer return codes in build-json.js and fetch-logs.js with constant communication tokens in constants.js
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:
 - Modified project structure:

@@ -7,7 +7,11 @@ This todo list is not a binding list of things that will be done, but more a lit
 <br>
 <i>(Italic entries will likely require more time and have a low priority)</i>
 
+- tests:
+  - add more extensive tests (e.g. test log with complete build run)
+
 - general / server- & client-side
+  - update nginx configuration instructions (modified file names)
   - rename class variables to be more intuitive (e.g. DateTime --> Timestamp or BanTime --> BanDuration) (includes client-side because of the div names (e.g. cell_BanTime))
   - <i>add ServerGroupName history like for the nicknames in the client list</i>
   - <i>add ServerGroup table (maybe with rights and so on)</i>
