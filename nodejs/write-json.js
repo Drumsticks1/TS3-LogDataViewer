@@ -12,6 +12,7 @@ const fs = require("fs"),
 
 /**
  * Creates a json containing the data extracted from the logs.
+ * @returns {number} the according constants.tokens constant (see constants.js)
  */
 module.exports = function () {
   log.debug(module, "Starting JSON creation.");
@@ -43,9 +44,10 @@ module.exports = function () {
     fs.writeFileSync(Constants.outputJSON, JSON.stringify(json), 'utf8');
   }
   catch (error) {
-    log.error(module, "An error occurred while creating the JSON:\n\t" + error.message);
-    return 0;
+    log.error(module, "An error occurred while writing the JSON:\n\t" + error.message);
+    return Constants.tokens.ERROR;
   }
 
   log.debug(module, "JSON creation completed.");
+  return Constants.tokens.SUCCESS;
 };

@@ -59,18 +59,18 @@
           updateTimeBetweenBuilds(res);
 
           if (res.newJSON)
-            if (res.fetchLogsError)
-              ts3ldv.ui.addCallout("An error occurred while fetching the log files, please check the ts3-ldv.log for more information.", "alert fetchLogsErrorCallout");
-            else
-              ts3ldv.tables.build();
+            ts3ldv.tables.build();
           else
             ts3ldv.ui.addCallout("No new information!", "secondary noNewInformationCallout", 2500);
-        }
-        else {
-          updateTimeBetweenBuilds(res);
+        } else {
+          if (res.timeDifference !== -1) {
+            updateTimeBetweenBuilds(res);
 
-          const timeUntilNextBuild = (timeBetweenBuilds - res.timeDifference);
-          ts3ldv.ui.addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
+            const timeUntilNextBuild = (timeBetweenBuilds - res.timeDifference);
+            ts3ldv.ui.addCallout("Next JSON build request allowed in " + timeUntilNextBuild + " ms!\n(This message will disappear when the next request is allowed)", "warning nextRequestCallout", timeUntilNextBuild);
+          } else {
+            ts3ldv.ui.addCallout("An error occurred on the server, please check the ts3-ldv.log for more information.", "alert serverErrorCallout");
+          }
         }
         buildRequestInProgress = false;
       });

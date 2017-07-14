@@ -30,9 +30,9 @@ app.listen(data.usedPort, 'localhost', function () {
 app.get("/buildJSON", function (req, res) {
   const timeDifference = Date.now().valueOf() - lastBuild,
     response = {
-      "success": false,
-      "fetchLogsError": false,
-      "newJSON": false,
+      "success": undefined,
+      "newJSON": undefined,
+      // todo: new request for this?
       "timeBetweenRequests": data.timeBetweenRequests,
       "timeDifference": -1
     };
@@ -40,17 +40,19 @@ app.get("/buildJSON", function (req, res) {
   if (timeDifference > data.timeBetweenRequests) {
     lastBuild = Date.now().valueOf();
     switch (buildJSON(String(req.query.clearBuffer) === "true")) {
-      case constants.tokens.build_json.ERROR_LOG_FETCHING:
-        response.fetchLogsError = true;
+      case constants.tokens.ERROR:
+        response.success = false;
+        response.newJSON = false;
         break;
 
-      case constants.tokens.build_json.SUCCESS:
+      case constants.tokens.SUCCESS:
         response.success = true;
         response.newJSON = true;
         break;
 
-      case constants.tokens.build_json.NOT_NECESSARY:
+      case constants.tokens.NOT_NECESSARY:
         response.success = true;
+        response.newJSON = false;
         break;
     }
   } else {

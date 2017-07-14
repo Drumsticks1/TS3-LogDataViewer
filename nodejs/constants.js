@@ -13,21 +13,11 @@ module.exports = {
 
   // Communication tokens used for human-readable communication between methods
   tokens: {
-    build_json: {
-      // the json build was successful
-      SUCCESS: 0,
-      // building was not necessary (no new log lines since the last build)
-      NOT_NECESSARY: 1,
-      // fetching the logs in fetch-logs.js failed
-      ERROR_LOG_FETCHING: 2
-    }, fetch_logs: {
-      // the log fetching was successful
-      SUCCESS: 0,
-      // the log fetching was successful but a rebuild is required
-      REBUILD_REQUIRED: 1,
-      // fetching the logs failed
-      ERROR_LOG_FETCHING: 2,
-    }
+    // the method finished successfully  (the json build was successful
+    SUCCESS: 0,
+    ERROR: 1,
+    NOT_NECESSARY: 2,
+    REBUILD_REQUIRED: 3
   },
 
   /**

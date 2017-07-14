@@ -22,12 +22,12 @@ module.exports = function () {
   try {
     if (!fs.statSync(data.TS3LogDirectory).isDirectory()) {
       log.warn(module, "The log directory seems not to be a directory!");
-      return constants.tokens.fetch_logs.ERROR_LOG_FETCHING;
+      return constants.tokens.ERROR;
     }
   }
   catch (error) {
     log.error(module, "An error occurred while fetching the logs:\n\t" + error.message);
-    return constants.tokens.fetch_logs.ERROR_LOG_FETCHING;
+    return constants.tokens.ERROR;
   }
 
   let logFiles;
@@ -52,7 +52,7 @@ module.exports = function () {
 
   if (newLogObjects.length === 0) {
     log.warn(module, "The log directory contains no valid logs for the specified virtual server.");
-    return constants.tokens.fetch_logs.ERROR_LOG_FETCHING;
+    return constants.tokens.ERROR;
   }
 
   log.debug(module, "Sorting logs.");
@@ -86,7 +86,7 @@ module.exports = function () {
   data.Logs = newLogObjects;
 
   if (rebuildRequired)
-    return constants.tokens.fetch_logs.REBUILD_REQUIRED;
+    return constants.tokens.REBUILD_REQUIRED;
   else
-    return constants.tokens.fetch_logs.SUCCESS;
+    return constants.tokens.SUCCESS;
 };

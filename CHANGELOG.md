@@ -6,33 +6,38 @@ Versions: <a href="#v2.1.1">2.1.1</a> | <a href="#v2.1.0">2.1.0</a> | <a href="#
 The changes in this release are focused on code maintenance, especially of the server-side code.
 
 Changes:
-- Javascript code:
+  - JavaScript Code:
     - Migrated to ECMAScript 6
-    - Modified directories and file names to be
-      - all lowercase
-      - in a pattern like multiple-words instead of multipleWords
     - Replaced occurrences of
       - <code>string.substring(a,b)</code> with <code>string.slice(a,b)</code>
       - <code>string.charAt(x)</code> with array-like <code>string[x]</code> indexation
       - comparisons of <code>string.indexOf(str)</code> with <code>-1</code> with the usage of <code>string.includes(str)</code>
-    - Server-Side:
-      - Code maintenance
-      - Replaced the methods Parser.parseLogs and Parser.parseLogData with the methods Parser.parseLogs, Parser.parseLog and Parser.parseLogLine for a more clear parsing structure
-      - Renamed the old parser methods in nodejs/parsers/*.js that extract and return the parsed data from the message of a log line from parseX() to parseMessageX()
-      - Moved the parser actions from nodejs/Parser.js into the nodejs/parsers files, naming example of the methods: parsers.client.parseConnect()
-      - Logging:
-        - Updated logging format, included the name of the module in which the log call was made
-        - Set clearer rules by which is decided which logLevel is appropriate for a log message
-        - Updated existing log calls according to the changes mentioned above and added new log calls
-      - Added subdirectories for similar files:
-        - nodejs/classes (contains ban.js, channel.js, client.js, complaint.js, kick.js, server-group.js and upload.js)
-      - Renamed scripts in nodejs/parsers by including the leading string "parser-" (e.g. nodejs/parsers/parser-ban.js) 
-      - Renamed nodejs/createJSON.js to nodejs/write-json.js
-      - Renamed nodejs/globalVariables.js to nodejs/data.js
-      - Renamed nodejs/getConf.js to nodejs/configuration.js
-      - Modified module structure:
-        - build-json.js, fetch-logs.js and write-json.js are now directly exporting their single function instead of a module containing the single function
-      - Replaced hardly human-readable integer return codes in build-json.js and fetch-logs.js with constant communication tokens in constants.js
+  - Modified (javascript code) directories and file names to be
+    - all lowercase
+    - in a pattern like multiple-words instead of multipleWords
+  - Server-Side:
+    - Code maintenance
+    - Replaced the methods Parser.parseLogs and Parser.parseLogData with the methods Parser.parseLogs, Parser.parseLog and Parser.parseLogLine for a more clear parsing structure
+    - Renamed the old parser methods in nodejs/parsers/*.js that extract and return the parsed data from the message of a log line from parseX() to parseMessageX()
+    - Moved the parser actions from nodejs/Parser.js into the nodejs/parsers files, naming example of the methods: parsers.client.parseConnect()
+    - Logging:
+      - Updated logging format, included the name of the module in which the log call was made
+      - Set clearer rules by which is decided which logLevel is appropriate for a log message
+      - Updated existing log calls according to the changes mentioned above and added new log calls
+    - Added subdirectories for similar files:
+      - nodejs/classes (contains ban.js, channel.js, client.js, complaint.js, kick.js, server-group.js and upload.js)
+    - Renamed scripts in nodejs/parsers by including the leading string "parser-" (e.g. nodejs/parsers/parser-ban.js) 
+    - Renamed nodejs/createJSON.js to nodejs/write-json.js
+    - Renamed nodejs/globalVariables.js to nodejs/data.js
+    - Renamed nodejs/getConf.js to nodejs/configuration.js
+    - Modified module structure:
+      - build-json.js, fetch-logs.js and write-json.js are now directly exporting their single function instead of a module containing the single function
+    - Replaced hardly human-readable integer return codes of several methods with constant communication tokens defined in constants.js
+  - Communication between Client and Server:
+    - The response parameter 'success' is now also false if writing the json to the server disk fails
+    - Removed the response attribute fetchLogsError
+
+
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
 Changes:
 - Modified project structure:
