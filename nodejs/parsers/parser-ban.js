@@ -11,11 +11,11 @@ var data = require("../data.js");
 
 module.exports = {
 
-  parseBan: function (message, dateTime, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP) {
-    let res = this.parseMessageBan(message, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP);
+  parseBan: function (message, dateTime, disconnectRes, lastBanRuleUID, lastBanRuleIP) {
+    let res = this.parseMessageBan(message, disconnectRes.boundaries, lastBanRuleUID, lastBanRuleIP);
 
-    if (!checkFunctions.isDuplicateBan(dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime))
-      Ban.addBan(data.BanList, dateTime, res.clientId, res.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime);
+    if (!checkFunctions.isDuplicateBan(dateTime, disconnectRes.clientId, disconnectRes.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime))
+      Ban.addBan(data.BanList, dateTime, disconnectRes.clientId, disconnectRes.Nickname, res.bannedUID, res.bannedIP, res.bannedByID, res.bannedByNickname, res.bannedByUID, res.banReason, res.banTime);
   },
 
   /**

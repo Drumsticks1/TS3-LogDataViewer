@@ -260,16 +260,16 @@ module.exports = {
 
       // Disconnects (including kicks and bans)
       else if (message.startsWith(match.disconnect)) {
-        let disconnectBoundaries = parsers.client.parseClientDisconnect(message, dateTime, isLastLog);
+        let disconnectRes = parsers.client.parseClientDisconnect(message, dateTime, isLastLog);
 
         if (!message.includes(") reason 'reasonmsg")) {
           // Kicks
           if (!message.includes(" bantime=")) {
-            parsers.kick.parseKick(message, dateTime, disconnectBoundaries);
+            parsers.kick.parseKick(message, dateTime, disconnectRes);
           }
           // Bans
           else {
-            parsers.ban.parseBan(message, dateTime, disconnectBoundaries, lastBanRuleUID, lastBanRuleIP);
+            parsers.ban.parseBan(message, dateTime, disconnectRes, lastBanRuleUID, lastBanRuleIP);
           }
         }
       }

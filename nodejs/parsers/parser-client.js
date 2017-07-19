@@ -128,7 +128,7 @@ module.exports = {
     if (isLastLog)
       data.ClientList[res.clientId].disconnect();
 
-    return res.boundaries;
+    return res;
   },
 
   /**

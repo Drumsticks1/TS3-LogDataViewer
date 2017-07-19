@@ -11,11 +11,11 @@ var data = require("../data.js");
 
 module.exports = {
 
-  parseKick: function(message, dateTime, disconnectBoundaries) {
-    let res = this.parseMessageKick(message, disconnectBoundaries);
+  parseKick: function(message, dateTime, disconnectRes) {
+    let res = this.parseMessageKick(message, disconnectRes.boundaries);
 
-    if (!checkFunctions.isDuplicateKick(dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason))
-      Kick.addKick(data.KickList, dateTime, res.clientId, res.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason);
+    if (!checkFunctions.isDuplicateKick(dateTime, disconnectRes.clientId, disconnectRes.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason))
+      Kick.addKick(data.KickList, dateTime, disconnectRes.clientId, disconnectRes.Nickname, res.kickedByNickname, res.kickedByUID, res.kickReason);
   },
 
   /**
