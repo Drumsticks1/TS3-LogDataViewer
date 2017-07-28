@@ -24,14 +24,15 @@
   module.addCallout = function (message, calloutClass, duration) {
     const calloutsWithTheSameClass = document.getElementsByClassName(calloutClass);
 
+    // TODO: easier and more reliable duplicate detection system, currently uncovered corner case: two existing callouts
     // Prevents duplicate callouts
     if (calloutsWithTheSameClass.length !== 0) {
-      // Todo: check what this is
+
       // Updates the message of the nextRequestCallout if one is already existing.
       if (calloutClass.includes("nextRequestCallout"))
         calloutsWithTheSameClass[0].innerText = message;
 
-      return;
+      return calloutsWithTheSameClass[0];
     }
 
     const callout = document.createElement("div"),
