@@ -67,9 +67,9 @@ From here on you should switch to the <code>ts3-ldv</code> user in order to not 
 
     sudo su --shell=/bin/bash ts3-ldv
 
-Clone the TS3-LDV git repository into the created directory:
+Clone the latest release version into the created directory (replace vx.x.x with the latest release version):
 
-    git clone https://github.com/Drumsticks1/TS3-LogDataViewer.git ts3-ldv-dir
+    git clone https://github.com/Drumsticks1/TS3-LogDataViewer.git vx.x.x ts3-ldv-dir
 
 <br>
 <b>If you didn't already switch to the ts3-ldv user: you should not install the npm dependencies as root because this

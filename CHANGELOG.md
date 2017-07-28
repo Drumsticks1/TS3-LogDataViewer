@@ -36,6 +36,9 @@ Changes:
   - Communication between Client and Server:
     - The response parameter 'success' is now also false if writing the json to the server disk fails
     - Removed the response attribute fetchLogsError
+  - General:
+    - INSTALL.md
+    - Updated instructions for cloning the repository (now using the latest release version instead of the master branch)
 
 
 ### <a name="v2.1.0">Version 2.1.0</a> (17.06.2017)
