@@ -5,8 +5,9 @@
 # WebStorm directory-based project format
 .idea/
 
-# node_modules folder
+# npm generated
 node_modules
+package-lock.json
 
 # local files (conf.json, output.json, ts3-ldv.log, ...)
 local/*

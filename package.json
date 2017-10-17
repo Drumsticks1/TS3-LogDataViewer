@@ -30,15 +30,15 @@
   ],
   "main": "nodejs/app.js",
   "dependencies": {
-    "express": "^4.15.3",
-    "foundation-sites": "^6.3.1",
-    "helmet": "^3.6.1",
+    "express": "^4.16.2",
+    "foundation-sites": "^6.4.3",
+    "helmet": "^3.9.0",
     "jquery": "^3.2.1",
-    "moment": "^2.18.1",
-    "tablesorter": "^2.28.14"
+    "moment": "^2.19.1",
+    "tablesorter": "^2.29.0"
   },
   "devDependencies": {
-    "mocha": "^3.4.2",
+    "mocha": "^4.0.1",
     "node-sass": "^4.5.3"
   },
   "scripts": {
