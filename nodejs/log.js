@@ -46,8 +46,8 @@ function log(timestamp, level, module, message) {
     return;
   }
 
-  // Only log if equal or above the set log level
-  if (level >= data.logLevel)
+  // Only log if not above the set log level
+  if (level > data.logLevel)
     return;
 
   let logLevelString;
