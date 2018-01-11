@@ -28,22 +28,6 @@ const logLevel = {
 };
 
 /**
- * Logs the message to the specified programLogfile.
- * Adds the current UTC time before and \n after the message.
- * If the programLogfile (write stream) is undefined the message is instead stored in the logBuffer array.
- *
- * @param {string} message the message to be logged
- * @param {number} logLevel
- * @param {boolean} alreadyProcessed
- */
-/**
- *
- * @param timestamp
- * @param level
- * @param module
- * @param message
- */
-/**
  * Logs the information to the programLogfile (write stream).
  * If the writeStream is undefined, the information is instead stored in the logBuffer array and logged as soon as the
  * writeStream is created.
@@ -62,8 +46,8 @@ function log(timestamp, level, module, message) {
     return;
   }
 
-  // Only log if above the minim
-  if (level > data.logLevel)
+  // Only log if equal or above the set log level
+  if (level >= data.logLevel)
     return;
 
   let logLevelString;
