@@ -1,5 +1,8 @@
 # TS3 Log Data Viewer
 
+## Project on Hold
+As of August 2018, the project is officially on hold and not actively developed anymore.
+
 ### Overview
  - <a href="#introduction">Introduction</a>
  - <a href="#demo">Demo</a>
