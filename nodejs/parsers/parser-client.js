@@ -57,6 +57,11 @@ module.exports = {
       return miscFunctions.getSubstring(boundaries, message, boundariesIdentifier);
     };
 
+    // quick fix for "using a myTeamSpeak ID connects".
+    if (isNaN(Number(getSubstring("clientId")))) {
+      boundaries.clientId[1] = message.lastIndexOf(") using a myTeamSpeak ID from")
+    }
+
     return {
       clientId: Number(getSubstring("clientId")),
       Nickname: getSubstring("Nickname"),
